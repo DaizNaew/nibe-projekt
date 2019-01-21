@@ -1,6 +1,8 @@
 // Dom7
 var $$ = Dom7;
 
+
+
 // Framework7 App main instance
 var app  = new Framework7({
   root: '#app', // App root element
@@ -66,4 +68,9 @@ $$('#my-login-screen .login-button').on('click', function () {
 
   // Alert username and password
   app.dialog.alert('Username: ' + username + '<br>Password: ' + password);
+});
+
+define(function(require) {
+  var dh = require('./datahandler');
+  dh.dbConn();
 });
