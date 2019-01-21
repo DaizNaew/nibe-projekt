@@ -5,3 +5,34 @@
 .ios .tabbar-labels .tab-link.tab-link-active .icon:not(.icon-ios-fill) {
   display: none;
 }
+
+nav { 
+  width: 100%;
+  border-bottom:1px solid black;
+}
+
+ul{ 
+  width: 100%;
+}
+
+ul li{ 
+  display: table-cell;
+  width: 100%;
+  text-align: center;
+}
+
+.navbar .navbar-nav > li:not(:last-child) {
+  border-right:1px solid black;
+}
+
+ul li a{ 
+  color:#0b4a54 !important; 
+}
+
+ul li a:hover{ 
+  color:white !important; 
+}
+
+.active a {
+  color:white !important;
+}
