@@ -1,90 +1,21 @@
 <template>
-<div class="container login-form page" data-name="login">
-        <h2 class="login-title">- Please Login -</h2>
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <form>
-                    <div class="input-group login-userinput">
-                        <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
-                        <input id="txtUser" type="text" class="form-control" name="username" placeholder="Username">
-                    </div>
-                    <div class="input-group">
-                        <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
-                        <input  id="txtPassword" type="password" class="form-control" name="password" placeholder="Password">
-                        <span id="showPassword" class="input-group-btn">
-                <button class="btn btn-default reveal" type="button"><i class="glyphicon glyphicon-eye-open"></i></button>
-              </span>  
-                    </div>
-                    <button class="btn btn-primary btn-block login-button" type="submit"><i class="fa fa-sign-in"></i> Login</button>
-                    <div class="checkbox login-options">
-                        <label><input type="checkbox"/> Remember Me</label>
-                        <a href="#" class="login-forgot">Forgot Username/Password?</a>
-                    </div>		
-                </form>			
-            </div>
-        </div>
-    </div>
+<div data-name="login">
+
+
+
+<div class="login">
+    <h1>Log ind</h1>
+    <hr/>
+    <form method="post">
+        <input type="text" name="u" placeholder="Brugernavn" required="required" />
+        <input type="password" name="p" placeholder="Adgangskode" required="required" />
+        <button type="submit" class="btn btn-primary btn-block btn-large">Gæst</button>
+        <button type="submit" class="btn btn-primary btn-block btn-large">Log ind</button>
+    </form>
+</div>
+
+
+
+
+</div>
 </template>
-
-
-<script>
-        return {
-          // Lifecycle Hooks
-          beforeCreate() {
-            //console.log('componentBeforeCreate', this)
-          },
-          created() {
-            //console.log('componentCreated', this)
-          },
-          beforeMount() {
-            //console.log('componentBeforeMount', this)
-          },
-          mounted() {
-            //console.log('componentMounted', this);
-          },
-          beforeDestroy() {
-            //console.log('componentBeforeDestroy', this);
-          },
-          destroyed() {
-            //console.log('componentDestroyed', this);
-          },
-          // Component Data
-          data: function () {
-            // Must return an object
-            return {
-              options: { frequency: 500 }, // Update interval
-              gyro_enabled: false,
-            }
-          },
-          // Component Methods
-          methods: {
-          },
-          // Page Events
-          on: {
-            pageMounted: function (e, page) {
-              //console.log('pageMounted', page);
-            },
-            pageInit: function (e, page) {
-              //console.log('pageInit', page);
-            },
-            pageBeforeIn: function (e, page) {
-              //console.log('pageBeforeIn', page);
-            },
-            pageAfterIn: function (e, page) {
-              //console.log('pageAfterIn', page);
-            },
-            pageBeforeOut: function (e, page) {
-              //console.log('pageBeforeOut', page);
-            },
-            pageAfterOut: function (e, page) {
-              //console.log('pageAfterOut', page);
-            },
-            pageBeforeRemove: function (e, page) {
-              //console.log('pageBeforeRemove', page);
-            },
-          }
-        }
-      
-      
-      
-      </script>
