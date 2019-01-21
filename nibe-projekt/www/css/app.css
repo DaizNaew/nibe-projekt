@@ -54,3 +54,27 @@ ul li a:hover{
   .navbar.adminnav .navbar-nav > li:last-child {
     border-right: 1px solid black;
   }
+
+.login-form{
+  width:390px;
+}
+
+.login-title{
+  font-family: 'Exo', sans-serif;text-align:center;color: white;
+}
+
+.login-userinput{
+  margin-bottom: 10px;
+}
+
+.login-button{
+  margin-top:10px;
+}
+
+.login-options{
+  margin-bottom:0px;
+}
+
+.login-forgot{
+  float: right;
+}
