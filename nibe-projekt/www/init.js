@@ -8,10 +8,11 @@ requirejs.config({
     baseUrl: 'modules',
     paths: {
         app: '../js',
-        framework7: '../framework7'
+        framework7: '../framework7',
+        mysql: '../mysql'
     }
 });
 
 // Start loading the main app file. Put all of
 // your application logic in there.
-requirejs(['js/app.js']);
+requirejs(['js/bundle.js']);
