@@ -36,3 +36,21 @@ ul li a:hover{
 .active a {
   color:white !important;
 }
+
+#adminnavbarwrapper{
+  width: 100%;
+  text-align: center;
+  }
+    
+  .adminnav{ 
+    width: 80%;
+    display: inline-block;
+  }
+  
+  .navbar.adminnav .navbar-nav > li:first-child {
+    border-left: 1px solid black;
+  }
+  
+  .navbar.adminnav .navbar-nav > li:last-child {
+    border-right: 1px solid black;
+  }
