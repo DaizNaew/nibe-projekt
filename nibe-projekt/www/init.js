@@ -7,7 +7,8 @@
 requirejs.config({
     baseUrl: 'modules',
     paths: {
-        app: '../js'
+        app: '../js',
+        framework7: '../framework7'
     }
 });
 

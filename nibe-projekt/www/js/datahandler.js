@@ -11,7 +11,7 @@ define(dataModules = () => {
     return {
         dbConn:function(){
             return conn.connect((err) => {
-                if (err) throw err;
+                if (err) console.log(err);
                 console.log("Connected!");
             })
         } 
