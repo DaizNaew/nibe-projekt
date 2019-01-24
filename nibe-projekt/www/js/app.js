@@ -31,6 +31,11 @@ var app  = new Framework7({
         console.log('init');
       } else {
         console.log('altså nej');
+        if(page.route.path == "/login/"){
+          return
+        }else{
+         //app.views.main.router.navigate("/login/");
+        }
       }
     },
   },
