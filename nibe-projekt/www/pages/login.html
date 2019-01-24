@@ -11,10 +11,10 @@
         <input id="password" type="password" name="p" placeholder="Adgangskode" required="required" />
         <ul class="button-content">
             <li>
-                <a><button class="btn btn-primary btn-block no-ripple">Gæst</button></a>
+                <a><button @click="guestLogin" class="btn btn-primary btn-block no-ripple">Gæst</button></a>
             </li>
             <li>
-                <a><button onclick="userLogin()" class="btn btn-primary btn-block no-ripple">Log ind</button></a>
+                <a><button @click="userLogin" class="btn btn-primary btn-block no-ripple">Log ind</button></a>
             </li>
         </ul>
     </form>
@@ -25,3 +25,29 @@
 
 </div>
 </template>
+
+<script>
+    return {
+    // Component Methods
+        methods: {
+            userLogin: function () {
+                let username = document.getElementById('username').value;
+                let password = document.getElementById('password').value;
+                
+
+                axios({
+                    method: 'get',
+                    url: `http://10.11.4.136/cordova/functions/verifyLogin.php?uname=${username}&pword=${password}`,
+                    responseType: 'json'
+                }).then((response) =>{
+                    console.log(response)
+                }).catch((e)=>{
+                    console.log(e);
+                });
+            },
+            guestLogin: function () {
+                console.log("GUEST");
+            },
+        },
+    }
+</script>
