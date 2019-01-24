@@ -11,7 +11,7 @@ var app  = new Framework7({
   data: function () {
       
     return {
-      
+      user:false,
     };
   },
   // App root methods
@@ -22,10 +22,21 @@ var app  = new Framework7({
   },
   // App routes
   routes: routes,
+
+  on: {
+    pageInit: function(page) {
+      console.log(page.route.path);
+      console.log(app.data['user']);
+      if(app.data['user']) { 
+        console.log('init');
+      } else {
+        console.log('altså nej');
+      }
+    },
+  },
 });
 
 // Init/Create views
 var homeView = app.views.create('#view-home', {
   url: '/'
 });
-
