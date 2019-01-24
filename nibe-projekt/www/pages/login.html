@@ -6,6 +6,11 @@
 <div class="login">
     <h1>Log ind</h1>
     <hr/>
+
+    <div id="errorcenter" style="display: none">
+        <div id="errorbox" class="alert alert-danger"></div>
+    </div>
+
     <form>
         <input id="username" type="text" name="u" placeholder="Brugernavn" required="required" />
         <input id="password" type="password" name="p" placeholder="Adgangskode" required="required" />
@@ -40,9 +45,17 @@
                     url: `http://10.11.4.136/cordova/functions/verifyLogin.php?uname=${username}&pword=${password}`,
                     responseType: 'json'
                 }).then((response) =>{
-                    console.log(response)
-                }).catch((e)=>{
-                    console.log(e);
+                    userID = response.data.user[0].ID;
+                    userGruppe = response.data.user[0].usergruppe;
+                    if(userID == -1){
+                        document.getElementById('errorcenter').style.display = "block";
+                        document.getElementById('errorbox').innerHTML = "Bruger ikke fundet."
+                    }else if(userID == -2){
+                        document.getElementById('errorcenter').style.display = "block";
+                        document.getElementById('errorbox').innerHTML = "Adgangskoden er forkert."
+                    }else{
+                        console.log("Ja tak");
+                    }
                 });
             },
             guestLogin: function () {

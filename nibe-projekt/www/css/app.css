@@ -179,3 +179,11 @@ nav {
 .btn-primary:active{
   color: #0062cc !important;
 }
+#errorcenter{
+  margin-bottom: 1rem;
+  text-align: center;
+}
+#errorcenter > div{
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
