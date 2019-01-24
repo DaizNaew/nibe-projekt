@@ -19,6 +19,12 @@ var app  = new Framework7({
     helloWorld: function () {
       app.dialog.alert('Hello World!');
     },
+    userLogin: function () {
+      console.log("i ran");
+      let username = document.getElementById('username').value;
+      let password = document.getElementById('password').value;
+      app.dialog.alert(username + " - " + password);
+    },
   },
   // App routes
   routes: routes,

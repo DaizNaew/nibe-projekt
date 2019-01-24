@@ -6,15 +6,15 @@
 <div class="login">
     <h1>Log ind</h1>
     <hr/>
-    <form method="post">
-        <input type="text" name="u" placeholder="Brugernavn" required="required" />
-        <input type="password" name="p" placeholder="Adgangskode" required="required" />
+    <form>
+        <input id="username" type="text" name="u" placeholder="Brugernavn" required="required" />
+        <input id="password" type="password" name="p" placeholder="Adgangskode" required="required" />
         <ul class="button-content">
             <li>
                 <a><button class="btn btn-primary btn-block no-ripple">Gæst</button></a>
             </li>
             <li>
-                <button type="submit" class="btn btn-primary btn-block no-ripple">Log ind</button>
+                <a><button onclick="userLogin()" class="btn btn-primary btn-block no-ripple">Log ind</button></a>
             </li>
         </ul>
     </form>
