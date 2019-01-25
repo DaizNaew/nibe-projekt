@@ -29,6 +29,11 @@ routes = [
     path: '/udlon/',
     componentUrl: './pages/udlon.html',
   },
+  {
+    name: 'navbar',
+    path: '/navbar/',
+    componentUrl: './pages/navbar.html',
+  },
   // Page Loaders & Router
   {
     path: '/page-loader-template7/:user/:userId/:posts/:postId/',
