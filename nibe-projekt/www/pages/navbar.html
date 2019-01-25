@@ -1,0 +1,76 @@
+<template>
+    <div class="page" data-name="navbar">
+
+<div id="navbarwrapper" style="display: none"> 
+    <nav class="navbar navbar-expand-sm bg-info navbar-dark">
+        <ul class="navbar-nav">
+          <li class="nav-item active">
+            <a class="nav-link showudlåner" href="/udlon/" data-view=".view-main" data-reload-current="true">Udlån</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" data-view=".view-main" data-reload-current="true">Aflevering</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" data-view=".view-main" data-reload-current="true">Reserver</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Oversigt</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Reservationer</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Historik</a>
+          </li>
+          <li class="nav-item adminbutton">
+            <a class="nav-link" href="#">Administrator</a>
+          </li>
+          <li class="nav-item">
+              <span class="nameLogout">{{$app.data['rigtignavn']}}</span>
+            <a class="nav-link nameLogout" @click="Logout" href="/login/" data-view=".view-main" data-reload-current="true">Log af</a>
+          </li>
+        </ul>
+    </nav>
+</div>
+      
+<div id="adminnavbarwrapper" style="display: none"> 
+    <nav class="navbar navbar-expand-sm bg-info navbar-dark adminnav">
+        <ul class="navbar-nav">
+          <li class="nav-item active adminnavli">
+            <a class="nav-link" href="#">Opret låner</a>
+          </li>
+          <li class="nav-item adminnavli">
+            <a class="nav-link" href="#">Opret værktøj</a>
+          </li>
+          <li class="nav-item adminnavli">
+            <a class="nav-link" href="#">Opret certifikat/kørekort</a>
+          </li>
+          <li class="nav-item adminnavli">
+            <a class="nav-link" href="#">Opret værktøjs kategori</a>
+          </li>
+          <li class="nav-item adminnavli">
+            <a class="nav-link" href="#">Udlåns oversigt</a>
+          </li>
+          <li class="nav-item adminnavli">
+            <a class="nav-link" href="#">Log</a>
+          </li>
+        </ul>
+    </nav>
+</div>
+</div>
+
+</template>
+
+
+<script>
+        return {
+        // Component Methods
+            methods: {
+                Logout: function () {
+                    console.log("LOGOUT");
+                    app.data['user'] = false;
+                    app.methods.refreshNavbar();
+                },
+            },
+        }
+    </script>

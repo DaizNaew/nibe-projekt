@@ -25,71 +25,21 @@
   <link rel="stylesheet" href="css/app.css">
 </head>
 <body>
+
+
     <div id="app">
-        <div id="navbarwrapper"> 
-            <nav class="navbar navbar-expand-sm bg-info navbar-dark">
-                <ul class="navbar-nav">
-                  <li class="nav-item active">
-                    <a class="nav-link" href="/udlon/" data-force="true" data-view=".view-main" data-ignore-cache="true" data-reload-current="true">Udlån</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="/login/" data-force="true" data-view=".view-main" data-ignore-cache="true" data-reload-current="true">Aflevering</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="/about/" data-force="true" data-view=".view-main" data-ignore-cache="true" data-reload-current="true">Reserver</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="#">Oversigt</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="#">Reservationer</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="#">Historik</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="#">Administrator</a>
-                  </li>
-                </ul>
-              </nav>
+
+      <div id="view-navbar" class="view view-navbar"></div>
+
+      <div id="view-home" class="view view-main tab tab-active">
+      <!-- Page, data-name contains page name which can be used in page callbacks -->
+        <div class="page" data-name="home">
+          <!-- Scrollable page content-->
+          <div class="page-content">
           </div>
-              
-            <div id="adminnavbarwrapper"> 
-            <nav class="navbar navbar-expand-sm bg-info navbar-dark adminnav">
-                <ul class="navbar-nav">
-                  <li class="nav-item active adminnavli">
-                    <a class="nav-link" href="#">Opret låner</a>
-                  </li>
-                  <li class="nav-item adminnavli">
-                    <a class="nav-link" href="#">Opret værktøj</a>
-                  </li>
-                  <li class="nav-item adminnavli">
-                    <a class="nav-link" href="#">Opret certifikat/kørekort</a>
-                  </li>
-                  <li class="nav-item adminnavli">
-                    <a class="nav-link" href="#">Opret værktøjs kategori</a>
-                  </li>
-                  <li class="nav-item adminnavli">
-                    <a class="nav-link" href="#">Udlåns oversigt</a>
-                  </li>
-                  <li class="nav-item adminnavli">
-                    <a class="nav-link" href="#">Log</a>
-                  </li>
-                </ul>
-              </nav>
-              </div>
-
-
-          <div id="view-home" class="view view-main tab tab-active">
-            <!-- Page, data-name contains page name which can be used in page callbacks -->
-            <div class="page" data-name="home">
-                    <!-- Scrollable page content-->
-            <div class="page-content">
-              
-            </div>
-            </div>
         </div>
       </div>
+    </div>
 
 
 
