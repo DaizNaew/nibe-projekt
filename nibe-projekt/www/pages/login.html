@@ -6,8 +6,6 @@
 <div class="login">
     <h1>Log ind</h1>
     <hr/>
-    <li><b>$route.url</b>: {{$route.url}}</li>
-
     <div id="errorcenter" style="display: none">
         <div id="errorbox" class="alert alert-danger"></div>
     </div>
@@ -47,6 +45,7 @@
                 }).then((response) =>{
                     userID = response.data.user[0].ID;
                     userGruppe = response.data.user[0].usergruppe;
+                    rigtignavn = response.data.user[0].name;
                     if(userID == -1){
                         document.getElementById('errorcenter').style.display = "block";
                         document.getElementById('errorbox').innerHTML = "Bruger ikke fundet."
@@ -55,6 +54,10 @@
                         document.getElementById('errorbox').innerHTML = "Adgangskoden er forkert."
                     }else{
                         console.log("Ja tak");
+                        app.data['user'] = true;
+                        app.data['username'] = username;
+                        app.data['rigtignavn'] = rigtignavn;
+                        app.methods.refreshNavbar();
                     }
                 });
             },

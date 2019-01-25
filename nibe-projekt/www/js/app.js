@@ -12,31 +12,60 @@ var app  = new Framework7({
       
     return {
       user:false,
+      username: "",
+      usergruppe: "",
+      userID: -1,
+      rigtignavn: "",
     };
   },
   // App root methods
   methods: {
-    helloWorld: function () {
-      app.dialog.alert('Hello World!');
+    LoginCheck: function (page) {
+      if(app.data['user'] == true) {
+        console.log('logged in');
+      } else {
+        //console.log('altså nej');
+        if(page.route.path == "/login/"){
+          return
+        }else{
+          app.views.main.router.navigate("/login/", {reloadCurrent: true,});
+        }
+      }
     },
+    refreshNavbar: function (){
+      if(app.data['user'] == true) {
+        let getNavView = app.views.get("#view-navbar");
+        getNavView.router.refreshPage();
+        document.getElementById('navbarwrapper').style.display = "block";
+      }else{
+        document.getElementById('navbarwrapper').style.display = "none";
+      }
+    },
+    populateNavbar: function (){
+
+      if(app.data['usergruppe'] == 4){ //admin
+        
+        app.views.main.router.navigate("/udlon/", {reloadCurrent: true,});
+      }
+      else if(app.data['usergruppe'] == 3){ //udlåner
+
+        app.views.main.router.navigate("/udlon/", {reloadCurrent: true,});
+      }else{ //guest
+        app.views.main.router.navigate("/udlon/", {reloadCurrent: true,});
+      }
+    },
+
   },
   // App routes
   routes: routes,
 
   on: {
-    pageInit: function(page) {
-      console.log(page.route.path);
-      console.log(app.data['user']);
-      if(app.data['user']) { 
-        console.log('init');
-      } else {
-        console.log('altså nej');
-        if(page.route.path == "/login/"){
-          return
-        }else{
-         //app.views.main.router.navigate("/login/");
-        }
-      }
+    pageInit: function(page){
+      app.methods.LoginCheck(page);
+    },
+    pageBeforeIn: function(page) {
+      app.methods.LoginCheck(page);
+
     },
   },
 });
@@ -44,4 +73,7 @@ var app  = new Framework7({
 // Init/Create views
 var homeView = app.views.create('#view-home', {
   url: '/'
+});
+var navbarView = app.views.create('#view-navbar', {
+  url: '/navbar/'
 });
