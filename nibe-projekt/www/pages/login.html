@@ -1,11 +1,12 @@
 <template>
-<div data-name="login">
+<div class="page" data-name="login">
 
 
 
 <div class="login">
     <h1>Log ind</h1>
     <hr/>
+    <li><b>$route.url</b>: {{$route.url}}</li>
 
     <div id="errorcenter" style="display: none">
         <div id="errorbox" class="alert alert-danger"></div>
@@ -25,11 +26,10 @@
     </form>
 </div>
 
-
+</template>
 
 
 </div>
-</template>
 
 <script>
     return {
