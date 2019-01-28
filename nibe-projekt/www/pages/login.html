@@ -8,7 +8,7 @@
         </div>
 
         <form>
-            <input id="username" type="text" name="u" placeholder="Brugernavn" required="required" />
+            <input id="username" type="text" name="u" placeholder="Brugernavn" required="required" autofocus/>
             <input id="password" type="password" name="p" placeholder="Adgangskode" required="required" />
             <ul class="button-content">
                 <li>
@@ -68,5 +68,10 @@
                 app.methods.populateNavbar();
             },
         },
+        on: {
+            pageAfterIn: function(e, page) {
+                document.getElementById("username").focus(); 
+            },
+        }
     }
 </script>
