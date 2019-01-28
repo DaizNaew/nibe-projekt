@@ -36,7 +36,6 @@ nav {
 }
 
 .navbar .navbar-nav  > li{ 
-  display: table-cell;
   width: 100%;
   text-align: center;
 }
@@ -192,6 +191,6 @@ nav {
   padding: 0px;
 }
 
-.navbarwrapper, .guesttab, .udlånertab, .admintab, .adminnavbarwrapper{
+#navbarwrapper, .guesttab, .udlånertab, .admintab, #adminnavbarwrapper{
   display: none;
 }
