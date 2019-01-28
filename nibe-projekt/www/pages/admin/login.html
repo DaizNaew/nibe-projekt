@@ -24,8 +24,9 @@
         methods: {
             setLoggedInState: function (cardID) {
                     app.data['adminIDCardNumber'] = cardID;
-                    app.data['adminConfirmedBool'] != app.data['adminConfirmedBool'];
-                    app.views.main.router.navigate("/about/", {reloadCurrent: true,});
+                    app.data['adminConfirmedBool'] = true;
+                    app.methods.showAdminNavbar();
+                    app.views.main.router.navigate("/usercreate/", {reloadCurrent: true,});
             },
             userVerify: function () {
                 let cardID = document.getElementById('cardID').value;
