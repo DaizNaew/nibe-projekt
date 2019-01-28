@@ -16,6 +16,8 @@ var app  = new Framework7({
       usergruppe: "",
       userID: -1,
       rigtignavn: "",
+      adminIDCardNumber: 0,
+      adminConfirmedBool: false,
     };
   },
   // App root methods
