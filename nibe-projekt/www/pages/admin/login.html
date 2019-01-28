@@ -9,7 +9,7 @@
         </div>
         <p>Scan dit kort for at logge ind</p>
         <form>
-            <input id="cardID" type="text" name="u" placeholder="Kort ID" required="required" />
+            <input id="cardID" type="text" name="u" placeholder="Kort ID" required="required" autofocus/>
             <div class="button-wrapper">
                 <a><button @click="userVerify" class="btn btn-primary btn-block no-ripple">Godkend</button></a>
             </div>
@@ -23,24 +23,32 @@
     // Component Methods
         methods: {
             setLoggedInState: function (cardID) {
-                if(true) {
                     app.data['adminIDCardNumber'] = cardID;
                     app.data['adminConfirmedBool'] != app.data['adminConfirmedBool'];
-                }
+                    app.views.main.router.navigate("/about/", {reloadCurrent: true,});
             },
             userVerify: function () {
                 let cardID = document.getElementById('cardID').value;
+                let brugernavn = app.data['username'];
 
                 axios({
                     method: 'get',
-                    url: `http://10.11.4.136/cordova/endpoint/user.php?brugernavn=${username}`,
+                    url: `http://10.11.4.136/cordova/endpoint/user.php?brugernavn=${brugernavn}`,
                     responseType: 'json'
                 }).then((response) =>{
-                    if(response.data.user[0].cardID = cardID) {
-                        setLoggedInState(cardID);
+                    if(response.data.records[0].cardID == cardID) {
+                        this.setLoggedInState(cardID);
+                    } else {
+                        document.getElementById('errorcenter').style.display = "block";
+                        document.getElementById('errorbox').innerHTML = "Forkert kort ID til denne bruger"
                     }
                 });
             },
         },
+        on: {
+            pageAfterIn: function(e, page) {
+                document.getElementById("cardID").focus(); 
+            },
+        }
     }
 </script>
