@@ -4,26 +4,26 @@
 <div id="navbarwrapper"> 
     <nav class="navbar navbar-expand-sm bg-info navbar-dark">
         <ul class="navbar-nav">
-          <li class="nav-item active">
-            <a class="nav-link udlånertab" href="/udlon/" data-view=".view-main" data-reload-current="true">Udlån</a>
+          <li class="nav-item active udlånertab">
+            <a class="nav-link" href="/udlon/" data-view=".view-main" data-reload-current="true">Udlån</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link udlånertab" href="#" data-view=".view-main" data-reload-current="true">Aflevering</a>
+          <li class="nav-item udlånertab">
+            <a class="nav-link" href="#" data-view=".view-main" data-reload-current="true">Aflevering</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link udlånertab" href="#" data-view=".view-main" data-reload-current="true">Reserver</a>
+          <li class="nav-item udlånertab">
+            <a class="nav-link" href="#" data-view=".view-main" data-reload-current="true">Reserver</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link guesttab" href="#">Oversigt</a>
+          <li class="nav-item guesttab">
+            <a class="nav-link" href="#">Oversigt</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link udlånertab" href="#">Reservationer</a>
+          <li class="nav-item udlånertab">
+            <a class="nav-link" href="#">Reservationer</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link udlånertab" href="#">Historik</a>
+          <li class="nav-item udlånertab">
+            <a class="nav-link" href="#">Historik</a>
           </li>
-          <li class="nav-item adminbutton">
-            <a class="nav-link admintab" href="#">Administrator</a>
+          <li class="nav-item adminbutton admintab">
+            <a class="nav-link" href="#">Administrator</a>
           </li>
           <li class="nav-item">
               <span class="nameLogout">{{$app.data['rigtignavn']}}</span>
@@ -67,7 +67,6 @@
         // Component Methods
             methods: {
                 Logout: function () {
-                    console.log("LOGOUT");
                     app.data['user'] = false;
                     app.methods.refreshNavbar();
                 },
