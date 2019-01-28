@@ -1,0 +1,26 @@
+<?php
+class Database{
+ 
+    // specify your own database credentials
+    private $host="10.11.4.136";
+	private $db_name="nibe-projekt";
+    private $username="nibe";
+    private $password="Masterfatman1337";
+    public $conn;
+ 
+    // get the database connection
+    public function getConnection(){
+ 
+        $this->conn = null;
+ 
+        try{
+            $this->conn = new PDO("mysql:host=" . $this->host . ";dbname=" . $this->db_name, $this->username, $this->password);
+            $this->conn->exec("set names utf8");
+        }catch(PDOException $exception){
+            echo "Connection error: " . $exception->getMessage();
+        }
+ 
+        return $this->conn;
+    }
+}
+?>
