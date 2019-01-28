@@ -191,3 +191,7 @@ nav {
   margin: 0px;
   padding: 0px;
 }
+
+.navbarwrapper, .guesttab, .udlånertab, .admintab, .adminnavbarwrapper{
+  display: none;
+}
