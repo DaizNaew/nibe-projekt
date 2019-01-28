@@ -208,3 +208,12 @@ nav {
 .login.Admin .button-wrapper .btn {
   width:50%;
 }
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 10px;
+}
+#item1>div, #item1>input{
+display: inline-block;
+}
