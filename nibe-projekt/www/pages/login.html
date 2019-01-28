@@ -43,8 +43,8 @@
                     url: `http://10.11.4.136/cordova/functions/verifyLogin.php?uname=${username}&pword=${password}`,
                     responseType: 'json'
                 }).then((response) =>{
-                    userID = response.data.user[0].ID;
-                    userGruppe = response.data.user[0].usergruppe;
+                    userID = parseInt(response.data.user[0].ID);
+                    userGruppe = parseInt(response.data.user[0].usergruppe);
                     rigtignavn = response.data.user[0].name;
                     if(userID == -1){
                         document.getElementById('errorcenter').style.display = "block";
@@ -53,16 +53,22 @@
                         document.getElementById('errorcenter').style.display = "block";
                         document.getElementById('errorbox').innerHTML = "Adgangskoden er forkert."
                     }else{
-                        console.log("Ja tak");
                         app.data['user'] = true;
                         app.data['username'] = username;
                         app.data['rigtignavn'] = rigtignavn;
+                        app.data['usergruppe'] = userGruppe;
                         app.methods.refreshNavbar();
+                        app.methods.populateNavbar();
                     }
                 });
             },
             guestLogin: function () {
-                console.log("GUEST");
+                app.data['user'] = true;
+                app.data['username'] = "Gæst";
+                app.data['rigtignavn'] = "Gæst";
+                app.data['usergruppe'] = 1;
+                app.methods.refreshNavbar();
+                app.methods.populateNavbar();
             },
         },
     }
