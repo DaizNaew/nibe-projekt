@@ -39,6 +39,11 @@ routes = [
     path: '/navbar/',
     componentUrl: './pages/navbar.html',
   },
+  {
+    name: 'toolkat',
+    path: '/toolkat/',
+    componentUrl: './pages/admin/toolkat.html',
+  },
   // Page Loaders & Router
   {
     path: '/page-loader-template7/:user/:userId/:posts/:postId/',
