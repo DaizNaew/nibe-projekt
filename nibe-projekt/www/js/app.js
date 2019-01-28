@@ -24,9 +24,7 @@ var app  = new Framework7({
   methods: {
     LoginCheck: function (page) {
       if(app.data['user'] == true) {
-        console.log('logged in');
       } else {
-        //console.log('altså nej');
         if(page.route.path == "/login/"){
           return
         }else{
@@ -35,25 +33,63 @@ var app  = new Framework7({
       }
     },
     refreshNavbar: function (){
+      let adminclass = document.getElementsByClassName("admintab");
+      let udlånerclass = document.getElementsByClassName("udlånertab");
+      let guessclass = document.getElementsByClassName("guesttab");
       if(app.data['user'] == true) {
         let getNavView = app.views.get("#view-navbar");
         getNavView.router.refreshPage();
         document.getElementById('navbarwrapper').style.display = "block";
       }else{
+
+        for(let element of adminclass) {
+          element.style.display = "none";
+        }
+        for(let element of udlånerclass) {
+          element.style.display = "none";
+        }
+        for(let element of guessclass) {
+          element.style.display = "none";
+        }
         document.getElementById('navbarwrapper').style.display = "none";
       }
     },
     populateNavbar: function (){
+      let adminclass = document.getElementsByClassName("admintab");
+      let udlånerclass = document.getElementsByClassName("udlånertab");
+      let guessclass = document.getElementsByClassName("guesttab");
 
       if(app.data['usergruppe'] == 4){ //admin
-        
+
+        for(let element of adminclass) {
+          element.style.display = "block";
+        }
+        for(let element of udlånerclass) {
+          element.style.display = "block";
+        }
+        for(let element of guessclass) {
+          element.style.display = "block";
+        }
+
         app.views.main.router.navigate("/udlon/", {reloadCurrent: true,});
       }
       else if(app.data['usergruppe'] == 3){ //udlåner
 
+
+        for(let element of udlånerclass) {
+          element.style.display = "block";
+        }
+        for(let element of guessclass) {
+          element.style.display = "block";
+        }
+
         app.views.main.router.navigate("/udlon/", {reloadCurrent: true,});
       }else{ //guest
-        app.views.main.router.navigate("/udlon/", {reloadCurrent: true,});
+
+        for(let element of guessclass) {
+          element.style.display = "block";
+        }
+        app.views.main.router.navigate("/oversigt/", {reloadCurrent: true,});
       }
     },
 
