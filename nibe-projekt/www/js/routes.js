@@ -25,6 +25,11 @@ routes = [
     componentUrl: './pages/login.html',
   },
   {
+    name: 'adminLogin',
+    path: '/admin/login',
+    componentUrl: './pages/admin/login.html'
+  },
+  {
     name: 'udlon',
     path: '/udlon/',
     componentUrl: './pages/udlon.html',
