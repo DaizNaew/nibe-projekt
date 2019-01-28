@@ -12,10 +12,10 @@
             <input id="password" type="password" name="p" placeholder="Adgangskode" required="required" />
             <ul class="button-content">
                 <li>
-                    <a><button @click="guestLogin" class="btn btn-primary btn-block no-ripple">Gæst</button></a>
+                    <a><button type="button" @click="guestLogin" class="btn btn-primary btn-block no-ripple">Gæst</button></a>
                 </li>
                 <li>
-                    <a><button @click="userLogin" class="btn btn-primary btn-block no-ripple">Log ind</button></a>
+                    <a><button type="submit" @click="userLogin" class="btn btn-primary btn-block no-ripple">Log ind</button></a>
                 </li>
             </ul>
         </form>
