@@ -54,6 +54,11 @@ var app  = new Framework7({
         document.getElementById('navbarwrapper').style.display = "none";
       }
     },
+    showAdminNavbar: function (){
+      if(app.data['adminConfirmedBool'] == true) {
+        document.getElementById('adminnavbarwrapper').style.display = "block";
+      }
+    },
     populateNavbar: function (){
       let adminclass = document.getElementsByClassName("admintab");
       let udlånerclass = document.getElementsByClassName("udlånertab");
