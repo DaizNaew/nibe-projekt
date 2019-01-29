@@ -1,6 +1,6 @@
 /* Your app styles here */
 
-html {
+html, body, #app{
   width: 100%; 
   height:100%; 
   overflow:hidden; 
@@ -22,6 +22,29 @@ body {
 }
 .ios .tabbar-labels .tab-link.tab-link-active .icon:not(.icon-ios-fill) {
   display: none;
+}
+
+#view-home{
+  position: inherit;
+  bottom: 0px;
+}
+
+#view-home{
+  left:0px;
+  right:0px;
+  bottom: 0px;
+  position: absolute;
+}
+
+#currentpage, #gridwrapper, .grid{
+  position: inherit;
+  left: inherit;
+  right: inherit;
+  bottom: inherit;
+  top: inherit;
+}
+#currentpage{
+  top:0px;
 }
 
 nav { 
@@ -114,7 +137,7 @@ nav {
   box-shadow: inset 0 -5px 45px rgba(197, 197, 197, 0.4), 0 1px 1px rgba(255, 255, 255, 0.2);
 }
 
-.login .btn {
+.login .btn, .godbtn {
   display: inline-block;
   *display: inline;
   *zoom: 1;
@@ -146,13 +169,13 @@ nav {
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
-.login .btn-primary, .login .btn-primary:hover {
+.login .btn-primary, .login .btn-primary:hover, .godbtn {
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
   color: black;
   border: 1.5px solid #0062cc;
 }
 
-.login .btn-primary {
+.login .btn-primary, .godbtn {
   border: 1px solid black;
   text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.4);
   padding: 9px 14px;
@@ -213,7 +236,10 @@ nav {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-gap: 10px;
+  bottom: 5%;
+
 }
-#item1>div, #item1>input{
-display: inline-block;
+#item1{
+  text-align: center;
+  border-right:1px solid black;
 }
