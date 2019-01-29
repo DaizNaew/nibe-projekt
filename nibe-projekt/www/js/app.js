@@ -18,6 +18,7 @@ var app  = new Framework7({
       rigtignavn: "",
       adminIDCardNumber: 0,
       adminConfirmedBool: false,
+      navbarheight: 0,
     };
   },
   // App root methods
@@ -105,10 +106,11 @@ var app  = new Framework7({
   on: {
     pageInit: function(page){
       app.methods.LoginCheck(page);
+      app.data['navbarheight'] = $$('#view-navbar')[0].clientHeight;
+      document.getElementById('view-home').style.top = app.data['navbarheight']+"px";
     },
     pageBeforeIn: function(page) {
       app.methods.LoginCheck(page);
-
     },
   },
 });
