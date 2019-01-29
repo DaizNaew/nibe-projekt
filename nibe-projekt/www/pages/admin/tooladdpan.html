@@ -2,14 +2,80 @@
     <div class="page" data-name="tooladdpan">
         <div id="gridwrapper">
             <div class="grid">
-                <div><!--Item 1-->
-                    <div id="item1">
-                    <div>Navn:</div>
-                    <input id="navninput" type="text" required="required"/>
+                <div style="padding: 10px" id="item1"><!--Item 1-->
+                    <div>
+                        <form>
+                            <div class="form-row">
+                                <label for="aktivNavn" class="col">Værktøjs Navn</label>
+                                <input id="aktivNavn" type="text" required="required" class="form-control form-control-sm col"/>
+                            </div>
+                            <div class="form-row">
+                                <label for="Mærke" class="col">Mærke</label>
+                                <input id="Mærke" type="text" class="form-control form-control-sm col"/>
+                            </div>
+                            <div class="form-row">
+                                <label for="Model" class="col">Model</label>
+                                <input id="Model" type="text" class="form-control form-control-sm col"/>
+                            </div>
+                            <div class="form-row">
+                                <label for="Serienummer" class="col">Serienummer</label>
+                                <input id="Serienummer" type="text" required="required" class="form-control form-control-sm col"/>
+                            </div>
+                            <div class="form-row">
+                                <label for="AssetTag" class="col">Asset Tag</label>
+                                <input id="AssetTag" type="text" required="required" class="form-control form-control-sm col"/>
+                            </div>
+                            <div class="form-row">
+                                <label for="Antal" class="col">Antal</label>
+                                <input id="Antal" type="number" class="form-control form-control-sm col"/>
+                            </div>
+                            <div class="form-row">
+                                <label for="Stand" class="col">Værktøjets stand</label>
+                                <input id="Stand" type="text" required="required" class="form-control form-control-sm col"/>
+                            </div>
+                            <div class="form-row">
+                                <label for="Kategori" class="col">Kategori</label>
+                                <select id="Kategori" required="required" class="form-control form-control-sm col">
+
+                                </select>
+                            </div>
+                            <div class="form-row form-button-row">
+                                <button type="submit" class="no-ripple col btn btn-primary godbtn">Opret Værktøj</button>
+                                <button type="submit" class="no-ripple col btn btn-primary godbtn">Opdater Værktøj</button>
+                                <button type="button" @click="resetfields" class="no-ripple col btn btn-primary godbtn">Nulstil felter</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
-                <div><!--Item 2-->
-                    b
+                <div style="padding: 10px"><!--Item 2-->
+                    <div>
+                        <table class="table" style="width:auto; background-color: #9eafc033">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th class="checkbox-cell" scope="col">
+                                        <!--<input type="checkbox" class="no-ripple"/>-->
+                                        <i class="icon-checkbox"></i>
+                                    </th>
+                                    <th class="label-cell" scope="col">Desert (100g serving)</th>
+                                    <th class="numeric-cell" scope="col">Calories</th>
+                                    <th class="numeric-cell" scope="col">Protein (g)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th scope="row">1</th>
+                                    <td class="checkbox-cell">
+                                      <input type="checkbox" class="no-ripple"/>
+                                      <i class="icon-checkbox"></i>
+                                    </td>
+                                    <td class="label-cell">Frozen yogurt</td>
+                                    <td class="numeric-cell">159</td>
+                                    <td class="numeric-cell">4.0</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                          </div>
                 </div>
             </div>
         
@@ -21,7 +87,9 @@
         return {
         // Component Methods
             methods: {
-                
+                resetfields: function() {
+                    app.dialog.show('NEJ!');
+                }
             },
         // Component States
             on: {
