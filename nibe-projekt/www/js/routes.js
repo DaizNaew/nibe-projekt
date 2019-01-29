@@ -44,6 +44,11 @@ routes = [
     path: '/toolkat/',
     componentUrl: './pages/admin/toolkat.html',
   },
+  {
+    name: 'oversigt',
+    path: '/oversigt/',
+    componentUrl: './pages/oversigt.html',
+  },
   // Page Loaders & Router
   {
     path: '/page-loader-template7/:user/:userId/:posts/:postId/',
