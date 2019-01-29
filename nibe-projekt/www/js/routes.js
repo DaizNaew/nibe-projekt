@@ -45,6 +45,11 @@ routes = [
     componentUrl: './pages/admin/toolkat.html',
   },
   {
+    name: 'tooladdpan',
+    path: '/tooladdpan/',
+    componentUrl: './pages/admin/tooladdpan.html',
+  },
+  {
     name: 'oversigt',
     path: '/oversigt/',
     componentUrl: './pages/oversigt.html',
