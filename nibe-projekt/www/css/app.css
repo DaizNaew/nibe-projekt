@@ -261,8 +261,9 @@ nav {
 }
 
 .godbtn{
-  width: 175px;
+  max-width: 175px;
   height: 55px;
+
 }
 
 .btnrow3{
