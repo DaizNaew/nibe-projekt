@@ -45,6 +45,26 @@ routes = [
     componentUrl: './pages/admin/toolkat.html',
   },
   {
+    name: 'aflervering',
+    path: '/aflervering/',
+    componentUrl: './pages/aflervering.html',
+  },
+  {
+    name: 'historik',
+    path: '/historik/',
+    componentUrl: './pages/historik.html',
+  },
+  {
+    name: 'reserver',
+    path: '/reserver/',
+    componentUrl: './pages/reserver.html',
+  },
+  {
+    name: 'reservationer',
+    path: '/reservationer/',
+    componentUrl: './pages/reservationer.html',
+  },
+  {
     name: 'tooladdpan',
     path: '/tooladdpan/',
     componentUrl: './pages/admin/tooladdpan.html',
