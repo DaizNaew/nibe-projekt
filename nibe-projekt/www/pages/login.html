@@ -35,14 +35,10 @@
                 let password = document.getElementById('password').value;
                 
 
-                axios({
-                    method: 'get',
-                    url: `http://10.11.4.136/cordova/functions/verifyLogin.php?uname=${username}&pword=${password}`,
-                    responseType: 'json'
-                }).then((response) =>{
-                    userID = parseInt(response.data.user[0].ID);
-                    userGruppe = parseInt(response.data.user[0].usergruppe);
-                    rigtignavn = response.data.user[0].name;
+                app.request.getJSON(`http://10.11.4.136/cordova/functions/verifyLogin.php?uname=${username}&pword=${password}`, (response) =>{
+                    userID = parseInt(response.user[0].ID);
+                    userGruppe = parseInt(response.user[0].usergruppe);
+                    rigtignavn = response.user[0].name;
                     if(userID == -1){
                         document.getElementById('errorcenter').style.display = "block";
                         document.getElementById('errorbox').innerHTML = "Bruger ikke fundet."

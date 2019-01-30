@@ -32,12 +32,8 @@
                 let cardID = document.getElementById('cardID').value;
                 let brugernavn = app.data['username'];
 
-                axios({
-                    method: 'get',
-                    url: `http://10.11.4.136/cordova/endpoint/user.php?brugernavn=${brugernavn}`,
-                    responseType: 'json'
-                }).then((response) =>{
-                    if(response.data.records[0].cardID == cardID) {
+                app.request.getJSON(`http://10.11.4.136/cordova/endpoint/user.php?brugernavn=${brugernavn}`, (response) =>{
+                    if(response.records[0].cardID == cardID) {
                         this.setLoggedInState(cardID);
                     } else {
                         document.getElementById('errorcenter').style.display = "block";
