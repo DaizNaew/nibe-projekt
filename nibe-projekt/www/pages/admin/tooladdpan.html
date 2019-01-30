@@ -112,7 +112,7 @@
                 fetchtools : () => {
                     axios({
                     method: 'get',
-                    url: `http://10.11.4.136/cordova/endpoint/equipment.php?brugernavn=-1`,
+                    url: `http://10.11.4.136/cordova/endpoint/equipment.php?id=-1`,
                     responseType: 'json'
                 }).then((response) =>{
                     console.dir(response.data);
