@@ -19,26 +19,18 @@
                 </div>
                 <div style="padding: 25px"><!--Item 2-->
                     <div>
-                        <table class="table" style="width:86%; min-width: 86%; max-width: 86%; background-color: #9eafc033">
+                        <table id="kattable" class="table" style="width:86%; min-width: 86%; max-width: 86%; background-color: #9eafc033">
                             <thead>
                                 <tr>
-                                    <th scope="col">#</th>
+                                    <th scope="col" style="width: 32px;">#</th>
+                                    <th class="label-cell" scope="col">kategorier</th>
                                     <th class="checkbox-cell" scope="col">
                                         <!--<input type="checkbox" class="no-ripple"/>-->
                                         <i class="icon-checkbox"></i>
                                     </th>
-                                    <th class="label-cell" scope="col">kategorier</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr>
-                                    <th scope="row">1</th>
-                                    <td class="checkbox-cell">
-                                      <input type="checkbox"/>
-                                      <i class="icon-checkbox"></i>
-                                    </td>
-                                    <td class="label-cell">Powertools</td>
-                                </tr>
+                            <tbody class="tableBody">
                             </tbody>
                         </table>
                         <div class="form-row form-button-row">
@@ -71,8 +63,32 @@
                 }
             },
         // Component States
-            on: {
-                
-            }
+        on: {
+                pageMounted: (page) => {
+                    let innerHTML = "";
+                    var self = this;
+                    var app = self.app;
+                    // request user data on page init
+                    app.request.getJSON('http://10.11.4.136/cordova/endpoint/category.php?id=-1', (response) => {
+                        // update component state with new state
+                        for(let i = 0; i < response.categories.length; i++) {
+                            
+                            innerHTML += 
+                            `
+                            <tr>
+                                <th scope="row" style="width: 32px;">${i+1}</th>
+                                <td class="label-cell">${response.categories[i].katNavn}</td>
+                                <td class="checkbox-cell">
+                                    <input type="checkbox" value="${response.categories[i].ID}"/>
+                                    <i class="icon-checkbox"></i>
+                                </td>
+                            </tr>
+                            `;
+                            $$('.tableBody').html(innerHTML);
+                        }
+                    });
+                    
+                }
+            },
         }
     </script>
