@@ -89,6 +89,11 @@
 
     <script>
         return {
+            data: function () {
+                return {
+
+                };
+            },
         // Component Methods
             methods: {
                 resetfields : () => {
@@ -101,12 +106,20 @@
 
                 },
                 fetchtools : () => {
-
+                    axios({
+                    method: 'get',
+                    url: `http://10.11.4.136/cordova/endpoint/equipment.php?brugernavn=-1`,
+                    responseType: 'json'
+                }).then((response) =>{
+                    console.dir(response.data);
+                });
                 }
             },
         // Component States
             on: {
-                
+                pageMounted: () => {
+                    console.dir(this);
+                }
             }
         }
     </script>
