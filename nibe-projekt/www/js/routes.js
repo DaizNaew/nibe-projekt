@@ -70,6 +70,26 @@ routes = [
     componentUrl: './pages/admin/tooladdpan.html',
   },
   {
+    name: 'createuser',
+    path: '/createuser/',
+    componentUrl: './pages/admin/createuser.html',
+  },
+  {
+    name: 'certifikat',
+    path: '/certifikat/',
+    componentUrl: './pages/admin/certifikat.html',
+  },
+  {
+    name: 'adminoversigt',
+    path: '/adminoversigt/',
+    componentUrl: './pages/admin/adminoversigt.html',
+  },
+  {
+    name: 'log',
+    path: '/log/',
+    componentUrl: './pages/admin/log.html',
+  },
+  {
     name: 'oversigt',
     path: '/oversigt/',
     componentUrl: './pages/oversigt.html',
