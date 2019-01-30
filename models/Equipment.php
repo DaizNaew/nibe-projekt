@@ -25,13 +25,12 @@ class Equipment {
 
 	// read products
 	function read($id) {
-        $query = "SELECT * FROM " . $this->table_name." INNER JOIN kategori k ON k.ID = equipment.ID";
+        $query = "SELECT *, equipment.ID AS ID FROM " . $this->table_name." INNER JOIN kategori k ON k.ID = equipment.katID";
         
-        if($id != -1) {
+        if($id != '-1') {
             // select query
             $query .= " WHERE equipment.ID = ".$id;
         }
-        print_r($query);
         // prepare query statement
         $stmt = $this->conn->prepare($query);
     
