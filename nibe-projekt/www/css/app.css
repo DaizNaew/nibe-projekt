@@ -282,3 +282,25 @@ button:disabled, button:disabled:hover {
   color: black;
   border: 1.5px solid #df048b;
 }
+
+#kattable thead tr>th{
+  margin: 0px;
+  padding: 0px;
+  padding-top: .75rem;
+  padding-bottom: .75rem;
+}
+
+#kattable tbody tr>td, #kattable tbody tr>th{
+  margin: 0px;
+  padding: 0px;
+  padding-top: .75rem;
+  padding-bottom: .75rem;
+}
+
+#kattable tbody tr>th:first-child, #kattable thead tr>th:first-child{
+  padding-left: .75rem;
+}
+
+#kattable tbody tr td>input, #kattable thead tr td>input{
+  margin-left: 10%;
+}
