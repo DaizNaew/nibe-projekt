@@ -58,25 +58,15 @@
                                         <i class="icon-checkbox"></i>
                                     </th>
                                     <th class="label-cell" scope="col">Værktøjs navn</th>
-                                    <th class="numeric-cell" scope="col">Mærke</th>
-                                    <th class="numeric-cell" scope="col">Model</th>
-                                    <th class="numeric-cell" scope="col">Serienummer</th>
-                                    <th class="numeric-cell" scope="col">AssetTag</th>
+                                    <th class="label-cell" scope="col">Kategori</th>
+                                    <th class="label-cell" scope="col">Mærke</th>
+                                    <th class="label-cell" scope="col">Model</th>
+                                    <th class="label-cell" scope="col">Serienummer</th>
+                                    <th class="label-cell" scope="col">AssetTag</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr>
-                                    <th scope="row">1</th>
-                                    <td class="checkbox-cell">
-                                      <input type="checkbox"/>
-                                      <i class="icon-checkbox"></i>
-                                    </td>
-                                    <td class="label-cell">Hammer</td>
-                                    <td class="numeric-cell">Stanley</td>
-                                    <td class="numeric-cell">STHT51511W</td>
-                                    <td class="numeric-cell">vseUzicF</td>
-                                    <td class="numeric-cell">XCg5HJUu</td>
-                                </tr>
+                            <tbody class="tableBody">
+                                
                             </tbody>
                         </table>
                         <div class="form-row form-button-row">
@@ -95,7 +85,6 @@
         return {
             data: function () {
                 return {
-
                 };
             },
         // Component Methods
@@ -109,20 +98,39 @@
                 inserttool : () => {
 
                 },
-                fetchtools : () => {
-                    axios({
-                    method: 'get',
-                    url: `http://10.11.4.136/cordova/endpoint/equipment.php?id=-1`,
-                    responseType: 'json'
-                }).then((response) =>{
-                    console.dir(response.data);
-                });
-                }
+                
             },
         // Component States
             on: {
-                pageMounted: () => {
-                    console.dir(this);
+                pageMounted: (page) => {
+                    let innerHTML = "";
+                    var self = this;
+                    var app = self.app;
+                    // request user data on page init
+                    app.request.getJSON('http://10.11.4.136/cordova/endpoint/equipment.php?id=-1', (tools) => {
+                        // update component state with new state
+                        for(let i = 0; i < tools.records.length; i++) {
+                            
+                            innerHTML += 
+                            `
+                            <tr>
+                                <th scope="row">${i+1}</th>
+                                <td class="checkbox-cell">
+                                    <input type="checkbox" value="${tools.records[i].ID}"/>
+                                    <i class="icon-checkbox"></i>
+                                </td>
+                                <td class="label-cell">${tools.records[i].activeName}</td>
+                                <td class="label-cell">${tools.records[i].categoryName}</td>
+                                <td class="label-cell">${tools.records[i].brandName}</td>
+                                <td class="label-cell">${tools.records[i].modelName}</td>
+                                <td class="label-cell">${tools.records[i].serialNumber}</td>
+                                <td class="label-cell">${tools.records[i].assetTag}</td>
+                            </tr>
+                            `;
+                            $$('.tableBody').html(innerHTML);
+                        }
+                    });
+                    
                 }
             }
         }
