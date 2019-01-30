@@ -108,8 +108,7 @@ var app  = new Framework7({
     pageInit: function(page){
       app.methods.LoginCheck(page);
       let currentpage = app.views.main.router.currentPageEl.dataset.name;
-      console.log(currentpage);
-      if(currentpage == "login" || currentpage == "adminlogin"){
+      if(currentpage == "login"){
         document.getElementById('view-home').style.top = "0";
         return;
       }else{
