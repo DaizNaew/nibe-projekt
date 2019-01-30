@@ -53,16 +53,16 @@
                             <thead>
                                 <tr>
                                     <th scope="col">#</th>
-                                    <th class="checkbox-cell" scope="col">
-                                        <!--<input type="checkbox" class="no-ripple"/>-->
-                                        <i class="icon-checkbox"></i>
-                                    </th>
                                     <th class="label-cell" scope="col">Værktøjs navn</th>
                                     <th class="label-cell" scope="col">Kategori</th>
                                     <th class="label-cell" scope="col">Mærke</th>
                                     <th class="label-cell" scope="col">Model</th>
                                     <th class="label-cell" scope="col">Serienummer</th>
                                     <th class="label-cell" scope="col">AssetTag</th>
+                                    <th class="checkbox-cell" scope="col">
+                                        <!--<input type="checkbox" class="no-ripple"/>-->
+                                        <i class="icon-checkbox"></i>
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody class="tableBody">
@@ -115,16 +115,16 @@
                             `
                             <tr>
                                 <th scope="row">${i+1}</th>
-                                <td class="checkbox-cell">
-                                    <input type="checkbox" value="${tools.records[i].ID}"/>
-                                    <i class="icon-checkbox"></i>
-                                </td>
                                 <td class="label-cell">${tools.records[i].activeName}</td>
                                 <td class="label-cell">${tools.records[i].categoryName}</td>
                                 <td class="label-cell">${tools.records[i].brandName}</td>
                                 <td class="label-cell">${tools.records[i].modelName}</td>
                                 <td class="label-cell">${tools.records[i].serialNumber}</td>
                                 <td class="label-cell">${tools.records[i].assetTag}</td>
+                                <td class="checkbox-cell">
+                                    <input type="checkbox" value="${tools.records[i].ID}"/>
+                                    <i class="icon-checkbox"></i>
+                                </td>
                             </tr>
                             `;
                             $$('.tableBody').html(innerHTML);
@@ -132,6 +132,6 @@
                     });
                     
                 }
-            }
+            },
         }
     </script>
