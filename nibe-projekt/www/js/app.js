@@ -53,6 +53,7 @@ var app  = new Framework7({
           element.style.display = "none";
         }
         document.getElementById('navbarwrapper').style.display = "none";
+        document.getElementById('adminnavbarwrapper').style.display = "none";
       }
     },
     showAdminNavbar: function (){
@@ -106,8 +107,16 @@ var app  = new Framework7({
   on: {
     pageInit: function(page){
       app.methods.LoginCheck(page);
-      app.data['navbarheight'] = $$('#view-navbar')[0].clientHeight;
-      document.getElementById('view-home').style.top = app.data['navbarheight']+"px";
+      let currentpage = app.views.main.router.currentPageEl.dataset.name;
+      console.log(currentpage);
+      if(currentpage == "login" || currentpage == "adminlogin"){
+        document.getElementById('view-home').style.top = "0";
+        return;
+      }else{
+        app.data['navbarheight'] = $$('#view-navbar')[0].clientHeight;
+        document.getElementById('view-home').style.top = app.data['navbarheight']+"px";
+      }
+
     },
     pageBeforeIn: function(page) {
       app.methods.LoginCheck(page);
