@@ -309,3 +309,8 @@ nav {
 .form-row {
   margin: 15px 10px;
 }
+
+button:disabled, button:disabled:hover {
+  color:#909090 !important;
+  border-color: black !important;
+}
