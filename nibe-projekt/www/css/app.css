@@ -241,59 +241,9 @@ nav {
   position: inherit;
 }
 
-#item2{
-  bottom: 5%;
-  left: 50%;
-  right: inherit;
-  top: inherit;
-  position: inherit;
-}
-
-#item2content, #item1content{
-  margin-left: 5%;
-  margin-right: 5%;
-  margin-top: 5%;
-  bottom: 5%;
-  position: inherit;
-  width: 85%;
-  top: inherit;
-  height: inherit;
-}
-
 .godbtn{
-  width: 175px;
+  max-width: 175px;
   height: 55px;
-}
-
-.btnrow3{
-  margin-left: 10%;
-}
-
-.btnrow2{
-  margin-left: 50%;
-}
-
-#namefield{
-  text-align: center;
-}
-
-#namefield>label{
-  margin-left: -10%;
-}
-
-#namefield>input{
-  margin-left: 10%;
-  width: 450px;
-}
-
-#buttonspace{
-  position: absolute;
-  bottom: 0;
-  height: auto;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-gap: 30px;
-  left: 10%
 }
 
 .form-button-row>button:not(:last-child) {

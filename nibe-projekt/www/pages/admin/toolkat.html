@@ -1,60 +1,78 @@
 <template>
-<div id="currentpage" class="page" data-name="toolkat">
-<div id="gridwrapper">
-
-
-    
-
-
-    <div id="item1">
-        <div id="item1content">
-            <form>
-                <div class="form-row">
-                    <label for="aktivNavn" class="col">Navn</label>
-                    <input id="aktivNavn" type="text" required="required" class="form-control form-control-sm col"/>
+    <div class="page" data-name="toolkat">
+        <div id="gridwrapper">
+            <div class="grid">
+                <div style="padding: 10px" id="item1"><!--Item 1-->
+                    <div>
+                        <form>
+                            <div class="form-row">
+                                <label for="aktivNavn" class="col">Navn</label>
+                                <input id="aktivNavn" type="text" required="required" class="form-control form-control-sm col"/>
+                            </div>
+                            <div class="form-row form-button-row">
+                                <button type="submit" class="no-ripple col btn btn-primary godbtn">Opret kategori</button>
+                                <button type="submit" class="no-ripple col btn btn-primary godbtn" disabled>Opdater kategori</button>
+                                <button type="button" @click="resetfields" class="no-ripple col btn btn-primary godbtn">Nulstil felter</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-                <div class="form-row form-button-row">
-                    <button type="submit" class="no-ripple col btn btn-primary godbtn">Opret kategori</button>
-                    <button type="submit" class="no-ripple col btn btn-primary godbtn" disabled>Opdater kategori</button>
-                    <button type="button" class="no-ripple col btn btn-primary godbtn">Nulstil felter</button>
+                <div style="padding: 25px"><!--Item 2-->
+                    <div>
+                        <table class="table" style="width:auto; background-color: #9eafc033">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th class="checkbox-cell" scope="col">
+                                        <!--<input type="checkbox" class="no-ripple"/>-->
+                                        <i class="icon-checkbox"></i>
+                                    </th>
+                                    <th class="label-cell" scope="col">kategorier</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th scope="row">1</th>
+                                    <td class="checkbox-cell">
+                                      <input type="checkbox"/>
+                                      <i class="icon-checkbox"></i>
+                                    </td>
+                                    <td class="label-cell">Powertools</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="form-row form-button-row">
+                            <button type="submit" class="no-ripple col btn btn-primary godbtn">Rediger kategori</button>
+                            <button type="button" @click="deletetool" class="no-ripple col btn btn-primary godbtn deletebtn">Slet kategori</button>
+                        </div>
+                    </div>
                 </div>
-            </form>
-        </div>
-    </div>
-
-    <div id="item2">
-        <div id="item2content">
-            <table class="table" style="width:85%; background-color: #9eafc033; text-align: left;">
-                <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th class="checkbox-cell" scope="col">
-                            <!--<input type="checkbox" class="no-ripple"/>-->
-                            <i class="icon-checkbox"></i>
-                        </th>
-                        <th class="label-cell" scope="col">Værktøjs kategori</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <th scope="row">1</th>
-                        <td class="checkbox-cell">
-                          <input type="checkbox" class="no-ripple"/>
-                          <i class="icon-checkbox"></i>
-                        </td>
-                        <td class="label-cell">Powertools</td>
-                    </tr>
-                </tbody>
-            </table>
-            <div class="form-row form-button-row">
-                <button type="submit" class="no-ripple col btn btn-primary godbtn">Rediger kategori</button>
-                <button type="button" class="no-ripple col btn btn-primary godbtn deletebtn">Slet kategori</button>
             </div>
+        
         </div>
     </div>
+    </template>
 
+    <script>
+        return {
+        // Component Methods
+            methods: {
+                resetfields : () => {
+                    app.dialog.confirm('Er du sikker på at du vil nulstille alle felter?', 'Confirm')
+                },
+                deletetool : () => {
+                    app.dialog.confirm('Er du sikker på at du vil slette denne kategori fra databasen?', 'Confirm')
+                },
+                inserttool : () => {
 
+                },
+                fetchtools : () => {
 
-</div>
-</div>
-</template>
+                }
+            },
+        // Component States
+            on: {
+                
+            }
+        }
+    </script>
