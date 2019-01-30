@@ -26,7 +26,7 @@
                     app.data['adminIDCardNumber'] = cardID;
                     app.data['adminConfirmedBool'] = true;
                     app.methods.showAdminNavbar();
-                    app.views.main.router.navigate("/usercreate/", {reloadCurrent: true,});
+                    app.views.main.router.navigate("/createuser/", {reloadCurrent: true,});
             },
             userVerify: function () {
                 let cardID = document.getElementById('cardID').value;
