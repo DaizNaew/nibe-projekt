@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     
         // tell the user no products found
         echo json_encode(
-            array("message" => "Ingen værktøj fundet")
+            array("message" => "Ingen kategori fundet")
         );
     }
 } else if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -63,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
         http_response_code(200);
         echo json_encode(
-            array("message" => "Insert blev fuldført")
+            array("message" => "Indsatte Kategori i databasen", "result" => 1)
         );
 
     } else {
@@ -72,7 +72,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     
         // tell the user no products found
         echo json_encode(
-            array("message" => "Insert blev ikke fuldført",
+            array("message" => "Kunne ikke Kategori i databasen",
+            "result" => 0,
             "error" => '')
         );
     }

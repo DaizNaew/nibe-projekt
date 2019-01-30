@@ -54,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     
         // tell the user no products found
         echo json_encode(
-            array("message" => "Ingen brugere fundet")
+            array("message" => "Ingen brugere fundet", "result" => 0)
         );
     }
 }

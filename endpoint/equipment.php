@@ -71,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
         http_response_code(200);
         echo json_encode(
-            array("message" => "Insert blev fuldført")
+            array("message" => "Insert blev fuldført", "result" => 1)
         );
 
     } else {
@@ -81,6 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         // tell the user no products found
         echo json_encode(
             array("message" => "Insert blev ikke fuldført",
+            "result" => 0,
             "error" => '')
         );
     }
