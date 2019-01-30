@@ -47,7 +47,7 @@
                         </form>
                     </div>
                 </div>
-                <div style="padding: 10px"><!--Item 2-->
+                <div style="padding: 25px"><!--Item 2-->
                     <div>
                         <table class="table" style="width:auto; background-color: #9eafc033">
                             <thead>
@@ -66,7 +66,7 @@
                                 <tr>
                                     <th scope="row">1</th>
                                     <td class="checkbox-cell">
-                                      <input type="checkbox" class="no-ripple"/>
+                                      <input type="checkbox"/>
                                       <i class="icon-checkbox"></i>
                                     </td>
                                     <td class="label-cell">Frozen yogurt</td>
@@ -75,7 +75,11 @@
                                 </tr>
                             </tbody>
                         </table>
-                          </div>
+                        <div class="form-row form-button-row">
+                            <button type="submit" class="no-ripple col btn btn-primary godbtn">Rediger Værktøj</button>
+                            <button type="button" @click="deletetool" class="no-ripple col btn btn-primary godbtn deletebtn">Slet Værktøj</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         
@@ -87,8 +91,17 @@
         return {
         // Component Methods
             methods: {
-                resetfields: function() {
-                    app.dialog.show('NEJ!');
+                resetfields : () => {
+                    app.dialog.confirm('Er du sikker på at du vil nulstille alle felter?', 'Confirm')
+                },
+                deletetool : () => {
+                    app.dialog.confirm('Er du sikker på at du vil slette dette værktøj fra databasen?', 'Confirm')
+                },
+                inserttool : () => {
+
+                },
+                fetchtools : () => {
+
                 }
             },
         // Component States
