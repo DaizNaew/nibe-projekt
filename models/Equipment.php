@@ -48,9 +48,8 @@ class Equipment {
         $assetTag = $post['assetTag'];
         $stand = $post['condition'];
         $katID = $post['categoryID'];
-        $inhouse = $post['inHouse'];
         $query = "INSERT INTO " . $this->table_name . " (aktivNavn,brand,model,serieNummer,assetTag,stand,katID,inhouse) VALUES " . 
-        "('$aktivNavn', '$brand', '$model', '$serieNummer', '$assetTag', '$stand', '$katID', '$inhouse');";
+        "('$aktivNavn', '$brand', '$model', '$serieNummer', '$assetTag', '$stand', '$katID', '1');";
         
         // prepare query statement
         $stmt = $this->conn->prepare($query);
