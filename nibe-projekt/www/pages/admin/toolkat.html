@@ -8,11 +8,12 @@
                             <div class="form-row">
                                 <label for="aktivNavn" class="col">Navn</label>
                                 <input id="aktivNavn" type="text" required="required" class="form-control form-control-sm col"/>
+                                <input id="ID" type="hidden"/>
                             </div>
                             <div class="form-row form-button-row">
-                                <button type="submit" class="no-ripple col btn btn-primary godbtn">Opret kategori</button>
-                                <button type="submit" class="no-ripple col btn btn-primary godbtn" disabled>Opdater kategori</button>
-                                <button type="button" @click="resetfields" class="no-ripple col btn btn-primary godbtn">Nulstil felter</button>
+                                <a><button type="submit" @click="inserttool" class="no-ripple col btn btn-primary godbtn" id="Opretbtn">Opret kategori</button></a>
+                                <a><button type="submit" @click="updatetool" class="no-ripple col btn btn-primary godbtn" id="Opdaterbtn" disabled>Opdater kategori</button></a>
+                                <a><button type="button" @click="resetfields" class="no-ripple col btn btn-primary godbtn">Nulstil felter</button></a>
                             </div>
                         </form>
                     </div>
@@ -24,9 +25,9 @@
                                 <tr>
                                     <th scope="col" style="width: 32px;">#</th>
                                     <th class="label-cell" scope="col">kategorier</th>
-                                    <th class="checkbox-cell" scope="col">
+                                    <th class="radio-cell" scope="col">
                                         <!--<input type="checkbox" class="no-ripple"/>-->
-                                        <i class="icon-checkbox"></i>
+                                        <i class="icon-radio"></i>
                                     </th>
                                 </tr>
                             </thead>
@@ -34,8 +35,8 @@
                             </tbody>
                         </table>
                         <div class="form-row form-button-row">
-                            <button type="submit" class="no-ripple col btn btn-primary godbtn">Rediger kategori</button>
-                            <button type="button" @click="deletetool" class="no-ripple col btn btn-primary godbtn deletebtn">Slet kategori</button>
+                            <a><button type="submit" @click="edittool" class="no-ripple col btn btn-primary godbtn">Rediger kategori</button></a>
+                            <a><button type="button" @click="deletetool" class="no-ripple col btn btn-primary godbtn deletebtn">Slet kategori</button></a>
                         </div>
                     </div>
                 </div>
@@ -50,22 +51,79 @@
         // Component Methods
             methods: {
                 resetfields : () => {
-                    app.dialog.confirm('Er du sikker på at du vil nulstille alle felter?', 'Confirm')
+                    app.dialog.confirm('Er du sikker på at du vil nulstille alle felter?', 'Nulstil felter', function(){
+                        document.getElementById('aktivNavn').value = "";
+                        document.getElementById("Opdaterbtn").disabled = true;
+                        document.getElementById("Opretbtn").disabled = false; 
+                    })
                 },
                 deletetool : () => {
-                    app.dialog.confirm('Er du sikker på at du vil slette denne kategori fra databasen?', 'Confirm')
+                    var checkBoxObj = $$('.tableBody').find('input[type="radio"]');
+                    app.dialog.confirm('Er du sikker på at du vil slette denne kategori fra databasen?', 'Slet kategori', function(){
+                    checkBoxObj.forEach(element => {
+                        if(element.checked) {
+                            app.request.getJSON(`http://10.11.4.136/cordova/functions/cats/delete.php?id=${element.value}`, (data) => {
+                                if(data.result == 1) {
+                                    let delKatNavn = element.parentElement.parentElement.children[1].innerText;
+                                    app.dialog.alert(`Kategorie (<span style='color: green; font-weight: bold;'>${delKatNavn}</span>) blev slettet fra databasen.`, "Slet kategori", function(){
+                                        app.views.main.router.navigate("/toolkat/", {reloadCurrent: true,});
+                                    });
+                                } else {
+                                    app.dialog.alert("Kategorien blev <span style='color: red; font-weight: bold;'>IKKE</span> slettet fra databasen.", "Slet kategori");
+                                }
+                            });
+                        }
+                    });
+
+                    })
                 },
                 inserttool : () => {
+                    let newKatNavn = document.getElementById('aktivNavn').value;
+                    if(newKatNavn == ""){
+                        app.dialog.alert("Navn feltet må ikke være tomt.", "Opret kategori");
+                        return;
+                    }
+                    app.request.post('http://10.11.4.136/cordova/endpoint/category.php', { katNavn:`${newKatNavn}` }, function(response){
+                        if(response.result == 1){
+                            app.dialog.alert(`Kategorien (<span style="color: green; font-weight: bold;">${newKatNavn}</span>) blev tilføjet til databasen.`, "Opret kategori", function(){
+                                app.views.main.router.navigate("/toolkat/", {reloadCurrent: true,});
+                            });
 
+                        }else{
+                            app.dialog.alert("Kategorien blev <span style='color: red; font-weight: bold;'>IKKE</span> tilføjet til databasen.", "Opret kategori");
+                            return;
+                        }
+                    }, function(e, e2){
+                    }, "json");
                 },
-                fetchtools : () => {
 
-                }
+                edittool : () => {
+                    var checkBoxObj = $$('.tableBody').find('input[type="radio"]');
+                    checkBoxObj.forEach(element => {
+                        if(element.checked) {
+                            document.getElementById('aktivNavn').value = element.parentElement.parentElement.children[1].innerHTML;
+                            document.getElementById('ID').value = element.parentElement.parentElement.children[2].children[0].value;
+                            document.getElementById("Opdaterbtn").disabled = false;
+                            document.getElementById("Opretbtn").disabled = true; 
+                        }
+                    });
+                },
+
+                updatetool : () => {
+                    let updatedKatNavn = document.getElementById('aktivNavn').value;
+                    let updatedKatID = document.getElementById('ID').value;
+                    app.request.post("http://10.11.4.136/cordova/functions/cats/update.php", { katNavn:`${updatedKatNavn}`, ID:`${updatedKatID}`}, function(response){
+                        app.views.main.router.navigate("/toolkat/", {reloadCurrent: true,});
+                    }, function(e, e2){
+                    }, "json");
+                    
+                },
             },
         // Component States
         on: {
                 pageMounted: (page) => {
                     let innerHTML = "";
+                    var oldrow = null;
                     var self = this;
                     var app = self.app;
                     // request user data on page init
@@ -78,16 +136,26 @@
                             <tr>
                                 <th scope="row" style="width: 32px;">${i+1}</th>
                                 <td class="label-cell">${response.categories[i].katNavn}</td>
-                                <td class="checkbox-cell">
-                                    <input type="checkbox" value="${response.categories[i].ID}"/>
-                                    <i class="icon-checkbox"></i>
+                                <td class="radio-cell">
+                                    <input type="radio" value="${response.categories[i].ID}" name="radiogroup"/>
+                                    <i class="icon-radio"></i>
                                 </td>
                             </tr>
                             `;
                             $$('.tableBody').html(innerHTML);
                         }
                     });
-                    
+                    $$('.tableBody').on('click', (e) => {
+                        if(oldrow == null){
+                            oldrow = e;
+                        }else{
+                            $$(oldrow.target.parentElement).css('background-color', '');
+                            oldrow = e;
+                        }
+                            $$(e.target.parentElement).find('input[type="radio"]').prop('checked', true);
+                            $$(e.target.parentElement).css('background-color', '#4CAF50');
+                        
+                    });
                 }
             },
         }
