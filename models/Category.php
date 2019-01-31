@@ -44,6 +44,16 @@ class Category {
         return $stmt->execute();
     }
 
+    function update($post) {
+        $katNavn = $post['katNavn'];
+        $id = $post['ID'];
+        $query = "UPDATE " . $this->table_name . " SET katNavn = ". $katNavn ." WHERE ID = " .$id;
+
+        $stmt = $this->conn->prepare($query);
+
+        return $stmt->execute();
+    }
+
     function delete($id) {
         $query = "DELETE FROM " . $this->table_name . " WHERE ID = ".$id;
 
