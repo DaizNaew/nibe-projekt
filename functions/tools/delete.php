@@ -6,8 +6,8 @@ header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
  
 // database connection will be here
-include_once '../database.inc';
-include_once '../models/Equipment.php';
+include_once '../../database.inc';
+include_once '../../models/Equipment.php';
 
 $id = $_GET['id'];
 

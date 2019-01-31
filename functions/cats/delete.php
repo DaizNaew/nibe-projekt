@@ -6,18 +6,18 @@ header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
  
 // database connection will be here
-include_once '../database.inc';
-include_once '../models/User.php';
+include_once '../../database.inc';
+include_once '../../models/Category.php';
 
 $id = $_GET['id'];
 
 $database = new Database();
 $db = $database->getConnection();
 
-$user = new User($db);
+$category = new Category($db);
 
 // query products
-$stmt = $user->delete($id);
+$stmt = $category->delete($id);
 if($stmt) {
     http_response_code(200);
     echo json_encode(
