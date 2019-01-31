@@ -40,16 +40,17 @@
                                 </select>
                             </div>
                             <div class="form-row form-button-row">
-                                <button type="submit" class="no-ripple col btn btn-primary godbtn">Opret Værktøj</button>
-                                <button type="submit" class="no-ripple col btn btn-primary godbtn" disabled>Opdater Værktøj</button>
-                                <button type="button" @click="resetfields" class="no-ripple col btn btn-primary godbtn">Nulstil felter</button>
+                                <a><button type="submit" @click="inserttool" class="no-ripple col btn btn-primary godbtn">Opret Værktøj</button></a>
+                                <a><button type="submit" @click="updatetool" class="no-ripple col btn btn-primary godbtn" disabled>Opdater Værktøj</button></a>
+                                <a><button type="button" @click="resetfields" class="no-ripple col btn btn-primary godbtn">Nulstil felter</button></a>
                             </div>
+                            <input id="editID" type="hidden"/>
                         </form>
                     </div>
                 </div>
                 <div style="padding: 25px"><!--Item 2-->
                     <div>
-                        <table class="table" style="width:auto; background-color: #9eafc033">
+                        <table class="table" style="width:auto; background-color: #9eafc033; overflow: scroll">
                             <thead>
                                 <tr>
                                     <th scope="col">#</th>
@@ -59,9 +60,9 @@
                                     <th class="label-cell" scope="col">Model</th>
                                     <th class="label-cell" scope="col">Serienummer</th>
                                     <th class="label-cell" scope="col">AssetTag</th>
-                                    <th class="checkbox-cell" scope="col">
+                                    <th class="radio-cell" scope="col">
                                         <!--<input type="checkbox" class="no-ripple"/>-->
-                                        <i class="icon-checkbox"></i>
+                                        <i class="icon-radio"></i>
                                     </th>
                                 </tr>
                             </thead>
@@ -70,8 +71,8 @@
                             </tbody>
                         </table>
                         <div class="form-row form-button-row">
-                            <button type="submit" class="no-ripple col btn btn-primary godbtn">Rediger Værktøj</button>
-                            <button type="button" @click="deletetool" class="no-ripple col btn btn-primary godbtn deletebtn">Slet Værktøj</button>
+                            <a><button type="submit" @click="edittool" class="no-ripple col btn btn-primary godbtn">Rediger Værktøj</button></a>
+                            <a><button type="button" @click="deletetool" class="no-ripple col btn btn-primary godbtn deletebtn">Slet Værktøj</button></a>
                         </div>
                     </div>
                 </div>
@@ -90,14 +91,77 @@
         // Component Methods
             methods: {
                 resetfields : () => {
-                    app.dialog.confirm('Er du sikker på at du vil nulstille alle felter?', 'Confirm')
+                    app.dialog.confirm('Er du sikker på at du vil nulstille alle felter?', 'Nulstil Felter', function(){
+                        let inputs = $$('form').find('input');
+                        inputs.val('');
+                    });
                 },
                 deletetool : () => {
-                    app.dialog.confirm('Er du sikker på at du vil slette dette værktøj fra databasen?', 'Confirm')
+                    app.dialog.confirm('Er du sikker på at du vil slette dette værktøj fra databasen?', 'Slet Værktøj', () => {
+                        var checkBoxObj = $$('.tableBody').find('input[type="radio"]');
+                        checkBoxObj.forEach(element => {
+                            if(element.checked) {
+                                app.request.getJSON(`http://10.11.4.136/cordova/functions/tools/delete.php?id=${element.value}`, (data) => {
+                                    if(data.result == 1) {
+                                        app.dialog.alert('Værktøjet blev slettet fra databasen', 'Success af sletning', () => {
+                                            app.views.main.router.navigate("/tooladdpan/", {reloadCurrent: true,});
+                                        });
+                                    } else {
+                                        app.dialog.alert('Værktøjet blev IKKE slettet fra databasen', 'Fejl af sletning', () => {
+                                            app.views.main.router.navigate("/tooladdpan/", {reloadCurrent: true,});
+                                        });
+                                    }
+                                });
+                            }
+                        });
+                    });
                 },
                 inserttool : () => {
 
+                    let tool = {
+                        activeName: $$('#aktivNavn').val(),
+                        brandName:  $$('#Mærke').val(),
+                        modelName:  $$('#Model').val(),
+                        serialNumber:  $$('#Serienummer').val(),
+                        assetTag:  $$('#AssetTag').val(),
+                        condition:  $$('#Stand').val(),
+                        categoryID:  $$('#Kategori').val(),
+                    };
+
+                    app.request.post('http://10.11.4.136/cordova/endpoint/equipment.php', tool, (data) => {
+                        let toastMessage = '';
+
+                        if(data.result == 1) {
+                            toastMessage = 'Værktøjet blev sat ind i databasen';
+                        } else {
+                            toastMessage = 'Værktøjet blev IKKE sat ind i databasen'
+                        }
+                        app.dialog.alert(toastMessage, 'Opret Køretøj', () => {
+                            app.views.main.router.navigate("/tooladdpan/", {reloadCurrent: true,});
+                        });
+                    }, (error) => {
+                        
+                    }, 'json');
                 },
+                edittool : () => {
+                    var checkBoxObj = $$('.tableBody').find('input[type="radio"]');
+                    let inputFields = $$('form').find(`input[type="text"]`);
+                    console.dir($$(inputFields));
+                        checkBoxObj.forEach(element => {
+                            if(element.checked) {
+                                let cells = $$(element.parentElement.parentElement).find('.label-cell');
+                                cells.forEach(element => {
+                                    console.dir( element.classList[1] );
+                                    //console.dir( $$(inputFields).find(`#${element.classList[1]}`));
+                                    //console.dir( $$(inputFields).find(`input[id="Stand"]`));
+                                })
+                                
+                            }
+                        });
+                },
+                updatetool : () => {
+
+                }
                 
             },
         // Component States
@@ -106,31 +170,38 @@
                     let innerHTML = "";
                     var self = this;
                     var app = self.app;
+                    app.request.getJSON('http://10.11.4.136/cordova/endpoint/category.php?id=-1', (cats) => {
+                        for(cat of cats.categories) {
+                            $$('#Kategori').append(`<option value="${cat.ID}">${cat.katNavn}</option>`)
+                        }
+                    });
                     // request user data on page init
                     app.request.getJSON('http://10.11.4.136/cordova/endpoint/equipment.php?id=-1', (tools) => {
                         // update component state with new state
                         for(let i = 0; i < tools.records.length; i++) {
-                            
                             innerHTML += 
                             `
                             <tr>
                                 <th scope="row">${i+1}</th>
-                                <td class="label-cell">${tools.records[i].activeName}</td>
-                                <td class="label-cell">${tools.records[i].categoryName}</td>
-                                <td class="label-cell">${tools.records[i].brandName}</td>
-                                <td class="label-cell">${tools.records[i].modelName}</td>
-                                <td class="label-cell">${tools.records[i].serialNumber}</td>
-                                <td class="label-cell">${tools.records[i].assetTag}</td>
-                                <td class="checkbox-cell">
-                                    <input type="checkbox" value="${tools.records[i].ID}"/>
-                                    <i class="icon-checkbox"></i>
+                                <td class="label-cell aktivNavn">${tools.records[i].activeName}</td>
+                                <td class="label-cell Kategori">${tools.records[i].categoryName}</td>
+                                <td class="label-cell Mærke">${tools.records[i].brandName}</td>
+                                <td class="label-cell Model">${tools.records[i].modelName}</td>
+                                <td class="label-cell Serienummer">${tools.records[i].serialNumber}</td>
+                                <td class="label-cell AssetTag">${tools.records[i].assetTag}</td>
+                                <td class="label-cell Stand" style="display:none;">${tools.records[i].condition}</td>
+                                <td class="radio-cell">
+                                    <input type="radio" value="${tools.records[i].ID}" name="selectedTool"/>
+                                    <i class="icon-radio"></i>
                                 </td>
                             </tr>
                             `;
                             $$('.tableBody').html(innerHTML);
                         }
                     });
-                    
+                    $$('.tableBody').on('click', (e) => {
+                        $$(e.target.parentElement).find('input[type="radio"]').prop('checked', true);
+                    })
                 }
             },
         }
