@@ -1,6 +1,6 @@
 <?php
 
-class Equipment {
+class Category {
  
     // database connection and table name
     private $conn;
@@ -41,6 +41,14 @@ class Equipment {
         $stmt = $this->conn->prepare($query);
     
         // execute query
+        return $stmt->execute();
+    }
+
+    function delete($id) {
+        $query = "DELETE FROM " . $this->table_name . " WHERE ID = ".$id;
+
+        $stmt = $this->conn->prepare($query);
+
         return $stmt->execute();
     }
 }
