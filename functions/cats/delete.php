@@ -21,7 +21,10 @@ $stmt = $category->delete($id);
 if($stmt) {
     http_response_code(200);
     echo json_encode(
-        array("message" => "Slettede Kategori fra databasen", "result" => 1, "statement" => $stmt)
+        array("message" => "Slettede Kategori fra databasen", 
+        "result" => 1, 
+        "statement" => $stmt
+        )
     );
 
 } else {
@@ -32,7 +35,7 @@ if($stmt) {
     echo json_encode(
         array("message" => "Kunne ikke slette Kategori fra databasen",
         "result" => 0,
-        "error" => '')
+        "error" => 'Kategorien bliver brugt af værktøjer i databasen')
     );
 }
 
