@@ -115,4 +115,11 @@ class Equipment {
             return $products_arr;
         }
     }
+    function delete($id) {
+        $query = "DELETE FROM " . $this->table_name . " WHERE ID = ".$id;
+
+        $stmt = $this->conn->prepare($query);
+
+        return $stmt->execute();
+    }
 }
