@@ -2,6 +2,10 @@
 
 // required headers
 header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Credentials: true");
+header("Access-Control-Max-Age: 1000");
+header("Access-Control-Allow-Headers: X-Requested-With, Content-Type, Origin, Cache-Control, Pragma, Authorization, Accept, Accept-Encoding");
+header("Access-Control-Allow-Methods: PUT, POST, GET, OPTIONS, DELETE");
 header("Content-Type: application/json; charset=UTF-8");
  
 // database connection will be here
@@ -14,9 +18,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $database = new Database();
     $db = $database->getConnection();
 
-    $equipment = new Equipment($db);
+    $Category = new Category($db);
     // query products
-    $stmt = $equipment->read($id);
+    $stmt = $Category->read($id);
     $num = $stmt->rowCount();
     
     // check if more than 0 record found
@@ -56,19 +60,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $database = new Database();
     $db = $database->getConnection();
 
-    $equipment = new Equipment($db);
+    $Category = new Category($db);
     // query products
-    $stmt = $equipment->write($_POST);
+    $stmt = $Category->write($_POST);
     if($stmt) {
 
         http_response_code(200);
         echo json_encode(
-            array("message" => "Indsatte Kategori i databasen", "result" => 1)
+            array("message" => "Indsatte Kategori i databasen", "result" => 1, "statement" => $stmt)
         );
 
     } else {
         // set response code - 404 Not found
-        http_response_code(404);
+        http_response_code(200);
     
         // tell the user no products found
         echo json_encode(

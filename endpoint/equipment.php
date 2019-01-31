@@ -1,7 +1,9 @@
 <?php
 
 // required headers
-header("Access-Control-Allow-Origin: *");
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Credentials: true');
+header('Access-Control-Max-Age: 1000');
 header("Content-Type: application/json; charset=UTF-8");
  
 // database connection will be here
@@ -76,7 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
     } else {
         // set response code - 404 Not found
-        http_response_code(404);
+        http_response_code(200);
     
         // tell the user no products found
         echo json_encode(

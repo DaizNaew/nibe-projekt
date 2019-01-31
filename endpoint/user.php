@@ -1,7 +1,9 @@
 <?php
 
 // required headers
-header("Access-Control-Allow-Origin: *");
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Credentials: true');
+header('Access-Control-Max-Age: 1000');
 header("Content-Type: application/json; charset=UTF-8");
  
 // database connection will be here
