@@ -47,7 +47,7 @@ class Category {
     function update($post) {
         $katNavn = $post['katNavn'];
         $id = $post['ID'];
-        $query = "UPDATE " . $this->table_name . " SET katNavn = ". $katNavn ." WHERE ID = " .$id;
+        $query = "UPDATE " . $this->table_name . " SET katNavn = '". $katNavn ."' WHERE ID = '" .$id."'";
 
         $stmt = $this->conn->prepare($query);
 

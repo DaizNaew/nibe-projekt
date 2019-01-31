@@ -12,7 +12,7 @@
 
     $category = new Category($db);
 
-    $stmt = $Category->update($_POST);
+    $stmt = $category->update($_POST);
 
     if($stmt) {
 
