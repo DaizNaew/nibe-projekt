@@ -304,3 +304,10 @@ button:disabled, button:disabled:hover {
 #kattable tbody tr td>input, #kattable thead tr td>input{
   margin-left: 10%;
 }
+
+
+.tablegrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 25px;
+}
