@@ -35,7 +35,7 @@
                 let password = document.getElementById('password').value;
                 
 
-                app.request.getJSON(`http://10.11.4.136/cordova/functions/verifyLogin.php?uname=${username}&pword=${password}`, (response) =>{
+                app.request.getJSON(`${app.data['serverip']}functions/verifyLogin.php?uname=${username}&pword=${password}`, (response) =>{
                     userID = parseInt(response.user[0].ID);
                     userGruppe = parseInt(response.user[0].usergruppe);
                     rigtignavn = response.user[0].name;
@@ -50,6 +50,7 @@
                         app.data['username'] = username;
                         app.data['rigtignavn'] = rigtignavn;
                         app.data['usergruppe'] = userGruppe;
+                        app.data['userID'] = userID;
                         app.methods.refreshNavbar();
                         app.methods.populateNavbar();
                     }
