@@ -312,3 +312,15 @@ button:disabled, button:disabled:hover {
   grid-gap: 25px;
   width:90%;
 }
+
+.tableFixHead    { 
+  overflow-y: auto; 
+  overflow-x: hidden;
+  max-height: 600px; 
+}
+
+.tableFixHead th { 
+  position: sticky; 
+  top: 0; 
+  background-color: white;
+}

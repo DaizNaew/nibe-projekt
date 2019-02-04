@@ -29,23 +29,23 @@
                 <div style="padding: 25px"><!--Item 2-->
                     <div>    
                         <div class="tablegrid">
-                            <div>
-                                <table id="kattable" class="table" style="width:100%; min-width: 100%; max-width: 100%; background-color: #9eafc033">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col" style="width: 32px;">#</th>
-                                            <th class="label-cell" scope="col">Certifikat</th>
-                                            <th class="radio-cell" scope="col">
-                                                <i class="icon-radio"></i>
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="tableCertBody">
-                                    </tbody>
-                                </table>
-                            </div>
+                                <div class="tableFixHead">
+                                    <table id="kattable" class="table" style="background-color: #9eafc033">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col" style="width: 32px;">#</th>
+                                                <th class="label-cell" scope="col">Certifikat</th>
+                                                <th class="radio-cell" scope="col">
+                                                    <i class="icon-radio"></i>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="tableCertBody">
+                                        </tbody>
+                                    </table>
+                                </div>
 
-                            <div>
+                            <div class="tableFixHead">
                                 <table id="kattable" class="table" style="width:100%; min-width: 100%; max-width: 100%; background-color: #9eafc033">
                                     <thead>
                                         <tr>
@@ -196,7 +196,7 @@
                             innerHTMLCert += 
                             `
                             <tr>
-                                <th scope="row" style="width: 32px;">${i+1}</th>
+                                <td style="width: 32px;">${i+1}</td>
                                 <td class="label-cell">${response.certifikat[i].type}</td>
                                 <td class="radio-cell">
                                     <input type="radio" value="${response.certifikat[i].ID}" name="radiogroup"/>
@@ -214,7 +214,7 @@
                             innerHTMLKort += 
                             `
                             <tr>
-                                <th scope="row" style="width: 32px;">${i+1}</th>
+                                <td style="width: 32px;">${i+1}</td>
                                 <td class="label-cell">${response.kørekort[i].type}</td>
                                 <td class="radio-cell">
                                     <input type="radio" value="${response.kørekort[i].ID}" name="radiogroup"/>

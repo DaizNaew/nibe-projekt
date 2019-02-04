@@ -39,24 +39,26 @@
                 </div>
                 <div style="padding: 25px"><!--Item 2-->
                     <div>
-                        <table class="table" style="width:auto; background-color: #9eafc033;">
-                            <thead  style="display: block">
-                                <tr>
-                                    <th scope="col" style="width: 32px;">#</th>
-                                    <th class="label-cell" scope="col">Fulde navn</th>
-                                    <th class="label-cell" scope="col">Mobil nr</th>
-                                    <th class="label-cell" scope="col">Adresse</th>
-                                    <th class="label-cell" scope="col">Medhjælper nr</th>
-                                    <th class="radio-cell" scope="col">
-                                        <!--<input type="checkbox" class="no-ripple"/>-->
-                                        <i class="icon-radio"></i>
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody class="tableBody" style="max-height: 400px;overflow: auto;display: block;overflow-x: hidden;">
-                                
-                            </tbody>
-                        </table>
+                        <div class="tableFixHead">
+                            <table class="table fixed_header" style="background-color: #9eafc033;">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" style="width: 32px;">#</th>
+                                        <th class="label-cell" scope="col">Fulde navn</th>
+                                        <th class="label-cell" scope="col">Mobil nr</th>
+                                        <th class="label-cell" scope="col">Adresse</th>
+                                        <th class="label-cell" scope="col">Medhjælper nr</th>
+                                        <th class="radio-cell" scope="col">
+                                            <!--<input type="checkbox" class="no-ripple"/>-->
+                                            <i class="icon-radio"></i>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="tableBody">
+                                    
+                                </tbody>
+                            </table>
+                        </div>
                         <div class="form-row form-button-row">
                             <a><button type="submit" @click="edittool" class="no-ripple col btn btn-primary godbtn">Rediger Bruger</button></a>
                             <a><button type="button" @click="deletetool" class="no-ripple col btn btn-primary godbtn deletebtn">Slet Bruger</button></a>
@@ -115,7 +117,7 @@
                             innerHTML += 
                             `
                             <tr>
-                                <th scope="row" style="width: 32px;">${i+1}</th>
+                                <td style="width: 32px;">${i+1}</td>
                                 <td class="label-cell aktivNavn">${response.records[i].name}</td>
                                 <td class="label-cell Kategori">${response.records[i].phoneNumber}</td>
                                 <td class="label-cell Mærke">${response.records[i].address}</td>

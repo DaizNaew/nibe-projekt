@@ -20,20 +20,22 @@
                 </div>
                 <div style="padding: 25px"><!--Item 2-->
                     <div>
-                        <table id="kattable" class="table" style="width:86%; min-width: 86%; max-width: 86%; background-color: #9eafc033">
-                            <thead>
-                                <tr>
-                                    <th scope="col" style="width: 32px;">#</th>
-                                    <th class="label-cell" scope="col">kategorier</th>
-                                    <th class="radio-cell" scope="col">
-                                        <!--<input type="checkbox" class="no-ripple"/>-->
-                                        <i class="icon-radio"></i>
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody class="tableBody">
-                            </tbody>
-                        </table>
+                        <div class="tableFixHead">
+                            <table id="kattable" class="table fixed_header" style="background-color: #9eafc033">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" style="width: 32px;">#</th>
+                                        <th class="label-cell" scope="col">kategorier</th>
+                                        <th class="radio-cell" scope="col">
+                                            <!--<input type="checkbox" class="no-ripple"/>-->
+                                            <i class="icon-radio"></i>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="tableBody">
+                                </tbody>
+                            </table>
+                        </div>
                         <div class="form-row form-button-row">
                             <a><button type="submit" @click="edittool" class="no-ripple col btn btn-primary godbtn">Rediger kategori</button></a>
                             <a><button type="button" @click="deletetool" class="no-ripple col btn btn-primary godbtn deletebtn">Slet kategori</button></a>
@@ -134,7 +136,7 @@
                             innerHTML += 
                             `
                             <tr>
-                                <th scope="row" style="width: 32px;">${i+1}</th>
+                                <td style="width: 32px;">${i+1}</td>
                                 <td class="label-cell">${response.categories[i].katNavn}</td>
                                 <td class="radio-cell">
                                     <input type="radio" value="${response.categories[i].ID}" name="radiogroup"/>

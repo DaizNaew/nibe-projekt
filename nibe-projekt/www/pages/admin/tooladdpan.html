@@ -50,26 +50,28 @@
                 </div>
                 <div style="padding: 25px"><!--Item 2-->
                     <div>
-                        <table class="table" style="width:auto; background-color: #9eafc033;">
-                            <thead style="display: block">
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th class="label-cell" scope="col">Værktøjs navn</th>
-                                    <th class="label-cell" scope="col">Kategori</th>
-                                    <th class="label-cell" scope="col">Mærke</th>
-                                    <th class="label-cell" scope="col">Model</th>
-                                    <th class="label-cell" scope="col">Serienummer</th>
-                                    <th class="label-cell" scope="col">AssetTag</th>
-                                    <th class="radio-cell" scope="col">
-                                        <!--<input type="checkbox" class="no-ripple"/>-->
-                                        <i class="icon-radio"></i>
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody class="tableBody" style="max-height: 400px;overflow: auto;display: block;overflow-x: hidden;">
-                                
-                            </tbody>
-                        </table>
+                        <div class="tableFixHead">
+                            <table class="table fixed_header" style="width:auto; background-color: #9eafc033;">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th class="label-cell" scope="col">Værktøjs navn</th>
+                                        <th class="label-cell" scope="col">Kategori</th>
+                                        <th class="label-cell" scope="col">Mærke</th>
+                                        <th class="label-cell" scope="col">Model</th>
+                                        <th class="label-cell" scope="col">Serienummer</th>
+                                        <th class="label-cell" scope="col">AssetTag</th>
+                                        <th class="radio-cell" scope="col">
+                                            <!--<input type="checkbox" class="no-ripple"/>-->
+                                            <i class="icon-radio"></i>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="tableBody">
+                                    
+                                </tbody>
+                            </table>
+                        </div>
                         <div class="form-row form-button-row">
                             <a><button type="submit" @click="edittool" class="no-ripple col btn btn-primary godbtn">Rediger Værktøj</button></a>
                             <a><button type="button" @click="deletetool" class="no-ripple col btn btn-primary godbtn deletebtn">Slet Værktøj</button></a>
@@ -194,7 +196,7 @@
                             innerHTML += 
                             `
                             <tr>
-                                <th scope="row">${i+1}</th>
+                                <td>${i+1}</td>
                                 <td class="label-cell aktivNavn">${tools.records[i].activeName}</td>
                                 <td class="label-cell Kategori">${tools.records[i].categoryName}</td>
                                 <td class="label-cell Mærke">${tools.records[i].brandName}</td>
