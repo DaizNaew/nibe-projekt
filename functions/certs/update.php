@@ -19,7 +19,7 @@
 
         http_response_code(200);
         echo json_encode(
-            array("message" => "Opdaterede element i databasen", "result" => 1, "statement" => $stmt)
+            array("message" => "Opdaterede element i databasen", "result" => 1)
         );
 
     } else {

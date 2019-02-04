@@ -24,8 +24,7 @@ if($stmt) {
     http_response_code(200);
     echo json_encode(
         array("message" => "Slettede element fra databasen", 
-        "result" => 1, 
-        "statement" => $stmt
+        "result" => 1
         )
     );
 

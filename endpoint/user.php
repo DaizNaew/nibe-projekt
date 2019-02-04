@@ -11,14 +11,14 @@ include_once '../database.inc';
 include_once '../models/User.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    $uname = $_GET['brugernavn'];
+    $id = $_GET['id'];
 
     $database = new Database();
     $db = $database->getConnection();
 
     $user = new User($db);
     // query products
-    $stmt = $user->read_uname($uname);
+    $stmt = $user->read($id);
     $num = $stmt->rowCount();
     
     // check if more than 0 record found
