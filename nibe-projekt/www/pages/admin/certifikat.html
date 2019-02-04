@@ -9,6 +9,7 @@
                                 <label for="aktivNavn" class="col">Navn</label>
                                 <input id="aktivNavn" type="text" required="required" class="form-control form-control-sm col"/>
                                 <input id="ID" type="hidden"/>
+                                <input id="tableID" type="hidden"/>
                             </div>
                             <div class="form-row">
                                 <label for="type" class="col">Type</label>
@@ -39,7 +40,7 @@
                                             </th>
                                         </tr>
                                     </thead>
-                                    <tbody class="tableBody">
+                                    <tbody class="tableCertBody">
                                     </tbody>
                                 </table>
                             </div>
@@ -55,7 +56,7 @@
                                             </th>
                                         </tr>
                                     </thead>
-                                    <tbody class="tableBody">
+                                    <tbody class="tableKortBody">
                                     </tbody>
                                 </table>
                             </div>
@@ -85,18 +86,33 @@
                     })
                 },
                 deletetool : () => {
-                    var checkBoxObj = $$('.tableBody').find('input[type="radio"]');
-                    app.dialog.confirm('Er du sikker på at du vil slette denne kategori fra databasen?', 'Slet kategori', function(){
-                    checkBoxObj.forEach(element => {
+                    var certCheckBoxObj = $$('.tableCertBody').find('input[type="radio"]');
+                    var kortCheckBoxObj = $$('.tableKortBody').find('input[type="radio"]');
+                    app.dialog.confirm('Er du sikker på at du vil slette denne certifikat/kørekort fra databasen?', 'Slet certifikat/kørekort', function(){
+                    certCheckBoxObj.forEach(element => {
                         if(element.checked) {
-                            app.request.getJSON(`http://10.11.4.136/cordova/functions/cats/delete.php?id=${element.value}`, (data) => {
+                            app.request.getJSON(`http://10.11.4.136/cordova/functions/certs/delete.php?id=${element.value}&tableid=0`, (data) => {
                                 if(data.result == 1) {
-                                    let delKatNavn = element.parentElement.parentElement.children[1].innerText;
-                                    app.dialog.alert(`Kategorie (<span style='color: green; font-weight: bold;'>${delKatNavn}</span>) blev slettet fra databasen.`, "Slet kategori", function(){
-                                        app.views.main.router.navigate("/toolkat/", {reloadCurrent: true,});
+                                    let delCertNavn = element.parentElement.parentElement.children[1].innerText;
+                                    app.dialog.alert(`Certifikatet (<span style='color: green; font-weight: bold;'>${delCertNavn}</span>) blev slettet fra databasen.`, "Slet certifikat", function(){
+                                        app.views.main.router.navigate("/certifikat/", {reloadCurrent: true,});
                                     });
                                 } else {
-                                    app.dialog.alert("Kategorien blev <span style='color: red; font-weight: bold;'>IKKE</span> slettet fra databasen.", "Slet kategori");
+                                    app.dialog.alert("Certifikatet blev <span style='color: red; font-weight: bold;'>IKKE</span> slettet fra databasen.", "Slet certifikat");
+                                }
+                            });
+                        }
+                    });
+                    kortCheckBoxObj.forEach(element => {
+                        if(element.checked) {
+                            app.request.getJSON(`http://10.11.4.136/cordova/functions/certs/delete.php?id=${element.value}&tableid=1`, (data) => {
+                                if(data.result == 1) {
+                                    let delKøreNavn = element.parentElement.parentElement.children[1].innerText;
+                                    app.dialog.alert(`Kørekortet (<span style='color: green; font-weight: bold;'>${delKøreNavn}</span>) blev slettet fra databasen.`, "Slet kørekort", function(){
+                                        app.views.main.router.navigate("/certifikat/", {reloadCurrent: true,});
+                                    });
+                                } else {
+                                    app.dialog.alert("Kørekortet blev <span style='color: red; font-weight: bold;'>IKKE</span> slettet fra databasen.", "Slet kørekort");
                                 }
                             });
                         }
@@ -105,19 +121,21 @@
                     })
                 },
                 inserttool : () => {
-                    let newKatNavn = document.getElementById('aktivNavn').value;
-                    if(newKatNavn == ""){
-                        app.dialog.alert("Navn feltet må ikke være tomt.", "Opret kategori");
+                    let newTingNavn = document.getElementById('aktivNavn').value;
+                    let tableID = document.getElementById('type').selectedIndex;
+                    let typenavn = document.getElementById('type').value + "et";
+                    if(newTingNavn == ""){
+                        app.dialog.alert("Navn feltet må ikke være tomt.", "Opret certifikat/kørekort");
                         return;
                     }
-                    app.request.post('http://10.11.4.136/cordova/endpoint/category.php', { katNavn:`${newKatNavn}` }, function(response){
+                    app.request.post('http://10.11.4.136/cordova/endpoint/certificate.php', { type:`${newTingNavn}`, tableID: tableID }, function(response){
                         if(response.result == 1){
-                            app.dialog.alert(`Kategorien (<span style="color: green; font-weight: bold;">${newKatNavn}</span>) blev tilføjet til databasen.`, "Opret kategori", function(){
-                                app.views.main.router.navigate("/toolkat/", {reloadCurrent: true,});
+                            app.dialog.alert(`${typenavn} (<span style="color: green; font-weight: bold;">${newTingNavn}</span>) blev tilføjet til databasen.`, "Opret certifikat/kørekort", function(){
+                                app.views.main.router.navigate("/certifikat/", {reloadCurrent: true,});
                             });
 
                         }else{
-                            app.dialog.alert("Kategorien blev <span style='color: red; font-weight: bold;'>IKKE</span> tilføjet til databasen.", "Opret kategori");
+                            app.dialog.alert(`${typenavn} blev <span style='color: red; font-weight: bold;'>IKKE</span> tilføjet til databasen.`, "Opret certifikat/kørekort");
                             return;
                         }
                     }, function(e, e2){
@@ -125,22 +143,38 @@
                 },
 
                 edittool : () => {
-                    var checkBoxObj = $$('.tableBody').find('input[type="radio"]');
-                    checkBoxObj.forEach(element => {
+                    var certCheckBoxObj = $$('.tableCertBody').find('input[type="radio"]');
+                    var kortCheckBoxObj = $$('.tableKortBody').find('input[type="radio"]');
+                    certCheckBoxObj.forEach(element => {
                         if(element.checked) {
                             document.getElementById('aktivNavn').value = element.parentElement.parentElement.children[1].innerHTML;
                             document.getElementById('ID').value = element.parentElement.parentElement.children[2].children[0].value;
+                            document.getElementById('tableID').value = 0;
                             document.getElementById("Opdaterbtn").disabled = false;
                             document.getElementById("Opretbtn").disabled = true; 
+                            document.getElementById("type").value = "Certifikat";
+                            document.getElementById("type").disabled = true; 
+                        }
+                    });
+                    kortCheckBoxObj.forEach(element => {
+                        if(element.checked) {
+                            document.getElementById('aktivNavn').value = element.parentElement.parentElement.children[1].innerHTML;
+                            document.getElementById('ID').value = element.parentElement.parentElement.children[2].children[0].value;
+                            document.getElementById('tableID').value = 1;
+                            document.getElementById("Opdaterbtn").disabled = false;
+                            document.getElementById("Opretbtn").disabled = true;
+                            document.getElementById("type").value = "Kørekort";
+                            document.getElementById("type").disabled = true; 
                         }
                     });
                 },
 
                 updatetool : () => {
-                    let updatedKatNavn = document.getElementById('aktivNavn').value;
-                    let updatedKatID = document.getElementById('ID').value;
-                    app.request.post("http://10.11.4.136/cordova/functions/cats/update.php", { katNavn:`${updatedKatNavn}`, ID:`${updatedKatID}`}, function(response){
-                        app.views.main.router.navigate("/toolkat/", {reloadCurrent: true,});
+                    let updatedType = document.getElementById('aktivNavn').value;
+                    let updatedID = document.getElementById('ID').value;
+                    let updatedtableID = document.getElementById('tableID').value;
+                    app.request.post("http://10.11.4.136/cordova/functions/certs/update.php", { type:`${updatedType}`, ID:`${updatedID}`, tableID:`${updatedtableID}`}, function(response){
+                        app.views.main.router.navigate("/certifikat/", {reloadCurrent: true,});
                     }, function(e, e2){
                     }, "json");
                     
@@ -149,30 +183,60 @@
         // Component States
         on: {
                 pageMounted: (page) => {
-                    let innerHTML = "";
+                    let innerHTMLCert = "";
+                    let innerHTMLKort = "";
                     var oldrow = null;
                     var self = this;
                     var app = self.app;
                     // request user data on page init
-                    app.request.getJSON('http://10.11.4.136/cordova/endpoint/category.php?id=-1', (response) => {
+                    app.request.getJSON('http://10.11.4.136/cordova/endpoint/certificate.php?id=-1&tableid=0', (response) => {
                         // update component state with new state
-                        for(let i = 0; i < response.categories.length; i++) {
+                        for(let i = 0; i < response.certifikat.length; i++) {
                             
-                            innerHTML += 
+                            innerHTMLCert += 
                             `
                             <tr>
                                 <th scope="row" style="width: 32px;">${i+1}</th>
-                                <td class="label-cell">${response.categories[i].katNavn}</td>
+                                <td class="label-cell">${response.certifikat[i].type}</td>
                                 <td class="radio-cell">
-                                    <input type="radio" value="${response.categories[i].ID}" name="radiogroup"/>
+                                    <input type="radio" value="${response.certifikat[i].ID}" name="radiogroup"/>
                                     <i class="icon-radio"></i>
                                 </td>
                             </tr>
                             `;
-                            $$('.tableBody').html(innerHTML);
+                            $$('.tableCertBody').html(innerHTMLCert);
                         }
                     });
-                    $$('.tableBody').on('click', (e) => {
+                    app.request.getJSON('http://10.11.4.136/cordova/endpoint/certificate.php?id=-1&tableid=1', (response) => {
+                        // update component state with new state
+                        for(let i = 0; i < response.kørekort.length; i++) {
+                            
+                            innerHTMLKort += 
+                            `
+                            <tr>
+                                <th scope="row" style="width: 32px;">${i+1}</th>
+                                <td class="label-cell">${response.kørekort[i].type}</td>
+                                <td class="radio-cell">
+                                    <input type="radio" value="${response.kørekort[i].ID}" name="radiogroup"/>
+                                    <i class="icon-radio"></i>
+                                </td>
+                            </tr>
+                            `;
+                            $$('.tableKortBody').html(innerHTMLKort);
+                        }
+                    });
+                    $$('.tableCertBody').on('click', (e) => {
+                        if(oldrow == null){
+                            oldrow = e;
+                        }else{
+                            $$(oldrow.target.parentElement).css('background-color', '');
+                            oldrow = e;
+                        }
+                            $$(e.target.parentElement).find('input[type="radio"]').prop('checked', true);
+                            $$(e.target.parentElement).css('background-color', '#4CAF50');
+                        
+                    });
+                    $$('.tableKortBody').on('click', (e) => {
                         if(oldrow == null){
                             oldrow = e;
                         }else{
