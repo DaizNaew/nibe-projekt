@@ -30,16 +30,17 @@
             },
             userVerify: function () {
                 let cardID = document.getElementById('cardID').value;
-                let brugernavn = app.data['username'];
+                let userID = app.data['userID'];
 
-                app.request.getJSON(`http://10.11.4.136/cordova/endpoint/user.php?brugernavn=${brugernavn}`, (response) =>{
+                app.request.getJSON(`http://10.11.4.136/cordova/endpoint/user.php?id=${userID}`, (response) =>{
+                    console.log(response);
                     if(response.records[0].cardID == cardID) {
                         this.setLoggedInState(cardID);
                     } else {
                         document.getElementById('errorcenter').style.display = "block";
                         document.getElementById('errorbox').innerHTML = "Forkert kort ID til denne bruger"
                     }
-                });
+                },function(e){console.log(e)});
             },
         },
         on: {
