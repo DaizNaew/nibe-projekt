@@ -50,8 +50,8 @@
                 </div>
                 <div style="padding: 25px"><!--Item 2-->
                     <div>
-                        <table class="table" style="width:auto; background-color: #9eafc033; overflow: scroll">
-                            <thead>
+                        <table class="table" style="width:auto; background-color: #9eafc033;">
+                            <thead style="display: block">
                                 <tr>
                                     <th scope="col">#</th>
                                     <th class="label-cell" scope="col">Værktøjs navn</th>
@@ -66,7 +66,7 @@
                                     </th>
                                 </tr>
                             </thead>
-                            <tbody class="tableBody">
+                            <tbody class="tableBody" style="max-height: 400px;overflow: auto;display: block;overflow-x: hidden;">
                                 
                             </tbody>
                         </table>
@@ -116,7 +116,7 @@
                         });
                     });
                 },
-                inserttool : () => {
+                inserttool : async () => {
 
                     let tool = {
                         activeName: $$('#aktivNavn').val(),
@@ -128,10 +128,24 @@
                         categoryID:  $$('#Kategori').val(),
                     };
 
-                    app.request.post('http://10.11.4.136/cordova/endpoint/equipment.php', tool, (data) => {
-                        let toastMessage = '';
+                    let dat;
+                    let toastMessage = '';
 
-                        if(data.result == 1) {
+                    let prom = new Promise((resolve, reject) => {
+                        for(let i = 1; i <= $$('#Antal').val(); i++) {
+                        app.request.post('http://10.11.4.136/cordova/endpoint/equipment.php', tool, (data) => {
+                         dat = data;
+                            resolve();
+                        }, (error) => {
+                            reject();
+                        }, 'json');
+                        
+                        }
+                    })
+
+                    await prom;
+
+                        if(dat.result == 1) {
                             toastMessage = 'Værktøjet blev sat ind i databasen';
                         } else {
                             toastMessage = 'Værktøjet blev IKKE sat ind i databasen'
@@ -139,9 +153,7 @@
                         app.dialog.alert(toastMessage, 'Opret Køretøj', () => {
                             app.views.main.router.navigate("/tooladdpan/", {reloadCurrent: true,});
                         });
-                    }, (error) => {
-                        
-                    }, 'json');
+                    
                 },
                 edittool : () => {
                     var checkBoxObj = $$('.tableBody').find('input[type="radio"]');
