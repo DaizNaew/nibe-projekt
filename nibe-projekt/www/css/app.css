@@ -322,5 +322,9 @@ button:disabled, button:disabled:hover {
 .tableFixHead th { 
   position: sticky; 
   top: 0; 
-  background-color: white;
+  background-color: #657a81;
+}
+
+tr:nth-child(even){
+  background-color: #83838333;
 }

@@ -40,7 +40,7 @@
                 <div style="padding: 25px"><!--Item 2-->
                     <div>
                         <div class="tableFixHead">
-                            <table class="table fixed_header" style="background-color: #9eafc033;">
+                            <table class="table fixed_header" style="background-color: #c5d9ec33;">
                                 <thead>
                                     <tr>
                                         <th scope="col" style="width: 32px;">#</th>
@@ -103,6 +103,7 @@
             on: {
                 pageMounted: (page) => {
                     let innerHTML = "";
+                    var oldrow = null;
                     var self = this;
                     var app = self.app;
                     app.request.getJSON('http://10.11.4.136/cordova/endpoint/category.php?id=-1', (cats) => {
@@ -132,8 +133,16 @@
                         }
                     });
                     $$('.tableBody').on('click', (e) => {
-                        $$(e.target.parentElement).find('input[type="radio"]').prop('checked', true);
-                    })
+                        if(oldrow == null){
+                            oldrow = e;
+                        }else{
+                            $$(oldrow.target.parentElement).css('background-color', '');
+                            oldrow = e;
+                        }
+                            $$(e.target.parentElement).find('input[type="radio"]').prop('checked', true);
+                            $$(e.target.parentElement).css('background-color', '#a8baad');
+                        
+                    });
                 }
             },
         }
