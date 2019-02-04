@@ -24,14 +24,12 @@ class User {
     // read products
 	function read($id) {
 
-        $id = strtolower($id);
-
         if($id == -1) {
             // select all query
             $query = "SELECT *, u.ID as ID, ug.ID as usergruppeID FROM " . $this->table_name . " u INNER JOIN usergruppe ug ON ug.ID = u.usergruppe";
         } else {
             // select query
-            $query = "SELECT *, u.ID as ID, ug.ID as usergruppeID FROM " . $this->table_name . " u INNER JOIN usergruppe ug ON ug.ID = u.usergruppe WHERE ID = "."'$uname'";
+            $query = "SELECT *, u.ID as ID, ug.ID as usergruppeID FROM " . $this->table_name . " u INNER JOIN usergruppe ug ON ug.ID = u.usergruppe WHERE u.ID = "."'$id'";
         }
     
         // prepare query statement
@@ -129,7 +127,7 @@ class User {
             return $products_arr;
         }
     }
-    
+
     function delete($id) {
         $query = "DELETE FROM " . $this->table_name . " WHERE ID = ".$id;
 
