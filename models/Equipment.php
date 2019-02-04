@@ -57,6 +57,23 @@ class Equipment {
         // execute query
         return $stmt->execute();
     }
+
+    function update($post) {
+        $aktivNavn = $post['activeName'];
+        $brand = $post['brandName'];
+        $model = $post['modelName'];
+        $serieNummer = $post['serialNumber'];
+        $assetTag = $post['assetTag'];
+        $stand = $post['condition'];
+        $katID = $post['categoryID'];
+        $id = $post['ID'];
+        $query = "UPDATE " . $this->table_name . " SET katNavn = '". $katNavn ."' WHERE ID = '" .$id."'";
+
+        $stmt = $this->conn->prepare($query);
+
+        return $stmt->execute();
+    }
+
     function delete($id) {
         $query = "DELETE FROM " . $this->table_name . " WHERE ID = ".$id;
 
