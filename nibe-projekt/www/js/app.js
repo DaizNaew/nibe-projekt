@@ -19,6 +19,7 @@ var app  = new Framework7({
       adminIDCardNumber: 0,
       adminConfirmedBool: false,
       navbarheight: 0,
+      serverip: "http://10.11.4.136/cordova/",
     };
   },
   // App root methods
@@ -66,7 +67,7 @@ var app  = new Framework7({
       let udlånerclass = document.getElementsByClassName("udlånertab");
       let guessclass = document.getElementsByClassName("guesttab");
 
-      if(app.data['usergruppe'] == 4){ //admin
+      if(app.data['usergruppe'] == 3){ //admin
 
         for(let element of adminclass) {
           element.style.display = "block";
@@ -80,7 +81,7 @@ var app  = new Framework7({
 
         app.views.main.router.navigate("/udlon/", {reloadCurrent: true,});
       }
-      else if(app.data['usergruppe'] == 3){ //udlåner
+      else if(app.data['usergruppe'] == 2){ //udlåner
 
 
         for(let element of udlånerclass) {

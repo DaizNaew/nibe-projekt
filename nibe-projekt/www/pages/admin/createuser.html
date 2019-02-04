@@ -106,13 +106,13 @@
                     var oldrow = null;
                     var self = this;
                     var app = self.app;
-                    app.request.getJSON('http://10.11.4.136/cordova/endpoint/category.php?id=-1', (cats) => {
-                        for(cat of cats.categories) {
-                            $$('#Kategori').append(`<option value="${cat.ID}">${cat.katNavn}</option>`)
+                    app.request.getJSON(`${app.data['serverip']}endpoint/usergroup.php?id=-1`, (response) => {
+                        for(group of response.usergroups) {
+                            $$('#Kategori').append(`<option value="${group.ID}">${group.title}</option>`)
                         }
                     });
                     // request user data on page init
-                    app.request.getJSON('http://10.11.4.136/cordova/endpoint/user.php?id=-1', (response) => {
+                    app.request.getJSON(`${app.data['serverip']}endpoint/user.php?id=-1`, (response) => {
                         // update component state with new state
                         for(let i = 0; i < response.records.length; i++) {
                             innerHTML += 

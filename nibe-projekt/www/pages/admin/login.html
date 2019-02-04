@@ -32,15 +32,14 @@
                 let cardID = document.getElementById('cardID').value;
                 let userID = app.data['userID'];
 
-                app.request.getJSON(`http://10.11.4.136/cordova/endpoint/user.php?id=${userID}`, (response) =>{
-                    console.log(response);
+                app.request.getJSON(`${app.data['serverip']}endpoint/user.php?id=${userID}`, (response) =>{
                     if(response.records[0].cardID == cardID) {
                         this.setLoggedInState(cardID);
                     } else {
                         document.getElementById('errorcenter').style.display = "block";
                         document.getElementById('errorbox').innerHTML = "Forkert kort ID til denne bruger"
                     }
-                },function(e){console.log(e)});
+                },function(e){});
             },
         },
         on: {

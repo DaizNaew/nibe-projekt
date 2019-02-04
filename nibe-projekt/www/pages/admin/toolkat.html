@@ -64,7 +64,7 @@
                     app.dialog.confirm('Er du sikker på at du vil slette denne kategori fra databasen?', 'Slet kategori', function(){
                     checkBoxObj.forEach(element => {
                         if(element.checked) {
-                            app.request.getJSON(`http://10.11.4.136/cordova/functions/cats/delete.php?id=${element.value}`, (data) => {
+                            app.request.getJSON(`${app.data['serverip']}functions/cats/delete.php?id=${element.value}`, (data) => {
                                 if(data.result == 1) {
                                     let delKatNavn = element.parentElement.parentElement.children[1].innerText;
                                     app.dialog.alert(`Kategorie (<span style='color: green; font-weight: bold;'>${delKatNavn}</span>) blev slettet fra databasen.`, "Slet kategori", function(){
@@ -85,7 +85,7 @@
                         app.dialog.alert("Navn feltet må ikke være tomt.", "Opret kategori");
                         return;
                     }
-                    app.request.post('http://10.11.4.136/cordova/endpoint/category.php', { katNavn:`${newKatNavn}` }, function(response){
+                    app.request.post(`${app.data['serverip']}endpoint/category.php`, { katNavn:`${newKatNavn}` }, function(response){
                         if(response.result == 1){
                             app.dialog.alert(`Kategorien (<span style="color: green; font-weight: bold;">${newKatNavn}</span>) blev tilføjet til databasen.`, "Opret kategori", function(){
                                 app.views.main.router.navigate("/toolkat/", {reloadCurrent: true,});
@@ -114,7 +114,7 @@
                 updatetool : () => {
                     let updatedKatNavn = document.getElementById('aktivNavn').value;
                     let updatedKatID = document.getElementById('ID').value;
-                    app.request.post("http://10.11.4.136/cordova/functions/cats/update.php", { katNavn:`${updatedKatNavn}`, ID:`${updatedKatID}`}, function(response){
+                    app.request.post(`${app.data['serverip']}functions/cats/update.php`, { katNavn:`${updatedKatNavn}`, ID:`${updatedKatID}`}, function(response){
                         app.views.main.router.navigate("/toolkat/", {reloadCurrent: true,});
                     }, function(e, e2){
                     }, "json");
@@ -129,7 +129,7 @@
                     var self = this;
                     var app = self.app;
                     // request user data on page init
-                    app.request.getJSON('http://10.11.4.136/cordova/endpoint/category.php?id=-1', (response) => {
+                    app.request.getJSON(`${app.data['serverip']}endpoint/category.php?id=-1`, (response) => {
                         // update component state with new state
                         for(let i = 0; i < response.categories.length; i++) {
                             

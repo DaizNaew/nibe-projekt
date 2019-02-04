@@ -91,7 +91,7 @@
                     app.dialog.confirm('Er du sikker på at du vil slette denne certifikat/kørekort fra databasen?', 'Slet certifikat/kørekort', function(){
                     certCheckBoxObj.forEach(element => {
                         if(element.checked) {
-                            app.request.getJSON(`http://10.11.4.136/cordova/functions/certs/delete.php?id=${element.value}&tableid=0`, (data) => {
+                            app.request.getJSON(`${app.data['serverip']}functions/certs/delete.php?id=${element.value}&tableid=0`, (data) => {
                                 if(data.result == 1) {
                                     let delCertNavn = element.parentElement.parentElement.children[1].innerText;
                                     app.dialog.alert(`Certifikatet (<span style='color: green; font-weight: bold;'>${delCertNavn}</span>) blev slettet fra databasen.`, "Slet certifikat", function(){
@@ -105,7 +105,7 @@
                     });
                     kortCheckBoxObj.forEach(element => {
                         if(element.checked) {
-                            app.request.getJSON(`http://10.11.4.136/cordova/functions/certs/delete.php?id=${element.value}&tableid=1`, (data) => {
+                            app.request.getJSON(`${app.data['serverip']}functions/certs/delete.php?id=${element.value}&tableid=1`, (data) => {
                                 if(data.result == 1) {
                                     let delKøreNavn = element.parentElement.parentElement.children[1].innerText;
                                     app.dialog.alert(`Kørekortet (<span style='color: green; font-weight: bold;'>${delKøreNavn}</span>) blev slettet fra databasen.`, "Slet kørekort", function(){
@@ -128,7 +128,7 @@
                         app.dialog.alert("Navn feltet må ikke være tomt.", "Opret certifikat/kørekort");
                         return;
                     }
-                    app.request.post('http://10.11.4.136/cordova/endpoint/certificate.php', { type:`${newTingNavn}`, tableID: tableID }, function(response){
+                    app.request.post(`${app.data['serverip']}endpoint/certificate.php`, { type:`${newTingNavn}`, tableID: tableID }, function(response){
                         if(response.result == 1){
                             app.dialog.alert(`${typenavn} (<span style="color: green; font-weight: bold;">${newTingNavn}</span>) blev tilføjet til databasen.`, "Opret certifikat/kørekort", function(){
                                 app.views.main.router.navigate("/certifikat/", {reloadCurrent: true,});
@@ -173,7 +173,7 @@
                     let updatedType = document.getElementById('aktivNavn').value;
                     let updatedID = document.getElementById('ID').value;
                     let updatedtableID = document.getElementById('tableID').value;
-                    app.request.post("http://10.11.4.136/cordova/functions/certs/update.php", { type:`${updatedType}`, ID:`${updatedID}`, tableID:`${updatedtableID}`}, function(response){
+                    app.request.post(`${app.data['serverip']}functions/certs/update.php`, { type:`${updatedType}`, ID:`${updatedID}`, tableID:`${updatedtableID}`}, function(response){
                         app.views.main.router.navigate("/certifikat/", {reloadCurrent: true,});
                     }, function(e, e2){
                     }, "json");
@@ -189,7 +189,7 @@
                     var self = this;
                     var app = self.app;
                     // request user data on page init
-                    app.request.getJSON('http://10.11.4.136/cordova/endpoint/certificate.php?id=-1&tableid=0', (response) => {
+                    app.request.getJSON(`${app.data['serverip']}endpoint/certificate.php?id=-1&tableid=0`, (response) => {
                         // update component state with new state
                         for(let i = 0; i < response.certifikat.length; i++) {
                             
@@ -207,7 +207,7 @@
                             $$('.tableCertBody').html(innerHTMLCert);
                         }
                     });
-                    app.request.getJSON('http://10.11.4.136/cordova/endpoint/certificate.php?id=-1&tableid=1', (response) => {
+                    app.request.getJSON(`${app.data['serverip']}endpoint/certificate.php?id=-1&tableid=1`, (response) => {
                         // update component state with new state
                         for(let i = 0; i < response.kørekort.length; i++) {
                             
