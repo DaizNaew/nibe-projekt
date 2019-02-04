@@ -1,8 +1,138 @@
 <template>
-<div class="page" data-name="createuser">
+    <div class="page" data-name="createuser">
+        <div id="gridwrapper">
+            <div class="grid">
+                <div style="padding: 10px" id="item1"><!--Item 1-->
+                    <div>
+                        <form>
+                            <div class="form-row">
+                                <label for="aktivNavn" class="col">Fulde Navn</label>
+                                <input id="aktivNavn" type="text" required="required" class="form-control form-control-sm col"/>
+                            </div>
+                            <div class="form-row">
+                                <label for="Mærke" class="col">Mobil Nr</label>
+                                <input id="Mærke" type="text" class="form-control form-control-sm col"/>
+                            </div>
+                            <div class="form-row">
+                                <label for="Model" class="col">Adresse</label>
+                                <input id="Model" type="text" class="form-control form-control-sm col"/>
+                            </div>
+                            <div class="form-row">
+                                <label for="Serienummer" class="col">Medhjælper Nr</label>
+                                <input id="Serienummer" type="text" required="required" class="form-control form-control-sm col"/>
+                            </div>
 
-    Opret låner siden
+                            <div class="form-row">
+                                <label for="Kategori" class="col">Kategori</label>
+                                <select id="Kategori" required="required" class="form-control form-control-sm col">
 
+                                </select>
+                            </div>
+                            <div class="form-row form-button-row">
+                                <a><button type="submit" @click="inserttool" class="no-ripple col btn btn-primary godbtn">Opret Bruger</button></a>
+                                <a><button type="submit" @click="updatetool" class="no-ripple col btn btn-primary godbtn" disabled>Opdater Bruger</button></a>
+                                <a><button type="button" @click="resetfields" class="no-ripple col btn btn-primary godbtn">Nulstil felter</button></a>
+                            </div>
+                            <input id="editID" type="hidden"/>
+                        </form>
+                    </div>
+                </div>
+                <div style="padding: 25px"><!--Item 2-->
+                    <div>
+                        <table class="table" style="width:auto; background-color: #9eafc033;">
+                            <thead  style="display: block">
+                                <tr>
+                                    <th scope="col" style="width: 32px;">#</th>
+                                    <th class="label-cell" scope="col">Fulde navn</th>
+                                    <th class="label-cell" scope="col">Mobil nr</th>
+                                    <th class="label-cell" scope="col">Adresse</th>
+                                    <th class="label-cell" scope="col">Medhjælper nr</th>
+                                    <th class="radio-cell" scope="col">
+                                        <!--<input type="checkbox" class="no-ripple"/>-->
+                                        <i class="icon-radio"></i>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="tableBody" style="max-height: 400px;overflow: auto;display: block;overflow-x: hidden;">
+                                
+                            </tbody>
+                        </table>
+                        <div class="form-row form-button-row">
+                            <a><button type="submit" @click="edittool" class="no-ripple col btn btn-primary godbtn">Rediger Bruger</button></a>
+                            <a><button type="button" @click="deletetool" class="no-ripple col btn btn-primary godbtn deletebtn">Slet Bruger</button></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+        </div>
+    </div>
+    </template>
 
-</div>
-</template>
+    <script>
+        return {
+            data: function () {
+                return {
+                };
+            },
+        // Component Methods
+            methods: {
+                resetfields : () => {
+                    app.dialog.confirm('Er du sikker på at du vil nulstille alle felter?', 'Nulstil Felter', function(){
+                        let inputs = $$('form').find('input');
+                        inputs.val('');
+                    });
+                },
+                deletetool : () => {
+
+                },
+                inserttool : async () => {
+                    
+                },
+                edittool : () => {
+
+                },
+                updatetool : () => {
+
+                }
+                
+            },
+        // Component States
+            on: {
+                pageMounted: (page) => {
+                    let innerHTML = "";
+                    var self = this;
+                    var app = self.app;
+                    app.request.getJSON('http://10.11.4.136/cordova/endpoint/category.php?id=-1', (cats) => {
+                        for(cat of cats.categories) {
+                            $$('#Kategori').append(`<option value="${cat.ID}">${cat.katNavn}</option>`)
+                        }
+                    });
+                    // request user data on page init
+                    app.request.getJSON('http://10.11.4.136/cordova/endpoint/user.php?id=-1', (response) => {
+                        // update component state with new state
+                        for(let i = 0; i < response.records.length; i++) {
+                            innerHTML += 
+                            `
+                            <tr>
+                                <th scope="row" style="width: 32px;">${i+1}</th>
+                                <td class="label-cell aktivNavn">${response.records[i].name}</td>
+                                <td class="label-cell Kategori">${response.records[i].phoneNumber}</td>
+                                <td class="label-cell Mærke">${response.records[i].address}</td>
+                                <td class="label-cell Model">${response.records[i].cardID}</td>
+                                <td class="radio-cell">
+                                    <input type="radio" value="${response.records[i].ID}" name="selectedTool"/>
+                                    <i class="icon-radio"></i>
+                                </td>
+                            </tr>
+                            `;
+                            $$('.tableBody').html(innerHTML);
+                        }
+                    });
+                    $$('.tableBody').on('click', (e) => {
+                        $$(e.target.parentElement).find('input[type="radio"]').prop('checked', true);
+                    })
+                }
+            },
+        }
+    </script>
