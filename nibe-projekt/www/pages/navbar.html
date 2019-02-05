@@ -3,7 +3,7 @@
 
 <div id="navbarwrapper"> 
     <nav class="navbar navbar-expand-sm bg-info navbar-dark">
-        <ul class="navbar-nav">
+        <ul class="navbar-nav" @click="clearadminnav">
           <li class="nav-item active">
             <a class="nav-link" href="/udlon/" data-view=".view-main" data-reload-current="true">Udlån</a>
           </li>
@@ -56,3 +56,14 @@
 </div>
 
 </template>
+
+<script>
+    return {
+    // Component Methods
+        methods: {
+          clearadminnav: function () {
+            app.methods.hideAdminNavbar();
+          }
+        },
+    }
+</script>
