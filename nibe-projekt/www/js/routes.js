@@ -20,11 +20,6 @@ routes = [
     url: './pages/settings.html',
   },
   {
-    name: 'login',
-    path: '/login/',
-    componentUrl: './pages/login.html',
-  },
-  {
     name: 'adminlogin',
     path: '/adminlogin/',
     componentUrl: './pages/admin/login.html'

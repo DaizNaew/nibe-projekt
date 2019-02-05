@@ -22,22 +22,21 @@
     return {
     // Component Methods
         methods: {
-            setLoggedInState: function (cardID) {
-                    app.data['adminIDCardNumber'] = cardID;
-                    app.data['adminConfirmedBool'] = true;
-                    app.methods.showAdminNavbar();
-                    app.views.main.router.navigate("/createuser/", {reloadCurrent: true,});
-            },
             userVerify: function () {
                 let cardID = document.getElementById('cardID').value;
                 let userID = app.data['userID'];
 
-                app.request.getJSON(`${app.data['serverip']}endpoint/user.php?id=${userID}`, (response) =>{
+                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllAdmins&param`, (response) =>{
                     if(response.records[0].cardID == cardID) {
-                        this.setLoggedInState(cardID);
+                        app.data['username'] = response.records[0].name;
+                        app.data['userID'] = response.records[0].ID;
+                        app.data['adminConfirmedBool'] = true;
+                        app.methods.showAdminNavbar();
+                        app.views.main.router.navigate("/createuser/", {reloadCurrent: true,});
+
                     } else {
                         document.getElementById('errorcenter').style.display = "block";
-                        document.getElementById('errorbox').innerHTML = "Forkert kort ID til denne bruger"
+                        document.getElementById('errorbox').innerHTML = "Kortet tilhøre ikke en Administrator"
                     }
                 },function(e){});
             },

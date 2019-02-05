@@ -4,30 +4,26 @@
 <div id="navbarwrapper"> 
     <nav class="navbar navbar-expand-sm bg-info navbar-dark">
         <ul class="navbar-nav">
-          <li class="nav-item active udlånertab">
+          <li class="nav-item active">
             <a class="nav-link" href="/udlon/" data-view=".view-main" data-reload-current="true">Udlån</a>
           </li>
-          <li class="nav-item udlånertab">
+          <li class="nav-item">
             <a class="nav-link" href="/aflervering/" data-view=".view-main" data-reload-current="true">Aflevering</a>
           </li>
-          <li class="nav-item udlånertab">
+          <li class="nav-item">
             <a class="nav-link" href="/reserver/" data-view=".view-main" data-reload-current="true">Reserver</a>
           </li>
-          <li class="nav-item guesttab">
+          <li class="nav-item">
             <a class="nav-link" href="/oversigt/" data-view=".view-main" data-reload-current="true">Oversigt</a>
           </li>
-          <li class="nav-item udlånertab">
+          <li class="nav-item">
             <a class="nav-link" href="/reservationer/" data-view=".view-main" data-reload-current="true">Reservationer</a>
           </li>
-          <li class="nav-item udlånertab">
+          <li class="nav-item">
             <a class="nav-link" href="/historik/" data-view=".view-main" data-reload-current="true">Historik</a>
           </li>
           <li class="nav-item adminbutton admintab">
             <a class="nav-link" href="/adminlogin/" data-view=".view-main" data-reload-current="true">Administrator</a>
-          </li>
-          <li class="nav-item">
-              <span class="nameLogout">{{$app.data['rigtignavn']}}</span>
-            <a class="nav-link nameLogout" @click="Logout" href="/login/" data-view=".view-main" data-reload-current="true">Log af</a>
           </li>
         </ul>
     </nav>
@@ -60,17 +56,3 @@
 </div>
 
 </template>
-
-
-<script>
-        return {
-        // Component Methods
-            methods: {
-                Logout: function () {
-                    app.data['user'] = false;
-                    app.methods.refreshNavbar();
-                },
-
-            },
-        }
-    </script>
