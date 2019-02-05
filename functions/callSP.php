@@ -7,7 +7,6 @@ header("Content-Type: application/json; charset=UTF-8");
  
 // database connection will be here
 include_once '../database.inc';
-include_once '../models/User.php';
 
 $sp = $_GET['sp'];
 $param = $_GET['param'];
