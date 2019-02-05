@@ -12,7 +12,6 @@ class User {
     public $phoneNumber;
     public $address;
     public $cardID;
-    public $brugernavn;
     public $usergruppe;
     public $title;
  
@@ -63,9 +62,9 @@ class User {
         return $stmt;
     }
     
-    function write($name, $number, $address, $cardId, $brugernavn, $adgangskode) {
+    function write($name, $number, $address, $cardId) {
         $brugernavn = strtolower($brugernavn);
-        $query = "INSERT INTO " . $this->table_name . " ('name','phoneNumber','address','cardID','brugernavn','adgangskode') VALUES " . "($name, $number, $address, $cardId, $brugernavn, $adgangskode)";
+        $query = "INSERT INTO " . $this->table_name . " ('name','phoneNumber','address','cardID') VALUES " . "($name, $number, $address, $cardId)";
         
         // prepare query statement
         $stmt = $this->conn->prepare($query);

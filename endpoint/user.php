@@ -36,7 +36,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 "phoneNumber" => $phoneNumber,
                 "address" => $address,
                 "cardID" => $cardID,
-                "brugernavn" => $brugernavn,
                 "usergruppe" => $usergruppe,
                 "usergruppetitle" => $title,
             );
