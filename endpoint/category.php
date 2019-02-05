@@ -63,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $Category = new Category($db);
     // query products
     $stmt = $Category->write($_POST);
-    if($stmt) {
+    if($stmt === true) {
 
         http_response_code(200);
         echo json_encode(
@@ -78,7 +78,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         echo json_encode(
             array("message" => "Kunne ikke Kategori i databasen",
             "result" => 0,
-            "error" => '')
+            "error" => $stmt->getMessage(),
+            "errMessage" => `Kategorien `.$_POST['katNavn'].` findes allerede i databasen`)
         );
     }
 }

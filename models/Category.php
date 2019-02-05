@@ -39,9 +39,14 @@ class Category {
         
         // prepare query statement
         $stmt = $this->conn->prepare($query);
-    
-        // execute query
-        return $stmt->execute();
+
+        try {
+            // execute query
+            return $stmt->execute();
+        } catch (PDOException $e) {
+            return ($e);
+        }
+        
     }
 
     function update($post) {
@@ -50,6 +55,8 @@ class Category {
         $query = "UPDATE " . $this->table_name . " SET katNavn = '". $katNavn ."' WHERE ID = '" .$id."'";
 
         $stmt = $this->conn->prepare($query);
+        
+        if(!$stmt) return $this->conn->errorInfo();
 
         return $stmt->execute();
     }
