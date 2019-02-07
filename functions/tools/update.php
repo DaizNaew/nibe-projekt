@@ -5,20 +5,20 @@
     
     // database connection will be here
     include_once '../../database.inc';
-    include_once '../../models/Category.php';
+    include_once '../../models/Equipment.php';
 
     $database = new Database();
     $db = $database->getConnection();
 
-    $category = new Category($db);
+    $Equipment = new Equipment($db);
 
-    $stmt = $category->update($_POST);
+    $stmt = $Equipment->update($_POST);
 
     if($stmt) {
 
         http_response_code(200);
         echo json_encode(
-            array("message" => "Opdaterede Kategori i databasen", "result" => 1)
+            array("message" => "Opdaterede Equipment i databasen", "result" => 1)
         );
 
     } else {
@@ -27,7 +27,7 @@
     
         // tell the user no products found
         echo json_encode(
-            array("message" => "Kunne ikke opdaterede Kategori i databasen",
+            array("message" => "Kunne ikke opdaterede Equipment i databasen",
             "result" => 0,
             "error" => '')
         );

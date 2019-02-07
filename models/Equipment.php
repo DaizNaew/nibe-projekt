@@ -67,7 +67,7 @@ class Equipment {
         $stand = $post['condition'];
         $katID = $post['categoryID'];
         $id = $post['ID'];
-        $query = "UPDATE " . $this->table_name . " SET katNavn = '". $katNavn ."' WHERE ID = '" .$id."'";
+        $query = "UPDATE " . $this->table_name . " SET aktivNavn = '" . $aktivNavn . "', brand = '" . $brand . "', model = '" . $model . "', serieNummer = '" . $serieNummer . "', assetTag = '" . $assetTag . "', stand = '" . $stand . "', katID = '" . $katID . "' WHERE ID = '" .$id."'";
 
         $stmt = $this->conn->prepare($query);
 
