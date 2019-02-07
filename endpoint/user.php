@@ -66,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $User = new User($db);
     // query products
     $stmt = $User->write($_POST);
-    if($stmt) {
+    if($stmt === true) {
 
         http_response_code(200);
         echo json_encode(
@@ -79,9 +79,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     
         // tell the user no products found
         echo json_encode(
-            array("message" => "Insert blev ikke fuldført",
+            array("message" => "Kunne ikke indsætte i databasen",
             "result" => 0,
-            "error" => '')
+            "error" => $stmt->getMessage(),
+            "errMessage" => `Kategorien `.$_POST['name'].` findes allerede i databasen`)
         );
     }
 }

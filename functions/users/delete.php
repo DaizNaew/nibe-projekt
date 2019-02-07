@@ -18,10 +18,12 @@ $user = new User($db);
 
 // query products
 $stmt = $user->delete($id);
-if($stmt) {
+
+if($stmt === true) {
+
     http_response_code(200);
     echo json_encode(
-        array("message" => "Slettede Brugeren fra databasen", "result" => 1)
+        array("message" => "Sletning blev fuldført", "result" => 1)
     );
 
 } else {
@@ -30,9 +32,10 @@ if($stmt) {
 
     // tell the user no products found
     echo json_encode(
-        array("message" => "Kunne ikke slette Brugeren fra databasen",
+        array("message" => "Kunne ikke slette fra databasen",
         "result" => 0,
-        "error" => '')
+        "error" => $stmt->getMessage(),
+        )
     );
 }
 
