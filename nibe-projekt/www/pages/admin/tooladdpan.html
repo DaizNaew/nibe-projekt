@@ -40,9 +40,9 @@
                                 </select>
                             </div>
                             <div class="form-row form-button-row">
-                                <a><button type="submit" @click="inserttool" class="no-ripple col btn btn-primary godbtn">Opret Værktøj</button></a>
-                                <a><button type="submit" @click="updatetool" class="no-ripple col btn btn-primary godbtn" disabled>Opdater Værktøj</button></a>
-                                <a><button type="button" @click="resetfields" class="no-ripple col btn btn-primary godbtn">Nulstil felter</button></a>
+                                <a><button id="insert" type="submit" @click="inserttool" class="no-ripple col btn btn-primary godbtn">Opret Værktøj</button></a>
+                                <a><button id="update" type="submit" @click="updatetool" class="no-ripple col btn btn-primary godbtn" disabled>Opdater Værktøj</button></a>
+                                <a><button id="reset" type="button" @click="resetfields" class="no-ripple col btn btn-primary godbtn">Nulstil felter</button></a>
                             </div>
                             <input id="editID" type="hidden"/>
                         </form>
@@ -96,6 +96,10 @@
                     app.dialog.confirm('Er du sikker på at du vil nulstille alle felter?', 'Nulstil Felter', function(){
                         let inputs = $$('form').find('input');
                         inputs.val('');
+                        $$('form').find('#Antal').prop('disabled', false);
+                        $$('form').find('#update').prop('disabled', true);
+                        $$('form').find('#insert').prop('disabled', false);
+                        $$('form').find(`#Kategori`).val(0);
                     });
                 },
                 deletetool : () => {
@@ -152,7 +156,7 @@
                         } else {
                             toastMessage = 'Værktøjet blev IKKE sat ind i databasen'
                         }
-                        app.dialog.alert(toastMessage, 'Opret Køretøj', () => {
+                        app.dialog.alert(toastMessage, 'Opret Værktøj', () => {
                             app.views.main.router.navigate("/tooladdpan/", {reloadCurrent: true,});
                         });
                     
@@ -160,21 +164,65 @@
                 edittool : () => {
                     var checkBoxObj = $$('.tableBody').find('input[type="radio"]');
                     let inputFields = $$('form').find(`input[type="text"]`);
-                    console.dir($$(inputFields));
+                    $$('form').find('#Antal').prop('disabled', true)
+                    $$('form').find('#update').prop('disabled', false);
+                    $$('form').find('#insert').prop('disabled', true);
                         checkBoxObj.forEach(element => {
                             if(element.checked) {
+                                $$('form').find('#editID').val($$(element.parentElement.parentElement).find('input[type="radio"]').val());
                                 let cells = $$(element.parentElement.parentElement).find('.label-cell');
                                 cells.forEach(element => {
-                                    console.dir( element.classList[1] );
-                                    //console.dir( $$(inputFields).find(`#${element.classList[1]}`));
-                                    //console.dir( $$(inputFields).find(`input[id="Stand"]`));
+                                    input = $$(inputFields).find(`${element.classList[1]}`).val();
+                                    input_data = element.firstChild.data;
+                                    $$('form').find(`#${element.classList[1]}`).val(input_data);
+                                    if(element.classList[1] == 'Kategori') {
+                                        $$('form').find(`#${element.classList[1]}`).val(element.firstChild.parentElement.attributes[1].value);
+                                    }
                                 })
                                 
                             }
                         });
                 },
-                updatetool : () => {
+                updatetool : async () => {
+                    let tool = {
+                        activeName: $$('#aktivNavn').val(),
+                        brandName:  $$('#Mærke').val(),
+                        modelName:  $$('#Model').val(),
+                        serialNumber:  $$('#Serienummer').val(),
+                        assetTag:  $$('#AssetTag').val(),
+                        condition:  $$('#Stand').val(),
+                        categoryID:  $$('#Kategori').val(),
+                        ID: $$('#editID').val(),
+                    };
 
+                    console.dir(tool);
+
+                    let dat;
+                    let toastMessage = '';
+
+                    let prom = new Promise((resolve, reject) => {
+
+                        app.request.post(`${app.data['serverip']}functions/tools/update.php`, tool, (data) => {
+                         dat = data;
+                            resolve();
+                        }, (error) => {
+                            console.error(error);
+                            reject();
+                        }, 'json');
+                        
+                        
+                    })
+
+                    await prom;
+
+                        if(dat.result == 1) {
+                            toastMessage = 'Værktøjet blev opdateret i databasen';
+                        } else {
+                            toastMessage = 'Værktøjet blev opdateret i databasen';
+                        }
+                        app.dialog.alert(toastMessage, 'Opdater Værktøj', () => {
+                            app.views.main.router.navigate("/tooladdpan/", {reloadCurrent: true,});
+                        });
                 }
                 
             },
@@ -199,7 +247,7 @@
                             <tr>
                                 <td>${i+1}</td>
                                 <td class="label-cell aktivNavn">${tools.records[i].activeName}</td>
-                                <td class="label-cell Kategori">${tools.records[i].categoryName}</td>
+                                <td class="label-cell Kategori" value="${tools.records[i].categoryID}">${tools.records[i].categoryName}</td>
                                 <td class="label-cell Mærke">${tools.records[i].brandName}</td>
                                 <td class="label-cell Model">${tools.records[i].modelName}</td>
                                 <td class="label-cell Serienummer">${tools.records[i].serialNumber}</td>
