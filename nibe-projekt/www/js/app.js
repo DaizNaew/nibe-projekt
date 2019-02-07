@@ -28,6 +28,11 @@ var app  = new Framework7({
         document.getElementById('adminnavbarwrapper').style.display = "block";
       }
     },
+
+    hideAdminNavbar: function (){
+      app.data['adminConfirmedBool'] = false;
+      document.getElementById('adminnavbarwrapper').style.display = "none";
+    },
   },
   // App routes
   routes: routes,
