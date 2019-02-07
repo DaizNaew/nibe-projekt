@@ -40,15 +40,23 @@ class User {
         return $stmt;
     }
     
-    function write($name, $number, $address, $cardId, $usergruppe) {
-        $brugernavn = strtolower($brugernavn);
-        $query = "INSERT INTO " . $this->table_name . " ('name','phoneNumber','address','cardID','usergruppe') VALUES " . "($name, $number, $address, $cardId, $usergruppe)";
+    function write($post) {
+        $name = $post['name'];
+        $number = $post['phoneNumber'];
+        $address = $post['address'];
+        $cardId = $post['cardID'];
+        $usergruppe = $post['usergruppe'];
+        $query = "INSERT INTO " . $this->table_name . " (name,phoneNumber,address,cardID,usergruppe) VALUES " . "('$name', '$number', '$address', '$cardId', '$usergruppe')";
         
         // prepare query statement
         $stmt = $this->conn->prepare($query);
     
-        // execute query
-        $stmt->execute();
+        try {
+            // execute query
+            return $stmt->execute();
+        } catch (PDOException $e) {
+            return ($e);
+        }
     }
 
     function delete($id) {
@@ -56,7 +64,12 @@ class User {
 
         $stmt = $this->conn->prepare($query);
 
-        return $stmt->execute();
+        try {
+            // execute query
+            return $stmt->execute();
+        } catch (PDOException $e) {
+            return ($e);
+        }
     }
 
     function update($post) {
