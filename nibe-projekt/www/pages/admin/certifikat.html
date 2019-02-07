@@ -82,7 +82,8 @@
                     app.dialog.confirm('Er du sikker på at du vil nulstille alle felter?', 'Nulstil felter', function(){
                         document.getElementById('aktivNavn').value = "";
                         document.getElementById("Opdaterbtn").disabled = true;
-                        document.getElementById("Opretbtn").disabled = false; 
+                        document.getElementById("Opretbtn").disabled = false;
+                        document.getElementById("type").disabled = false; 
                     })
                 },
                 deletetool : () => {
