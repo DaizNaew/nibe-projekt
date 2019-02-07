@@ -58,5 +58,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             array("message" => "Ingen brugere fundet", "result" => 0)
         );
     }
+} else if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    
+    $database = new Database();
+    $db = $database->getConnection();
+
+    $User = new User($db);
+    // query products
+    $stmt = $User->write($_POST);
+    if($stmt) {
+
+        http_response_code(200);
+        echo json_encode(
+            array("message" => "Insert blev fuldført", "result" => 1)
+        );
+
+    } else {
+        // set response code - 404 Not found
+        http_response_code(200);
+    
+        // tell the user no products found
+        echo json_encode(
+            array("message" => "Insert blev ikke fuldført",
+            "result" => 0,
+            "error" => '')
+        );
+    }
 }
 ?>

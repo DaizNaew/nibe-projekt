@@ -40,9 +40,9 @@ class User {
         return $stmt;
     }
     
-    function write($name, $number, $address, $cardId) {
+    function write($name, $number, $address, $cardId, $usergruppe) {
         $brugernavn = strtolower($brugernavn);
-        $query = "INSERT INTO " . $this->table_name . " ('name','phoneNumber','address','cardID') VALUES " . "($name, $number, $address, $cardId)";
+        $query = "INSERT INTO " . $this->table_name . " ('name','phoneNumber','address','cardID','usergruppe') VALUES " . "($name, $number, $address, $cardId, $usergruppe)";
         
         // prepare query statement
         $stmt = $this->conn->prepare($query);
@@ -53,6 +53,20 @@ class User {
 
     function delete($id) {
         $query = "DELETE FROM " . $this->table_name . " WHERE ID = ".$id;
+
+        $stmt = $this->conn->prepare($query);
+
+        return $stmt->execute();
+    }
+
+    function update($post) {
+        $name = $post['name'];
+        $phoneNumber = $post['phoneNumber'];
+        $address = $post['address'];
+        $cardID = $post['cardID'];
+        $usergruppe = $post['usergruppe'];
+        $id = $post['ID'];
+        $query = "UPDATE " . $this->table_name . " SET name = '" . $name . "', phoneNumber = '" . $phoneNumber . "', address = '" . $address . "', cardID = '" . $cardID . "', usergruppe = '" . $usergruppe . "' WHERE ID = '" .$id."'";
 
         $stmt = $this->conn->prepare($query);
 
