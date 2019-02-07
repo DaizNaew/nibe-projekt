@@ -83,6 +83,11 @@ class User {
 
         $stmt = $this->conn->prepare($query);
 
-        return $stmt->execute();
+        try {
+            // execute query
+            return $stmt->execute();
+        } catch (PDOException $e) {
+            return ($e);
+        }
     }
 }

@@ -14,11 +14,11 @@
 
     $stmt = $User->update($_POST);
 
-    if($stmt) {
+    if($stmt === true) {
 
         http_response_code(200);
         echo json_encode(
-            array("message" => "Opdaterede Bruger i databasen", "result" => 1)
+            array("message" => "Opdatering blev fuldført", "result" => 1)
         );
 
     } else {
@@ -27,8 +27,9 @@
     
         // tell the user no products found
         echo json_encode(
-            array("message" => "Kunne ikke opdaterede Bruger i databasen",
+            array("message" => "Kunne ikke Opdatere databasen",
             "result" => 0,
-            "error" => '')
+            "error" => $stmt->getMessage(),
+            )
         );
     }
