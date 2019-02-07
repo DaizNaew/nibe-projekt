@@ -6,32 +6,32 @@
                     <div>
                         <form>
                             <div class="form-row">
-                                <label for="aktivNavn" class="col">Fulde Navn</label>
-                                <input id="aktivNavn" type="text" required="required" class="form-control form-control-sm col"/>
+                                <label for="Navn" class="col">Fulde Navn</label>
+                                <input id="Navn" type="text" required="required" class="form-control form-control-sm col"/>
                             </div>
                             <div class="form-row">
-                                <label for="Mærke" class="col">Mobil Nr</label>
-                                <input id="Mærke" type="text" class="form-control form-control-sm col"/>
+                                <label for="Mobilnr" class="col">Mobil Nr</label>
+                                <input id="Mobilnr" type="text" class="form-control form-control-sm col"/>
                             </div>
                             <div class="form-row">
-                                <label for="Model" class="col">Adresse</label>
-                                <input id="Model" type="text" class="form-control form-control-sm col"/>
+                                <label for="Adresse" class="col">Adresse</label>
+                                <input id="Adresse" type="text" class="form-control form-control-sm col"/>
                             </div>
                             <div class="form-row">
-                                <label for="Serienummer" class="col">Medhjælper Nr</label>
-                                <input id="Serienummer" type="text" required="required" class="form-control form-control-sm col"/>
+                                <label for="Medhjælpernr" class="col">Medhjælper Nr</label>
+                                <input id="Medhjælpernr" type="text" required="required" class="form-control form-control-sm col"/>
                             </div>
 
                             <div class="form-row">
-                                <label for="Kategori" class="col">Kategori</label>
-                                <select id="Kategori" required="required" class="form-control form-control-sm col">
+                                <label for="Brugertype" class="col">Bruger Type</label>
+                                <select id="Brugertype" required="required" class="form-control form-control-sm col">
 
                                 </select>
                             </div>
                             <div class="form-row form-button-row">
-                                <a><button type="submit" @click="inserttool" class="no-ripple col btn btn-primary godbtn">Opret Bruger</button></a>
-                                <a><button type="submit" @click="updatetool" class="no-ripple col btn btn-primary godbtn" disabled>Opdater Bruger</button></a>
-                                <a><button type="button" @click="resetfields" class="no-ripple col btn btn-primary godbtn">Nulstil felter</button></a>
+                                <a><button id="insert" type="submit" @click="inserttool" class="no-ripple col btn btn-primary godbtn">Opret Bruger</button></a>
+                                <a><button id="update" type="submit" @click="updatetool" class="no-ripple col btn btn-primary godbtn" disabled>Opdater Bruger</button></a>
+                                <a><button id="reset" type="button" @click="resetfields" class="no-ripple col btn btn-primary godbtn">Nulstil felter</button></a>
                             </div>
                             <input id="editID" type="hidden"/>
                         </form>
@@ -83,19 +83,87 @@
                     app.dialog.confirm('Er du sikker på at du vil nulstille alle felter?', 'Nulstil Felter', function(){
                         let inputs = $$('form').find('input');
                         inputs.val('');
+                        document.getElementById("Brugertype").value = "1";
+                        document.getElementById("update").disabled = true;
+                        document.getElementById("insert").disabled = false;
                     });
                 },
                 deletetool : () => {
-
+                    var checkBoxObj = $$('.tableBody').find('input[type="radio"]');
+                    app.dialog.confirm('Er du sikker på at du vil slette denne bruger fra databasen?', 'Slet Bruger', function(){
+                    checkBoxObj.forEach(element => {
+                        if(element.checked) {
+                            app.request.getJSON(`${app.data['serverip']}functions/users/delete.php?id=${element.value}`, (data) => {
+                                if(data.result == 1) {
+                                    let delbrugerNavn = element.parentElement.parentElement.children[1].innerText;
+                                    app.dialog.alert(`Brugeren (<span style='color: green; font-weight: bold;'>${delbrugerNavn}</span>) blev slettet fra databasen.`, "Slet Bruger", function(){
+                                        app.views.main.router.navigate("/createuser/", {reloadCurrent: true,});
+                                    });
+                                } else {
+                                    app.dialog.alert("Brugeren blev <span style='color: red; font-weight: bold;'>IKKE</span> slettet fra databasen.", "Slet Bruger");
+                                }
+                            });
+                        }
+                    });
+                    })
                 },
                 inserttool : async () => {
+                    let newNavn = document.getElementById('Navn').value;
+                    let newMobilnr = document.getElementById('Mobilnr').value;
+                    let newAdresse = document.getElementById('Adresse').value;
+                    let newMedhjælpernr = document.getElementById('Medhjælpernr').value;
+                    let gruppeID = document.getElementById('Brugertype').selectedIndex +1;
+                    if(newNavn == "" || newMobilnr == "" || newAdresse == "" || newMedhjælpernr == ""){
+                        app.dialog.alert("Ingen felter må ikke være tomme.", "Opret Bruger");
+                        return;
+                    }
+                    app.request.post(`${app.data['serverip']}endpoint/user.php`, { name: newNavn, phoneNumber: newMobilnr, address:newAdresse, cardID:newMedhjælpernr, usergruppe:gruppeID }, function(response){
+                        if(response.result == 1){
+                            app.dialog.alert(`Brugeren (<span style="color: green; font-weight: bold;">${newNavn}</span>) blev tilføjet til databasen.`, "Opret Bruger", function(){
+                                app.views.main.router.navigate("/createuser/", {reloadCurrent: true,});
+                            });
+
+                        }else{
+                            app.dialog.alert(`${newNavn} blev <span style='color: red; font-weight: bold;'>IKKE</span> tilføjet til databasen.`, "Opret Bruger");
+                            return;
+                        }
+                    }, function(e, e2){
+                    }, "json");
                     
                 },
                 edittool : () => {
-
+                    var checkBoxObj = $$('.tableBody').find('input[type="radio"]');
+                    let inputFields = $$('form').find(`input[type="text"]`);
+                    $$('form').find('#update').prop('disabled', false);
+                    $$('form').find('#insert').prop('disabled', true);
+                        checkBoxObj.forEach(element => {
+                            if(element.checked) {
+                                $$('form').find('#editID').val($$(element.parentElement.parentElement).find('input[type="radio"]').val());
+                                let cells = $$(element.parentElement.parentElement).find('.label-cell');
+                                cells.forEach(element => {
+                                    input = $$(inputFields).find(`${element.classList[1]}`).val();
+                                    input_data = element.firstChild.data;
+                                    $$('form').find(`#${element.classList[1]}`).val(input_data);
+                                    if(element.classList[1] == 'Brugertype') {
+                                        $$('form').find(`#${element.classList[1]}`).val(element.firstChild.parentElement.attributes[2].value);
+                                    }
+                                })
+                                
+                            }
+                        });
                 },
                 updatetool : () => {
-
+                    let newUserID = document.getElementById('editID').value;
+                    let newNavn = document.getElementById('Navn').value;
+                    let newMobilnr = document.getElementById('Mobilnr').value;
+                    let newAdresse = document.getElementById('Adresse').value;
+                    let newMedhjælpernr = document.getElementById('Medhjælpernr').value;
+                    let gruppeID = document.getElementById('Brugertype').selectedIndex +1;
+                    app.request.post(`${app.data['serverip']}functions/users/update.php`, { ID: newUserID, name: newNavn, phoneNumber: newMobilnr, address:newAdresse, cardID:newMedhjælpernr, usergruppe:gruppeID }, function(response){
+                        app.views.main.router.navigate("/createuser/", {reloadCurrent: true,});
+                    }, function(e, e2){
+                    }, "json");
+                    
                 }
                 
             },
@@ -108,7 +176,7 @@
                     var app = self.app;
                     app.request.getJSON(`${app.data['serverip']}endpoint/usergroup.php?id=-1`, (response) => {
                         for(group of response.usergroups) {
-                            $$('#Kategori').append(`<option value="${group.ID}">${group.title}</option>`)
+                            $$('#Brugertype').append(`<option value="${group.ID}">${group.title}</option>`)
                         }
                     });
                     // request user data on page init
@@ -119,10 +187,11 @@
                             `
                             <tr>
                                 <td style="width: 32px;">${i+1}</td>
-                                <td class="label-cell aktivNavn">${response.records[i].name}</td>
-                                <td class="label-cell Kategori">${response.records[i].phoneNumber}</td>
-                                <td class="label-cell Mærke">${response.records[i].address}</td>
-                                <td class="label-cell Model">${response.records[i].cardID}</td>
+                                <td class="label-cell Navn">${response.records[i].name}</td>
+                                <td class="label-cell Mobilnr">${response.records[i].phoneNumber}</td>
+                                <td class="label-cell Adresse">${response.records[i].address}</td>
+                                <td class="label-cell Medhjælpernr">${response.records[i].cardID}</td>
+                                <td class="label-cell Brugertype" style="display: none;" value="${response.records[i].usergruppe}">${response.records[i].usergruppetitle}</td>
                                 <td class="radio-cell">
                                     <input type="radio" value="${response.records[i].ID}" name="selectedTool"/>
                                     <i class="icon-radio"></i>
