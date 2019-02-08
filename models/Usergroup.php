@@ -26,10 +26,12 @@ class Usergroup {
         // prepare query statement
         $stmt = $this->conn->prepare($query);
     
-        // execute query
-        $stmt->execute();
-    
-        return $stmt;
+        try {
+            // execute query
+            return $stmt->execute();
+        } catch (PDOException $e) {
+            return ($e);
+        }
     }
     
     function write($post) {

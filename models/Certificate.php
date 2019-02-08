@@ -41,8 +41,12 @@ class Certificate {
         // prepare query statement
         $stmt = $this->conn->prepare($query);
     
-        // execute query
-        return $stmt->execute();
+        try {
+            // execute query
+            return $stmt->execute();
+        } catch (PDOException $e) {
+            return ($e);
+        }
     }
 
     function update($post) {

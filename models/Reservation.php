@@ -73,8 +73,12 @@ class Reservation {
         // prepare query statement
         $stmt = $this->conn->prepare($query);
     
-        // execute query
-        $stmt->execute();
+        try {
+            // execute query
+            return $stmt->execute();
+        } catch (PDOException $e) {
+            return ($e);
+        }
     }
 
     function delete($id) {
