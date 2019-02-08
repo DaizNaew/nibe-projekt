@@ -1,13 +1,31 @@
 <?php
 
-class Equipment {
+class Reservation {
  
     // database connection and table name
     private $conn;
-    private $table_name = "equipment";
+    private $table_name = "reservation";
  
     // object properties
     public $ID;
+
+    // User properties
+    public $userID;
+    public $name;
+    public $phoneNumber;
+    public $address;
+    public $cardID;
+    public $brugernavn;
+    public $usergruppe;
+
+    // Loan  Props
+    public $dateStart;
+    public $expectedDateEnd;
+    public $actualDateEnd;
+    public $description;
+
+    // Tool props
+    public $toolID;
     public $activeName;
     public $brandName;
     public $modelName;
@@ -17,6 +35,9 @@ class Equipment {
     public $categoryID;
     public $categoryName;
     public $inHouse;
+
+    // Loan Props
+    public $udløbet;
  
     // constructor with $db as database connection
     public function __construct($db) {
@@ -25,13 +46,16 @@ class Equipment {
 
 	// read products
 	function read($id) {
-        $query = "SELECT * FROM " . $this->table_name." INNER JOIN kategori k ON k.ID = equipment.ID";
-        
-        if($id == -1) {
-        } else {
-            // select query
-            $query .= " WHERE equipment.ID = ".$id;
-        }
+        $query = "SELECT reservation.ID as ID,
+		user.name as userName, user.phoneNumber as userPhoneNummer, user.cardID as userCardID, 
+		e.`aktivNavn` as equipmentNavn, e.assetTag as equipmentAsset, e.brand as equipmentBrand, e.model as equipmentModel, e.serieNummer as equipmentSerieNummer, e.stand as equipmentCondition,
+		k.katNavn as equipmentKategori,
+		date_format(dateStart,'%d-%m-%Y %H:%i:%s ') as dateStart, date_format(expectedDateEnd,'%d-%m-%Y %H:%i:%s ') as expectedDateEnd, date_format(actualDateEnd,'%d-%m-%Y %H:%i:%s ') as actualDateEnd
+		FROM reservation
+		INNER JOIN user ON user.ID = reservation.userID
+		INNER JOIN equipment e ON e.ID = reservation.equipmentID
+		INNER JOIN kategori k ON k.ID = e.katID
+        WHERE ID = $id;";
         print_r($query);
         // prepare query statement
         $stmt = $this->conn->prepare($query);
@@ -53,47 +77,6 @@ class Equipment {
         $stmt->execute();
     }
 
-    function checkPass($pass,$username) {
-        $query = "SELECT * FROM " . $this->table_name . " WHERE brugernavn = '$username'";
-
-        // prepare query statement
-        $stmt = $this->conn->prepare($query);
-    
-        // execute query
-        $stmt->execute();
-
-        if(!$stmt->fetch()) {
-            
-            $products_arr["user"]=array();
-            $product_item=array(
-                "ID" => -1,
-                "usergruppe" => -1
-            );
-            array_push($products_arr["user"], $product_item);
-            echo json_encode($products_arr);
-            return;
-        } else {
-            $products_arr["user"]=array();
-            $stmt->closeCursor();
-            $query = "SELECT * FROM " . $this->table_name . " WHERE adgangskode = '$pass'";
-             // prepare query statement
-            $stmt = $this->conn->prepare($query);
-        
-            // execute query
-            $temp = $stmt->execute();
-            if(!$stmt->fetch()) { return false; }
-            $stmt->execute();
-            $row = $stmt->fetch(PDO::FETCH_ASSOC);
-                extract($row);
-                $product_item=array(
-                    "ID" => $ID,
-                    "usergruppe" => $usergruppe
-                );
-                array_push($products_arr["user"], $product_item);
-            
-            return $products_arr;
-        }
-    }
     function delete($id) {
         $query = "DELETE FROM " . $this->table_name . " WHERE ID = ".$id;
 
