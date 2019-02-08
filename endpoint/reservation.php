@@ -67,7 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
         http_response_code(200);
         echo json_encode(
-            array("message" => "Indsatte loan i databasen", "result" => 1)
+            array("message" => "Indsatte Reservation i databasen", "result" => 1)
         );
 
     } else {
@@ -76,7 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     
         // tell the user no products found
         echo json_encode(
-            array("message" => "Kunne ikke loan i databasen",
+            array("message" => "Kunne ikke Reservation i databasen",
             "result" => 0,
             "error" => $stmt->getMessage())
         );
