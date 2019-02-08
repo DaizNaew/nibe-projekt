@@ -26,6 +26,33 @@ routes = [
   },
   {
     name: 'udlon',
+    path: '/udlon/:reservationID/',
+    async: function (routeTo, routeFrom, resolve, reject) {
+      // Router instance
+      var router = this;
+
+      // App instance
+      var app = router.app;
+
+      // Show Preloader
+      app.preloader.show();
+
+      // User ID from request
+      var reservationID = routeTo.params.reservationID;
+      console.log(reservationID);
+      console.log(routeTo);
+      console.log(routeFrom);
+      resolve({
+        componentUrl: './pages/udlon.html',
+      }, {
+        context: {
+          reservationID: reservationID,
+        }
+      })
+    },
+  },
+  {
+    name: 'udlon',
     path: '/udlon/',
     componentUrl: './pages/udlon.html',
   },

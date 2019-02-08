@@ -42,8 +42,8 @@
             
     <script>
 
-    udlon = (kategoriID) => {
-
+    udlon = (reservationID) => {
+        app.views.main.router.navigate(`/udlon/${reservationID}/`, {reloadCurrent: true,});
     }
 
     deletetool = (kategoriID) => {
