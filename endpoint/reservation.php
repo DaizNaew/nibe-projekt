@@ -34,7 +34,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             
             $product_item=array(
                 "ID" => $ID,
-                "katNavn" => $katNavn,
+                "userName" => $userName,
+                "userPhoneNummer" => $userPhoneNummer,
+                "userCardID" => $userCardID,
+                "equipmentNavn" => $equipmentNavn,
+                "equipmentAsset" => $equipmentAsset,
+                "equipmentBrand" => $equipmentBrand,
+                "equipmentModel" => $equipmentModel,
+                "equipmentSerieNummer" => $equipmentSerieNummer,
+                "equipmentCondition" => $equipmentCondition,
+                "categoryName" => $categoryName,
+                "dateStart" => $dateStart,
+                "expectedDateEnd" => $expectedDateEnd,
+                "actualDateEnd" => $actualDateEnd,
             );
     
             array_push($products_arr["categories"], $product_item);

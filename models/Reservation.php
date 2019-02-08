@@ -49,13 +49,13 @@ class Reservation {
         $query = "SELECT reservation.ID as ID,
 		user.name as userName, user.phoneNumber as userPhoneNummer, user.cardID as userCardID, 
 		e.`aktivNavn` as equipmentNavn, e.assetTag as equipmentAsset, e.brand as equipmentBrand, e.model as equipmentModel, e.serieNummer as equipmentSerieNummer, e.stand as equipmentCondition,
-		k.katNavn as equipmentKategori,
+		k.katNavn as categoryName,
 		date_format(dateStart,'%d-%m-%Y %H:%i:%s ') as dateStart, date_format(expectedDateEnd,'%d-%m-%Y %H:%i:%s ') as expectedDateEnd, date_format(actualDateEnd,'%d-%m-%Y %H:%i:%s ') as actualDateEnd
 		FROM reservation
 		INNER JOIN user ON user.ID = reservation.userID
 		INNER JOIN equipment e ON e.ID = reservation.equipmentID
 		INNER JOIN kategori k ON k.ID = e.katID
-        WHERE ID = $id;";
+        WHERE reservation.ID = $id;";
         print_r($query);
         // prepare query statement
         $stmt = $this->conn->prepare($query);
