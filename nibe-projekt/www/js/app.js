@@ -20,18 +20,17 @@ var app  = new Framework7({
   },
   // App root methods
   methods: {
-    LoginCheck: function (page) {
-
-    },
     showAdminNavbar: function (){
       if(app.data['adminConfirmedBool'] == true) {
-        document.getElementById('adminnavbarwrapper').style.display = "block";
+        //document.getElementById('adminnavbarwrapper').style.display = "block";
+        $$('#adminnavbarwrapper').show();
       }
     },
 
     hideAdminNavbar: function (){
       app.data['adminConfirmedBool'] = false;
-      document.getElementById('adminnavbarwrapper').style.display = "none";
+      //document.getElementById('adminnavbarwrapper').style.display = "none";
+      $$('#adminnavbarwrapper').hide();
     },
   },
   // App routes
@@ -45,7 +44,6 @@ var app  = new Framework7({
         app.data['navbarheight'] = $$('#view-navbar')[0].clientHeight;
         document.getElementById('view-home').style.top = app.data['navbarheight']+"px";
       }
-
     },
     pageAfterIn: function(page) {
       app.data['navbarheight'] = $$('#view-navbar')[0].clientHeight;
