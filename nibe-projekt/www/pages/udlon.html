@@ -1,25 +1,149 @@
 <template>
     <div class="page" data-name="udlon">
-        
-
-        udlån siden
-        
-        
-        
+        <div id="gridwrapper">
+            <div class="grid">
+                <div style="padding: 10px" id="item1"><!--Item 1-->
+                    <div>
+                        <form>
+                            <div class="form-row">
+                                <label for="lånerID" class="col">Låner ID</label>
+                                <input id="lånerID" type="text" required="required" class="form-control form-control-sm col"/>
+                            </div>
+                            <div class="tableFixHead">
+                                <table class="table fixed_header" style="background-color: #c5d9ec33;">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col" style="width: 32px;">#</th>
+                                            <th class="label-cell" scope="col">Værktøjs Navn</th>
+                                            <th class="label-cell" scope="col">Kategori</th>
+                                            <th class="label-cell" scope="col">Mærke</th>
+                                            <th class="label-cell" scope="col">Model</th>
+                                            <th class="label-cell" scope="col">Serienummer</th>
+                                            <th class="label-cell" scope="col">AssetTag</th>
+                                            <th class="label-cell" scope="col">Stand</th>
+                                            <th class="radio-cell" scope="col">
+                                                <!--<input type="checkbox" class="no-ripple"/>-->
+                                                <i class="icon-radio"></i>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="låneTableBody">
+                                                    
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="form-row">
+                                <label for="calendar_input" class="col">Afleverings Dato</label>
+                                <input type="text" id="calendar_input" required="required" class="form-control form-control-sm col">
+                                <span>
+                                    <img id="calendar_icon" src="../common/calendar.gif" border="0">
+                                </span>
+                            </div>
+                            <div class="form-row">
+                                    <input id="input-a" value="" data-default="20:48">
+                                    <button type="button" id="button-b">Check the  hours</button>
+                                </div>
+                            <div class="form-row form-button-row">
+                                <a><button id="insert" type="submit" class="no-ripple col btn btn-primary godbtn">Udlån</button></a>
+                                <a><button id="reset" type="button" class="no-ripple col btn btn-primary godbtn">Nulstil felter</button></a>
+                            </div>
+                            <input id="ID" type="hidden"/>
+                        </form>
+                    </div>
+                </div>
+                <div style="padding: 25px"><!--Item 2-->
+                    <div>
+                        <div class="tableFixHead">
+                            <table class="table fixed_header" style="background-color: #c5d9ec33;">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" style="width: 32px;">#</th>
+                                        <th class="label-cell" scope="col">Værktøjs Navn</th>
+                                        <th class="label-cell" scope="col">Kategori</th>
+                                        <th class="label-cell" scope="col">Mærke</th>
+                                        <th class="label-cell" scope="col">Model</th>
+                                        <th class="label-cell" scope="col">Serienummer</th>
+                                        <th class="label-cell" scope="col">AssetTag</th>
+                                        <th class="label-cell" scope="col">Stand</th>
+                                        <th class="radio-cell" scope="col">
+                                            <!--<input type="checkbox" class="no-ripple"/>-->
+                                            <i class="icon-radio"></i>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="tableBody">
+                                            
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
        
         
 <script>
-    console.log(reservationID)
+    fjernudlånsværktøj = (kategoriID) => {
+        console.log("delete")
+    }
+
     return {
         data: function () {
             return {
-                
             };
         },
     // Component Methods
         methods: {
         },
+
+        on: {
+            pageAfterIn: function(e, page) {
+                var myCalendar = new dhtmlXCalendarObject(
+                    {input:"calendar_input",button:"calendar_icon"}
+                );
+                myCalendar.hideTime();
+
+
+                var input = $('#input-a');
+                input.clockpicker({
+                    autoclose: true
+                });
+                $('#button-b').click(function(e){
+                    // Have to stop propagation here
+                    e.stopPropagation();
+                    input.clockpicker('show')
+                            .clockpicker('toggleView', 'hours');
+                });
+            },
+            pageMounted: (page) => {
+                let reservationID = page.detail.route.params.reservationID;
+                let innerHTML = "";
+                if(reservationID != null){
+                    app.request.getJSON(`${app.data['serverip']}endpoint/reservation.php?id=${reservationID}`, (response) => {
+                        innerHTML += 
+                            `
+                            <tr>
+                                <td style="width: 32px;">1</td>
+                                <td class="label-cell VærktøjNavn">${response.records[0].equipmentNavn}</td>
+                                <td class="label-cell Kategori">${response.records[0].categoryName}</td>
+                                <td class="label-cell Mærke">${response.records[0].equipmentBrand}</td>
+                                <td class="label-cell Model">${response.records[0].equipmentModel}</td>
+                                <td class="label-cell Serienummer">${response.records[0].equipmentSerieNummer}</td>
+                                <td class="label-cell AssetTag">${response.records[0].equipmentAsset}</td>
+                                <td class="label-cell Stand">${response.records[0].equipmentCondition}</td>
+                                <td class="radio-cell">
+                                    <button type="button" onclick="fjernudlånsværktøj(${response.records[0].ID})" class="no-ripple btn-primary deletebtn">Slet</button>
+                                </td>
+                            </tr>
+                            `;
+                            $$('.låneTableBody').html(innerHTML);
+                    }, function(e){
+                    })
+                }
+            }
+        },
     }
+
 </script>
