@@ -66,9 +66,9 @@ class Reservation {
         return $stmt;
     }
     
-    function write($name, $number, $address, $cardId, $brugernavn, $adgangskode) {
+    function write($userID, $equipmentID, $dateStart, $expectedDateEnd, $actualDateEnd, $description) {
         $brugernavn = strtolower($brugernavn);
-        $query = "INSERT INTO " . $this->table_name . " ('name','phoneNumber','address','cardID','brugernavn','adgangskode') VALUES " . "($name, $number, $address, $cardId, $brugernavn, $adgangskode)";
+        $query = "INSERT INTO " . $this->table_name . " (userID,equipmentID,dateStart,expectedDateEnd,actualDateEnd,description) VALUES " . "('$userID', '$equipmentID', '$dateStart', '$expectedDateEnd', '$actualDateEnd', '$description')";
         
         // prepare query statement
         $stmt = $this->conn->prepare($query);
