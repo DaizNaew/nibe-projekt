@@ -37,6 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 "userName" => $userName,
                 "userPhoneNummer" => $userPhoneNummer,
                 "userCardID" => $userCardID,
+                "equipmentID" => $equipmentID,
                 "equipmentNavn" => $equipmentNavn,
                 "equipmentAsset" => $equipmentAsset,
                 "equipmentBrand" => $equipmentBrand,
