@@ -34,15 +34,15 @@
                             </div>
                             <div class="form-row">
                                 <label for="calendar_input" class="col">Afleverings Dato</label>
-                                <input type="text" id="calendar_input" required="required" class="form-control form-control-sm col">
-                                <span>
-                                    <img id="calendar_icon" src="../common/calendar.gif" border="0">
-                                </span>
+                                <div class="form-group has-feedback">
+                                    <input type="text" id="calendar_input" required="required" class="form-control form-control-sm col">
+                                    <span id="calendar_icon" class="material-icons">calendar_today</span>
+                                </div>
                             </div>
                             <div class="form-row">
-                                    <input id="input-a" value="" data-default="20:48">
-                                    <button type="button" id="button-b">Check the  hours</button>
-                                </div>
+                                    <label for="input-a" class="col">Afleverings Tidspunkt</label>
+                                    <input id="input-a" value="" data-default="10:00" required="required" class="form-control form-control-sm col">
+                            </div>
                             <div class="form-row form-button-row">
                                 <a><button id="insert" type="submit" class="no-ripple col btn btn-primary godbtn">Udlån</button></a>
                                 <a><button id="reset" type="button" class="no-ripple col btn btn-primary godbtn">Nulstil felter</button></a>
