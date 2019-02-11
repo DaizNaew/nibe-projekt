@@ -56,7 +56,6 @@ class Reservation {
 		INNER JOIN equipment e ON e.ID = reservation.equipmentID
 		INNER JOIN kategori k ON k.ID = e.katID
         WHERE reservation.ID = $id;";
-        print_r($query);
         // prepare query statement
         $stmt = $this->conn->prepare($query);
     
