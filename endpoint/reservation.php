@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     if($num>0){
 
         $products_arr=array();
-        $products_arr["categories"]=array();
+        $products_arr["records"]=array();
     
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
             extract($row);
@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 "actualDateEnd" => $actualDateEnd,
             );
     
-            array_push($products_arr["categories"], $product_item);
+            array_push($products_arr["records"], $product_item);
         }
     
         // set response code - 200 OK
