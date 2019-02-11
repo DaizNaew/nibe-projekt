@@ -17,6 +17,7 @@ class Equipment {
     public $categoryID;
     public $categoryName;
     public $inHouse;
+    public $reserved;
  
     // constructor with $db as database connection
     public function __construct($db) {

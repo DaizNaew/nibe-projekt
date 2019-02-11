@@ -35,6 +35,7 @@ class Reservation {
     public $categoryID;
     public $categoryName;
     public $inHouse;
+    public $reserved;
 
     // Loan Props
     public $udløbet;
