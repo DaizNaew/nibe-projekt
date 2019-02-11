@@ -88,8 +88,34 @@
        
         
 <script>
-    fjernudlånsværktøj = (kategoriID) => {
+    fjernudlånsværktøj = (værktøjsID) => {
         console.log("delete")
+    }
+
+    tilføjudlånsværktøj = (værktøjsID) => {
+        let innerHTML = "";
+        app.request.getJSON(`${app.data['serverip']}endpoint/equipment.php?id=${værktøjsID}`, (response) => {
+            $$(`.tableBody`).find(`#${værktøjsID}`).prop({disabled: true,});
+            for(let i = 0; i < response.records.length; i++) {
+                innerHTML += 
+                    `
+                    <tr>
+                        <td>${i+1}</td>
+                        <td class="label-cell VærktøjsNavn">${response.records[i].activeName}</td>
+                        <td class="label-cell Kategori">${response.records[i].categoryName}</td>
+                        <td class="label-cell Mærke">${response.records[i].brandName}</td>
+                        <td class="label-cell Model">${response.records[i].modelName}</td>
+                        <td class="label-cell Serienummer">${response.records[i].serialNumber}</td>
+                        <td class="label-cell AssetTag">${response.records[i].assetTag}</td>
+                        <td class="label-cell Stand">${response.records[i].condition}</td>
+                        <td class="radio-cell">
+                            <button type="button" onclick="fjernudlånsværktøj(${response.records[0].ID})" class="no-ripple btn-primary deletebtn">Slet</button>
+                        </td>
+                    </tr>
+                    `;
+                    $$('.låneTableBody').html(innerHTML);
+            }
+        })
     }
 
     return {
@@ -123,9 +149,35 @@
             pageMounted: (page) => {
                 let reservationID = page.detail.route.params.reservationID;
                 let innerHTML = "";
+                let låneInnerHTML = "";
+
+                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllToolsForLoan&param=-1`, (response) => {
+                    for(let i = 0; i < response.records.length; i++) {
+                        innerHTML += 
+                            `
+                            <tr>
+                                <td>${i+1}</td>
+                                <td class="label-cell VærktøjsNavn">${response.records[i].equipmentNavn}</td>
+                                <td class="label-cell Kategori">${response.records[i].equipmentKategori}</td>
+                                <td class="label-cell Mærke">${response.records[i].equipmentBrand}</td>
+                                <td class="label-cell Model">${response.records[i].equipmentModel}</td>
+                                <td class="label-cell Serienummer">${response.records[i].equipmentSerieNummer}</td>
+                                <td class="label-cell AssetTag">${response.records[i].equipmentAsset}</td>
+                                <td class="label-cell Stand">${response.records[i].equipmentCondition}</td>
+                                <td class="radio-cell">
+                                    <button type="button" id="${response.records[0].ID}" onclick="tilføjudlånsværktøj(${response.records[0].ID})" class="no-ripple btn-primary">Tilføj</button>
+                                </td>
+                            </tr>
+                            `;
+                            $$('.tableBody').html(innerHTML);
+                    }
+                })
+
+
+
                 if(reservationID != null){
                     app.request.getJSON(`${app.data['serverip']}endpoint/reservation.php?id=${reservationID}`, (response) => {
-                        innerHTML += 
+                        låneInnerHTML += 
                             `
                             <tr>
                                 <td style="width: 32px;">1</td>
@@ -141,7 +193,7 @@
                                 </td>
                             </tr>
                             `;
-                            $$('.låneTableBody').html(innerHTML);
+                            $$('.låneTableBody').html(låneInnerHTML);
                     }, function(e){
                     })
                 }
