@@ -4,16 +4,27 @@
 
         afleverings siden
         
-        
+        <input type="text" id="calendar_input">
+        <span>
+            <img id="calendar_icon" src="../common/calendar.gif" border="0">
+        </span>
         
     </div>
 </template>
        
         
 <script>
+
     return {
     // Component Methods
         methods: {
         },
+        on: {
+            pageAfterIn: function(e, page) {
+                var myCalendar = new dhtmlXCalendarObject(
+                    {input:"calendar_input",button:"calendar_icon"}
+                );
+            },
+        }
     }
 </script>
