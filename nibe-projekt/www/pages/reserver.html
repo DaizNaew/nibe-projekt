@@ -1,19 +1,193 @@
 <template>
     <div class="page" data-name="reserver">
-        
+        <div id="gridwrapper">
+            <div class="grid">
+                <div style="padding: 10px" id="item1"><!--Item 1-->
+                    <div>
+                        <form>
+                            <div class="form-row">
+                                <label for="ReserverNavn" class="col">Reserver navn</label>
+                                <input id="ReserverNavn" type="text" required="required" class="form-control form-control-sm col"/>
+                            </div>
+                            <div class="tableFixHead">
+                                <table class="table fixed_header" style="background-color: #c5d9ec33;">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col" style="width: 32px;">#</th>
+                                            <th class="label-cell" scope="col">Værktøjs Navn</th>
+                                            <th class="label-cell" scope="col">Kategori</th>
+                                            <th class="label-cell" scope="col">Mærke</th>
+                                            <th class="label-cell" scope="col">Model</th>
+                                            <th class="label-cell" scope="col">Serienummer</th>
+                                            <th class="label-cell" scope="col">AssetTag</th>
+                                            <th class="label-cell" scope="col">Stand</th>
+                                            <th class="radio-cell" scope="col">
+                                                <!--<input type="checkbox" class="no-ripple"/>-->
+                                                <i class="icon-radio"></i>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="låneTableBody">
+                                                    
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="input-group form-group">
+                                <label for="calendar_input" class="col">Afhentnings Dato</label>
+                                <div class="input-group-prepend col">    
+                                    <input type="text" id="calendar_input" required="required" class="form-control form-control-sm">
+                                    <span><i id="calendar_icon" class="far fa-calendar-alt input-group-text input_icon_css"></i></span>
+                                </div>
+                            </div>
+                            <div class="input-group form-group">
+                                    <label for="input-a" class="col">Afhentnings Tidspunkt</label>
+                                    <div class="input-group-prepend col">    
+                                        <input id="input-a" value="" data-default="10:00" required="required" class="form-control form-control-sm">
+                                        <span><i id="calendar_icon" class="far fa-clock input-group-text input_icon_css"></i></span>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="input-group form-group">
+                                    <label for="calendar_input2" class="col">Afleverings Dato</label>
+                                    <div class="input-group-prepend col">    
+                                        <input type="text" id="calendar_input2" required="required" class="form-control form-control-sm">
+                                        <span><i id="calendar_icon" class="far fa-calendar-alt input-group-text input_icon_css"></i></span>
+                                    </div>
+                                </div>
+                                <div class="input-group form-group">
+                                        <label for="input-b" class="col">Afleverings Tidspunkt</label>
+                                        <div class="input-group-prepend col">    
+                                            <input id="input-b" value="" data-default="10:00" required="required" class="form-control form-control-sm">
+                                            <span><i id="calendar_icon" class="far fa-clock input-group-text input_icon_css"></i></span>
+                                        </div>
+                                    </div>
 
-        reserver siden
-        
-        
-        
+                            <div class="form-row form-button-row">
+                                <a><button id="insert" @click="reservertool" type="submit" class="no-ripple col btn btn-primary godbtn">Reserver</button></a>
+                                <a><button id="reset" @click="resetfields" type="button" class="no-ripple col btn btn-primary godbtn">Nulstil felter</button></a>
+                            </div>
+                            <input id="ID" type="hidden"/>
+                        </form>
+                    </div>
+                </div>
+                <div style="padding: 25px"><!--Item 2-->
+                    <div>
+                        <div class="tableFixHead">
+                            <table class="table fixed_header" style="background-color: #c5d9ec33;">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" style="width: 32px;">#</th>
+                                        <th class="label-cell" scope="col">Værktøjs Navn</th>
+                                        <th class="label-cell" scope="col">Kategori</th>
+                                        <th class="label-cell" scope="col">Mærke</th>
+                                        <th class="label-cell" scope="col">Model</th>
+                                        <th class="label-cell" scope="col">Serienummer</th>
+                                        <th class="label-cell" scope="col">AssetTag</th>
+                                        <th class="label-cell" scope="col">Stand</th>
+                                        <th class="radio-cell" scope="col">
+                                            <!--<input type="checkbox" class="no-ripple"/>-->
+                                            <i class="icon-radio"></i>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="tableBody">
+                                            
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
        
         
 <script>
+    fjernreserverværktøj = (værktøjsID) => {
+        $$(`.tableBody`).find(`#btn${værktøjsID}`).prop("disabled",false);
+        $$(`.låneTableBody`).find(`#værktøjnr${værktøjsID}`).remove();
+    }
+
+    tilføjreserverværktøj = (værktøjsID) => {
+        let innerHTML = "";
+        app.request.getJSON(`${app.data['serverip']}endpoint/equipment.php?id=${værktøjsID}`, (response) => {
+            $$(`.tableBody`).find(`#btn${værktøjsID}`).prop("disabled",true);
+            innerHTML = $$(`.låneTableBody`).html();
+            for(let i = 0; i < response.records.length; i++) {
+                innerHTML += 
+                    `
+                    <tr id="værktøjnr${værktøjsID}">
+                        <td>${værktøjsID}</td>
+                        <td class="label-cell VærktøjsNavn">${response.records[i].activeName}</td>
+                        <td class="label-cell Kategori">${response.records[i].categoryName}</td>
+                        <td class="label-cell Mærke">${response.records[i].brandName}</td>
+                        <td class="label-cell Model">${response.records[i].modelName}</td>
+                        <td class="label-cell Serienummer">${response.records[i].serialNumber}</td>
+                        <td class="label-cell AssetTag">${response.records[i].assetTag}</td>
+                        <td class="label-cell Stand">${response.records[i].condition}</td>
+                        <td class="radio-cell">
+                            <button type="button" onclick="fjernudlånsværktøj(${response.records[0].ID})" class="no-ripple btn-primary deletebtn">Slet</button>
+                        </td>
+                    </tr>
+                    `;
+                    $$('.låneTableBody').html(innerHTML);
+            }
+        })
+    }
+
     return {
+        data: function () {
+            return {
+            };
+        },
     // Component Methods
         methods: {
+            resetfields : () => {
+                app.dialog.confirm('Er du sikker på at du vil nulstille alle felter?', 'Nulstil Felter', function(){
+                    let inputs = $$('form').find('input');
+                    inputs.val('');
+                    $$(`.låneTableBody`).html('');
+                    var checkBoxObj = $$('.tableBody').find('button');
+                        checkBoxObj.forEach(element => {
+                            if(element.disabled) {
+                                element.disabled = false;
+                            }
+                        })
+                });
+            },
+            reservertool : () => {
+
+            },
+        },
+
+        on: {
+            pageAfterIn: function(e, page) {
+
+                var myCalendar = new dhtmlXCalendarObject(
+                    {input:"calendar_input",button:"calendar_input"}
+                );
+                myCalendar.hideTime();
+
+                var myCalendar2 = new dhtmlXCalendarObject(
+                    {input:"calendar_input2",button:"calendar_input2"}
+                );
+                myCalendar2.hideTime();
+
+                var input = $('#input-a');
+                input.clockpicker({
+                    autoclose: true
+                });
+                var input2 = $('#input-b');
+                input2.clockpicker({
+                    autoclose: true
+                });
+
+            },
+            pageMounted: (page) => {
+                
+            }
         },
     }
+
 </script>
