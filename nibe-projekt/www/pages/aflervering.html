@@ -1,30 +1,113 @@
 <template>
     <div class="page" data-name="aflevering">
-        
-
-        afleverings siden
-        
-        <input type="text" id="calendar_input">
-        <span>
-            <img id="calendar_icon" src="../common/calendar.gif" border="0">
-        </span>
-        
+        <div id="gridwrapper">
+            <div class="grid">
+                <div style="padding: 10px" id="item1"><!--Item 1-->
+                    <div>
+                        <form>
+                            <div class="form-row">
+                                <label for="lånerID" class="col">Låner ID</label>
+                                <input id="lånerID" type="text" required="required" class="form-control form-control-sm col"/>
+                            </div>
+                            <div class="tableFixHead">
+                                <table class="table fixed_header" style="background-color: #c5d9ec33;">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col" style="width: 32px;">#</th>
+                                            <th class="label-cell" scope="col">Værktøjs Navn</th>
+                                            <th class="label-cell" scope="col">Kategori</th>
+                                            <th class="label-cell" scope="col">Mærke</th>
+                                            <th class="label-cell" scope="col">Model</th>
+                                            <th class="label-cell" scope="col">Serienummer</th>
+                                            <th class="label-cell" scope="col">AssetTag</th>
+                                            <th class="label-cell" scope="col">Stand</th>
+                                            <th class="radio-cell" scope="col">
+                                                <!--<input type="checkbox" class="no-ripple"/>-->
+                                                <i class="icon-radio"></i>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="låneTableBody">
+                                                    
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="form-row form-button-row">
+                                <a><button id="insert" @click="afleverool" type="submit" class="no-ripple col btn btn-primary godbtn">Aflever</button></a>
+                                <a><button id="reset" @click="resetfields" type="button" class="no-ripple col btn btn-primary godbtn">Nulstil felter</button></a>
+                            </div>
+                            <input id="ID" type="hidden"/>
+                        </form>
+                    </div>
+                </div>
+                <div style="padding: 25px"><!--Item 2-->
+                    <div>
+                        <div class="tableFixHead">
+                            <table class="table fixed_header" style="background-color: #c5d9ec33;">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" style="width: 32px;">#</th>
+                                        <th class="label-cell" scope="col">Værktøjs Navn</th>
+                                        <th class="label-cell" scope="col">Kategori</th>
+                                        <th class="label-cell" scope="col">Mærke</th>
+                                        <th class="label-cell" scope="col">Model</th>
+                                        <th class="label-cell" scope="col">Serienummer</th>
+                                        <th class="label-cell" scope="col">AssetTag</th>
+                                        <th class="label-cell" scope="col">Stand</th>
+                                        <th class="radio-cell" scope="col">
+                                            <!--<input type="checkbox" class="no-ripple"/>-->
+                                            <i class="icon-radio"></i>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="tableBody">
+                                            
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
        
         
 <script>
+    fjernudlånsværktøj = (værktøjsID) => {
+    }
+
+    tilføjudlånsværktøj = (værktøjsID) => {
+    }
 
     return {
+        data: function () {
+            return {
+            };
+        },
     // Component Methods
         methods: {
-        },
-        on: {
-            pageAfterIn: function(e, page) {
-                var myCalendar = new dhtmlXCalendarObject(
-                    {input:"calendar_input",button:"calendar_icon"}
-                );
+            resetfields : () => {
+                app.dialog.confirm('Er du sikker på at du vil nulstille alle felter?', 'Nulstil Felter', function(){
+                    let inputs = $$('form').find('input');
+                    inputs.val('');
+                    $$(`.låneTableBody`).html('');
+                    var checkBoxObj = $$('.tableBody').find('button');
+                        checkBoxObj.forEach(element => {
+                            if(element.disabled) {
+                                element.disabled = false;
+                            }
+                        })
+                });
             },
-        }
+            afleverool : () => {
+            },
+        },
+
+        on: {
+            pageMounted: (page) => {
+            }
+        },
     }
+
 </script>
