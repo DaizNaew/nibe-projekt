@@ -21,7 +21,7 @@ $stmt = $Reservation->delete($id);
 if($stmt) {
     http_response_code(200);
     echo json_encode(
-        array("message" => "Slettede Kategori fra databasen", 
+        array("message" => "Slettede Reservation fra databasen", 
         "result" => 1
         )
     );
@@ -32,9 +32,9 @@ if($stmt) {
 
     // tell the user no products found
     echo json_encode(
-        array("message" => "Kunne ikke slette Kategori fra databasen",
+        array("message" => "Kunne ikke slette Reservation fra databasen",
         "result" => 0,
-        "error" => 'Kategorien bliver brugt af værktøjer i databasen')
+        "error" => 'Reservation bliver brugt af noget i databasen')
     );
 }
 
