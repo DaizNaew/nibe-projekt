@@ -67,9 +67,17 @@ class Reservation {
         return $stmt;
     }
     
-    function write($userID, $equipmentID, $dateStart, $expectedDateEnd, $actualDateEnd, $description) {
-        $brugernavn = strtolower($brugernavn);
-        $query = "INSERT INTO " . $this->table_name . " (userID,equipmentID,dateStart,expectedDateEnd,actualDateEnd,description) VALUES " . "('$userID', '$equipmentID', '$dateStart', '$expectedDateEnd', '$actualDateEnd', '$description')";
+    function write($post) {
+        $userID = $post['userID'];
+        $equipmentID = $post['equipmentID'];
+        $dateStart = $post['dateStart'];
+
+        $expectedDateEnd = null;
+        $description = null;
+        if(isset($post['expectedDateEnd'])) $expectedDateEnd = $post['expectedDateEnd'];
+        if(isset($post['description'])) $description = $post['description'];
+        
+        $query = "INSERT INTO " . $this->table_name . " (userID,equipmentID,dateStart,expectedDateEnd,description) VALUES " . "('$userID', '$equipmentID', '$dateStart', '$expectedDateEnd', '$description')";
         
         // prepare query statement
         $stmt = $this->conn->prepare($query);
