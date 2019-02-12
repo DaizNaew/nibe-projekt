@@ -47,8 +47,8 @@
                                     </div>
                                 </div>
                             <div class="form-row form-button-row">
-                                <a><button id="insert" type="submit" class="no-ripple col btn btn-primary godbtn">Udlån</button></a>
-                                <a><button id="reset" type="button" class="no-ripple col btn btn-primary godbtn">Nulstil felter</button></a>
+                                <a><button id="insert" @click="udlontool" type="submit" class="no-ripple col btn btn-primary godbtn">Udlån</button></a>
+                                <a><button id="reset" @click="resetfields" type="button" class="no-ripple col btn btn-primary godbtn">Nulstil felter</button></a>
                             </div>
                             <input id="ID" type="hidden"/>
                         </form>
@@ -89,18 +89,20 @@
         
 <script>
     fjernudlånsværktøj = (værktøjsID) => {
-        console.log("delete")
+        $$(`.tableBody`).find(`#btn${værktøjsID}`).prop("disabled",false);
+        $$(`.låneTableBody`).find(`#værktøjnr${værktøjsID}`).remove();
     }
 
     tilføjudlånsværktøj = (værktøjsID) => {
         let innerHTML = "";
         app.request.getJSON(`${app.data['serverip']}endpoint/equipment.php?id=${værktøjsID}`, (response) => {
-            $$(`.tableBody`).find(`#${værktøjsID}`).prop({disabled: true,});
+            $$(`.tableBody`).find(`#btn${værktøjsID}`).prop("disabled",true);
+            innerHTML = $$(`.låneTableBody`).html();
             for(let i = 0; i < response.records.length; i++) {
                 innerHTML += 
                     `
-                    <tr>
-                        <td>${i+1}</td>
+                    <tr id="værktøjnr${værktøjsID}">
+                        <td>${værktøjsID}</td>
                         <td class="label-cell VærktøjsNavn">${response.records[i].activeName}</td>
                         <td class="label-cell Kategori">${response.records[i].categoryName}</td>
                         <td class="label-cell Mærke">${response.records[i].brandName}</td>
@@ -125,6 +127,34 @@
         },
     // Component Methods
         methods: {
+            resetfields : () => {
+                app.dialog.confirm('Er du sikker på at du vil nulstille alle felter?', 'Nulstil Felter', function(){
+                    let inputs = $$('form').find('input');
+                    inputs.val('');
+                    $$(`.låneTableBody`).html('');
+                    var checkBoxObj = $$('.tableBody').find('button');
+                        checkBoxObj.forEach(element => {
+                            if(element.disabled) {
+                                element.disabled = false;
+                            }
+                        })
+                });
+            },
+            udlontool : () => {
+                let newKatNavn = document.getElementById('aktivNavn').value;
+                    app.request.post(`${app.data['serverip']}endpoint/category.php`, { katNavn:`${newKatNavn}` }, function(response){
+                        if(response.result == 1){
+                            app.dialog.alert(`Kategorien (<span style="color: green; font-weight: bold;">${newKatNavn}</span>) blev tilføjet til databasen.`, "Opret kategori", function(){
+                                app.views.main.router.navigate("/toolkat/", {reloadCurrent: true,});
+                            });
+
+                        }else{
+                            app.dialog.alert("Kategorien blev <span style='color: red; font-weight: bold;'>IKKE</span> tilføjet til databasen.", "Opret kategori");
+                            return;
+                        }
+                    }, function(e, e2){
+                    }, "json");
+            },
         },
 
         on: {
@@ -165,7 +195,7 @@
                                 <td class="label-cell AssetTag">${response.records[i].equipmentAsset}</td>
                                 <td class="label-cell Stand">${response.records[i].equipmentCondition}</td>
                                 <td class="radio-cell">
-                                    <button type="button" id="${response.records[0].ID}" onclick="tilføjudlånsværktøj(${response.records[0].ID})" class="no-ripple btn-primary">Tilføj</button>
+                                    <button type="button" id="btn${response.records[i].ID}" onclick="tilføjudlånsværktøj(${response.records[i].ID})" class="no-ripple btn-primary">Tilføj</button>
                                 </td>
                             </tr>
                             `;
