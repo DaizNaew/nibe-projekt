@@ -275,6 +275,7 @@ button:disabled, button:disabled:hover {
   background-image: -o-linear-gradient(top, #ca0202, #aa0000);
   background-image: linear-gradient(top, #ca0202, #aa0000);
   background-repeat: repeat-x;
+  border: 1px solid #7e111a;
 }
 
 .deletebtn:hover{
