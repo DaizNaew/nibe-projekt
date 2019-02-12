@@ -161,19 +161,13 @@
             pageAfterIn: function(e, page) {
 
                 var myCalendar = new dhtmlXCalendarObject(
-                    {input:"calendar_input",button:"calendar_icon"}
+                    {input:"calendar_input",button:"calendar_input"}
                 );
                 myCalendar.hideTime();
 
                 var input = $('#input-a');
                 input.clockpicker({
                     autoclose: true
-                });
-                $('#button-b').click(function(e){
-                    // Have to stop propagation here
-                    e.stopPropagation();
-                    input.clockpicker('show')
-                            .clockpicker('toggleView', 'hours');
                 });
             },
             pageMounted: (page) => {
