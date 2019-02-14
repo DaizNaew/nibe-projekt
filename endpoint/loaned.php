@@ -18,9 +18,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $database = new Database();
     $db = $database->getConnection();
 
-    $Category = new Category($db);
+    $Loaned = new Loaned($db);
     // query products
-    $stmt = $Category->read($id);
+    $stmt = $Loaned->read($id);
     $num = $stmt->rowCount();
     
     // check if more than 0 record found
@@ -60,9 +60,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $database = new Database();
     $db = $database->getConnection();
 
-    $Category = new Category($db);
+    $Loaned = new Loaned($db);
     // query products
-    $stmt = $Category->write($_POST);
+    $stmt = $Loaned->write($_POST);
     if($stmt === true) {
 
         http_response_code(200);
