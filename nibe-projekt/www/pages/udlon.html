@@ -88,12 +88,18 @@
        
         
 <script>
+    var arr = [];
+    var globalReservationID;
+    var globalEquipmentID;
+
     fjernudlånsværktøj = (værktøjsID) => {
         $$(`.tableBody`).find(`#btn${værktøjsID}`).prop("disabled",false);
         $$(`.låneTableBody`).find(`#værktøjnr${værktøjsID}`).remove();
+        arr.splice( arr.indexOf(værktøjsID), 1 );
     }
 
     tilføjudlånsværktøj = (værktøjsID) => {
+        arr.push(værktøjsID);
         let innerHTML = "";
         app.request.getJSON(`${app.data['serverip']}endpoint/equipment.php?id=${værktøjsID}`, (response) => {
             $$(`.tableBody`).find(`#btn${værktøjsID}`).prop("disabled",true);
@@ -140,20 +146,45 @@
                         })
                 });
             },
-            udlontool : () => {
-                let newKatNavn = document.getElementById('aktivNavn').value;
-                    app.request.post(`${app.data['serverip']}endpoint/category.php`, { katNavn:`${newKatNavn}` }, function(response){
-                        if(response.result == 1){
-                            app.dialog.alert(`Kategorien (<span style="color: green; font-weight: bold;">${newKatNavn}</span>) blev tilføjet til databasen.`, "Opret kategori", function(){
-                                app.views.main.router.navigate("/toolkat/", {reloadCurrent: true,});
-                            });
+            udlontool : async () => {
+                let newLånerID = document.getElementById('lånerID').value;
+                let expectedDateEnd = document.getElementById('calendar_input').value + " " + document.getElementById('input-a').value + ":00";
+                let dat;
+                if(globalReservationID != null){
+                    arr.push(globalEquipmentID);
+                    app.request.getJSON(`${app.data['serverip']}functions/reservation/delete.php?id=${globalReservationID}&equipmentID=${globalEquipmentID}`, (data) => {
+                    },function(e){});
+                }
 
-                        }else{
-                            app.dialog.alert("Kategorien blev <span style='color: red; font-weight: bold;'>IKKE</span> tilføjet til databasen.", "Opret kategori");
-                            return;
-                        }
-                    }, function(e, e2){
-                    }, "json");
+                let prom = new Promise((resolve, reject) => {
+                    console.log(newLånerID)
+                    console.log(arr)
+                    console.log(arr[0])
+                    console.log(expectedDateEnd)
+                    for(i=0; i<arr.length; i++) {
+                        //Kald Endpoint med id som arr[i]
+                        app.request.post(`${app.data['serverip']}endpoint/loaned.php`, { userID: newLånerID, equipmentID: arr[i], expectedDateEnd: expectedDateEnd}, function(response){
+                            if(response.result == 1){
+                                dat = response;
+                                resolve();
+                            }else{
+                                reject();
+                            }
+                        }, function(e, e2){
+                        }, "json");
+                    }
+                })
+
+                await prom;
+                if(dat.result == 1) {
+                    app.dialog.alert(`Værktøjet blev udlånt.`, "Udlån", function(){
+                        app.views.main.router.navigate("/udlon/", {reloadCurrent: true,});
+                        arr = [];
+                    });
+                } else {
+                    app.dialog.alert(`Værktøjet blev <span style='color: red; font-weight: bold;'>IKKE</span> udlånt.`, "Udlån");
+                    return; 
+                }
             },
         },
 
@@ -171,6 +202,7 @@
                 });
             },
             pageMounted: (page) => {
+                globalReservationID = page.detail.route.params.reservationID;
                 let reservationID = page.detail.route.params.reservationID;
                 let innerHTML = "";
                 let låneInnerHTML = "";
@@ -201,10 +233,11 @@
 
                 if(reservationID != null){
                     app.request.getJSON(`${app.data['serverip']}endpoint/reservation.php?id=${reservationID}`, (response) => {
+                        globalEquipmentID = response.records[0].equipmentID;
                         låneInnerHTML += 
                             `
                             <tr>
-                                <td style="width: 32px;">${response.records[0].ID}</td>
+                                <td style="width: 32px;">${response.records[0].equipmentID}</td>
                                 <td class="label-cell VærktøjNavn">${response.records[0].equipmentNavn}</td>
                                 <td class="label-cell Kategori">${response.records[0].categoryName}</td>
                                 <td class="label-cell Mærke">${response.records[0].equipmentBrand}</td>
