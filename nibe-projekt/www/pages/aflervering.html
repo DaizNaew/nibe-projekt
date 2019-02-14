@@ -74,10 +74,40 @@
        
         
 <script>
+    var arr = [];
+
     fjernafleveringsværktøj = (værktøjsID) => {
+        $$(`.tableBody`).find(`#btn${værktøjsID}`).prop("disabled",false);
+        $$(`.låneTableBody`).find(`#værktøjnr${værktøjsID}`).remove();
+        arr.splice( arr.indexOf(værktøjsID), 1 );
     }
 
     tilføjafleveringsværktøj = (værktøjsID) => {
+        arr.push(værktøjsID);
+        let innerHTML = "";
+        app.request.getJSON(`${app.data['serverip']}endpoint/equipment.php?id=${værktøjsID}`, (response) => {
+            $$(`.tableBody`).find(`#btn${værktøjsID}`).prop("disabled",true);
+            innerHTML = $$(`.låneTableBody`).html();
+            for(let i = 0; i < response.records.length; i++) {
+                innerHTML += 
+                    `
+                    <tr id="værktøjnr${værktøjsID}">
+                        <td>${værktøjsID}</td>
+                        <td class="label-cell VærktøjsNavn">${response.records[i].activeName}</td>
+                        <td class="label-cell Kategori">${response.records[i].categoryName}</td>
+                        <td class="label-cell Mærke">${response.records[i].brandName}</td>
+                        <td class="label-cell Model">${response.records[i].modelName}</td>
+                        <td class="label-cell Serienummer">${response.records[i].serialNumber}</td>
+                        <td class="label-cell AssetTag">${response.records[i].assetTag}</td>
+                        <td class="label-cell Stand">${response.records[i].condition}</td>
+                        <td class="radio-cell">
+                            <button type="button" onclick="fjernudlånsværktøj(${response.records[0].ID})" class="no-ripple btn-primary deletebtn">Slet</button>
+                        </td>
+                    </tr>
+                    `;
+                    $$('.låneTableBody').html(innerHTML);
+            }
+        })
     }
 
     return {
