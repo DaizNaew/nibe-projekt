@@ -180,7 +180,7 @@
                         innerHTML += 
                             `
                             <tr>
-                                <td>${i+1}</td>
+                                <td>${response.records[i].ID}</td>
                                 <td class="label-cell VærktøjsNavn">${response.records[i].equipmentNavn}</td>
                                 <td class="label-cell Kategori">${response.records[i].equipmentKategori}</td>
                                 <td class="label-cell Mærke">${response.records[i].equipmentBrand}</td>
@@ -204,7 +204,7 @@
                         låneInnerHTML += 
                             `
                             <tr>
-                                <td style="width: 32px;">1</td>
+                                <td style="width: 32px;">${response.records[0].ID}</td>
                                 <td class="label-cell VærktøjNavn">${response.records[0].equipmentNavn}</td>
                                 <td class="label-cell Kategori">${response.records[0].categoryName}</td>
                                 <td class="label-cell Mærke">${response.records[0].equipmentBrand}</td>

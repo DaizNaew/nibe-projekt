@@ -197,7 +197,7 @@
                             innerHTMLCert += 
                             `
                             <tr>
-                                <td style="width: 32px;">${i+1}</td>
+                                <td style="width: 32px;">${response.certifikat[i].ID}</td>
                                 <td class="label-cell">${response.certifikat[i].type}</td>
                                 <td class="radio-cell">
                                     <input type="radio" value="${response.certifikat[i].ID}" name="radiogroup"/>
@@ -215,7 +215,7 @@
                             innerHTMLKort += 
                             `
                             <tr>
-                                <td style="width: 32px;">${i+1}</td>
+                                <td style="width: 32px;">${response.kørekort[i].ID}</td>
                                 <td class="label-cell">${response.kørekort[i].type}</td>
                                 <td class="radio-cell">
                                     <input type="radio" value="${response.kørekort[i].ID}" name="radiogroup"/>
