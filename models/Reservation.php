@@ -83,6 +83,9 @@ class Reservation {
         $stmt = $this->conn->prepare($query);
     
         try {
+            $query2 = "UPDATE equipment SET reserved = '1' WHERE ID = ". $equipmentID;
+            $stmt2 = $this->conn->prepare($query2);
+            $stmt2->execute();
             // execute query
             return $stmt->execute();
         } catch (PDOException $e) {
