@@ -65,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     
         // tell the user no products found
         echo json_encode(
-            array("message" => "Ingen kategori fundet")
+            array("message" => "Ingen reservation fundet")
         );
     }
 } else  if ($_SERVER['REQUEST_METHOD'] === 'POST') {
