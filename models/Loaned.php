@@ -63,9 +63,15 @@ class Loaned {
         return $stmt;
     }
     
-    function write($userID, $equipmentID, $dateStart, $expectedDateEnd, $actualDateEnd, $description, $udløbet) {
+    function write($post) {
+
+        $userID = $post['userID'];
+        $equipmentID = $post['equipmentID'];
+        $expectedDateEnd = $post['expectedDateEnd'];
+        $description = $post['description'];
+
         $brugernavn = strtolower($brugernavn);
-        $query = "INSERT INTO " . $this->table_name . " (userID,equipmentID,dateStart,expectedDateEnd,actualDateEnd,description,udløbet) VALUES " . "('$userID', '$equipmentID', '$dateStart', '$expectedDateEnd', '$actualDateEnd', '$description', '$udløbet')";
+        $query = "INSERT INTO " . $this->table_name . " (userID,equipmentID,expectedDateEnd,description) VALUES " . "('$userID', '$equipmentID', '$expectedDateEnd', '$description')";
         
         // prepare query statement
         $stmt = $this->conn->prepare($query);
@@ -84,5 +90,9 @@ class Loaned {
         $stmt = $this->conn->prepare($query);
 
         return $stmt->execute();
+    }
+
+    function deliver($id, $deliverDate) {
+        $query = "UPDATE " . $this->table_name . " SET actualDateEnd = " . $deliverDate . ", udløbet = 1 WHERE ID = " . $id;
     }
 }
