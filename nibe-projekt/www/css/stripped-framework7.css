@@ -1459,3 +1459,2126 @@ i.icon {
       margin-bottom: env(safe-area-inset-bottom);
     }
   }
+  
+/* === List View === */
+.list {
+  position: relative;
+  z-index: 1;
+}
+.list ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: relative;
+}
+.list ul ul:before {
+  display: none !important;
+}
+.list ul ul:after {
+  display: none !important;
+}
+.list li {
+  position: relative;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.list .item-media {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  padding-bottom: 8px;
+}
+.list .item-inner {
+  position: relative;
+  width: 100%;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  min-width: 0;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-align-self: stretch;
+  -ms-flex-item-align: stretch;
+  align-self: stretch;
+}
+.list .item-title {
+  min-width: 0;
+  -webkit-flex-shrink: 1;
+  -ms-flex-negative: 1;
+  flex-shrink: 1;
+  white-space: nowrap;
+  position: relative;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+.list .item-after {
+  white-space: nowrap;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  margin-left: auto;
+}
+.list .item-link,
+.list .list-button {
+  -webkit-transition-duration: 300ms;
+  transition-duration: 300ms;
+  -webkit-transition-property: background-color;
+  transition-property: background-color;
+  display: block;
+  position: relative;
+  overflow: hidden;
+  z-index: 0;
+}
+.list .item-content {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+.list .item-subtitle {
+  position: relative;
+  overflow: hidden;
+  white-space: nowrap;
+  max-width: 100%;
+  text-overflow: ellipsis;
+}
+.list .item-text {
+  position: relative;
+  overflow: hidden;
+  text-overflow: hidden;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  display: -webkit-box;
+}
+.list .item-title-row {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.list .item-title-row .item-after {
+  -webkit-align-self: center;
+  -ms-flex-item-align: center;
+  align-self: center;
+}
+.list .item-row {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.list .item-cell {
+  display: block;
+  -webkit-align-self: center;
+  -ms-flex-item-align: center;
+  align-self: center;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-flex-shrink: 1;
+  -ms-flex-negative: 1;
+  flex-shrink: 1;
+}
+.list li:last-child .list-button:after {
+  display: none !important;
+}
+.list li:last-child > .item-inner:after,
+.list li:last-child li:last-child > .item-inner:after,
+.list li:last-child > .item-content > .item-inner:after,
+.list li:last-child li:last-child > .item-content > .item-inner:after,
+.list li:last-child > .swipeout-content > .item-content > .item-inner:after,
+.list li:last-child li:last-child > .swipeout-content > .item-content > .item-inner:after,
+.list li:last-child > .item-link > .item-content > .item-inner:after,
+.list li:last-child li:last-child > .item-link > .item-content > .item-inner:after {
+  display: none !important;
+}
+.list.no-hairlines:before,
+.list.no-hairlines ul:before,
+.md .list.no-hairlines-md:before,
+.md .list.no-hairlines-md ul:before,
+.ios .list.no-hairlines-ios:before,
+.ios .list.no-hairlines-ios ul:before {
+  display: none !important;
+}
+.list.no-hairlines:after,
+.list.no-hairlines ul:after,
+.md .list.no-hairlines-md:after,
+.md .list.no-hairlines-md ul:after,
+.ios .list.no-hairlines-ios:after,
+.ios .list.no-hairlines-ios ul:after {
+  display: none !important;
+}
+.list.no-hairline-top:before,
+.list.no-hairline-top ul:before,
+.md .list.no-hairline-top-md:before,
+.md .list.no-hairline-top-md ul:before,
+.ios .list.no-hairline-top-ios:before,
+.ios .list.no-hairline-top-ios ul:before {
+  display: none !important;
+}
+.list.no-hairline-bottom:after,
+.list.no-hairline-bottom ul:after,
+.md .list.no-hairline-bottom-md:after,
+.md .list.no-hairline-bottom-md ul:after,
+.ios .list.no-hairline-bottom-ios:after,
+.ios .list.no-hairline-bottom-ios ul:after {
+  display: none !important;
+}
+.list.no-hairlines-between .item-inner:after,
+.md .list.no-hairlines-between-md .item-inner:after,
+.ios .list.no-hairlines-between-ios .item-inner:after,
+.list.no-hairlines-between .list-button:after,
+.md .list.no-hairlines-between-md .list-button:after,
+.ios .list.no-hairlines-between-ios .list-button:after,
+.list.no-hairlines-between .item-divider:after,
+.md .list.no-hairlines-between-md .item-divider:after,
+.ios .list.no-hairlines-between-ios .item-divider:after,
+.list.no-hairlines-between .list-group-title:after,
+.md .list.no-hairlines-between-md .list-group-title:after,
+.ios .list.no-hairlines-between-ios .list-group-title:after,
+.list.no-hairlines-between .list-group-title:after,
+.md .list.no-hairlines-between-md .list-group-title:after,
+.ios .list.no-hairlines-between-ios .list-group-title:after {
+  display: none !important;
+}
+.list.no-hairlines-between.simple-list li:after,
+.md .list.no-hairlines-between-md.simple-list li:after,
+.ios .list.no-hairlines-between-ios.simple-list li:after {
+  display: none !important;
+}
+.list.no-hairlines-between.links-list a:after,
+.md .list.no-hairlines-between-md.links-list a:after,
+.ios .list.no-hairlines-between-ios.links-list a:after {
+  display: none !important;
+}
+.list.simple-list li {
+  position: relative;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-align-content: center;
+  -ms-flex-line-pack: center;
+  align-content: center;
+}
+.list.simple-list li:last-child:after {
+  display: none !important;
+}
+.list.links-list a {
+  -webkit-transition-duration: 300ms;
+  transition-duration: 300ms;
+  -webkit-transition-property: background-color;
+  transition-property: background-color;
+  display: block;
+  position: relative;
+  overflow: hidden;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-align-content: center;
+  -ms-flex-line-pack: center;
+  align-content: center;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+.list.links-list li:last-child a:after {
+  display: none !important;
+}
+.media-list .item-inner,
+li.media-item .item-inner {
+  display: block;
+  -webkit-align-self: stretch;
+  -ms-flex-item-align: stretch;
+  align-self: stretch;
+}
+.media-list .item-link .item-inner,
+li.media-item .item-link .item-inner {
+  background: none;
+}
+.media-list .item-media,
+li.media-item .item-media {
+  -webkit-align-self: flex-start;
+  -ms-flex-item-align: start;
+  align-self: flex-start;
+}
+.media-list .item-media img,
+li.media-item .item-media img {
+  display: block;
+}
+.list .item-link .item-inner,
+.links-list a,
+.media-list .item-link .item-title-row,
+li.media-item .item-link .item-title-row,
+.media-list.chevron-center .item-link .item-inner,
+.media-list .chevron-center .item-link .item-inner,
+.media-list .item-link.chevron-center .item-inner,
+li.media-item.chevron-center .item-link .item-inner,
+li.media-item .chevron-center .item-link .item-inner,
+li.media-item .item-link.chevron-center .item-inner {
+  background-size: 8px 13px;
+  background-repeat: no-repeat;
+  background-position: 95% center;
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg%20width%3D'8px'%20height%3D'13px'%20viewBox%3D'0%200%208%2013'%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%3E%3Cpolygon%20fill%3D'%23c7c7cc'%20transform%3D'translate(1.500000%2C%206.500000)%20rotate(-45.000000)%20translate(-1.500000%2C%20-6.500000)%20'%20points%3D'6%2011%206%202%204%202%204%209%20-3%209%20-3%2011%205%2011'%3E%3C%2Fpolygon%3E%3C%2Fsvg%3E");
+}
+.links-list.no-chevron a,
+.no-chevron .links-list a,
+.links-list .no-chevron a,
+.item-link.no-chevron .item-inner,
+.no-chevron .item-link .item-inner,
+.media-list.no-chevron .item-link .item-title-row,
+.no-chevron .media-list .item-link .item-title-row,
+li.media-item .no-chevron .item-title-row,
+li.media-item.no-chevron .item-title-row,
+.media-list.chevron-center .item-title-row,
+.media-list .chevron-center .item-title-row,
+li.media-item.chevron-center .item-title-row,
+li.media-item .chevron-center .item-title-row {
+  background-image: none !important;
+}
+.media-list .item-link .item-inner,
+li.media-item .item-link .item-inner {
+  background-image: none;
+}
+.media-list .item-link .item-title-row,
+li.media-item .item-link .item-title-row {
+  background-position: right center !important;
+}
+.list-group ul:after,
+.list-group ul:before {
+  z-index: 25 !important;
+}
+.list-group + .list-group ul:before {
+  display: none !important;
+}
+li.item-divider,
+.item-divider,
+li.list-group-title {
+  white-space: nowrap;
+  position: relative;
+  max-width: 100%;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  z-index: 15;
+}
+li.list-group-title,
+.list li.list-group-title {
+  position: relative;
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  margin-top: 0;
+  z-index: 20;
+}
+li.list-group-title:before,
+.list li.list-group-title:before {
+  display: none !important;
+}
+.list.inset .block-title {
+  margin-left: 0;
+  margin-right: 0;
+}
+.list.inset ul:before {
+  display: none !important;
+}
+.list.inset ul:after {
+  display: none !important;
+}
+@media (min-width: 768px) {
+  .list.tablet-inset .block-title {
+    margin-left: 0;
+    margin-right: 0;
+  }
+  .list.tablet-inset ul:before {
+    display: none !important;
+  }
+  .list.tablet-inset ul:after {
+    display: none !important;
+  }
+}
+.theme-dark .list .item-link .item-inner,
+.list.theme-dark .item-link .item-inner,
+.theme-dark .links-list a,
+.links-list.theme-dark a,
+.theme-dark .media-list .item-link .item-title-row,
+.media-list.theme-dark .item-link .item-title-row,
+.theme-dark li.media-item .item-link .item-title-row {
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg%20width%3D'8px'%20height%3D'13px'%20viewBox%3D'0%200%208%2013'%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%3E%3Cpolygon%20fill%3D'%23434345'%20transform%3D'translate(1.500000%2C%206.500000)%20rotate(-45.000000)%20translate(-1.500000%2C%20-6.500000)%20'%20points%3D'6%2011%206%202%204%202%204%209%20-3%209%20-3%2011%205%2011'%3E%3C%2Fpolygon%3E%3C%2Fsvg%3E");
+}
+.theme-dark .media-list .item-link .item-inner,
+.media-list.theme-dark .item-link .item-inner,
+.theme-dark li.media-item .item-link .item-inner {
+  background-image: none;
+}
+.ios .list {
+  margin: 35px 0;
+  font-size: 17px;
+}
+.ios .list .item-cell {
+  width: 100%;
+  min-width: 0;
+  margin-left: 15px;
+}
+.ios .list .item-cell:first-child {
+  margin-left: 0;
+}
+.ios .list ul {
+  background: #fff;
+}
+.ios .list ul ul {
+  padding-left: 45px;
+}
+.ios .list .item-media {
+  padding-top: 7px;
+}
+.ios .list .item-media i + i,
+.ios .list .item-media i + img {
+  margin-left: 5px;
+}
+.ios .list .item-media + .item-inner {
+  margin-left: 15px;
+}
+.ios .list .item-inner {
+  min-height: 44px;
+  padding-right: 15px;
+}
+.ios .list .item-after {
+  color: #8e8e93;
+  padding-left: 5px;
+}
+.ios .list .item-link,
+.ios .list .list-button {
+  color: inherit;
+}
+.ios .list .item-link .item-inner,
+.ios .list .list-button .item-inner {
+  padding-right: 35px;
+}
+.ios .list .item-link.active-state,
+.ios .list .list-button.active-state {
+  -webkit-transition-duration: 0ms;
+  transition-duration: 0ms;
+  background-color: #d9d9d9;
+}
+.ios .list .item-link.active-state .item-inner:after,
+.ios .list .list-button.active-state .item-inner:after {
+  background-color: transparent;
+}
+.ios .list .list-button {
+  padding: 0 15px;
+  text-align: center;
+  color: #007aff;
+  line-height: 44px;
+}
+.ios .list .item-content {
+  min-height: 44px;
+  padding-left: 15px;
+}
+.ios .list .item-subtitle {
+  font-size: 15px;
+}
+.ios .list .item-text {
+  font-size: 15px;
+  color: #8e8e93;
+  line-height: 21px;
+  max-height: 42px;
+}
+.ios .list .item-header,
+.ios .list .item-footer {
+  font-weight: normal;
+  font-size: 12px;
+  line-height: 1.2;
+  white-space: normal;
+}
+.ios .list .item-footer {
+  color: #8e8e93;
+}
+.ios .list .item-link.no-chevron .item-inner,
+.ios .list.no-chevron .item-link .item-inner,
+.ios .list .no-chevron .item-link .item-inner,
+.ios .no-chevron .list .item-link .item-inner {
+  padding-right: 15px;
+}
+.ios .simple-list li:after {
+  content: '';
+  position: absolute;
+  background-color: #c8c7cc;
+  display: block;
+  z-index: 15;
+  top: auto;
+  right: auto;
+  bottom: 0;
+  left: 0;
+  height: 1px;
+  width: 100%;
+  -webkit-transform-origin: 50% 100%;
+  transform-origin: 50% 100%;
+}
+.ios.device-pixel-ratio-2 .simple-list li:after {
+  -webkit-transform: scaleY(0.5);
+  transform: scaleY(0.5);
+}
+.ios.device-pixel-ratio-3 .simple-list li:after {
+  -webkit-transform: scaleY(0.33);
+  transform: scaleY(0.33);
+}
+.ios .simple-list li {
+  padding-left: 15px;
+  padding-right: 15px;
+  line-height: 44px;
+  height: 44px;
+}
+.ios .simple-list li:after {
+  width: auto;
+  left: 15px;
+  right: 0;
+}
+.ios .links-list a:after {
+  content: '';
+  position: absolute;
+  background-color: #c8c7cc;
+  display: block;
+  z-index: 15;
+  top: auto;
+  right: auto;
+  bottom: 0;
+  left: 0;
+  height: 1px;
+  width: 100%;
+  -webkit-transform-origin: 50% 100%;
+  transform-origin: 50% 100%;
+}
+.ios.device-pixel-ratio-2 .links-list a:after {
+  -webkit-transform: scaleY(0.5);
+  transform: scaleY(0.5);
+}
+.ios.device-pixel-ratio-3 .links-list a:after {
+  -webkit-transform: scaleY(0.33);
+  transform: scaleY(0.33);
+}
+.ios .links-list a {
+  height: 44px;
+  color: inherit;
+}
+.ios .links-list a.active-state {
+  -webkit-transition-duration: 0ms;
+  transition-duration: 0ms;
+  background-color: #d9d9d9;
+}
+.ios .links-list a:after {
+  width: auto;
+}
+.ios .links-list a {
+  padding-left: 15px;
+  padding-right: 35px;
+}
+.ios .links-list a:after {
+  left: 15px;
+  right: 0;
+}
+.ios .links-list.no-chevron a,
+.ios .no-chevron .links-list a,
+.ios .links-list a.no-chevron,
+.ios .links-list .no-chevron a {
+  padding-right: 15px;
+}
+.ios .media-list .item-title,
+.ios li.media-item .item-title {
+  font-weight: 600;
+}
+.ios .media-list .item-inner,
+.ios li.media-item .item-inner {
+  padding-top: 10px;
+  padding-bottom: 9px;
+}
+.ios .media-list .item-media,
+.ios li.media-item .item-media {
+  padding-top: 9px;
+  padding-bottom: 10px;
+}
+.ios .media-list .item-link .item-inner,
+.ios li.media-item .item-link .item-inner {
+  padding-right: 15px;
+}
+.ios .media-list .item-link .item-title-row,
+.ios li.media-item .item-link .item-title-row {
+  padding-right: 20px;
+}
+.ios .media-list.chevron-center .item-link .item-inner,
+.ios .media-list .chevron-center .item-link .item-inner,
+.ios .media-list .item-link.chevron-center .item-inner,
+.ios li.media-item.chevron-center .item-link .item-inner,
+.ios li.media-item .item-link.chevron-center .item-inner,
+.ios li.media-item .chevron-center .item-link .item-inner {
+  padding-right: 35px;
+}
+.ios .media-list.no-chevron .item-link .item-title-row,
+.ios .no-chevron .media-list .item-link .item-title-row,
+.ios .media-list .no-chevron .item-link .item-title-row,
+.ios li.media-item.no-chevron .item-link .item-title-row,
+.ios .no-chevron li.media-item .item-link .item-title-row,
+.ios .media-list.chevron-center .item-title-row,
+.ios .media-list .chevron-center .item-title-row,
+.ios li.media-item.chevron-center .item-title-row,
+.ios li.media-item .chevron-center .item-title-row {
+  padding-right: 0 !important;
+}
+.ios .list .item-link .item-inner,
+.ios .links-list a {
+  background-position: calc(100% - 15px) center;
+}
+.ios .item-divider,
+.ios .list-group-title {
+  margin-top: -1px;
+  padding: 4px 15px;
+  background: #f7f7f7;
+  color: #8e8e93;
+}
+.ios .item-divider:after,
+.ios .list-group-title:after {
+  display: none !important;
+}
+.ios .list-group-title {
+  margin-top: 0;
+}
+.ios .item-divider:before {
+  content: '';
+  position: absolute;
+  background-color: #c8c7cc;
+  display: block;
+  z-index: 15;
+  top: 0;
+  right: auto;
+  bottom: auto;
+  left: 0;
+  height: 1px;
+  width: 100%;
+  -webkit-transform-origin: 50% 0%;
+  transform-origin: 50% 0%;
+}
+.ios.device-pixel-ratio-2 .item-divider:before {
+  -webkit-transform: scaleY(0.5);
+  transform: scaleY(0.5);
+}
+.ios.device-pixel-ratio-3 .item-divider:before {
+  -webkit-transform: scaleY(0.33);
+  transform: scaleY(0.33);
+}
+.ios .list-group-title:before {
+  content: '';
+  position: absolute;
+  background-color: #c8c7cc;
+  display: block;
+  z-index: 15;
+  top: 0;
+  right: auto;
+  bottom: auto;
+  left: 0;
+  height: 1px;
+  width: 100%;
+  -webkit-transform-origin: 50% 0%;
+  transform-origin: 50% 0%;
+}
+.ios.device-pixel-ratio-2 .list-group-title:before {
+  -webkit-transform: scaleY(0.5);
+  transform: scaleY(0.5);
+}
+.ios.device-pixel-ratio-3 .list-group-title:before {
+  -webkit-transform: scaleY(0.33);
+  transform: scaleY(0.33);
+}
+.ios .list .list-button:after {
+  content: '';
+  position: absolute;
+  background-color: #c8c7cc;
+  display: block;
+  z-index: 15;
+  top: auto;
+  right: auto;
+  bottom: 0;
+  left: 0;
+  height: 1px;
+  width: 100%;
+  -webkit-transform-origin: 50% 100%;
+  transform-origin: 50% 100%;
+}
+.ios.device-pixel-ratio-2 .list .list-button:after {
+  -webkit-transform: scaleY(0.5);
+  transform: scaleY(0.5);
+}
+.ios.device-pixel-ratio-3 .list .list-button:after {
+  -webkit-transform: scaleY(0.33);
+  transform: scaleY(0.33);
+}
+.ios .list .item-inner:after {
+  content: '';
+  position: absolute;
+  background-color: #c8c7cc;
+  display: block;
+  z-index: 15;
+  top: auto;
+  right: auto;
+  bottom: 0;
+  left: 0;
+  height: 1px;
+  width: 100%;
+  -webkit-transform-origin: 50% 100%;
+  transform-origin: 50% 100%;
+}
+.ios.device-pixel-ratio-2 .list .item-inner:after {
+  -webkit-transform: scaleY(0.5);
+  transform: scaleY(0.5);
+}
+.ios.device-pixel-ratio-3 .list .item-inner:after {
+  -webkit-transform: scaleY(0.33);
+  transform: scaleY(0.33);
+}
+.ios .list ul:before {
+  content: '';
+  position: absolute;
+  background-color: #c8c7cc;
+  display: block;
+  z-index: 15;
+  top: 0;
+  right: auto;
+  bottom: auto;
+  left: 0;
+  height: 1px;
+  width: 100%;
+  -webkit-transform-origin: 50% 0%;
+  transform-origin: 50% 0%;
+}
+.ios.device-pixel-ratio-2 .list ul:before {
+  -webkit-transform: scaleY(0.5);
+  transform: scaleY(0.5);
+}
+.ios.device-pixel-ratio-3 .list ul:before {
+  -webkit-transform: scaleY(0.33);
+  transform: scaleY(0.33);
+}
+.ios .list ul:after {
+  content: '';
+  position: absolute;
+  background-color: #c8c7cc;
+  display: block;
+  z-index: 15;
+  top: auto;
+  right: auto;
+  bottom: 0;
+  left: 0;
+  height: 1px;
+  width: 100%;
+  -webkit-transform-origin: 50% 100%;
+  transform-origin: 50% 100%;
+}
+.ios.device-pixel-ratio-2 .list ul:after {
+  -webkit-transform: scaleY(0.5);
+  transform: scaleY(0.5);
+}
+.ios.device-pixel-ratio-3 .list ul:after {
+  -webkit-transform: scaleY(0.33);
+  transform: scaleY(0.33);
+}
+.ios .list.inset {
+  margin-left: 15px;
+  margin-right: 15px;
+  border-radius: 7px;
+}
+.ios .list.inset ul {
+  border-radius: 7px;
+}
+.ios .list.inset li:first-child > a {
+  border-radius: 7px 7px 0 0;
+}
+.ios .list.inset li:last-child > a {
+  border-radius: 0 0 7px 7px;
+}
+.ios .list.inset li:first-child:last-child > a {
+  border-radius: 7px;
+}
+@media (min-width: 768px) {
+  .ios .list.tablet-inset {
+    margin-left: 15px;
+    margin-right: 15px;
+    border-radius: 7px;
+  }
+  .ios .list.tablet-inset ul {
+    border-radius: 7px;
+  }
+  .ios .list.tablet-inset li:first-child > a {
+    border-radius: 7px 7px 0 0;
+  }
+  .ios .list.tablet-inset li:last-child > a {
+    border-radius: 0 0 7px 7px;
+  }
+  .ios .list.tablet-inset li:first-child:last-child > a {
+    border-radius: 7px;
+  }
+}
+.ios li li:last-child .item-inner:after,
+.ios li:last-child li .item-inner:after {
+  content: '';
+  position: absolute;
+  background-color: #c8c7cc;
+  display: block;
+  z-index: 15;
+  top: auto;
+  right: auto;
+  bottom: 0;
+  left: 0;
+  height: 1px;
+  width: 100%;
+  -webkit-transform-origin: 50% 100%;
+  transform-origin: 50% 100%;
+}
+html.device-pixel-ratio-2 .ios li li:last-child .item-inner:after,
+html.device-pixel-ratio-2 .ios li:last-child li .item-inner:after {
+  -webkit-transform: scaleY(0.5);
+  transform: scaleY(0.5);
+}
+html.device-pixel-ratio-3 .ios li li:last-child .item-inner:after,
+html.device-pixel-ratio-3 .ios li:last-child li .item-inner:after {
+  -webkit-transform: scaleY(0.33);
+  transform: scaleY(0.33);
+}
+@media (orientation: landscape) {
+  .ios.device-iphone-x .ios-left-edge .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-left-edge).simple-list li,
+  .ios.device-iphone-x .ios-edges .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-left-edge).simple-list li,
+  .ios.device-iphone-x .popup .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-left-edge).simple-list li,
+  .ios.device-iphone-x .sheet-modal .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-left-edge).simple-list li,
+  .ios.device-iphone-x .panel-left .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-left-edge).simple-list li {
+    padding-left: calc(15px + constant(safe-area-inset-left));
+    padding-left: calc(15px + env(safe-area-inset-left));
+  }
+  .ios.device-iphone-x .ios-left-edge .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-left-edge) .item-divider,
+  .ios.device-iphone-x .ios-edges .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-left-edge) .item-divider,
+  .ios.device-iphone-x .popup .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-left-edge) .item-divider,
+  .ios.device-iphone-x .sheet-modal .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-left-edge) .item-divider,
+  .ios.device-iphone-x .panel-left .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-left-edge) .item-divider,
+  .ios.device-iphone-x .ios-left-edge .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-left-edge) .list-group-title,
+  .ios.device-iphone-x .ios-edges .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-left-edge) .list-group-title,
+  .ios.device-iphone-x .popup .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-left-edge) .list-group-title,
+  .ios.device-iphone-x .sheet-modal .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-left-edge) .list-group-title,
+  .ios.device-iphone-x .panel-left .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-left-edge) .list-group-title {
+    padding-left: calc(15px + constant(safe-area-inset-left));
+    padding-left: calc(15px + env(safe-area-inset-left));
+  }
+  .ios.device-iphone-x .ios-left-edge .list.inset:not(.no-ios-edges):not(.no-ios-left-edge),
+  .ios.device-iphone-x .ios-edges .list.inset:not(.no-ios-edges):not(.no-ios-left-edge),
+  .ios.device-iphone-x .popup .list.inset:not(.no-ios-edges):not(.no-ios-left-edge),
+  .ios.device-iphone-x .sheet-modal .list.inset:not(.no-ios-edges):not(.no-ios-left-edge),
+  .ios.device-iphone-x .panel-left .list.inset:not(.no-ios-edges):not(.no-ios-left-edge) {
+    margin-left: calc(15px + constant(safe-area-inset-left));
+    margin-left: calc(15px + env(safe-area-inset-left));
+  }
+  .ios.device-iphone-x .ios-left-edge .list.inset:not(.no-ios-edges):not(.no-ios-left-edge) .block-header,
+  .ios.device-iphone-x .ios-edges .list.inset:not(.no-ios-edges):not(.no-ios-left-edge) .block-header,
+  .ios.device-iphone-x .popup .list.inset:not(.no-ios-edges):not(.no-ios-left-edge) .block-header,
+  .ios.device-iphone-x .sheet-modal .list.inset:not(.no-ios-edges):not(.no-ios-left-edge) .block-header,
+  .ios.device-iphone-x .panel-left .list.inset:not(.no-ios-edges):not(.no-ios-left-edge) .block-header,
+  .ios.device-iphone-x .ios-left-edge .list.inset:not(.no-ios-edges):not(.no-ios-left-edge) .block-footer,
+  .ios.device-iphone-x .ios-edges .list.inset:not(.no-ios-edges):not(.no-ios-left-edge) .block-footer,
+  .ios.device-iphone-x .popup .list.inset:not(.no-ios-edges):not(.no-ios-left-edge) .block-footer,
+  .ios.device-iphone-x .sheet-modal .list.inset:not(.no-ios-edges):not(.no-ios-left-edge) .block-footer,
+  .ios.device-iphone-x .panel-left .list.inset:not(.no-ios-edges):not(.no-ios-left-edge) .block-footer {
+    padding-left: 15px;
+  }
+  .ios.device-iphone-x .ios-left-edge .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-left-edge) .item-content,
+  .ios.device-iphone-x .ios-edges .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-left-edge) .item-content,
+  .ios.device-iphone-x .popup .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-left-edge) .item-content,
+  .ios.device-iphone-x .sheet-modal .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-left-edge) .item-content,
+  .ios.device-iphone-x .panel-left .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-left-edge) .item-content {
+    padding-left: calc(15px + constant(safe-area-inset-left));
+    padding-left: calc(15px + env(safe-area-inset-left));
+  }
+  .ios.device-iphone-x .ios-left-edge .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-left-edge).simple-list li:after,
+  .ios.device-iphone-x .ios-edges .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-left-edge).simple-list li:after,
+  .ios.device-iphone-x .popup .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-left-edge).simple-list li:after,
+  .ios.device-iphone-x .sheet-modal .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-left-edge).simple-list li:after,
+  .ios.device-iphone-x .panel-left .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-left-edge).simple-list li:after {
+    left: calc(15px + constant(safe-area-inset-left));
+    left: calc(15px + env(safe-area-inset-left));
+  }
+  .ios.device-iphone-x .ios-left-edge .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-left-edge).links-list a,
+  .ios.device-iphone-x .ios-edges .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-left-edge).links-list a,
+  .ios.device-iphone-x .popup .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-left-edge).links-list a,
+  .ios.device-iphone-x .sheet-modal .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-left-edge).links-list a,
+  .ios.device-iphone-x .panel-left .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-left-edge).links-list a {
+    padding-left: calc(15px + constant(safe-area-inset-left));
+    padding-left: calc(15px + env(safe-area-inset-left));
+  }
+  .ios.device-iphone-x .ios-left-edge .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-left-edge).links-list a:after,
+  .ios.device-iphone-x .ios-edges .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-left-edge).links-list a:after,
+  .ios.device-iphone-x .popup .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-left-edge).links-list a:after,
+  .ios.device-iphone-x .sheet-modal .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-left-edge).links-list a:after,
+  .ios.device-iphone-x .panel-left .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-left-edge).links-list a:after {
+    left: calc(15px + constant(safe-area-inset-left));
+    left: calc(15px + env(safe-area-inset-left));
+  }
+  .ios.device-iphone-x .ios-right-edge .list.inset:not(.no-ios-edges):not(.no-ios-right-edge),
+  .ios.device-iphone-x .ios-edges .list.inset:not(.no-ios-edges):not(.no-ios-right-edge),
+  .ios.device-iphone-x .popup .list.inset:not(.no-ios-edges):not(.no-ios-right-edge),
+  .ios.device-iphone-x .sheet-modal .list.inset:not(.no-ios-edges):not(.no-ios-right-edge),
+  .ios.device-iphone-x .panel-right .list.inset:not(.no-ios-edges):not(.no-ios-right-edge) {
+    margin-right: calc(15px + constant(safe-area-inset-right));
+    margin-right: calc(15px + env(safe-area-inset-right));
+  }
+  .ios.device-iphone-x .ios-right-edge .list.inset:not(.no-ios-edges):not(.no-ios-right-edge) .block-header,
+  .ios.device-iphone-x .ios-edges .list.inset:not(.no-ios-edges):not(.no-ios-right-edge) .block-header,
+  .ios.device-iphone-x .popup .list.inset:not(.no-ios-edges):not(.no-ios-right-edge) .block-header,
+  .ios.device-iphone-x .sheet-modal .list.inset:not(.no-ios-edges):not(.no-ios-right-edge) .block-header,
+  .ios.device-iphone-x .panel-right .list.inset:not(.no-ios-edges):not(.no-ios-right-edge) .block-header,
+  .ios.device-iphone-x .ios-right-edge .list.inset:not(.no-ios-edges):not(.no-ios-right-edge) .block-footer,
+  .ios.device-iphone-x .ios-edges .list.inset:not(.no-ios-edges):not(.no-ios-right-edge) .block-footer,
+  .ios.device-iphone-x .popup .list.inset:not(.no-ios-edges):not(.no-ios-right-edge) .block-footer,
+  .ios.device-iphone-x .sheet-modal .list.inset:not(.no-ios-edges):not(.no-ios-right-edge) .block-footer,
+  .ios.device-iphone-x .panel-right .list.inset:not(.no-ios-edges):not(.no-ios-right-edge) .block-footer {
+    padding-right: 15px;
+  }
+  .ios.device-iphone-x .ios-right-edge .list.tablet-inset:not(.no-ios-edges):not(.no-ios-right-edge) .block-header,
+  .ios.device-iphone-x .ios-edges .list.tablet-inset:not(.no-ios-edges):not(.no-ios-right-edge) .block-header,
+  .ios.device-iphone-x .popup .list.tablet-inset:not(.no-ios-edges):not(.no-ios-right-edge) .block-header,
+  .ios.device-iphone-x .sheet-modal .list.tablet-inset:not(.no-ios-edges):not(.no-ios-right-edge) .block-header,
+  .ios.device-iphone-x .panel-right .list.tablet-inset:not(.no-ios-edges):not(.no-ios-right-edge) .block-header,
+  .ios.device-iphone-x .ios-right-edge .list.tablet-inset:not(.no-ios-edges):not(.no-ios-right-edge) .block-footer,
+  .ios.device-iphone-x .ios-edges .list.tablet-inset:not(.no-ios-edges):not(.no-ios-right-edge) .block-footer,
+  .ios.device-iphone-x .popup .list.tablet-inset:not(.no-ios-edges):not(.no-ios-right-edge) .block-footer,
+  .ios.device-iphone-x .sheet-modal .list.tablet-inset:not(.no-ios-edges):not(.no-ios-right-edge) .block-footer,
+  .ios.device-iphone-x .panel-right .list.tablet-inset:not(.no-ios-edges):not(.no-ios-right-edge) .block-footer {
+    padding-right: 15px;
+  }
+  .ios.device-iphone-x .ios-right-edge .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) .item-divider,
+  .ios.device-iphone-x .ios-edges .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) .item-divider,
+  .ios.device-iphone-x .popup .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) .item-divider,
+  .ios.device-iphone-x .sheet-modal .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) .item-divider,
+  .ios.device-iphone-x .panel-right .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) .item-divider,
+  .ios.device-iphone-x .ios-right-edge .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) .list-group-title,
+  .ios.device-iphone-x .ios-edges .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) .list-group-title,
+  .ios.device-iphone-x .popup .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) .list-group-title,
+  .ios.device-iphone-x .sheet-modal .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) .list-group-title,
+  .ios.device-iphone-x .panel-right .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) .list-group-title {
+    padding-right: calc(15px + constant(safe-area-inset-right));
+    padding-right: calc(15px + env(safe-area-inset-right));
+  }
+  .ios.device-iphone-x .ios-right-edge .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).simple-list li,
+  .ios.device-iphone-x .ios-edges .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).simple-list li,
+  .ios.device-iphone-x .popup .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).simple-list li,
+  .ios.device-iphone-x .sheet-modal .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).simple-list li,
+  .ios.device-iphone-x .panel-right .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).simple-list li {
+    padding-right: calc(15px + constant(safe-area-inset-right));
+    padding-right: calc(15px + env(safe-area-inset-right));
+  }
+  .ios.device-iphone-x .ios-right-edge .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) .item-link .item-inner,
+  .ios.device-iphone-x .ios-edges .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) .item-link .item-inner,
+  .ios.device-iphone-x .popup .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) .item-link .item-inner,
+  .ios.device-iphone-x .sheet-modal .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) .item-link .item-inner,
+  .ios.device-iphone-x .panel-right .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) .item-link .item-inner,
+  .ios.device-iphone-x .ios-right-edge .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).links-list a,
+  .ios.device-iphone-x .ios-edges .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).links-list a,
+  .ios.device-iphone-x .popup .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).links-list a,
+  .ios.device-iphone-x .sheet-modal .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).links-list a,
+  .ios.device-iphone-x .panel-right .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).links-list a {
+    background-position: calc(100% - 15px - constant(safe-area-inset-right)) center;
+    background-position: calc(100% - 15px - env(safe-area-inset-right)) center;
+  }
+  .ios.device-iphone-x .ios-right-edge .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) .item-inner,
+  .ios.device-iphone-x .ios-edges .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) .item-inner,
+  .ios.device-iphone-x .popup .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) .item-inner,
+  .ios.device-iphone-x .sheet-modal .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) .item-inner,
+  .ios.device-iphone-x .panel-right .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) .item-inner {
+    padding-right: calc(15px + constant(safe-area-inset-right));
+    padding-right: calc(15px + env(safe-area-inset-right));
+  }
+  .ios.device-iphone-x .ios-right-edge .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) .item-link .item-inner,
+  .ios.device-iphone-x .ios-edges .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) .item-link .item-inner,
+  .ios.device-iphone-x .popup .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) .item-link .item-inner,
+  .ios.device-iphone-x .sheet-modal .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) .item-link .item-inner,
+  .ios.device-iphone-x .panel-right .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) .item-link .item-inner {
+    padding-right: calc(35px + constant(safe-area-inset-right));
+    padding-right: calc(35px + env(safe-area-inset-right));
+  }
+  .ios.device-iphone-x .ios-right-edge .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).media-list .item-link .item-inner,
+  .ios.device-iphone-x .ios-edges .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).media-list .item-link .item-inner,
+  .ios.device-iphone-x .popup .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).media-list .item-link .item-inner,
+  .ios.device-iphone-x .sheet-modal .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).media-list .item-link .item-inner,
+  .ios.device-iphone-x .panel-right .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).media-list .item-link .item-inner,
+  .ios.device-iphone-x .ios-right-edge .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) li.media-item .item-link .item-inner,
+  .ios.device-iphone-x .ios-edges .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) li.media-item .item-link .item-inner,
+  .ios.device-iphone-x .popup .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) li.media-item .item-link .item-inner,
+  .ios.device-iphone-x .sheet-modal .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) li.media-item .item-link .item-inner,
+  .ios.device-iphone-x .panel-right .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) li.media-item .item-link .item-inner {
+    padding-right: calc(15px + constant(safe-area-inset-right));
+    padding-right: calc(15px + env(safe-area-inset-right));
+  }
+  .ios.device-iphone-x .ios-right-edge .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).links-list a,
+  .ios.device-iphone-x .ios-edges .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).links-list a,
+  .ios.device-iphone-x .popup .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).links-list a,
+  .ios.device-iphone-x .sheet-modal .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).links-list a,
+  .ios.device-iphone-x .panel-right .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).links-list a {
+    padding-right: calc(35px + constant(safe-area-inset-right));
+    padding-right: calc(35px + env(safe-area-inset-right));
+  }
+  .ios.device-iphone-x .ios-right-edge .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).media-list.chevron-center .item-link .item-inner,
+  .ios.device-iphone-x .ios-edges .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).media-list.chevron-center .item-link .item-inner,
+  .ios.device-iphone-x .popup .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).media-list.chevron-center .item-link .item-inner,
+  .ios.device-iphone-x .sheet-modal .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).media-list.chevron-center .item-link .item-inner,
+  .ios.device-iphone-x .panel-right .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).media-list.chevron-center .item-link .item-inner,
+  .ios.device-iphone-x .ios-right-edge .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).media-list .chevron-center .item-link .item-inner,
+  .ios.device-iphone-x .ios-edges .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).media-list .chevron-center .item-link .item-inner,
+  .ios.device-iphone-x .popup .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).media-list .chevron-center .item-link .item-inner,
+  .ios.device-iphone-x .sheet-modal .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).media-list .chevron-center .item-link .item-inner,
+  .ios.device-iphone-x .panel-right .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).media-list .chevron-center .item-link .item-inner,
+  .ios.device-iphone-x .ios-right-edge .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).media-list .item-link.chevron-center .item-inner,
+  .ios.device-iphone-x .ios-edges .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).media-list .item-link.chevron-center .item-inner,
+  .ios.device-iphone-x .popup .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).media-list .item-link.chevron-center .item-inner,
+  .ios.device-iphone-x .sheet-modal .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).media-list .item-link.chevron-center .item-inner,
+  .ios.device-iphone-x .panel-right .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).media-list .item-link.chevron-center .item-inner,
+  .ios.device-iphone-x .ios-right-edge .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) li.media-item.chevron-center .item-link .item-inner,
+  .ios.device-iphone-x .ios-edges .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) li.media-item.chevron-center .item-link .item-inner,
+  .ios.device-iphone-x .popup .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) li.media-item.chevron-center .item-link .item-inner,
+  .ios.device-iphone-x .sheet-modal .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) li.media-item.chevron-center .item-link .item-inner,
+  .ios.device-iphone-x .panel-right .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) li.media-item.chevron-center .item-link .item-inner,
+  .ios.device-iphone-x .ios-right-edge .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) li.media-item .item-link.chevron-center .item-inner,
+  .ios.device-iphone-x .ios-edges .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) li.media-item .item-link.chevron-center .item-inner,
+  .ios.device-iphone-x .popup .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) li.media-item .item-link.chevron-center .item-inner,
+  .ios.device-iphone-x .sheet-modal .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) li.media-item .item-link.chevron-center .item-inner,
+  .ios.device-iphone-x .panel-right .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) li.media-item .item-link.chevron-center .item-inner,
+  .ios.device-iphone-x .ios-right-edge .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) li.media-item .chevron-center .item-link .item-inner,
+  .ios.device-iphone-x .ios-edges .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) li.media-item .chevron-center .item-link .item-inner,
+  .ios.device-iphone-x .popup .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) li.media-item .chevron-center .item-link .item-inner,
+  .ios.device-iphone-x .sheet-modal .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) li.media-item .chevron-center .item-link .item-inner,
+  .ios.device-iphone-x .panel-right .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) li.media-item .chevron-center .item-link .item-inner {
+    padding-right: calc(35px + constant(safe-area-inset-right));
+    padding-right: calc(35px + env(safe-area-inset-right));
+  }
+  .ios.device-iphone-x .ios-right-edge .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) .item-link.no-chevron .item-inner,
+  .ios.device-iphone-x .ios-edges .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) .item-link.no-chevron .item-inner,
+  .ios.device-iphone-x .popup .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) .item-link.no-chevron .item-inner,
+  .ios.device-iphone-x .sheet-modal .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) .item-link.no-chevron .item-inner,
+  .ios.device-iphone-x .panel-right .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) .item-link.no-chevron .item-inner,
+  .ios.device-iphone-x .ios-right-edge .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).no-chevron .item-link .item-inner,
+  .ios.device-iphone-x .ios-edges .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).no-chevron .item-link .item-inner,
+  .ios.device-iphone-x .popup .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).no-chevron .item-link .item-inner,
+  .ios.device-iphone-x .sheet-modal .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).no-chevron .item-link .item-inner,
+  .ios.device-iphone-x .panel-right .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).no-chevron .item-link .item-inner,
+  .ios.device-iphone-x .ios-right-edge .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) .no-chevron .item-link .item-inner,
+  .ios.device-iphone-x .ios-edges .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) .no-chevron .item-link .item-inner,
+  .ios.device-iphone-x .popup .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) .no-chevron .item-link .item-inner,
+  .ios.device-iphone-x .sheet-modal .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) .no-chevron .item-link .item-inner,
+  .ios.device-iphone-x .panel-right .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) .no-chevron .item-link .item-inner,
+  .ios.device-iphone-x .ios-right-edge .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).links-list.no-chevron a,
+  .ios.device-iphone-x .ios-edges .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).links-list.no-chevron a,
+  .ios.device-iphone-x .popup .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).links-list.no-chevron a,
+  .ios.device-iphone-x .sheet-modal .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).links-list.no-chevron a,
+  .ios.device-iphone-x .panel-right .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).links-list.no-chevron a,
+  .ios.device-iphone-x .ios-right-edge .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).links-list a.no-chevron,
+  .ios.device-iphone-x .ios-edges .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).links-list a.no-chevron,
+  .ios.device-iphone-x .popup .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).links-list a.no-chevron,
+  .ios.device-iphone-x .sheet-modal .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).links-list a.no-chevron,
+  .ios.device-iphone-x .panel-right .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).links-list a.no-chevron,
+  .ios.device-iphone-x .ios-right-edge .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).links-list .no-chevron a,
+  .ios.device-iphone-x .ios-edges .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).links-list .no-chevron a,
+  .ios.device-iphone-x .popup .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).links-list .no-chevron a,
+  .ios.device-iphone-x .sheet-modal .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).links-list .no-chevron a,
+  .ios.device-iphone-x .panel-right .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).links-list .no-chevron a {
+    padding-right: calc(15px + constant(safe-area-inset-right));
+    padding-right: calc(15px + env(safe-area-inset-right));
+  }
+  .ios.device-iphone-x .ios-right-edge .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).media-list.no-chevron .item-link .item-title-row,
+  .ios.device-iphone-x .ios-edges .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).media-list.no-chevron .item-link .item-title-row,
+  .ios.device-iphone-x .popup .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).media-list.no-chevron .item-link .item-title-row,
+  .ios.device-iphone-x .sheet-modal .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).media-list.no-chevron .item-link .item-title-row,
+  .ios.device-iphone-x .panel-right .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).media-list.no-chevron .item-link .item-title-row,
+  .ios.device-iphone-x .ios-right-edge .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).media-list .no-chevron .item-link .item-title-row,
+  .ios.device-iphone-x .ios-edges .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).media-list .no-chevron .item-link .item-title-row,
+  .ios.device-iphone-x .popup .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).media-list .no-chevron .item-link .item-title-row,
+  .ios.device-iphone-x .sheet-modal .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).media-list .no-chevron .item-link .item-title-row,
+  .ios.device-iphone-x .panel-right .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).media-list .no-chevron .item-link .item-title-row,
+  .ios.device-iphone-x .ios-right-edge .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) li.media-item.no-chevron .item-link .item-title-row,
+  .ios.device-iphone-x .ios-edges .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) li.media-item.no-chevron .item-link .item-title-row,
+  .ios.device-iphone-x .popup .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) li.media-item.no-chevron .item-link .item-title-row,
+  .ios.device-iphone-x .sheet-modal .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) li.media-item.no-chevron .item-link .item-title-row,
+  .ios.device-iphone-x .panel-right .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) li.media-item.no-chevron .item-link .item-title-row,
+  .ios.device-iphone-x .ios-right-edge .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).no-chevron li.media-item .item-link .item-title-row,
+  .ios.device-iphone-x .ios-edges .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).no-chevron li.media-item .item-link .item-title-row,
+  .ios.device-iphone-x .popup .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).no-chevron li.media-item .item-link .item-title-row,
+  .ios.device-iphone-x .sheet-modal .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).no-chevron li.media-item .item-link .item-title-row,
+  .ios.device-iphone-x .panel-right .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).no-chevron li.media-item .item-link .item-title-row {
+    padding-right: 0;
+  }
+}
+@media (orientation: landscape) and (min-width: 768px) {
+  .ios.device-iphone-x .ios-left-edge .list.tablet-inset:not(.no-ios-edges):not(.no-ios-left-edge),
+  .ios.device-iphone-x .ios-edges .list.tablet-inset:not(.no-ios-edges):not(.no-ios-left-edge),
+  .ios.device-iphone-x .popup .list.tablet-inset:not(.no-ios-edges):not(.no-ios-left-edge),
+  .ios.device-iphone-x .sheet-modal .list.tablet-inset:not(.no-ios-edges):not(.no-ios-left-edge),
+  .ios.device-iphone-x .panel-left .list.tablet-inset:not(.no-ios-edges):not(.no-ios-left-edge) {
+    margin-left: calc(15px + constant(safe-area-inset-left));
+    margin-left: calc(15px + env(safe-area-inset-left));
+  }
+  .ios.device-iphone-x .ios-left-edge .list.tablet-inset:not(.no-ios-edges):not(.no-ios-left-edge) .block-header,
+  .ios.device-iphone-x .ios-edges .list.tablet-inset:not(.no-ios-edges):not(.no-ios-left-edge) .block-header,
+  .ios.device-iphone-x .popup .list.tablet-inset:not(.no-ios-edges):not(.no-ios-left-edge) .block-header,
+  .ios.device-iphone-x .sheet-modal .list.tablet-inset:not(.no-ios-edges):not(.no-ios-left-edge) .block-header,
+  .ios.device-iphone-x .panel-left .list.tablet-inset:not(.no-ios-edges):not(.no-ios-left-edge) .block-header,
+  .ios.device-iphone-x .ios-left-edge .list.tablet-inset:not(.no-ios-edges):not(.no-ios-left-edge) .block-footer,
+  .ios.device-iphone-x .ios-edges .list.tablet-inset:not(.no-ios-edges):not(.no-ios-left-edge) .block-footer,
+  .ios.device-iphone-x .popup .list.tablet-inset:not(.no-ios-edges):not(.no-ios-left-edge) .block-footer,
+  .ios.device-iphone-x .sheet-modal .list.tablet-inset:not(.no-ios-edges):not(.no-ios-left-edge) .block-footer,
+  .ios.device-iphone-x .panel-left .list.tablet-inset:not(.no-ios-edges):not(.no-ios-left-edge) .block-footer {
+    padding-left: 15px;
+  }
+}
+@media (orientation: landscape) and (min-width: 768px) {
+  .ios.device-iphone-x .ios-right-edge .list.tablet-inset:not(.no-ios-edges):not(.no-ios-right-edge),
+  .ios.device-iphone-x .ios-edges .list.tablet-inset:not(.no-ios-edges):not(.no-ios-right-edge),
+  .ios.device-iphone-x .popup .list.tablet-inset:not(.no-ios-edges):not(.no-ios-right-edge),
+  .ios.device-iphone-x .sheet-modal .list.tablet-inset:not(.no-ios-edges):not(.no-ios-right-edge),
+  .ios.device-iphone-x .panel-right .list.tablet-inset:not(.no-ios-edges):not(.no-ios-right-edge) {
+    margin-right: calc(15px + constant(safe-area-inset-right));
+    margin-right: calc(15px + env(safe-area-inset-right));
+  }
+}
+.ios .theme-dark .list ul,
+.list.ios .theme-dark ul {
+  background: #1c1c1d;
+}
+.ios .theme-dark .list ul:before,
+.list.ios .theme-dark ul:before {
+  background-color: #282829;
+}
+.ios .theme-dark .list ul:after,
+.list.ios .theme-dark ul:after {
+  background-color: #282829;
+}
+.ios .theme-dark .list li li:last-child .item-inner:after,
+.list.ios .theme-dark li li:last-child .item-inner:after,
+.ios .theme-dark .list li:last-child li .item-inner:after,
+.list.ios .theme-dark li:last-child li .item-inner:after {
+  background-color: #282829;
+}
+.ios .theme-dark .item-divider:before {
+  background-color: #282829;
+}
+.ios .theme-dark .list-group-title:before {
+  background-color: #282829;
+}
+.ios .theme-dark .list-button:after {
+  background-color: #282829;
+}
+.ios .theme-dark .item-inner:after {
+  background-color: #282829;
+}
+.ios .theme-dark .item-divider,
+.ios .theme-dark .list-group-title {
+  background-color: #111;
+}
+.ios .theme-dark .links-list a:after,
+.ios .theme-dark .simple-list li:after,
+.ios .theme-dark .links-list a:after,
+.links-list.ios .theme-dark a .simple-list li:after,
+.simple-list.ios .theme-dark li:after {
+  background-color: #282829;
+}
+.ios .theme-dark .list .item-link.active-state,
+.list.ios .theme-dark .item-link.active-state,
+.ios .theme-dark .list .list-button.active-state,
+.list.ios .theme-dark .list-button.active-state,
+.ios .theme-dark .links-list a.active-state,
+.links-list.ios .theme-dark a.active-state {
+  background-color: #363636;
+}
+.ios .color-theme-red .list-button {
+  color: #ff3b30;
+}
+.ios .color-theme-green .list-button {
+  color: #4cd964;
+}
+.ios .color-theme-blue .list-button {
+  color: #007aff;
+}
+.ios .color-theme-pink .list-button {
+  color: #ff2d55;
+}
+.ios .color-theme-yellow .list-button {
+  color: #ffcc00;
+}
+.ios .color-theme-orange .list-button {
+  color: #ff9500;
+}
+.ios .color-theme-gray .list-button {
+  color: #8e8e93;
+}
+.ios .color-theme-white .list-button {
+  color: #ffffff;
+}
+.ios .color-theme-black .list-button {
+  color: #000000;
+}
+.ios .list .list-button.color-red,
+.ios .list li.color-red .list-button,
+.ios .links-list li.color-red a,
+.ios .simple-list li.color-red,
+.ios .links-list a.color-red,
+.ios .list .item-link.color-red,
+.ios .list li.color-red .item-link {
+  color: #ff3b30;
+}
+.ios .list .list-button.color-green,
+.ios .list li.color-green .list-button,
+.ios .links-list li.color-green a,
+.ios .simple-list li.color-green,
+.ios .links-list a.color-green,
+.ios .list .item-link.color-green,
+.ios .list li.color-green .item-link {
+  color: #4cd964;
+}
+.ios .list .list-button.color-blue,
+.ios .list li.color-blue .list-button,
+.ios .links-list li.color-blue a,
+.ios .simple-list li.color-blue,
+.ios .links-list a.color-blue,
+.ios .list .item-link.color-blue,
+.ios .list li.color-blue .item-link {
+  color: #007aff;
+}
+.ios .list .list-button.color-pink,
+.ios .list li.color-pink .list-button,
+.ios .links-list li.color-pink a,
+.ios .simple-list li.color-pink,
+.ios .links-list a.color-pink,
+.ios .list .item-link.color-pink,
+.ios .list li.color-pink .item-link {
+  color: #ff2d55;
+}
+.ios .list .list-button.color-yellow,
+.ios .list li.color-yellow .list-button,
+.ios .links-list li.color-yellow a,
+.ios .simple-list li.color-yellow,
+.ios .links-list a.color-yellow,
+.ios .list .item-link.color-yellow,
+.ios .list li.color-yellow .item-link {
+  color: #ffcc00;
+}
+.ios .list .list-button.color-orange,
+.ios .list li.color-orange .list-button,
+.ios .links-list li.color-orange a,
+.ios .simple-list li.color-orange,
+.ios .links-list a.color-orange,
+.ios .list .item-link.color-orange,
+.ios .list li.color-orange .item-link {
+  color: #ff9500;
+}
+.ios .list .list-button.color-gray,
+.ios .list li.color-gray .list-button,
+.ios .links-list li.color-gray a,
+.ios .simple-list li.color-gray,
+.ios .links-list a.color-gray,
+.ios .list .item-link.color-gray,
+.ios .list li.color-gray .item-link {
+  color: #8e8e93;
+}
+.ios .list .list-button.color-white,
+.ios .list li.color-white .list-button,
+.ios .links-list li.color-white a,
+.ios .simple-list li.color-white,
+.ios .links-list a.color-white,
+.ios .list .item-link.color-white,
+.ios .list li.color-white .item-link {
+  color: #ffffff;
+}
+.ios .list .list-button.color-black,
+.ios .list li.color-black .list-button,
+.ios .links-list li.color-black a,
+.ios .simple-list li.color-black,
+.ios .links-list a.color-black,
+.ios .list .item-link.color-black,
+.ios .list li.color-black .item-link {
+  color: #000000;
+}
+.md .list {
+  margin: 32px 0;
+  font-size: 16px;
+}
+.md .list .item-cell {
+  width: 100%;
+  min-width: 0;
+  margin-left: 16px;
+}
+.md .list .item-cell:first-child {
+  margin-left: 0;
+}
+.md .list .ripple-wave + .item-cell {
+  margin-left: 0;
+}
+.md .list ul ul {
+  padding-left: 56px;
+}
+.md .list .item-media {
+  padding-top: 8px;
+  min-width: 40px;
+}
+.md .list .item-media i + i,
+.md .list .item-media i + img {
+  margin-left: 8px;
+}
+.md .list .item-media + .item-inner {
+  margin-left: 16px;
+}
+.md .list .item-inner {
+  min-height: 48px;
+  padding-right: 16px;
+}
+.md .list .item-after {
+  color: #757575;
+  font-size: 14px;
+  padding-left: 8px;
+}
+.md .list .item-link,
+.md .list .list-button {
+  color: inherit;
+}
+.md .list .item-link .item-inner,
+.md .list .list-button .item-inner {
+  padding-right: 42px;
+}
+.md .list .item-link.active-state,
+.md .list .list-button.active-state {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+.md .list .list-button {
+  padding: 0 16px;
+  font-size: 16px;
+  line-height: 48px;
+}
+.md .list .item-content {
+  min-height: 48px;
+  padding-left: 16px;
+}
+.md .list .item-subtitle {
+  font-size: 14px;
+}
+.md .list .item-text {
+  font-size: 14px;
+  color: #757575;
+  line-height: 20px;
+  max-height: 40px;
+}
+.md .list .item-header,
+.md .list .item-footer {
+  font-weight: normal;
+  font-size: 12px;
+  line-height: 1.2;
+  white-space: normal;
+}
+.md .list .item-footer {
+  color: rgba(0, 0, 0, 0.5);
+}
+.md .list .item-link.no-chevron .item-inner,
+.md .list.no-chevron .item-link .item-inner,
+.md .list .no-chevron .item-link .item-inner,
+.md .no-chevron .list .item-link .item-inner {
+  padding-right: 16px;
+}
+.md .simple-list li:after {
+  content: '';
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.12);
+  display: block;
+  z-index: 15;
+  top: auto;
+  right: auto;
+  bottom: 0;
+  left: 0;
+  height: 1px;
+  width: 100%;
+  -webkit-transform-origin: 50% 100%;
+  transform-origin: 50% 100%;
+}
+.md.device-pixel-ratio-2 .simple-list li:after {
+  -webkit-transform: scaleY(0.5);
+  transform: scaleY(0.5);
+}
+.md.device-pixel-ratio-3 .simple-list li:after {
+  -webkit-transform: scaleY(0.33);
+  transform: scaleY(0.33);
+}
+.md .simple-list li {
+  padding-left: 16px;
+  padding-right: 16px;
+  line-height: 48px;
+  height: 48px;
+}
+.md .simple-list li:after {
+  width: auto;
+  left: 16px;
+  right: 0;
+}
+.md .links-list a:after {
+  content: '';
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.12);
+  display: block;
+  z-index: 15;
+  top: auto;
+  right: auto;
+  bottom: 0;
+  left: 0;
+  height: 1px;
+  width: 100%;
+  -webkit-transform-origin: 50% 100%;
+  transform-origin: 50% 100%;
+}
+.md.device-pixel-ratio-2 .links-list a:after {
+  -webkit-transform: scaleY(0.5);
+  transform: scaleY(0.5);
+}
+.md.device-pixel-ratio-3 .links-list a:after {
+  -webkit-transform: scaleY(0.33);
+  transform: scaleY(0.33);
+}
+.md .links-list a {
+  height: 48px;
+  color: inherit;
+}
+.md .links-list a.active-state {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+.md .links-list a:after {
+  width: auto;
+}
+.md .links-list a {
+  padding-left: 16px;
+  padding-right: 42px;
+}
+.md .links-list a:after {
+  left: 16px;
+  right: 0;
+}
+.md .links-list.no-chevron a,
+.md .no-chevron .links-list a,
+.md .links-list a.no-chevron,
+.md .links-list .no-chevron a {
+  padding-right: 16px;
+}
+.md .media-list .item-inner,
+.md li.media-item .item-inner {
+  padding-top: 14px;
+  padding-bottom: 14px;
+}
+.md .media-list .item-link .item-inner,
+.md li.media-item .item-link .item-inner {
+  padding-right: 16px;
+}
+.md .media-list .item-link .item-title-row,
+.md li.media-item .item-link .item-title-row {
+  padding-right: 26px;
+}
+.md .media-list .item-media,
+.md li.media-item .item-media {
+  padding-top: 14px;
+  padding-bottom: 14px;
+}
+.md .media-list.chevron-center .item-link .item-inner,
+.md .media-list .chevron-center .item-link .item-inner,
+.md .media-list .item-link.chevron-center .item-inner,
+.md li.media-item.chevron-center .item-link .item-inner,
+.md li.media-item .item-link.chevron-center .item-inner,
+.md li.media-item .chevron-center .item-link .item-inner {
+  padding-right: 42px;
+}
+.md .media-list.no-chevron .item-link .item-title-row,
+.md .no-chevron .media-list .item-link .item-title-row,
+.md .media-list .no-chevron .item-link .item-title-row,
+.md li.media-item.no-chevron .item-link .item-title-row,
+.md .no-chevron li.media-item .item-link .item-title-row,
+.md .media-list.chevron-center .item-title-row,
+.md .media-list .chevron-center .item-title-row,
+.md li.media-item.chevron-center .item-title-row,
+.md li.media-item .chevron-center .item-title-row {
+  padding-right: 0 !important;
+}
+.md .list .item-link .item-inner,
+.md .links-list a {
+  background-position: calc(100% - 16px) center;
+}
+.md .item-divider,
+.md .list-group-title {
+  padding: 0 16px;
+  background: #f4f4f4;
+  color: rgba(0, 0, 0, 0.54);
+  height: 48px;
+  line-height: 48px;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  font-size: 14px;
+}
+.md .item-divider:before,
+.md .list-group-title:before {
+  display: none !important;
+}
+.md .item-divider:after,
+.md .list-group-title:after {
+  display: none !important;
+}
+.md .list-group-title {
+  margin-top: 0;
+}
+.md .list .item-inner:after {
+  content: '';
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.12);
+  display: block;
+  z-index: 15;
+  top: auto;
+  right: auto;
+  bottom: 0;
+  left: 0;
+  height: 1px;
+  width: 100%;
+  -webkit-transform-origin: 50% 100%;
+  transform-origin: 50% 100%;
+}
+.md.device-pixel-ratio-2 .list .item-inner:after {
+  -webkit-transform: scaleY(0.5);
+  transform: scaleY(0.5);
+}
+.md.device-pixel-ratio-3 .list .item-inner:after {
+  -webkit-transform: scaleY(0.33);
+  transform: scaleY(0.33);
+}
+.md .list ul:before {
+  content: '';
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.12);
+  display: block;
+  z-index: 15;
+  top: 0;
+  right: auto;
+  bottom: auto;
+  left: 0;
+  height: 1px;
+  width: 100%;
+  -webkit-transform-origin: 50% 0%;
+  transform-origin: 50% 0%;
+}
+.md.device-pixel-ratio-2 .list ul:before {
+  -webkit-transform: scaleY(0.5);
+  transform: scaleY(0.5);
+}
+.md.device-pixel-ratio-3 .list ul:before {
+  -webkit-transform: scaleY(0.33);
+  transform: scaleY(0.33);
+}
+.md .list ul:after {
+  content: '';
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.12);
+  display: block;
+  z-index: 15;
+  top: auto;
+  right: auto;
+  bottom: 0;
+  left: 0;
+  height: 1px;
+  width: 100%;
+  -webkit-transform-origin: 50% 100%;
+  transform-origin: 50% 100%;
+}
+.md.device-pixel-ratio-2 .list ul:after {
+  -webkit-transform: scaleY(0.5);
+  transform: scaleY(0.5);
+}
+.md.device-pixel-ratio-3 .list ul:after {
+  -webkit-transform: scaleY(0.33);
+  transform: scaleY(0.33);
+}
+.md .list.inset {
+  margin-left: 16px;
+  margin-right: 16px;
+  border-radius: 4px;
+}
+.md .list.inset ul {
+  border-radius: 4px;
+}
+.md .list.inset li:first-child > a {
+  border-radius: 4px 4px 0 0;
+}
+.md .list.inset li:last-child > a {
+  border-radius: 0 0 4px 4px;
+}
+.md .list.inset li:first-child:last-child > a {
+  border-radius: 4px;
+}
+@media (min-width: 768px) {
+  .md .list.tablet-inset {
+    margin-left: 16px;
+    margin-right: 16px;
+    border-radius: 4px;
+  }
+  .md .list.tablet-inset li:first-child > a {
+    border-radius: 4px 4px 0 0;
+  }
+  .md .list.tablet-inset li:last-child > a {
+    border-radius: 0 0 4px 4px;
+  }
+  .md .list.tablet-inset li:first-child:last-child > a {
+    border-radius: 4px;
+  }
+}
+.md li li:last-child .item-inner:after,
+.md li:last-child li .item-inner:after {
+  content: '';
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.12);
+  display: block;
+  z-index: 15;
+  top: auto;
+  right: auto;
+  bottom: 0;
+  left: 0;
+  height: 1px;
+  width: 100%;
+  -webkit-transform-origin: 50% 100%;
+  transform-origin: 50% 100%;
+}
+html.device-pixel-ratio-2 .md li li:last-child .item-inner:after,
+html.device-pixel-ratio-2 .md li:last-child li .item-inner:after {
+  -webkit-transform: scaleY(0.5);
+  transform: scaleY(0.5);
+}
+html.device-pixel-ratio-3 .md li li:last-child .item-inner:after,
+html.device-pixel-ratio-3 .md li:last-child li .item-inner:after {
+  -webkit-transform: scaleY(0.33);
+  transform: scaleY(0.33);
+}
+@media (orientation: landscape) {
+  .md.device-iphone-x .ios-left-edge .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-left-edge).simple-list li,
+  .md.device-iphone-x .ios-edges .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-left-edge).simple-list li,
+  .md.device-iphone-x .popup .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-left-edge).simple-list li,
+  .md.device-iphone-x .sheet-modal .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-left-edge).simple-list li,
+  .md.device-iphone-x .panel-left .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-left-edge).simple-list li {
+    padding-left: calc(16px + constant(safe-area-inset-left));
+    padding-left: calc(16px + env(safe-area-inset-left));
+  }
+  .md.device-iphone-x .ios-left-edge .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-left-edge) .item-divider,
+  .md.device-iphone-x .ios-edges .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-left-edge) .item-divider,
+  .md.device-iphone-x .popup .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-left-edge) .item-divider,
+  .md.device-iphone-x .sheet-modal .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-left-edge) .item-divider,
+  .md.device-iphone-x .panel-left .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-left-edge) .item-divider,
+  .md.device-iphone-x .ios-left-edge .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-left-edge) .list-group-title,
+  .md.device-iphone-x .ios-edges .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-left-edge) .list-group-title,
+  .md.device-iphone-x .popup .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-left-edge) .list-group-title,
+  .md.device-iphone-x .sheet-modal .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-left-edge) .list-group-title,
+  .md.device-iphone-x .panel-left .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-left-edge) .list-group-title {
+    padding-left: calc(16px + constant(safe-area-inset-left));
+    padding-left: calc(16px + env(safe-area-inset-left));
+  }
+  .md.device-iphone-x .ios-left-edge .list.inset:not(.no-ios-edges):not(.no-ios-left-edge),
+  .md.device-iphone-x .ios-edges .list.inset:not(.no-ios-edges):not(.no-ios-left-edge),
+  .md.device-iphone-x .popup .list.inset:not(.no-ios-edges):not(.no-ios-left-edge),
+  .md.device-iphone-x .sheet-modal .list.inset:not(.no-ios-edges):not(.no-ios-left-edge),
+  .md.device-iphone-x .panel-left .list.inset:not(.no-ios-edges):not(.no-ios-left-edge) {
+    margin-left: calc(16px + constant(safe-area-inset-left));
+    margin-left: calc(16px + env(safe-area-inset-left));
+  }
+  .md.device-iphone-x .ios-left-edge .list.inset:not(.no-ios-edges):not(.no-ios-left-edge) .block-header,
+  .md.device-iphone-x .ios-edges .list.inset:not(.no-ios-edges):not(.no-ios-left-edge) .block-header,
+  .md.device-iphone-x .popup .list.inset:not(.no-ios-edges):not(.no-ios-left-edge) .block-header,
+  .md.device-iphone-x .sheet-modal .list.inset:not(.no-ios-edges):not(.no-ios-left-edge) .block-header,
+  .md.device-iphone-x .panel-left .list.inset:not(.no-ios-edges):not(.no-ios-left-edge) .block-header,
+  .md.device-iphone-x .ios-left-edge .list.inset:not(.no-ios-edges):not(.no-ios-left-edge) .block-footer,
+  .md.device-iphone-x .ios-edges .list.inset:not(.no-ios-edges):not(.no-ios-left-edge) .block-footer,
+  .md.device-iphone-x .popup .list.inset:not(.no-ios-edges):not(.no-ios-left-edge) .block-footer,
+  .md.device-iphone-x .sheet-modal .list.inset:not(.no-ios-edges):not(.no-ios-left-edge) .block-footer,
+  .md.device-iphone-x .panel-left .list.inset:not(.no-ios-edges):not(.no-ios-left-edge) .block-footer {
+    padding-left: 15px;
+  }
+  .md.device-iphone-x .ios-left-edge .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-left-edge) .item-content,
+  .md.device-iphone-x .ios-edges .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-left-edge) .item-content,
+  .md.device-iphone-x .popup .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-left-edge) .item-content,
+  .md.device-iphone-x .sheet-modal .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-left-edge) .item-content,
+  .md.device-iphone-x .panel-left .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-left-edge) .item-content {
+    padding-left: calc(16px + constant(safe-area-inset-left));
+    padding-left: calc(16px + env(safe-area-inset-left));
+  }
+  .md.device-iphone-x .ios-left-edge .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-left-edge).simple-list li:after,
+  .md.device-iphone-x .ios-edges .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-left-edge).simple-list li:after,
+  .md.device-iphone-x .popup .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-left-edge).simple-list li:after,
+  .md.device-iphone-x .sheet-modal .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-left-edge).simple-list li:after,
+  .md.device-iphone-x .panel-left .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-left-edge).simple-list li:after {
+    left: calc(16px + constant(safe-area-inset-left));
+    left: calc(16px + env(safe-area-inset-left));
+  }
+  .md.device-iphone-x .ios-left-edge .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-left-edge).links-list a,
+  .md.device-iphone-x .ios-edges .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-left-edge).links-list a,
+  .md.device-iphone-x .popup .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-left-edge).links-list a,
+  .md.device-iphone-x .sheet-modal .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-left-edge).links-list a,
+  .md.device-iphone-x .panel-left .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-left-edge).links-list a {
+    padding-left: calc(16px + constant(safe-area-inset-left));
+    padding-left: calc(16px + env(safe-area-inset-left));
+  }
+  .md.device-iphone-x .ios-left-edge .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-left-edge).links-list a:after,
+  .md.device-iphone-x .ios-edges .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-left-edge).links-list a:after,
+  .md.device-iphone-x .popup .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-left-edge).links-list a:after,
+  .md.device-iphone-x .sheet-modal .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-left-edge).links-list a:after,
+  .md.device-iphone-x .panel-left .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-left-edge).links-list a:after {
+    left: calc(16px + constant(safe-area-inset-left));
+    left: calc(16px + env(safe-area-inset-left));
+  }
+  .md.device-iphone-x .ios-right-edge .list.inset:not(.no-ios-edges):not(.no-ios-right-edge),
+  .md.device-iphone-x .ios-edges .list.inset:not(.no-ios-edges):not(.no-ios-right-edge),
+  .md.device-iphone-x .popup .list.inset:not(.no-ios-edges):not(.no-ios-right-edge),
+  .md.device-iphone-x .sheet-modal .list.inset:not(.no-ios-edges):not(.no-ios-right-edge),
+  .md.device-iphone-x .panel-right .list.inset:not(.no-ios-edges):not(.no-ios-right-edge) {
+    margin-right: calc(16px + constant(safe-area-inset-right));
+    margin-right: calc(16px + env(safe-area-inset-right));
+  }
+  .md.device-iphone-x .ios-right-edge .list.inset:not(.no-ios-edges):not(.no-ios-right-edge) .block-header,
+  .md.device-iphone-x .ios-edges .list.inset:not(.no-ios-edges):not(.no-ios-right-edge) .block-header,
+  .md.device-iphone-x .popup .list.inset:not(.no-ios-edges):not(.no-ios-right-edge) .block-header,
+  .md.device-iphone-x .sheet-modal .list.inset:not(.no-ios-edges):not(.no-ios-right-edge) .block-header,
+  .md.device-iphone-x .panel-right .list.inset:not(.no-ios-edges):not(.no-ios-right-edge) .block-header,
+  .md.device-iphone-x .ios-right-edge .list.inset:not(.no-ios-edges):not(.no-ios-right-edge) .block-footer,
+  .md.device-iphone-x .ios-edges .list.inset:not(.no-ios-edges):not(.no-ios-right-edge) .block-footer,
+  .md.device-iphone-x .popup .list.inset:not(.no-ios-edges):not(.no-ios-right-edge) .block-footer,
+  .md.device-iphone-x .sheet-modal .list.inset:not(.no-ios-edges):not(.no-ios-right-edge) .block-footer,
+  .md.device-iphone-x .panel-right .list.inset:not(.no-ios-edges):not(.no-ios-right-edge) .block-footer {
+    padding-right: 16px;
+  }
+  .md.device-iphone-x .ios-right-edge .list.tablet-inset:not(.no-ios-edges):not(.no-ios-right-edge) .block-header,
+  .md.device-iphone-x .ios-edges .list.tablet-inset:not(.no-ios-edges):not(.no-ios-right-edge) .block-header,
+  .md.device-iphone-x .popup .list.tablet-inset:not(.no-ios-edges):not(.no-ios-right-edge) .block-header,
+  .md.device-iphone-x .sheet-modal .list.tablet-inset:not(.no-ios-edges):not(.no-ios-right-edge) .block-header,
+  .md.device-iphone-x .panel-right .list.tablet-inset:not(.no-ios-edges):not(.no-ios-right-edge) .block-header,
+  .md.device-iphone-x .ios-right-edge .list.tablet-inset:not(.no-ios-edges):not(.no-ios-right-edge) .block-footer,
+  .md.device-iphone-x .ios-edges .list.tablet-inset:not(.no-ios-edges):not(.no-ios-right-edge) .block-footer,
+  .md.device-iphone-x .popup .list.tablet-inset:not(.no-ios-edges):not(.no-ios-right-edge) .block-footer,
+  .md.device-iphone-x .sheet-modal .list.tablet-inset:not(.no-ios-edges):not(.no-ios-right-edge) .block-footer,
+  .md.device-iphone-x .panel-right .list.tablet-inset:not(.no-ios-edges):not(.no-ios-right-edge) .block-footer {
+    padding-right: 16px;
+  }
+  .md.device-iphone-x .ios-right-edge .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) .item-divider,
+  .md.device-iphone-x .ios-edges .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) .item-divider,
+  .md.device-iphone-x .popup .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) .item-divider,
+  .md.device-iphone-x .sheet-modal .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) .item-divider,
+  .md.device-iphone-x .panel-right .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) .item-divider,
+  .md.device-iphone-x .ios-right-edge .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) .list-group-title,
+  .md.device-iphone-x .ios-edges .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) .list-group-title,
+  .md.device-iphone-x .popup .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) .list-group-title,
+  .md.device-iphone-x .sheet-modal .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) .list-group-title,
+  .md.device-iphone-x .panel-right .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) .list-group-title {
+    padding-right: calc(16px + constant(safe-area-inset-right));
+    padding-right: calc(16px + env(safe-area-inset-right));
+  }
+  .md.device-iphone-x .ios-right-edge .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).simple-list li,
+  .md.device-iphone-x .ios-edges .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).simple-list li,
+  .md.device-iphone-x .popup .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).simple-list li,
+  .md.device-iphone-x .sheet-modal .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).simple-list li,
+  .md.device-iphone-x .panel-right .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).simple-list li {
+    padding-right: calc(16px + constant(safe-area-inset-right));
+    padding-right: calc(16px + env(safe-area-inset-right));
+  }
+  .md.device-iphone-x .ios-right-edge .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) .item-link .item-inner,
+  .md.device-iphone-x .ios-edges .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) .item-link .item-inner,
+  .md.device-iphone-x .popup .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) .item-link .item-inner,
+  .md.device-iphone-x .sheet-modal .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) .item-link .item-inner,
+  .md.device-iphone-x .panel-right .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) .item-link .item-inner,
+  .md.device-iphone-x .ios-right-edge .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).links-list a,
+  .md.device-iphone-x .ios-edges .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).links-list a,
+  .md.device-iphone-x .popup .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).links-list a,
+  .md.device-iphone-x .sheet-modal .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).links-list a,
+  .md.device-iphone-x .panel-right .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).links-list a {
+    background-position: calc(100% - 16px - constant(safe-area-inset-right)) center;
+    background-position: calc(100% - 16px - env(safe-area-inset-right)) center;
+  }
+  .md.device-iphone-x .ios-right-edge .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) .item-inner,
+  .md.device-iphone-x .ios-edges .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) .item-inner,
+  .md.device-iphone-x .popup .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) .item-inner,
+  .md.device-iphone-x .sheet-modal .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) .item-inner,
+  .md.device-iphone-x .panel-right .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) .item-inner {
+    padding-right: calc(16px + constant(safe-area-inset-right));
+    padding-right: calc(16px + env(safe-area-inset-right));
+  }
+  .md.device-iphone-x .ios-right-edge .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) .item-link .item-inner,
+  .md.device-iphone-x .ios-edges .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) .item-link .item-inner,
+  .md.device-iphone-x .popup .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) .item-link .item-inner,
+  .md.device-iphone-x .sheet-modal .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) .item-link .item-inner,
+  .md.device-iphone-x .panel-right .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) .item-link .item-inner {
+    padding-right: calc(42px + constant(safe-area-inset-right));
+    padding-right: calc(42px + env(safe-area-inset-right));
+  }
+  .md.device-iphone-x .ios-right-edge .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).media-list .item-link .item-inner,
+  .md.device-iphone-x .ios-edges .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).media-list .item-link .item-inner,
+  .md.device-iphone-x .popup .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).media-list .item-link .item-inner,
+  .md.device-iphone-x .sheet-modal .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).media-list .item-link .item-inner,
+  .md.device-iphone-x .panel-right .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).media-list .item-link .item-inner,
+  .md.device-iphone-x .ios-right-edge .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) li.media-item .item-link .item-inner,
+  .md.device-iphone-x .ios-edges .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) li.media-item .item-link .item-inner,
+  .md.device-iphone-x .popup .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) li.media-item .item-link .item-inner,
+  .md.device-iphone-x .sheet-modal .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) li.media-item .item-link .item-inner,
+  .md.device-iphone-x .panel-right .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) li.media-item .item-link .item-inner {
+    padding-right: calc(16px + constant(safe-area-inset-right));
+    padding-right: calc(16px + env(safe-area-inset-right));
+  }
+  .md.device-iphone-x .ios-right-edge .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).links-list a,
+  .md.device-iphone-x .ios-edges .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).links-list a,
+  .md.device-iphone-x .popup .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).links-list a,
+  .md.device-iphone-x .sheet-modal .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).links-list a,
+  .md.device-iphone-x .panel-right .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).links-list a {
+    padding-right: calc(42px + constant(safe-area-inset-right));
+    padding-right: calc(42px + env(safe-area-inset-right));
+  }
+  .md.device-iphone-x .ios-right-edge .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).media-list.chevron-center .item-link .item-inner,
+  .md.device-iphone-x .ios-edges .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).media-list.chevron-center .item-link .item-inner,
+  .md.device-iphone-x .popup .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).media-list.chevron-center .item-link .item-inner,
+  .md.device-iphone-x .sheet-modal .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).media-list.chevron-center .item-link .item-inner,
+  .md.device-iphone-x .panel-right .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).media-list.chevron-center .item-link .item-inner,
+  .md.device-iphone-x .ios-right-edge .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).media-list .chevron-center .item-link .item-inner,
+  .md.device-iphone-x .ios-edges .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).media-list .chevron-center .item-link .item-inner,
+  .md.device-iphone-x .popup .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).media-list .chevron-center .item-link .item-inner,
+  .md.device-iphone-x .sheet-modal .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).media-list .chevron-center .item-link .item-inner,
+  .md.device-iphone-x .panel-right .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).media-list .chevron-center .item-link .item-inner,
+  .md.device-iphone-x .ios-right-edge .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).media-list .item-link.chevron-center .item-inner,
+  .md.device-iphone-x .ios-edges .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).media-list .item-link.chevron-center .item-inner,
+  .md.device-iphone-x .popup .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).media-list .item-link.chevron-center .item-inner,
+  .md.device-iphone-x .sheet-modal .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).media-list .item-link.chevron-center .item-inner,
+  .md.device-iphone-x .panel-right .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).media-list .item-link.chevron-center .item-inner,
+  .md.device-iphone-x .ios-right-edge .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) li.media-item.chevron-center .item-link .item-inner,
+  .md.device-iphone-x .ios-edges .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) li.media-item.chevron-center .item-link .item-inner,
+  .md.device-iphone-x .popup .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) li.media-item.chevron-center .item-link .item-inner,
+  .md.device-iphone-x .sheet-modal .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) li.media-item.chevron-center .item-link .item-inner,
+  .md.device-iphone-x .panel-right .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) li.media-item.chevron-center .item-link .item-inner,
+  .md.device-iphone-x .ios-right-edge .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) li.media-item .item-link.chevron-center .item-inner,
+  .md.device-iphone-x .ios-edges .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) li.media-item .item-link.chevron-center .item-inner,
+  .md.device-iphone-x .popup .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) li.media-item .item-link.chevron-center .item-inner,
+  .md.device-iphone-x .sheet-modal .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) li.media-item .item-link.chevron-center .item-inner,
+  .md.device-iphone-x .panel-right .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) li.media-item .item-link.chevron-center .item-inner,
+  .md.device-iphone-x .ios-right-edge .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) li.media-item .chevron-center .item-link .item-inner,
+  .md.device-iphone-x .ios-edges .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) li.media-item .chevron-center .item-link .item-inner,
+  .md.device-iphone-x .popup .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) li.media-item .chevron-center .item-link .item-inner,
+  .md.device-iphone-x .sheet-modal .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) li.media-item .chevron-center .item-link .item-inner,
+  .md.device-iphone-x .panel-right .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) li.media-item .chevron-center .item-link .item-inner {
+    padding-right: calc(42px + constant(safe-area-inset-right));
+    padding-right: calc(42px + env(safe-area-inset-right));
+  }
+  .md.device-iphone-x .ios-right-edge .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) .item-link.no-chevron .item-inner,
+  .md.device-iphone-x .ios-edges .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) .item-link.no-chevron .item-inner,
+  .md.device-iphone-x .popup .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) .item-link.no-chevron .item-inner,
+  .md.device-iphone-x .sheet-modal .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) .item-link.no-chevron .item-inner,
+  .md.device-iphone-x .panel-right .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) .item-link.no-chevron .item-inner,
+  .md.device-iphone-x .ios-right-edge .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).no-chevron .item-link .item-inner,
+  .md.device-iphone-x .ios-edges .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).no-chevron .item-link .item-inner,
+  .md.device-iphone-x .popup .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).no-chevron .item-link .item-inner,
+  .md.device-iphone-x .sheet-modal .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).no-chevron .item-link .item-inner,
+  .md.device-iphone-x .panel-right .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).no-chevron .item-link .item-inner,
+  .md.device-iphone-x .ios-right-edge .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) .no-chevron .item-link .item-inner,
+  .md.device-iphone-x .ios-edges .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) .no-chevron .item-link .item-inner,
+  .md.device-iphone-x .popup .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) .no-chevron .item-link .item-inner,
+  .md.device-iphone-x .sheet-modal .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) .no-chevron .item-link .item-inner,
+  .md.device-iphone-x .panel-right .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) .no-chevron .item-link .item-inner,
+  .md.device-iphone-x .ios-right-edge .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).links-list.no-chevron a,
+  .md.device-iphone-x .ios-edges .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).links-list.no-chevron a,
+  .md.device-iphone-x .popup .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).links-list.no-chevron a,
+  .md.device-iphone-x .sheet-modal .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).links-list.no-chevron a,
+  .md.device-iphone-x .panel-right .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).links-list.no-chevron a,
+  .md.device-iphone-x .ios-right-edge .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).links-list a.no-chevron,
+  .md.device-iphone-x .ios-edges .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).links-list a.no-chevron,
+  .md.device-iphone-x .popup .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).links-list a.no-chevron,
+  .md.device-iphone-x .sheet-modal .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).links-list a.no-chevron,
+  .md.device-iphone-x .panel-right .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).links-list a.no-chevron,
+  .md.device-iphone-x .ios-right-edge .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).links-list .no-chevron a,
+  .md.device-iphone-x .ios-edges .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).links-list .no-chevron a,
+  .md.device-iphone-x .popup .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).links-list .no-chevron a,
+  .md.device-iphone-x .sheet-modal .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).links-list .no-chevron a,
+  .md.device-iphone-x .panel-right .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).links-list .no-chevron a {
+    padding-right: calc(16px + constant(safe-area-inset-right));
+    padding-right: calc(16px + env(safe-area-inset-right));
+  }
+  .md.device-iphone-x .ios-right-edge .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).media-list.no-chevron .item-link .item-title-row,
+  .md.device-iphone-x .ios-edges .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).media-list.no-chevron .item-link .item-title-row,
+  .md.device-iphone-x .popup .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).media-list.no-chevron .item-link .item-title-row,
+  .md.device-iphone-x .sheet-modal .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).media-list.no-chevron .item-link .item-title-row,
+  .md.device-iphone-x .panel-right .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).media-list.no-chevron .item-link .item-title-row,
+  .md.device-iphone-x .ios-right-edge .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).media-list .no-chevron .item-link .item-title-row,
+  .md.device-iphone-x .ios-edges .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).media-list .no-chevron .item-link .item-title-row,
+  .md.device-iphone-x .popup .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).media-list .no-chevron .item-link .item-title-row,
+  .md.device-iphone-x .sheet-modal .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).media-list .no-chevron .item-link .item-title-row,
+  .md.device-iphone-x .panel-right .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).media-list .no-chevron .item-link .item-title-row,
+  .md.device-iphone-x .ios-right-edge .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) li.media-item.no-chevron .item-link .item-title-row,
+  .md.device-iphone-x .ios-edges .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) li.media-item.no-chevron .item-link .item-title-row,
+  .md.device-iphone-x .popup .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) li.media-item.no-chevron .item-link .item-title-row,
+  .md.device-iphone-x .sheet-modal .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) li.media-item.no-chevron .item-link .item-title-row,
+  .md.device-iphone-x .panel-right .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge) li.media-item.no-chevron .item-link .item-title-row,
+  .md.device-iphone-x .ios-right-edge .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).no-chevron li.media-item .item-link .item-title-row,
+  .md.device-iphone-x .ios-edges .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).no-chevron li.media-item .item-link .item-title-row,
+  .md.device-iphone-x .popup .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).no-chevron li.media-item .item-link .item-title-row,
+  .md.device-iphone-x .sheet-modal .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).no-chevron li.media-item .item-link .item-title-row,
+  .md.device-iphone-x .panel-right .list:not(.inset):not(.tablet-inset):not(.no-ios-edges):not(.no-ios-right-edge).no-chevron li.media-item .item-link .item-title-row {
+    padding-right: 0;
+  }
+}
+@media (orientation: landscape) and (min-width: 768px) {
+  .md.device-iphone-x .ios-left-edge .list.tablet-inset:not(.no-ios-edges):not(.no-ios-left-edge),
+  .md.device-iphone-x .ios-edges .list.tablet-inset:not(.no-ios-edges):not(.no-ios-left-edge),
+  .md.device-iphone-x .popup .list.tablet-inset:not(.no-ios-edges):not(.no-ios-left-edge),
+  .md.device-iphone-x .sheet-modal .list.tablet-inset:not(.no-ios-edges):not(.no-ios-left-edge),
+  .md.device-iphone-x .panel-left .list.tablet-inset:not(.no-ios-edges):not(.no-ios-left-edge) {
+    margin-left: calc(16px + constant(safe-area-inset-left));
+    margin-left: calc(16px + env(safe-area-inset-left));
+  }
+  .md.device-iphone-x .ios-left-edge .list.tablet-inset:not(.no-ios-edges):not(.no-ios-left-edge) .block-header,
+  .md.device-iphone-x .ios-edges .list.tablet-inset:not(.no-ios-edges):not(.no-ios-left-edge) .block-header,
+  .md.device-iphone-x .popup .list.tablet-inset:not(.no-ios-edges):not(.no-ios-left-edge) .block-header,
+  .md.device-iphone-x .sheet-modal .list.tablet-inset:not(.no-ios-edges):not(.no-ios-left-edge) .block-header,
+  .md.device-iphone-x .panel-left .list.tablet-inset:not(.no-ios-edges):not(.no-ios-left-edge) .block-header,
+  .md.device-iphone-x .ios-left-edge .list.tablet-inset:not(.no-ios-edges):not(.no-ios-left-edge) .block-footer,
+  .md.device-iphone-x .ios-edges .list.tablet-inset:not(.no-ios-edges):not(.no-ios-left-edge) .block-footer,
+  .md.device-iphone-x .popup .list.tablet-inset:not(.no-ios-edges):not(.no-ios-left-edge) .block-footer,
+  .md.device-iphone-x .sheet-modal .list.tablet-inset:not(.no-ios-edges):not(.no-ios-left-edge) .block-footer,
+  .md.device-iphone-x .panel-left .list.tablet-inset:not(.no-ios-edges):not(.no-ios-left-edge) .block-footer {
+    padding-left: 15px;
+  }
+}
+@media (orientation: landscape) and (min-width: 768px) {
+  .md.device-iphone-x .ios-right-edge .list.tablet-inset:not(.no-ios-edges):not(.no-ios-right-edge),
+  .md.device-iphone-x .ios-edges .list.tablet-inset:not(.no-ios-edges):not(.no-ios-right-edge),
+  .md.device-iphone-x .popup .list.tablet-inset:not(.no-ios-edges):not(.no-ios-right-edge),
+  .md.device-iphone-x .sheet-modal .list.tablet-inset:not(.no-ios-edges):not(.no-ios-right-edge),
+  .md.device-iphone-x .panel-right .list.tablet-inset:not(.no-ios-edges):not(.no-ios-right-edge) {
+    margin-right: calc(16px + constant(safe-area-inset-right));
+    margin-right: calc(16px + env(safe-area-inset-right));
+  }
+}
+.md .theme-dark .list ul:before,
+.list.md .theme-dark ul:before {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+.md .theme-dark .list ul:after,
+.list.md .theme-dark ul:after {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+.md .theme-dark .list li li:last-child .item-inner:after,
+.list.md .theme-dark li li:last-child .item-inner:after,
+.md .theme-dark .list li:last-child li .item-inner:after,
+.list.md .theme-dark li:last-child li .item-inner:after {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+.md .theme-dark .item-divider:before {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+.md .theme-dark .list-group-title:before {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+.md .theme-dark .list-button:after {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+.md .theme-dark .item-inner:after {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+.md .theme-dark .item-divider,
+.md .theme-dark .list-group-title {
+  background-color: #111;
+  color: #fff;
+}
+.md .theme-dark .links-list a:after,
+.md .theme-dark .simple-list li:after,
+.md .theme-dark .links-list a:after,
+.links-list.md .theme-dark a .simple-list li:after,
+.simple-list.md .theme-dark li:after {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+.md .theme-dark .list .item-link.active-state,
+.list.md .theme-dark .item-link.active-state,
+.md .theme-dark .list .list-button.active-state,
+.list.md .theme-dark .list-button.active-state,
+.md .theme-dark .links-list a.active-state,
+.links-list.md .theme-dark a.active-state {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+.md .theme-dark .item-after,
+.md .theme-dark .item-text {
+  color: rgba(255, 255, 255, 0.54);
+}
+.md .color-theme-red .list-button {
+  color: #f44336;
+}
+.md .color-theme-green .list-button {
+  color: #4caf50;
+}
+.md .color-theme-blue .list-button {
+  color: #2196f3;
+}
+.md .color-theme-pink .list-button {
+  color: #e91e63;
+}
+.md .color-theme-yellow .list-button {
+  color: #ffeb3b;
+}
+.md .color-theme-orange .list-button {
+  color: #ff9800;
+}
+.md .color-theme-gray .list-button {
+  color: #9e9e9e;
+}
+.md .color-theme-white .list-button {
+  color: #ffffff;
+}
+.md .color-theme-black .list-button {
+  color: #000000;
+}
+.md .list .list-button.color-red,
+.md .list li.color-red .list-button,
+.md .links-list li.color-red a,
+.md .simple-list li.color-red,
+.md .links-list a.color-red,
+.md .list .item-link.color-red,
+.md .list li.color-red .item-link {
+  color: #f44336;
+}
+.md .list .list-button.color-green,
+.md .list li.color-green .list-button,
+.md .links-list li.color-green a,
+.md .simple-list li.color-green,
+.md .links-list a.color-green,
+.md .list .item-link.color-green,
+.md .list li.color-green .item-link {
+  color: #4caf50;
+}
+.md .list .list-button.color-blue,
+.md .list li.color-blue .list-button,
+.md .links-list li.color-blue a,
+.md .simple-list li.color-blue,
+.md .links-list a.color-blue,
+.md .list .item-link.color-blue,
+.md .list li.color-blue .item-link {
+  color: #2196f3;
+}
+.md .list .list-button.color-pink,
+.md .list li.color-pink .list-button,
+.md .links-list li.color-pink a,
+.md .simple-list li.color-pink,
+.md .links-list a.color-pink,
+.md .list .item-link.color-pink,
+.md .list li.color-pink .item-link {
+  color: #e91e63;
+}
+.md .list .list-button.color-yellow,
+.md .list li.color-yellow .list-button,
+.md .links-list li.color-yellow a,
+.md .simple-list li.color-yellow,
+.md .links-list a.color-yellow,
+.md .list .item-link.color-yellow,
+.md .list li.color-yellow .item-link {
+  color: #ffeb3b;
+}
+.md .list .list-button.color-orange,
+.md .list li.color-orange .list-button,
+.md .links-list li.color-orange a,
+.md .simple-list li.color-orange,
+.md .links-list a.color-orange,
+.md .list .item-link.color-orange,
+.md .list li.color-orange .item-link {
+  color: #ff9800;
+}
+.md .list .list-button.color-gray,
+.md .list li.color-gray .list-button,
+.md .links-list li.color-gray a,
+.md .simple-list li.color-gray,
+.md .links-list a.color-gray,
+.md .list .item-link.color-gray,
+.md .list li.color-gray .item-link {
+  color: #9e9e9e;
+}
+.md .list .list-button.color-white,
+.md .list li.color-white .list-button,
+.md .links-list li.color-white a,
+.md .simple-list li.color-white,
+.md .links-list a.color-white,
+.md .list .item-link.color-white,
+.md .list li.color-white .item-link {
+  color: #ffffff;
+}
+.md .list .list-button.color-black,
+.md .list li.color-black .list-button,
+.md .links-list li.color-black a,
+.md .simple-list li.color-black,
+.md .links-list a.color-black,
+.md .list .item-link.color-black,
+.md .list li.color-black .item-link {
+  color: #000000;
+}
