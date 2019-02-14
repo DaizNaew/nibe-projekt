@@ -94,5 +94,15 @@ class Loaned {
 
     function deliver($id, $deliverDate) {
         $query = "UPDATE " . $this->table_name . " SET actualDateEnd = " . $deliverDate . ", udløbet = 1 WHERE ID = " . $id;
+
+        // prepare query statement
+        $stmt = $this->conn->prepare($query);
+    
+        try {
+            // execute query
+            return $stmt->execute();
+        } catch (PDOException $e) {
+            return ($e);
+        }
     }
 }
