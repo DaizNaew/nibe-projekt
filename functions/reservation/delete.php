@@ -10,6 +10,7 @@ include_once '../../database.inc';
 include_once '../../models/Reservation.php';
 
 $id = $_GET['id'];
+$equipmentID = $_GET['equipmentID'];
 
 $database = new Database();
 $db = $database->getConnection();
@@ -17,7 +18,7 @@ $db = $database->getConnection();
 $Reservation = new Reservation($db);
 
 // query products
-$stmt = $Reservation->delete($id);
+$stmt = $Reservation->delete($id, $equipmentID);
 if($stmt) {
     http_response_code(200);
     echo json_encode(

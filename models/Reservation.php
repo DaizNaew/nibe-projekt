@@ -93,11 +93,19 @@ class Reservation {
         }
     }
 
-    function delete($id) {
+    function delete($id, $equipmentID) {
         $query = "DELETE FROM " . $this->table_name . " WHERE ID = ".$id;
 
         $stmt = $this->conn->prepare($query);
 
-        return $stmt->execute();
+        try {
+            $query2 = "UPDATE equipment SET reserved = '0' WHERE ID = ". $equipmentID;
+            $stmt2 = $this->conn->prepare($query2);
+            $stmt2->execute();
+            // execute query
+            return $stmt->execute();
+        } catch (PDOException $e) {
+            return ($e);
+        }
     }
 }

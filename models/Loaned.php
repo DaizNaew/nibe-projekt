@@ -67,19 +67,21 @@ class Loaned {
 
         $userID = $post['userID'];
         $equipmentID = $post['equipmentID'];
-        
+
         $expectedDateEnd = null;
         $description = null;
         if(isset($post['expectedDateEnd'])) $expectedDateEnd = $post['expectedDateEnd'];
         if(isset($post['description'])) $description = $post['description'];
 
-        $brugernavn = strtolower($brugernavn);
         $query = "INSERT INTO " . $this->table_name . " (userID,equipmentID,expectedDateEnd,description) VALUES " . "('$userID', '$equipmentID', '$expectedDateEnd', '$description')";
         
         // prepare query statement
         $stmt = $this->conn->prepare($query);
     
         try {
+            $query2 = "UPDATE equipment SET inhouse = '0' WHERE ID = ". $equipmentID;
+            $stmt2 = $this->conn->prepare($query2);
+            $stmt2->execute();
             // execute query
             return $stmt->execute();
         } catch (PDOException $e) {
@@ -92,16 +94,28 @@ class Loaned {
 
         $stmt = $this->conn->prepare($query);
 
-        return $stmt->execute();
+        try {
+            $query2 = "UPDATE equipment SET inhouse = '1' WHERE ID = ". $equipmentID;
+            $stmt2 = $this->conn->prepare($query2);
+            $stmt2->execute();
+            // execute query
+            return $stmt->execute();
+        } catch (PDOException $e) {
+            return ($e);
+        }
     }
 
-    function deliver($id, $deliverDate) {
+    function deliver($id, $deliverDate, $equipmentID) {
+
         $query = "UPDATE " . $this->table_name . " SET actualDateEnd = " . $deliverDate . ", udløbet = 1 WHERE ID = " . $id;
 
         // prepare query statement
         $stmt = $this->conn->prepare($query);
     
         try {
+            $query2 = "UPDATE equipment SET inhouse = '1' WHERE ID = ". $equipmentID;
+            $stmt2 = $this->conn->prepare($query2);
+            $stmt2->execute();
             // execute query
             return $stmt->execute();
         } catch (PDOException $e) {
