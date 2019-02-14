@@ -67,8 +67,11 @@ class Loaned {
 
         $userID = $post['userID'];
         $equipmentID = $post['equipmentID'];
-        $expectedDateEnd = $post['expectedDateEnd'];
-        $description = $post['description'];
+        
+        $expectedDateEnd = null;
+        $description = null;
+        if(isset($post['expectedDateEnd'])) $expectedDateEnd = $post['expectedDateEnd'];
+        if(isset($post['description'])) $description = $post['description'];
 
         $brugernavn = strtolower($brugernavn);
         $query = "INSERT INTO " . $this->table_name . " (userID,equipmentID,expectedDateEnd,description) VALUES " . "('$userID', '$equipmentID', '$expectedDateEnd', '$description')";
