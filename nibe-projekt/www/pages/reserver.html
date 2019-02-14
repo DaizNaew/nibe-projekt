@@ -4,57 +4,14 @@
             <div class="grid">
                 <div style="padding: 10px" id="item1"><!--Item 1-->
                     <div>
-                        <form>
+                        <form autocomplete="off">
                             <div class="form-row">
                                 <label for="ReserverNavn" class="col">Reserver navn</label>
-                                <input id="ReserverNavn" type="text" required="required" class="form-control form-control-sm col"/>
+                                
+                                <div class="autocomplete">
+                                    <input id="ReserverNavn" type="text" required="required" class="form-control form-control-sm col">
+                                  </div>
                             </div>
-                            <form class="searchbar">
-                                <div class="searchbar-inner">
-                                  <div class="searchbar-input-wrap">
-                                    <input type="search" placeholder="Search">
-                                    <i class="searchbar-icon"></i>
-                                    <span class="input-clear-button"></span>
-                                  </div>
-                                  <span class="searchbar-disable-button">Cancel</span>
-                                </div>
-                              </form>
-                            <div class="searchbar-backdrop"></div>
-                            <!-- hide-on-search element -->
-                            <div class="block searchbar-hide-on-search">
-                              <p>This block will be hidden on search. Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
-                            </div>
-                            <!-- search target list -->
-                            <div class="list searchbar-found">
-                              <ul>
-                                <li class="item-content">
-                                  <div class="item-inner">
-                                    <div class="item-title">Acura</div>
-                                  </div>
-                                </li>
-                                <li class="item-content">
-                                  <div class="item-inner">
-                                    <div class="item-title">Audi</div>
-                                  </div>
-                                </li>
-                                <li class="item-content">
-                                  <div class="item-inner">
-                                    <div class="item-title">BMW</div>
-                                  </div>
-                                </li>
-                                ...
-                                <li class="item-content">
-                                  <div class="item-inner">
-                                    <div class="item-title">Volvo</div>
-                                  </div>
-                                </li>
-                              </ul>
-                            </div>
-                            <!-- Nothing found message -->
-                            <div class="block searchbar-not-found">
-                              <div class="block-inner">Nothing found</div>
-                            </div>
-
                             <div class="tableFixHead">
                                 <table class="table fixed_header" style="background-color: #c5d9ec33;">
                                     <thead>
@@ -150,12 +107,114 @@
        
         
 <script>
+    var arr = [];
+
+function autocomplete(inp, arr) {
+  /*the autocomplete function takes two arguments,
+  the text field element and an array of possible autocompleted values:*/
+  var currentFocus;
+  /*execute a function when someone writes in the text field:*/
+  inp.addEventListener("input", function(e) {
+      var a, b, i, val = this.value;
+      /*close any already open lists of autocompleted values*/
+      closeAllLists();
+      if (!val) { return false;}
+      currentFocus = -1;
+      /*create a DIV element that will contain the items (values):*/
+      a = document.createElement("DIV");
+      a.setAttribute("id", this.id + "autocomplete-list");
+      a.setAttribute("class", "autocomplete-items");
+      /*append the DIV element as a child of the autocomplete container:*/
+      this.parentNode.appendChild(a);
+      /*for each item in the array...*/
+      for (i = 0; i < arr.length; i++) {
+        /*check if the item starts with the same letters as the text field value:*/
+        if (arr[i].navn.substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+          /*create a DIV element for each matching element:*/
+          b = document.createElement("DIV");
+          /*make the matching letters bold:*/
+          b.innerHTML = "<strong>" + arr[i].navn.substr(0, val.length) + "</strong>";
+          b.innerHTML += arr[i].navn.substr(val.length);
+          /*insert a input field that will hold the current array item's value:*/
+          b.innerHTML += "<input type='hidden' value='" + arr[i].navn + "' id='" + arr[i].ID + "'>";
+          /*execute a function when someone clicks on the item value (DIV element):*/
+              b.addEventListener("click", function(e) {
+              /*insert the value for the autocomplete text field:*/
+              document.getElementById("ID").value = this.getElementsByTagName("input")[0].id;
+              inp.value = this.getElementsByTagName("input")[0].value;
+              /*close the list of autocompleted values,
+              (or any other open lists of autocompleted values:*/
+              closeAllLists();
+          });
+          a.appendChild(b);
+        }
+      }
+  });
+  /*execute a function presses a key on the keyboard:*/
+  inp.addEventListener("keydown", function(e) {
+      var x = document.getElementById(this.id + "autocomplete-list");
+      if (x) x = x.getElementsByTagName("div");
+      if (e.keyCode == 40) {
+        /*If the arrow DOWN key is pressed,
+        increase the currentFocus variable:*/
+        currentFocus++;
+        /*and and make the current item more visible:*/
+        addActive(x);
+      } else if (e.keyCode == 38) { //up
+        /*If the arrow UP key is pressed,
+        decrease the currentFocus variable:*/
+        currentFocus--;
+        /*and and make the current item more visible:*/
+        addActive(x);
+      } else if (e.keyCode == 13) {
+        /*If the ENTER key is pressed, prevent the form from being submitted,*/
+        e.preventDefault();
+        if (currentFocus > -1) {
+          /*and simulate a click on the "active" item:*/
+          if (x) x[currentFocus].click();
+        }
+      }
+  });
+  function addActive(x) {
+    /*a function to classify an item as "active":*/
+    if (!x) return false;
+    /*start by removing the "active" class on all items:*/
+    removeActive(x);
+    if (currentFocus >= x.length) currentFocus = 0;
+    if (currentFocus < 0) currentFocus = (x.length - 1);
+    /*add class "autocomplete-active":*/
+    x[currentFocus].classList.add("autocomplete-active");
+  }
+  function removeActive(x) {
+    /*a function to remove the "active" class from all autocomplete items:*/
+    for (var i = 0; i < x.length; i++) {
+      x[i].classList.remove("autocomplete-active");
+    }
+  }
+  function closeAllLists(elmnt) {
+    /*close all autocomplete lists in the document,
+    except the one passed as an argument:*/
+    var x = document.getElementsByClassName("autocomplete-items");
+    for (var i = 0; i < x.length; i++) {
+      if (elmnt != x[i] && elmnt != inp) {
+      x[i].parentNode.removeChild(x[i]);
+    }
+  }
+}
+/*execute a function when someone clicks in the document:*/
+document.addEventListener("click", function (e) {
+    closeAllLists(e.target);
+});
+}
+
     fjernreserverværktøj = (værktøjsID) => {
         $$(`.tableBody`).find(`#btn${værktøjsID}`).prop("disabled",false);
         $$(`.låneTableBody`).find(`#værktøjnr${værktøjsID}`).remove();
+        arr.splice( arr.indexOf(værktøjsID), 1 );
     }
 
     tilføjreserverværktøj = (værktøjsID) => {
+        arr.push(værktøjsID);
         let innerHTML = "";
         app.request.getJSON(`${app.data['serverip']}endpoint/equipment.php?id=${værktøjsID}`, (response) => {
             $$(`.tableBody`).find(`#btn${værktøjsID}`).prop("disabled",true);
@@ -173,7 +232,7 @@
                         <td class="label-cell AssetTag">${response.records[i].assetTag}</td>
                         <td class="label-cell Stand">${response.records[i].condition}</td>
                         <td class="radio-cell">
-                            <button type="button" onclick="fjernudlånsværktøj(${response.records[0].ID})" class="no-ripple btn-primary deletebtn">Slet</button>
+                            <button type="button" onclick="fjernreserverværktøj(${response.records[0].ID})" class="no-ripple btn-primary deletebtn">Slet</button>
                         </td>
                     </tr>
                     `;
@@ -202,25 +261,42 @@
                         })
                 });
             },
-            reservertool : () => {
-                let newNavn = document.getElementById('Navn').value;
-                let newMobilnr = document.getElementById('Mobilnr').value;
-                let newAdresse = document.getElementById('Adresse').value;
-                let newMedhjælpernr = document.getElementById('Medhjælpernr').value;
-                let gruppeID = document.getElementById('Brugertype').selectedIndex +1;
-                app.request.post(`${app.data['serverip']}endpoint/reservation.php`, { userID: newNavn, equipmentID: newMobilnr, dateStart:newAdresse, expectedDateEnd:newMedhjælpernr}, function(response){
-                        if(response.result == 1){
-                            app.dialog.alert(`Værktøjet (<span style="color: green; font-weight: bold;">${newNavn}</span>) blev reserveret.`, "Reserver", function(){
-                                app.views.main.router.navigate("/createuser/", {reloadCurrent: true,});
-                            });
+            reservertool : async () => {
+                let newReserverNavn = document.getElementById('ReserverNavn').value;
+                let newReserverID = document.getElementById('ID').value;
+                let newAfhentDato = document.getElementById('calendar_input').value + " " + document.getElementById('input-a').value + ":00";
+                let newAfleverDato = document.getElementById('calendar_input2').value + " " + document.getElementById('input-b').value + ":00";
 
-                        }else{
-                            app.dialog.alert(`${newNavn} blev <span style='color: red; font-weight: bold;'>IKKE</span> reserveret.`, "Reserver");
-                            return;
-                        }
-                    }, function(e, e2){
-                    }, "json");
 
+                let dat;
+                let toastMessage = '';
+
+                let prom = new Promise((resolve, reject) => {
+
+                    for(i=0; i<arr.length; i++) {
+                        //Kald Endpoint med id som arr[i]
+                        app.request.post(`${app.data['serverip']}endpoint/reservation.php`, { userID: newReserverID, equipmentID: arr[i], dateStart: newAfhentDato, expectedDateEnd: newAfleverDato}, function(response){
+                            if(response.result == 1){
+                                dat = response;
+                                resolve();
+                            }else{
+                                reject();
+                            }
+                        }, function(e, e2){
+                        }, "json");
+                    }
+                })
+
+                await prom;
+                if(dat.result == 1) {
+                    app.dialog.alert(`Reservationen til (<span style="color: green; font-weight: bold;">${newReserverNavn}</span>) blev oprettet.`, "Reserver", function(){
+                        app.views.main.router.navigate("/reserver/", {reloadCurrent: true,});
+                        arr = [];
+                    });
+                } else {
+                    app.dialog.alert(`Reservationen til ${newReserverNavn} blev <span style='color: red; font-weight: bold;'>IKKE</span> oprettet.`, "Reserver");
+                    return; 
+                }
             },
         },
 
@@ -246,27 +322,25 @@
                     autoclose: true
                 });
 
-                var searchbar = app.searchbar.create({
-                    el: '.searchbar',
-                    searchContainer: '.list',
-                    searchIn: '.item-title',
-                    on: {
-                        search(sb, query, previousQuery) {
-                            console.log(query, previousQuery);
-                        }
-                    }
-                });
-
             },
             pageMounted: (page) => {
                 let innerHTML = "";
+                let userList = [];
+                app.request.getJSON(`${app.data['serverip']}endpoint/user.php?id=-1`, (response) => {
+                    for(let i = 0; i < response.records.length; i++) {
+                        userList[i] = {navn: `${response.records[i].name}`, ID: `${response.records[i].ID}`}
+                    }
+                autocomplete(document.getElementById("ReserverNavn"), userList);
+                })
+
+
 
                 app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllToolsForLoan&param=-1`, (response) => {
                     for(let i = 0; i < response.records.length; i++) {
                         innerHTML += 
                             `
                             <tr>
-                                <td>${i+1}</td>
+                                <td>${response.records[i].ID}</td>
                                 <td class="label-cell VærktøjsNavn">${response.records[i].equipmentNavn}</td>
                                 <td class="label-cell Kategori">${response.records[i].equipmentKategori}</td>
                                 <td class="label-cell Mærke">${response.records[i].equipmentBrand}</td>
