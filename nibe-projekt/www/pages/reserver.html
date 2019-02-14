@@ -9,6 +9,43 @@
                                 <label for="ReserverNavn" class="col">Reserver navn</label>
                                 <input id="ReserverNavn" type="text" required="required" class="form-control form-control-sm col"/>
                             </div>
+                            
+                            <div class="searchbar-backdrop"></div>
+                            <!-- hide-on-search element -->
+                            <div class="block searchbar-hide-on-search">
+                              <p>This block will be hidden on search. Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+                            </div>
+                            <!-- search target list -->
+                            <div class="list searchbar-found">
+                              <ul>
+                                <li class="item-content">
+                                  <div class="item-inner">
+                                    <div class="item-title">Acura</div>
+                                  </div>
+                                </li>
+                                <li class="item-content">
+                                  <div class="item-inner">
+                                    <div class="item-title">Audi</div>
+                                  </div>
+                                </li>
+                                <li class="item-content">
+                                  <div class="item-inner">
+                                    <div class="item-title">BMW</div>
+                                  </div>
+                                </li>
+                                ...
+                                <li class="item-content">
+                                  <div class="item-inner">
+                                    <div class="item-title">Volvo</div>
+                                  </div>
+                                </li>
+                              </ul>
+                            </div>
+                            <!-- Nothing found message -->
+                            <div class="block searchbar-not-found">
+                              <div class="block-inner">Nothing found</div>
+                            </div>
+
                             <div class="tableFixHead">
                                 <table class="table fixed_header" style="background-color: #c5d9ec33;">
                                     <thead>
@@ -157,6 +194,23 @@
                 });
             },
             reservertool : () => {
+                let newNavn = document.getElementById('Navn').value;
+                let newMobilnr = document.getElementById('Mobilnr').value;
+                let newAdresse = document.getElementById('Adresse').value;
+                let newMedhjælpernr = document.getElementById('Medhjælpernr').value;
+                let gruppeID = document.getElementById('Brugertype').selectedIndex +1;
+                app.request.post(`${app.data['serverip']}endpoint/reservation.php`, { userID: newNavn, equipmentID: newMobilnr, dateStart:newAdresse, expectedDateEnd:newMedhjælpernr}, function(response){
+                        if(response.result == 1){
+                            app.dialog.alert(`Værktøjet (<span style="color: green; font-weight: bold;">${newNavn}</span>) blev reserveret.`, "Reserver", function(){
+                                app.views.main.router.navigate("/createuser/", {reloadCurrent: true,});
+                            });
+
+                        }else{
+                            app.dialog.alert(`${newNavn} blev <span style='color: red; font-weight: bold;'>IKKE</span> reserveret.`, "Reserver");
+                            return;
+                        }
+                    }, function(e, e2){
+                    }, "json");
 
             },
         },
@@ -181,6 +235,17 @@
                 var input2 = $('#input-b');
                 input2.clockpicker({
                     autoclose: true
+                });
+
+                var searchbar = app.searchbar.create({
+                    el: '.searchbar',
+                    searchContainer: '.list',
+                    searchIn: '.item-title',
+                    on: {
+                        search(sb, query, previousQuery) {
+                            console.log(query, previousQuery);
+                        }
+                    }
                 });
 
             },
