@@ -4,10 +4,13 @@
             <div class="grid">
                 <div style="padding: 10px" id="item1"><!--Item 1-->
                     <div>
-                        <form>
+                        <form autocomplete="off">
                             <div class="form-row">
-                                <label for="lånerID" class="col">Låner ID</label>
-                                <input id="lånerID" type="text" required="required" class="form-control form-control-sm col"/>
+                                <label for="loanerID" class="col">Låner ID</label>
+                                
+                                <div class="autocomplete">
+                                    <input id="loanerID" type="text" required="required" class="form-control form-control-sm col">
+                                </div>
                             </div>
                             <div class="tableFixHead">
                                 <table class="table fixed_header" style="background-color: #c5d9ec33;">
@@ -75,6 +78,134 @@
         
 <script>
     var arr = [];
+    var loanerAssetTag;
+
+function fillTable(userID) {
+    let innerHTML = "";
+    app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetSingleToolsForAflevering&param=${userID}`, (response) => {
+        for(let i = 0; i < response.records.length; i++) {
+            innerHTML += 
+                `
+                <tr>
+                    <td>${response.records[i].ID}</td>
+                    <td class="label-cell VærktøjsNavn">${response.records[i].equipmentNavn}</td>
+                    <td class="label-cell Kategori">${response.records[i].equipmentKategori}</td>
+                    <td class="label-cell Mærke">${response.records[i].equipmentBrand}</td>
+                    <td class="label-cell Model">${response.records[i].equipmentModel}</td>
+                    <td class="label-cell Serienummer">${response.records[i].equipmentSerieNummer}</td>
+                    <td class="label-cell AssetTag">${response.records[i].equipmentAsset}</td>
+                    <td class="label-cell Stand">${response.records[i].equipmentCondition}</td>
+                    <td class="radio-cell">
+                        <button type="button" id="btn${response.records[i].ID}" onclick="tilføjafleveringsværktøj(${response.records[i].ID})" class="no-ripple btn-primary">Tilføj</button>
+                    </td>
+                </tr>
+                `;
+            $$('.tableBody').html(innerHTML);
+        }
+    });
+}
+
+    
+function autocomplete(inp, arr) {
+  /*the autocomplete function takes two arguments,
+  the text field element and an array of possible autocompleted values:*/
+  var currentFocus;
+  /*execute a function when someone writes in the text field:*/
+  inp.addEventListener("input", function(e) {
+      var a, b, i, val = this.value;
+      /*close any already open lists of autocompleted values*/
+      closeAllLists();
+      if (!val) { return false;}
+      currentFocus = -1;
+      /*create a DIV element that will contain the items (values):*/
+      a = document.createElement("DIV");
+      a.setAttribute("id", this.id + "autocomplete-list");
+      a.setAttribute("class", "autocomplete-items");
+      /*append the DIV element as a child of the autocomplete container:*/
+      this.parentNode.appendChild(a);
+      /*for each item in the array...*/
+      for (i = 0; i < arr.length; i++) {
+        /*check if the item starts with the same letters as the text field value:*/
+        if (arr[i].userID.substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+          /*create a DIV element for each matching element:*/
+          b = document.createElement("DIV");
+          /*make the matching letters bold:*/
+          b.innerHTML = "<strong>" + arr[i].userID.substr(0, val.length) + "</strong>";
+          b.innerHTML += arr[i].userID.substr(val.length);
+          /*insert a input field that will hold the current array item's value:*/
+          b.innerHTML += "<input type='hidden' value='" + arr[i].userName + "' id='" + arr[i].userID + "'>";
+          /*execute a function when someone clicks on the item value (DIV element):*/
+              b.addEventListener("click", function(e) {
+                /*insert the value for the autocomplete text field:*/
+                document.getElementById("ID").value = this.getElementsByTagName("input")[0].id;
+                loanerUserID = document.getElementById("ID").value;
+                inp.value = this.getElementsByTagName("input")[0].value;
+                console.log(loanerUserID);
+                fillTable(loanerUserID);
+                /*close the list of autocompleted values,
+                (or any other open lists of autocompleted values:*/
+                closeAllLists();
+            });
+          a.appendChild(b);
+        }
+      }
+  });
+  /*execute a function presses a key on the keyboard:*/
+  inp.addEventListener("keydown", function(e) {
+      var x = document.getElementById(this.id + "autocomplete-list");
+      if (x) x = x.getElementsByTagName("div");
+      if (e.keyCode == 40) {
+        /*If the arrow DOWN key is pressed,
+        increase the currentFocus variable:*/
+        currentFocus++;
+        /*and and make the current item more visible:*/
+        addActive(x);
+      } else if (e.keyCode == 38) { //up
+        /*If the arrow UP key is pressed,
+        decrease the currentFocus variable:*/
+        currentFocus--;
+        /*and and make the current item more visible:*/
+        addActive(x);
+      } else if (e.keyCode == 13) {
+        /*If the ENTER key is pressed, prevent the form from being submitted,*/
+        e.preventDefault();
+        if (currentFocus > -1) {
+          /*and simulate a click on the "active" item:*/
+          if (x) x[currentFocus].click();
+        }
+      }
+  });
+  function addActive(x) {
+    /*a function to classify an item as "active":*/
+    if (!x) return false;
+    /*start by removing the "active" class on all items:*/
+    removeActive(x);
+    if (currentFocus >= x.length) currentFocus = 0;
+    if (currentFocus < 0) currentFocus = (x.length - 1);
+    /*add class "autocomplete-active":*/
+    x[currentFocus].classList.add("autocomplete-active");
+  }
+  function removeActive(x) {
+    /*a function to remove the "active" class from all autocomplete items:*/
+    for (var i = 0; i < x.length; i++) {
+      x[i].classList.remove("autocomplete-active");
+    }
+  }
+  function closeAllLists(elmnt) {
+    /*close all autocomplete lists in the document,
+    except the one passed as an argument:*/
+    var x = document.getElementsByClassName("autocomplete-items");
+    for (var i = 0; i < x.length; i++) {
+      if (elmnt != x[i] && elmnt != inp) {
+      x[i].parentNode.removeChild(x[i]);
+    }
+  }
+}
+/*execute a function when someone clicks in the document:*/
+document.addEventListener("click", function (e) {
+    closeAllLists(e.target);
+});
+}
 
     fjernafleveringsværktøj = (værktøjsID) => {
         $$(`.tableBody`).find(`#btn${værktøjsID}`).prop("disabled",false);
@@ -136,29 +267,29 @@
 
         on: {
             pageMounted: (page) => {
-                let innerHTML = "";
-
+                
+                let reserveList = [];
                 app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllToolsForAflevering&param=-1`, (response) => {
                     for(let i = 0; i < response.records.length; i++) {
-                        innerHTML += 
-                            `
-                            <tr>
-                                <td>${response.records[i].ID}</td>
-                                <td class="label-cell VærktøjsNavn">${response.records[i].equipmentNavn}</td>
-                                <td class="label-cell Kategori">${response.records[i].equipmentKategori}</td>
-                                <td class="label-cell Mærke">${response.records[i].equipmentBrand}</td>
-                                <td class="label-cell Model">${response.records[i].equipmentModel}</td>
-                                <td class="label-cell Serienummer">${response.records[i].equipmentSerieNummer}</td>
-                                <td class="label-cell AssetTag">${response.records[i].equipmentAsset}</td>
-                                <td class="label-cell Stand">${response.records[i].equipmentCondition}</td>
-                                <td class="radio-cell">
-                                    <button type="button" id="btn${response.records[i].ID}" onclick="tilføjafleveringsværktøj(${response.records[i].ID})" class="no-ripple btn-primary">Tilføj</button>
-                                </td>
-                            </tr>
-                            `;
-                            $$('.tableBody').html(innerHTML);
+                        reserveList[i] = {
+                            navn: `${response.records[i].equipmentNavn}`,
+                            ID: `${response.records[i].ID}`,
+                            userName: `${response.records[i].userName}`,
+                            userID: `${response.records[i].userCardID}`,
+                            kategori: `${response.records[i].equipmentKategori}`,
+                            brand: `${response.records[i].equipmentBrand}`,
+                            model: `${response.records[i].equipmentModel}`,
+                            serieNummer: `${response.records[i].equipmentSerieNummer}`,
+                            assetTag: `${response.records[i].equipmentAsset}`,
+                            condition: `${response.records[i].equipmentCondition}`
+                        }
                     }
+
+                autocomplete(document.getElementById("loanerID"), reserveList);
                 })
+                console.dir(reserveList);
+
+                
             }
         },
     }
