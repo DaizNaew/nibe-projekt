@@ -95,6 +95,7 @@
                             app.request.getJSON(`${app.data['serverip']}functions/certs/delete.php?id=${element.value}&tableid=0`, (data) => {
                                 if(data.result == 1) {
                                     let delCertNavn = element.parentElement.parentElement.children[1].innerText;
+                                    app.methods.addToLog(`${app.data['userID']}`, `Slettet certifikatet ${delCertNavn}`);
                                     app.dialog.alert(`Certifikatet (<span style='color: green; font-weight: bold;'>${delCertNavn}</span>) blev slettet fra databasen.`, "Slet certifikat", function(){
                                         app.views.main.router.navigate("/certifikat/", {reloadCurrent: true,});
                                     });
@@ -109,6 +110,7 @@
                             app.request.getJSON(`${app.data['serverip']}functions/certs/delete.php?id=${element.value}&tableid=1`, (data) => {
                                 if(data.result == 1) {
                                     let delKøreNavn = element.parentElement.parentElement.children[1].innerText;
+                                    app.methods.addToLog(`${app.data['userID']}`, `Slettet kørekortet ${delKøreNavn}`);
                                     app.dialog.alert(`Kørekortet (<span style='color: green; font-weight: bold;'>${delKøreNavn}</span>) blev slettet fra databasen.`, "Slet kørekort", function(){
                                         app.views.main.router.navigate("/certifikat/", {reloadCurrent: true,});
                                     });
@@ -131,6 +133,7 @@
                     }
                     app.request.post(`${app.data['serverip']}endpoint/certificate.php`, { type:`${newTingNavn}`, tableID: tableID }, function(response){
                         if(response.result == 1){
+                            app.methods.addToLog(`${app.data['userID']}`, `Oprettet ${typenavn}  ${newTingNavn}`);
                             app.dialog.alert(`${typenavn} (<span style="color: green; font-weight: bold;">${newTingNavn}</span>) blev tilføjet til databasen.`, "Opret certifikat/kørekort", function(){
                                 app.views.main.router.navigate("/certifikat/", {reloadCurrent: true,});
                             });
@@ -175,6 +178,7 @@
                     let updatedID = document.getElementById('ID').value;
                     let updatedtableID = document.getElementById('tableID').value;
                     app.request.post(`${app.data['serverip']}functions/certs/update.php`, { type:`${updatedType}`, ID:`${updatedID}`, tableID:`${updatedtableID}`}, function(response){
+                        app.methods.addToLog(`${app.data['userID']}`, `Ændret ${updatedType}`);
                         app.views.main.router.navigate("/certifikat/", {reloadCurrent: true,});
                     }, function(e, e2){
                     }, "json");
