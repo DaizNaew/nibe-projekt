@@ -109,6 +109,7 @@
                             if(element.checked) {
                                 app.request.getJSON(`${app.data['serverip']}functions/tools/delete.php?id=${element.value}`, (data) => {
                                     if(data.result == 1) {
+                                        app.methods.addToLog(`${app.data['userID']}`, `Slettet værktøjet ${element.parentElement.parentElement.children[1].innerHTML} med assetTag (${element.parentElement.parentElement.children[6].innerHTML})`);
                                         app.dialog.alert('Værktøjet blev slettet fra databasen', 'Success af sletning', () => {
                                             app.views.main.router.navigate("/tooladdpan/", {reloadCurrent: true,});
                                         });
@@ -140,7 +141,8 @@
                     let prom = new Promise((resolve, reject) => {
                         for(let i = 1; i <= $$('#Antal').val(); i++) {
                         app.request.post(`${app.data['serverip']}endpoint/equipment.php`, tool, (data) => {
-                         dat = data;
+                            app.methods.addToLog(`${app.data['userID']}`, `Oprettet værktøjet ${tool.activeName} med assetTag (${tool.assetTag})`);
+                            dat = data;
                             resolve();
                         }, (error) => {
                             reject();
@@ -203,7 +205,8 @@
                     let prom = new Promise((resolve, reject) => {
 
                         app.request.post(`${app.data['serverip']}functions/tools/update.php`, tool, (data) => {
-                         dat = data;
+                            app.methods.addToLog(`${app.data['userID']}`, `Ændret værktøjet ${tool.activeName} med assetTag (${tool.assetTag})`);
+                            dat = data;
                             resolve();
                         }, (error) => {
                             console.error(error);
