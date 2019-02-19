@@ -68,6 +68,7 @@
                                 if(data.result == 1) {
                                     let delKatNavn = element.parentElement.parentElement.children[1].innerText;
                                     app.dialog.alert(`Kategorie (<span style='color: green; font-weight: bold;'>${delKatNavn}</span>) blev slettet fra databasen.`, "Slet kategori", function(){
+                                        app.methods.addToLog(`${app.data['userID']}`, `Slettet værktøjets kategorien ${delKatNavn}`);
                                         app.views.main.router.navigate("/toolkat/", {reloadCurrent: true,});
                                     });
                                 } else {
@@ -88,6 +89,7 @@
                     app.request.post(`${app.data['serverip']}endpoint/category.php`, { katNavn:`${newKatNavn}` }, function(response){
                         if(response.result == 1){
                             app.dialog.alert(`Kategorien (<span style="color: green; font-weight: bold;">${newKatNavn}</span>) blev tilføjet til databasen.`, "Opret kategori", function(){
+                                app.methods.addToLog(`${app.data['userID']}`, `Oprettet værktøjets kategorien ${newKatNavn}`);
                                 app.views.main.router.navigate("/toolkat/", {reloadCurrent: true,});
                             });
 
@@ -115,6 +117,7 @@
                     let updatedKatNavn = document.getElementById('aktivNavn').value;
                     let updatedKatID = document.getElementById('ID').value;
                     app.request.post(`${app.data['serverip']}functions/cats/update.php`, { katNavn:`${updatedKatNavn}`, ID:`${updatedKatID}`}, function(response){
+                        app.methods.addToLog(`${app.data['userID']}`, `Ændret værktøjets kategorien ${updatedKatNavn}`);
                         app.views.main.router.navigate("/toolkat/", {reloadCurrent: true,});
                     }, function(e, e2){
                     }, "json");
