@@ -97,6 +97,7 @@
                                 if(data.result == 1) {
                                     let delbrugerNavn = element.parentElement.parentElement.children[1].innerText;
                                     app.dialog.alert(`Brugeren (<span style='color: green; font-weight: bold;'>${delbrugerNavn}</span>) blev slettet fra databasen.`, "Slet Bruger", function(){
+                                        app.methods.addToLog(`${app.data['userID']}`, `Slettet brugeren ${delbrugerNavn}`);
                                         app.views.main.router.navigate("/createuser/", {reloadCurrent: true,});
                                     });
                                 } else {
@@ -119,6 +120,7 @@
                     }
                     app.request.post(`${app.data['serverip']}endpoint/user.php`, { name: newNavn, phoneNumber: newMobilnr, address:newAdresse, cardID:newMedhjælpernr, usergruppe:gruppeID }, function(response){
                         if(response.result == 1){
+                            app.methods.addToLog(`${app.data['userID']}`, `Oprettet brugeren ${newNavn}`);
                             app.dialog.alert(`Brugeren (<span style="color: green; font-weight: bold;">${newNavn}</span>) blev tilføjet til databasen.`, "Opret Bruger", function(){
                                 app.views.main.router.navigate("/createuser/", {reloadCurrent: true,});
                             });
@@ -160,6 +162,7 @@
                     let newMedhjælpernr = document.getElementById('Medhjælpernr').value;
                     let gruppeID = document.getElementById('Brugertype').selectedIndex +1;
                     app.request.post(`${app.data['serverip']}functions/users/update.php`, { ID: newUserID, name: newNavn, phoneNumber: newMobilnr, address:newAdresse, cardID:newMedhjælpernr, usergruppe:gruppeID }, function(response){
+                        app.methods.addToLog(`${app.data['userID']}`, `Ændret på brugeren ${newNavn}`);
                         app.views.main.router.navigate("/createuser/", {reloadCurrent: true,});
                     }, function(e, e2){
                     }, "json");
