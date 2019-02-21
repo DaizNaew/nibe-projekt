@@ -20,7 +20,7 @@ class Logging {
 
 	// read products
 	function read($id) {
-        $query = "SELECT *, user.name as userName FROM " . $this->table_name . " l INNER JOIN user ON user.ID = l.ID";
+        $query = "SELECT *, user.name as userName FROM " . $this->table_name . " l INNER JOIN user ON user.ID = l.UserID";
         
         if($id != '-1') {
             // select query
