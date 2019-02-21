@@ -38,17 +38,22 @@
 
 <script>
 
-    deletetool = (kategoriID) => {
+    deletetool = (ID, equipmentID) => {
         app.dialog.confirm('Er du sikker på at du vil slette dette lån fra databasen?', 'Slet lån', function(){
-            app.request.getJSON(`${app.data['serverip']}functions/loans/delete.php?id=${kategoriID}`, (data) => {
-                if(data.result == 1) {
-                    app.dialog.alert(`Lånet blev slettet fra databasen.`, "Slet lån", function(){
-                        app.views.main.router.navigate("/adminoversigt/", {reloadCurrent: true,});
-                    });
-                } else {
-                        app.dialog.alert("Lånet blev <span style='color: red; font-weight: bold;'>IKKE</span> slettet fra databasen.", "Slet lån");
-                    }
-            });
+            app.request.getJSON(`${app.data['serverip']}endpoint/loaned.php?id=${ID}`, (response) => {
+                let itemname = response.records[0].aktivNavn;
+                let itemtag = response.records[0].assetTag;
+                app.request.getJSON(`${app.data['serverip']}functions/loans/delete.php?id=${ID}&equipmentID=${equipmentID}`, (data) => {
+                    if(data.result == 1) {
+                        app.dialog.alert(`Lånet blev slettet fra databasen.`, "Slet lån", function(){
+                            app.methods.addToLog(`${app.data['userID']}`, `Slettet lånet for ${itemname} med assetTag (${itemtag})`);
+                            app.views.main.router.navigate("/adminoversigt/", {reloadCurrent: true,});
+                        });
+                    } else {
+                            app.dialog.alert("Lånet blev <span style='color: red; font-weight: bold;'>IKKE</span> slettet fra databasen.", "Slet lån");
+                        }
+                },function(e){console.log(e)});
+            })
         })
     }
 
@@ -88,7 +93,7 @@
                             <td class="label-cell DatoUdlånt">${response.records[i].dateStart}</td>
                             <td class="label-cell ForventesTilbage">${response.records[i].expectedDateEnd}</td>
                             <td class="input-cell">
-                                <button type="button" onclick="deletetool(${response.records[i].ID})" class="no-ripple btn-primary deletebtn">Slet</button>
+                                <button type="button" onclick="deletetool(${response.records[i].ID}, ${response.records[i].equipmentID})" class="no-ripple btn-primary deletebtn">Slet</button>
                             </td>
                         </tr>
                         `;

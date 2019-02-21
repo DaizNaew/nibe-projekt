@@ -46,9 +46,9 @@
         app.views.main.router.navigate(`/udlon/${reservationID}/`, {reloadCurrent: true,});
     }
 
-    reservationerdeletetool = (kategoriID) => {
+    reservationerdeletetool = (kategoriID, equipmentID) => {
         app.dialog.confirm('Er du sikker på at du vil slette denne reservation fra databasen?', 'Slet reservation', function(){
-            app.request.getJSON(`${app.data['serverip']}functions/reservation/delete.php?id=${kategoriID}`, (data) => {
+            app.request.getJSON(`${app.data['serverip']}functions/reservation/delete.php?id=${kategoriID}&equipmentID=${equipmentID}`, (data) => {
                 if(data.result == 1) {
                     app.dialog.alert(`Reservation blev slettet fra databasen.`, "Slet reservation", function(){
                         app.views.main.router.navigate("/reservationer/", {reloadCurrent: true,});
@@ -99,7 +99,7 @@
                                         <button type="button" onclick="udlon(${response.records[i].ID})" class="no-ripple btn-primary">Udlån</button>
                                     </td>
                                     <td class="input-cell">
-                                        <button type="button" onclick="reservationerdeletetool(${response.records[i].ID})" class="no-ripple btn-primary deletebtn">Slet</button>
+                                        <button type="button" onclick="reservationerdeletetool(${response.records[i].ID}, ${response.records[i].equipmentID})" class="no-ripple btn-primary deletebtn">Slet</button>
                                     </td>
                                 </tr>
                                 `;

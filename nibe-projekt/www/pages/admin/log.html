@@ -8,20 +8,9 @@
                             <thead>
                                 <tr>
                                     <th scope="col">#</th>
-                                    <th class="label-cell" scope="col">Medhjælper Navn</th>
-                                    <th class="label-cell" scope="col">Medhjælper Nummer</th>
-                                    <th class="label-cell" scope="col">Værktøjs Navn</th>
-                                    <th class="label-cell" scope="col">Kategori</th>
-                                    <th class="label-cell" scope="col">Mærke</th>
-                                    <th class="label-cell" scope="col">Model</th>
-                                    <th class="label-cell" scope="col">Serienummer</th>
-                                    <th class="label-cell" scope="col">AssetTag</th>
-                                    <th class="label-cell" scope="col">Stand</th>
-                                    <th class="label-cell" scope="col">Dato Udlånt</th>
-                                    <th class="label-cell" scope="col">Forventes Tilbage</th>
-                                    <th class="label-cell" scope="col">Faktisk Afleveret</th>
-                                    <th class="label-cell" scope="col">Udlånt Af</th>
-                                    <th class="label-cell" scope="col">Modtaget Af</th>
+                                    <th class="label-cell log_UserName" scope="col">Medhjælper Navn</th>
+                                    <th class="label-cell log_Handling" scope="col">Handling</th>
+                                    <th class="label-cell" scope="col">Dato</th>
                                 </tr>
                             </thead>
                             <tbody class="tableBody">
@@ -48,6 +37,23 @@
         // Component States
         on: {
             pageMounted: (page) => {
+                let innerHTML = "";
+                // request user data on page init
+                app.request.getJSON(`${app.data['serverip']}endpoint/logging.php?id=-1`, (response) => {
+                    // update component state with new state
+                    for(let i = 0; i < response.records.length; i++) {
+                        innerHTML += 
+                            `
+                            <tr>
+                                <td>${i+1}</td>
+                                <td class="label-cell log_UserName">${response.records[i].UserName}</td>
+                                <td class="label-cell log_Handling">${response.records[i].Handling}</td>
+                                <td class="label-cell Date">${response.records[i].Date}</td>
+                            </tr>
+                            `;
+                            $$('.tableBody').html(innerHTML);
+                    }
+                });
             }
         },
     }

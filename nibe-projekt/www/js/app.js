@@ -32,6 +32,14 @@ var app  = new Framework7({
       //document.getElementById('adminnavbarwrapper').style.display = "none";
       $$('#adminnavbarwrapper').hide();
     },
+
+    addToLog: function(UserID, Handling){
+      app.request.post(`${app.data['serverip']}endpoint/logging.php`, { UserID: UserID, Handling: Handling }, function(response){
+        console.log(response);
+      }, function(e, e2){
+        console.log(e);
+      }, "json");
+    },
   },
   // App routes
   routes: routes,
