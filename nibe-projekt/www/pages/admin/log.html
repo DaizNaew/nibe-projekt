@@ -8,8 +8,8 @@
                             <thead>
                                 <tr>
                                     <th scope="col">#</th>
-                                    <th class="label-cell" scope="col">Medhjælper Navn</th>
-                                    <th class="label-cell" scope="col">Handling</th>
+                                    <th class="label-cell log_UserName" scope="col">Medhjælper Navn</th>
+                                    <th class="label-cell log_Handling" scope="col">Handling</th>
                                     <th class="label-cell" scope="col">Dato</th>
                                 </tr>
                             </thead>
@@ -39,15 +39,15 @@
             pageMounted: (page) => {
                 let innerHTML = "";
                 // request user data on page init
-                app.request.getJSON(`${app.data['serverip']}endpoint/log.php?id=-1`, (response) => {
+                app.request.getJSON(`${app.data['serverip']}endpoint/logging.php?id=-1`, (response) => {
                     // update component state with new state
                     for(let i = 0; i < response.records.length; i++) {
                         innerHTML += 
                             `
                             <tr>
                                 <td>${i+1}</td>
-                                <td class="label-cell UserID">${response.records[i].UserID}</td>
-                                <td class="label-cell Handling">${response.records[i].Handling}</td>
+                                <td class="label-cell log_UserName">${response.records[i].UserName}</td>
+                                <td class="label-cell log_Handling">${response.records[i].Handling}</td>
                                 <td class="label-cell Date">${response.records[i].Date}</td>
                             </tr>
                             `;
