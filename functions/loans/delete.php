@@ -10,6 +10,7 @@ include_once '../../database.inc';
 include_once '../../models/Loaned.php';
 
 $id = $_GET['id'];
+$equipmentID = $_GET['equipmentID'];
 
 $database = new Database();
 $db = $database->getConnection();
@@ -17,7 +18,7 @@ $db = $database->getConnection();
 $Loaned = new Loaned($db);
 
 // query products
-$stmt = $Loaned->delete($id);
+$stmt = $Loaned->delete($id, $equipmentID);
 if($stmt) {
     http_response_code(200);
     echo json_encode(

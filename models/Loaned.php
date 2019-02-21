@@ -88,7 +88,7 @@ class Loaned {
         }
     }
 
-    function delete($id) {
+    function delete($id, $equipmentID) {
         $query = "DELETE FROM " . $this->table_name . " WHERE ID = ".$id;
 
         $stmt = $this->conn->prepare($query);
