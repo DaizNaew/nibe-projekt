@@ -54,8 +54,10 @@ var app  = new Framework7({
       }
     },
     pageAfterIn: function(page) {
-      app.data['navbarheight'] = $$('#view-navbar')[0].clientHeight;
-      document.getElementById('view-home').style.top = app.data['navbarheight']+"px";
+      setTimeout(function(){
+        app.data['navbarheight'] = $$('#view-navbar')[0].clientHeight;
+        document.getElementById('view-home').style.top = app.data['navbarheight']+"px";
+      }, 0);
     },
   },
 });
