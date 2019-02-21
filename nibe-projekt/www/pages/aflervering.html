@@ -271,25 +271,40 @@ document.addEventListener("click", function (e) {
                 let reserveList = [];
                 app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllToolsForAflevering&param=-1`, (response) => {
                     for(let i = 0; i < response.records.length; i++) {
-                        reserveList[i] = {
-                            navn: `${response.records[i].equipmentNavn}`,
-                            ID: `${response.records[i].ID}`,
-                            userName: `${response.records[i].userName}`,
-                            userID: `${response.records[i].userCardID}`,
-                            kategori: `${response.records[i].equipmentKategori}`,
-                            brand: `${response.records[i].equipmentBrand}`,
-                            model: `${response.records[i].equipmentModel}`,
-                            serieNummer: `${response.records[i].equipmentSerieNummer}`,
-                            assetTag: `${response.records[i].equipmentAsset}`,
-                            condition: `${response.records[i].equipmentCondition}`
+                        if(i != 0) {
+                            reserveList.forEach(element => {
+                                if(element.userID != response.records[i].userCardID) {
+                                    reserveList[i] = {
+                                    navn: `${response.records[i].equipmentNavn}`,
+                                    ID: `${response.records[i].ID}`,
+                                    userName: `${response.records[i].userName}`,
+                                    userID: `${response.records[i].userCardID}`,
+                                    kategori: `${response.records[i].equipmentKategori}`,
+                                    brand: `${response.records[i].equipmentBrand}`,
+                                    model: `${response.records[i].equipmentModel}`,
+                                    serieNummer: `${response.records[i].equipmentSerieNummer}`,
+                                    assetTag: `${response.records[i].equipmentAsset}`,
+                                    condition: `${response.records[i].equipmentCondition}`
+                                }
+                                }
+                            });
+                        } else {
+                            reserveList[i] = {
+                                    navn: `${response.records[i].equipmentNavn}`,
+                                    ID: `${response.records[i].ID}`,
+                                    userName: `${response.records[i].userName}`,
+                                    userID: `${response.records[i].userCardID}`,
+                                    kategori: `${response.records[i].equipmentKategori}`,
+                                    brand: `${response.records[i].equipmentBrand}`,
+                                    model: `${response.records[i].equipmentModel}`,
+                                    serieNummer: `${response.records[i].equipmentSerieNummer}`,
+                                    assetTag: `${response.records[i].equipmentAsset}`,
+                                    condition: `${response.records[i].equipmentCondition}`
+                                }
                         }
                     }
-
                 autocomplete(document.getElementById("loanerID"), reserveList);
                 })
-                console.dir(reserveList);
-
-                
             }
         },
     }
