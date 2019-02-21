@@ -239,7 +239,7 @@
                         globalEquipmentID = response.records[0].equipmentID;
                         låneInnerHTML += 
                             `
-                            <tr>
+                            <tr id="værktøjnr${response.records[0].equipmentID}">
                                 <td style="width: 32px;">${response.records[0].equipmentID}</td>
                                 <td class="label-cell VærktøjNavn">${response.records[0].equipmentNavn}</td>
                                 <td class="label-cell Kategori">${response.records[0].categoryName}</td>
@@ -249,7 +249,7 @@
                                 <td class="label-cell AssetTag">${response.records[0].equipmentAsset}</td>
                                 <td class="label-cell Stand">${response.records[0].equipmentCondition}</td>
                                 <td class="radio-cell">
-                                    <button type="button" onclick="fjernudlånsværktøj(${response.records[0].ID})" class="no-ripple btn-primary deletebtn">Slet</button>
+                                    <button type="button" onclick="fjernudlånsværktøj(${response.records[0].equipmentID})" class="no-ripple btn-primary deletebtn">Slet</button>
                                 </td>
                             </tr>
                             `;
