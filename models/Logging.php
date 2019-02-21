@@ -11,6 +11,7 @@ class Logging {
     public $UserID;
     public $Handling;
     public $Date;
+    public $userName;
 
     // constructor with $db as database connection
     public function __construct($db) {
@@ -19,7 +20,7 @@ class Logging {
 
 	// read products
 	function read($id) {
-        $query = "SELECT * FROM " . $this->table_name;
+        $query = "SELECT *, user.name as userName FROM " . $this->table_name . " l INNER JOIN user ON user.ID = l.ID";
         
         if($id != '-1') {
             // select query

@@ -35,6 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $product_item=array(
                 "ID" => $ID,
                 "UserID" => $UserID,
+                "UserName" => $userName,
                 "Handling" => $Handling,
                 "Date" => $Date,
             );
