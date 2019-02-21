@@ -147,10 +147,11 @@
                 });
             },
             udlontool : async () => {
-                let newLånerID = document.getElementById('lånerID').value;
+                let newLånerCard = document.getElementById('lånerID').value;
                 let expectedDateEnd = document.getElementById('calendar_input').value + " " + document.getElementById('input-a').value + ":00";
                 let dat;
                 let logString;
+                let newLånerID;
                 if(globalReservationID != null){
                     arr.push(globalEquipmentID);
                     app.request.getJSON(`${app.data['serverip']}functions/reservation/delete.php?id=${globalReservationID}&equipmentID=${globalEquipmentID}`, (data) => {
@@ -158,19 +159,22 @@
                 }
 
                 let prom = new Promise((resolve, reject) => {
-                    for(i=0; i<arr.length; i++) {
-                        //Kald Endpoint med id som arr[i]
-                        app.request.post(`${app.data['serverip']}endpoint/loaned.php`, { userID: newLånerID, equipmentID: arr[i], expectedDateEnd: expectedDateEnd}, function(response){
-                            if(response.result == 1){
-                                //logString += `${arr[i]}`
-                                dat = response;
-                                resolve();
-                            }else{
-                                reject();
-                            }
-                        }, function(e, e2){
-                        }, "json");
-                    }
+                    app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_ConvertCardIDtoUserID&param=${newLånerCard}`, (data2) => {
+                        newLånerID = data2.records[0].ID;
+                        for(i=0; i<arr.length; i++) {
+                            //Kald Endpoint med id som arr[i]
+                            app.request.post(`${app.data['serverip']}endpoint/loaned.php`, { userID: newLånerID, equipmentID: arr[i], expectedDateEnd: expectedDateEnd}, function(response){
+                                if(response.result == 1){
+                                    //logString += `${arr[i]}`
+                                    dat = response;
+                                    resolve();
+                                }else{
+                                    reject();
+                                }
+                            }, function(e, e2){
+                            }, "json");
+                        }
+                    },function(e){console.log(e)})
                 })
 
                 await prom;
@@ -239,7 +243,7 @@
                         globalEquipmentID = response.records[0].equipmentID;
                         låneInnerHTML += 
                             `
-                            <tr>
+                            <tr id="værktøjnr${response.records[0].equipmentID}">
                                 <td style="width: 32px;">${response.records[0].equipmentID}</td>
                                 <td class="label-cell VærktøjNavn">${response.records[0].equipmentNavn}</td>
                                 <td class="label-cell Kategori">${response.records[0].categoryName}</td>
@@ -249,7 +253,7 @@
                                 <td class="label-cell AssetTag">${response.records[0].equipmentAsset}</td>
                                 <td class="label-cell Stand">${response.records[0].equipmentCondition}</td>
                                 <td class="radio-cell">
-                                    <button type="button" onclick="fjernudlånsværktøj(${response.records[0].ID})" class="no-ripple btn-primary deletebtn">Slet</button>
+                                    <button type="button" onclick="fjernudlånsværktøj(${response.records[0].equipmentID})" class="no-ripple btn-primary deletebtn">Slet</button>
                                 </td>
                             </tr>
                             `;
