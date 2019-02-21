@@ -36,7 +36,7 @@
                                 </table>
                             </div>
                             <div class="form-row form-button-row">
-                                <a><button id="insert" @click="afleverool" type="submit" class="no-ripple col btn btn-primary godbtn">Aflever</button></a>
+                                <a><button id="insert" @click="aflevertool" type="submit" class="no-ripple col btn btn-primary godbtn">Aflever</button></a>
                                 <a><button id="reset" @click="resetfields" type="button" class="no-ripple col btn btn-primary godbtn">Nulstil felter</button></a>
                             </div>
                             <input id="ID" type="hidden"/>
@@ -96,7 +96,7 @@ function fillTable(userID) {
                     <td class="label-cell AssetTag">${response.records[i].equipmentAsset}</td>
                     <td class="label-cell Stand">${response.records[i].equipmentCondition}</td>
                     <td class="radio-cell">
-                        <button type="button" id="btn${response.records[i].ID}" onclick="tilføjafleveringsværktøj(${response.records[i].ID})" class="no-ripple btn-primary">Tilføj</button>
+                        <button type="button" id="btn${response.records[i].equipmentID}" onclick="tilføjafleveringsværktøj(${response.records[i].equipmentID},${response.records[i].ID})" class="no-ripple btn-primary">Tilføj</button>
                     </td>
                 </tr>
                 `;
@@ -125,6 +125,7 @@ function autocomplete(inp, arr) {
       this.parentNode.appendChild(a);
       /*for each item in the array...*/
       for (i = 0; i < arr.length; i++) {
+          console.dir(arr)
         /*check if the item starts with the same letters as the text field value:*/
         if (arr[i].userID.substr(0, val.length).toUpperCase() == val.toUpperCase()) {
           /*create a DIV element for each matching element:*/
@@ -140,7 +141,7 @@ function autocomplete(inp, arr) {
                 document.getElementById("ID").value = this.getElementsByTagName("input")[0].id;
                 loanerUserID = document.getElementById("ID").value;
                 inp.value = this.getElementsByTagName("input")[0].value;
-                console.log(loanerUserID);
+                selectedUserID = loanerUserID;
                 fillTable(loanerUserID);
                 /*close the list of autocompleted values,
                 (or any other open lists of autocompleted values:*/
@@ -213,17 +214,18 @@ document.addEventListener("click", function (e) {
         arr.splice( arr.indexOf(værktøjsID), 1 );
     }
 
-    tilføjafleveringsværktøj = (værktøjsID) => {
+    tilføjafleveringsværktøj = (værktøjsID, udlånsID) => {
         arr.push(værktøjsID);
         let innerHTML = "";
         app.request.getJSON(`${app.data['serverip']}endpoint/equipment.php?id=${værktøjsID}`, (response) => {
             $$(`.tableBody`).find(`#btn${værktøjsID}`).prop("disabled",true);
             innerHTML = $$(`.låneTableBody`).html();
             for(let i = 0; i < response.records.length; i++) {
+                console.dir(response.records);
                 innerHTML += 
                     `
                     <tr id="værktøjnr${værktøjsID}">
-                        <td>${værktøjsID}</td>
+                        <td>${udlånsID}</td>
                         <td class="label-cell VærktøjsNavn">${response.records[i].activeName}</td>
                         <td class="label-cell Kategori">${response.records[i].categoryName}</td>
                         <td class="label-cell Mærke">${response.records[i].brandName}</td>
@@ -244,6 +246,7 @@ document.addEventListener("click", function (e) {
     return {
         data: function () {
             return {
+                selectedUserID: 0
             };
         },
     // Component Methods
@@ -261,7 +264,43 @@ document.addEventListener("click", function (e) {
                         })
                 });
             },
-            afleverool : () => {
+            aflevertool : async () => {
+                let dat;
+                let toastMessage = '';
+                console.dir($$('.låneTableBody'));
+                let prom = new Promise((resolve, reject) => {
+                $$('.låneTableBody').forEach(element => {
+                    for(i = 0; i < element.children.length; i++) {
+                        let loan = {
+                            id: element.children[i].children[0].innerText,
+                            VærktøjsNavn: element.children[i].children[1].innerText,
+                            equipmentID: (element.children[i].id).split("værktøjnr").pop(),
+                            AssetTag:  element.children[i].children[6].innerText,
+                            selectedUserID: selectedUserID
+                        };
+                        console.dir(loan);
+
+                            app.request.post(`${app.data['serverip']}functions/loans/deliver.php`, loan, (data) => {
+                                app.methods.addToLog(`${selectedUserID}`, `Afleverede værktøjet ${loan.VærktøjsNavn} med assetTag (${loan.AssetTag})`);
+                                dat = data;
+                                resolve();
+                            }, (error) => {
+                                reject();
+                                console.error(error);
+                            }, 'json');
+                        }
+                });
+            });
+            await prom;
+                if(dat.result == 1) {
+                            toastMessage = 'Værktøjet blev Afleveret';
+                        } else {
+                            toastMessage = 'Værktøjet blev ikke Afleveret';
+                            console.dir(dat.error)
+                        }
+                        app.dialog.alert(toastMessage, 'Afleveret Værktøj', () => {
+                            app.views.main.router.navigate("/aflervering/", {reloadCurrent: true,});
+                        });
             },
         },
 
@@ -269,39 +308,27 @@ document.addEventListener("click", function (e) {
             pageMounted: (page) => {
                 
                 let reserveList = [];
+                let o = 0;
                 app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllToolsForAflevering&param=-1`, (response) => {
                     for(let i = 0; i < response.records.length; i++) {
-                        if(i != 0) {
-                            reserveList.forEach(element => {
-                                if(element.userID != response.records[i].userCardID) {
-                                    reserveList[i] = {
-                                    navn: `${response.records[i].equipmentNavn}`,
+                        if(i !== 0) {
+                            if(reserveList[o].userID != response.records[i].userCardID) {
+
+                                reserveList.push({
                                     ID: `${response.records[i].ID}`,
                                     userName: `${response.records[i].userName}`,
-                                    userID: `${response.records[i].userCardID}`,
-                                    kategori: `${response.records[i].equipmentKategori}`,
-                                    brand: `${response.records[i].equipmentBrand}`,
-                                    model: `${response.records[i].equipmentModel}`,
-                                    serieNummer: `${response.records[i].equipmentSerieNummer}`,
-                                    assetTag: `${response.records[i].equipmentAsset}`,
-                                    condition: `${response.records[i].equipmentCondition}`
-                                }
-                                }
-                            });
+                                    userID: `${response.records[i].userCardID}`
+                                });
+                                o++;
+                            }
                         } else {
-                            reserveList[i] = {
-                                    navn: `${response.records[i].equipmentNavn}`,
+                            reserveList.push({
                                     ID: `${response.records[i].ID}`,
                                     userName: `${response.records[i].userName}`,
-                                    userID: `${response.records[i].userCardID}`,
-                                    kategori: `${response.records[i].equipmentKategori}`,
-                                    brand: `${response.records[i].equipmentBrand}`,
-                                    model: `${response.records[i].equipmentModel}`,
-                                    serieNummer: `${response.records[i].equipmentSerieNummer}`,
-                                    assetTag: `${response.records[i].equipmentAsset}`,
-                                    condition: `${response.records[i].equipmentCondition}`
-                                }
+                                    userID: `${response.records[i].userCardID}`
+                                })
                         }
+                        
                     }
                 autocomplete(document.getElementById("loanerID"), reserveList);
                 })
