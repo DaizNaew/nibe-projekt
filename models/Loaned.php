@@ -104,9 +104,18 @@ class Loaned {
         }
     }
 
-    function deliver($id, $deliverDate, $equipmentID) {
+    function deliver($post) {
+        $id = $post['id'];
+        $equipmentID = $post['equipmentID'];
+        
 
-        $query = "UPDATE " . $this->table_name . " SET actualDateEnd = " . $deliverDate . ", udløbet = 1 WHERE ID = " . $id;
+        date_default_timezone_set('Europe/Copenhagen'); 
+
+        $date = date("m/d/Y h:i A");
+        $final = strtotime($date);
+        $time_posted = date("Y-m-d H:i:s", $final);
+
+        $query = "UPDATE " . $this->table_name . " SET actualDateEnd = '" . $time_posted . "', udløbet = '1' WHERE ID = " . $id;
 
         // prepare query statement
         $stmt = $this->conn->prepare($query);
