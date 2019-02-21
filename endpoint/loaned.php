@@ -11,7 +11,7 @@ header("Content-Type: application/json; charset=UTF-8");
 // database connection will be here
 include_once '../database.inc';
 include_once '../models/Loaned.php';
-/*
+
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $id = $_GET['id'];
 
@@ -34,6 +34,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             
             $product_item=array(
                 "ID" => $ID,
+                "userID" => $userID,
+                "equipmentID" => $equipmentID,
+                "dateStart" => $dateStart,
+                "expectedDateEnd" => $expectedDateEnd,
+                "description" => $description,
+                "udløbet" => $udløbet,
+                "aktivNavn" => $aktivNavn,
+                "brand" => $brand,
+                "model" => $model,
+                "serieNummer" => $serieNummer,
+                "assetTag" => $assetTag,
+                "stand" => $stand,
+                "katID" => $katID,
+                "inhouse" => $inhouse,
+                "reserved" => $reserved,
                 "katNavn" => $katNavn,
             );
     
@@ -52,10 +67,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     
         // tell the user no products found
         echo json_encode(
-            array("message" => "Ingen kategori fundet")
+            array("message" => "Ingen loan fundet")
         );
     }
-} else */ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+} else  if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     $database = new Database();
     $db = $database->getConnection();

@@ -38,8 +38,9 @@ class Logging {
     function write($post) {
         $UserID = $post['UserID'];
         $Handling = $post['Handling'];
+
         $query = "INSERT INTO " . $this->table_name . " (UserID,Handling) VALUES " . "('$UserID', '$Handling')";
-        
+
         // prepare query statement
         $stmt = $this->conn->prepare($query);
 
@@ -49,6 +50,5 @@ class Logging {
         } catch (PDOException $e) {
             return ($e);
         }
-        
     }
 }

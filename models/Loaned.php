@@ -46,14 +46,13 @@ class Loaned {
 
 	// read products
 	function read($id) {
-        $query = "SELECT *, udlånt.ID AS ID, equipment FROM " . $this->table_name." INNER JOIN kategori k ON k.ID = equipment.katID";
+        $query = "SELECT *, udlånt.ID as ID FROM " . $this->table_name." INNER JOIN equipment e ON e.ID = udlånt.equipmentID INNER JOIN kategori k ON k.ID = e.katID";
         
         if($id == -1) {
         } else {
             // select query
-            $query .= " WHERE equipment.ID = ".$id;
+            $query .= " WHERE udlånt.ID = ".$id;
         }
-        print_r($query);
         // prepare query statement
         $stmt = $this->conn->prepare($query);
     
