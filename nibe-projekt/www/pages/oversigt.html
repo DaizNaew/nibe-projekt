@@ -1,15 +1,14 @@
 <template>
         <div class="page" data-name="oversigt">
-            <div id="wrapper">
-                    <form autocomplete="off">
-                        <div class="form-row">
-                            <label for="oversigtListBruger" class="col">Udlåner navn</label>
+                <form autocomplete="off">
+                        <label for="oversigtListBruger" class="col">Udlåner navn</label>
                                 
-                            <div class="autocomplete">
-                                <input id="oversigtListBruger" type="text" class="form-control form-control-sm col">
-                            </div>
-                         </div>
-                    </form>
+                        <div class="autocomplete">
+                            <input id="oversigtListBruger" type="text" class="form-control form-control-sm col">
+                        </div>
+                </form>
+            <div id="wrapper">
+                    
                 <div style="padding: 25px; width:100%; text-align: center;"><!--Item 2-->
                     <div style="display: inline-block;">
                         <div class="tableFixHead">
@@ -41,8 +40,37 @@
 
     </template>
             
-    <script>
-         var arr = [];
+<script>
+var arr = [];
+function fillTable(userName) {
+    let innerHTML = "";
+    console.error('Inde i funken')
+    app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetSelectOversigt&param=${userName}`, (response) => {
+        console.error('Inde i Requesten')
+        $$('.tableBody').html("");
+                        // update component state with new state
+                        for(let i = 0; i < response.records.length; i++) {
+                            innerHTML += 
+                                `
+                                <tr id="oversigt${response.records[i].ID}">
+                                    <td>${response.records[i].ID}</td>
+                                    <td class="label-cell MedhjælperNavn">${response.records[i].userName}</td>
+                                    <td class="label-cell MedhjælperNummer">${response.records[i].userCardID}</td>
+                                    <td class="label-cell VærktøjsNavn">${response.records[i].equipmentNavn}</td>
+                                    <td class="label-cell Kategori">${response.records[i].equipmentKategori}</td>
+                                    <td class="label-cell Mærke">${response.records[i].equipmentBrand}</td>
+                                    <td class="label-cell Model">${response.records[i].equipmentModel}</td>
+                                    <td class="label-cell AssetTag">${response.records[i].equipmentAsset}</td>
+                                    <td class="label-cell Stand">${response.records[i].equipmentCondition}</td>
+                                    <td class="label-cell DatoUdlånt">${response.records[i].dateStart}</td>
+                                    <td class="label-cell ForventesTilbage">${response.records[i].expectedDateEnd}</td>
+                                </tr>
+                                `;
+                                console.log(innerHTML);
+                                $$('.tableBody').html(innerHTML);
+        }
+    }, (error) => { console.error(error)});
+}
 
 function autocomplete(inp, arr) {
   /*the autocomplete function takes two arguments,
@@ -75,8 +103,9 @@ function autocomplete(inp, arr) {
           /*execute a function when someone clicks on the item value (DIV element):*/
               b.addEventListener("click", function(e) {
               /*insert the value for the autocomplete text field:*/
-              document.getElementById("ID").value = this.getElementsByTagName("input")[0].id;
               inp.value = this.getElementsByTagName("input")[0].value;
+              loanerUserName = inp.value;
+              fillTable(loanerUserName);
               /*close the list of autocompleted values,
               (or any other open lists of autocompleted values:*/
               closeAllLists();
@@ -169,7 +198,7 @@ document.addEventListener("click", function (e) {
                         for(let i = 0; i < response.records.length; i++) {
                             innerHTML += 
                                 `
-                                <tr id="oversigt${response.records[i].ID}>
+                                <tr id="oversigt${response.records[i].ID}">
                                     <td>${response.records[i].ID}</td>
                                     <td class="label-cell MedhjælperNavn">${response.records[i].userName}</td>
                                     <td class="label-cell MedhjælperNummer">${response.records[i].userCardID}</td>
@@ -185,8 +214,7 @@ document.addEventListener("click", function (e) {
                                 `;
                                 $$('.tableBody').html(innerHTML);
                                 if(i !== 0) {
-                                    if(reserveList[o].userID != response.records[i].userCardID) {
-
+                                    if(oversigtListBruger[o].navn != response.records[i].userName) {
                                         oversigtListBruger.push( {navn: `${response.records[i].userName}`, ID: `${response.records[i].ID}`});
                                         oversigtListTools.push( {navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}`});
                                         o++;
@@ -195,7 +223,6 @@ document.addEventListener("click", function (e) {
                                     oversigtListBruger.push( {navn: `${response.records[i].userName}`, ID: `${response.records[i].ID}`});
                                     oversigtListTools.push( {navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}`});
                                 }
-                                
                         }
                         autocomplete(document.getElementById("oversigtListBruger"), oversigtListBruger);
                     });
