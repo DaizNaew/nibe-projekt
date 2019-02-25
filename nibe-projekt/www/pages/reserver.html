@@ -21,9 +21,7 @@
                                             <th class="label-cell" scope="col">Kategori</th>
                                             <th class="label-cell" scope="col">Mærke</th>
                                             <th class="label-cell" scope="col">Model</th>
-                                            <th class="label-cell" scope="col">Serienummer</th>
                                             <th class="label-cell" scope="col">AssetTag</th>
-                                            <th class="label-cell" scope="col">Stand</th>
                                             <th class="radio-cell" scope="col">
                                                 <!--<input type="checkbox" class="no-ripple"/>-->
                                                 <i class="icon-radio"></i>
@@ -84,9 +82,7 @@
                                         <th class="label-cell" scope="col">Kategori</th>
                                         <th class="label-cell" scope="col">Mærke</th>
                                         <th class="label-cell" scope="col">Model</th>
-                                        <th class="label-cell" scope="col">Serienummer</th>
                                         <th class="label-cell" scope="col">AssetTag</th>
-                                        <th class="label-cell" scope="col">Stand</th>
                                         <th class="radio-cell" scope="col">
                                             <!--<input type="checkbox" class="no-ripple"/>-->
                                             <i class="icon-radio"></i>
@@ -228,9 +224,7 @@ document.addEventListener("click", function (e) {
                         <td class="label-cell Kategori">${response.records[i].categoryName}</td>
                         <td class="label-cell Mærke">${response.records[i].brandName}</td>
                         <td class="label-cell Model">${response.records[i].modelName}</td>
-                        <td class="label-cell Serienummer">${response.records[i].serialNumber}</td>
                         <td class="label-cell AssetTag">${response.records[i].assetTag}</td>
-                        <td class="label-cell Stand">${response.records[i].condition}</td>
                         <td class="radio-cell">
                             <button type="button" onclick="fjernreserverværktøj(${response.records[0].ID})" class="no-ripple btn-primary deletebtn">Slet</button>
                         </td>
@@ -349,9 +343,7 @@ document.addEventListener("click", function (e) {
                                 <td class="label-cell Kategori">${response.records[i].equipmentKategori}</td>
                                 <td class="label-cell Mærke">${response.records[i].equipmentBrand}</td>
                                 <td class="label-cell Model">${response.records[i].equipmentModel}</td>
-                                <td class="label-cell Serienummer">${response.records[i].equipmentSerieNummer}</td>
                                 <td class="label-cell AssetTag">${response.records[i].equipmentAsset}</td>
-                                <td class="label-cell Stand">${response.records[i].equipmentCondition}</td>
                                 <td class="radio-cell">
                                     <button type="button" id="btn${response.records[i].ID}" onclick="tilføjreserverværktøj(${response.records[i].ID})" class="no-ripple btn-primary">Tilføj</button>
                                 </td>
