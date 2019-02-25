@@ -26,7 +26,7 @@
                 let cardID = document.getElementById('cardID').value;
                 let userID = app.data['userID'];
 
-                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllAdmins&param`, (response) =>{
+                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllAdmins&param=0`, (response) =>{
                     if(response.records[0].cardID == cardID) {
                         app.data['username'] = response.records[0].name;
                         app.data['userID'] = response.records[0].ID;
