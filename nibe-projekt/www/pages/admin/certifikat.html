@@ -33,7 +33,7 @@
                                     <table id="kattable" class="table" style="background-color: #c5d9ec33">
                                         <thead>
                                             <tr>
-                                                <th scope="col" style="width: 32px;">#</th>
+                                                <th scope="col" style="display: none;">#</th>
                                                 <th class="label-cell" scope="col">Certifikat</th>
                                                 <th class="radio-cell" scope="col">
                                                     <i class="icon-radio"></i>
@@ -49,7 +49,7 @@
                                 <table id="kattable" class="table" style="width:100%; min-width: 100%; max-width: 100%; background-color: #c5d9ec33">
                                     <thead>
                                         <tr>
-                                            <th scope="col" style="width: 32px;">#</th>
+                                            <th scope="col" style="display: none;">#</th>
                                             <th class="label-cell" scope="col">Kørekort</th>
                                             <th class="radio-cell" scope="col">
                                                 <i class="icon-radio"></i>
@@ -201,7 +201,7 @@
                             innerHTMLCert += 
                             `
                             <tr>
-                                <td style="width: 32px;">${response.certifikat[i].ID}</td>
+                                <td style="display: none;">${response.certifikat[i].ID}</td>
                                 <td class="label-cell">${response.certifikat[i].type}</td>
                                 <td class="radio-cell">
                                     <input type="radio" value="${response.certifikat[i].ID}" name="radiogroup"/>
@@ -219,7 +219,7 @@
                             innerHTMLKort += 
                             `
                             <tr>
-                                <td style="width: 32px;">${response.kørekort[i].ID}</td>
+                                <td style="display: none;">${response.kørekort[i].ID}</td>
                                 <td class="label-cell">${response.kørekort[i].type}</td>
                                 <td class="radio-cell">
                                     <input type="radio" value="${response.kørekort[i].ID}" name="radiogroup"/>

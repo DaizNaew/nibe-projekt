@@ -43,7 +43,7 @@
                             <table class="table fixed_header" style="background-color: #c5d9ec33;">
                                 <thead>
                                     <tr>
-                                        <th scope="col" style="width: 32px;">#</th>
+                                        <th scope="col" style="display: none;">#</th>
                                         <th class="label-cell" scope="col">Fulde navn</th>
                                         <th class="label-cell" scope="col">Mobil nr</th>
                                         <th class="label-cell" scope="col">Adresse</th>
@@ -189,7 +189,7 @@
                             innerHTML += 
                             `
                             <tr>
-                                <td style="width: 32px;">${response.records[i].ID}</td>
+                                <td style="display: none;">${response.records[i].ID}</td>
                                 <td class="label-cell Navn">${response.records[i].name}</td>
                                 <td class="label-cell Mobilnr">${response.records[i].phoneNumber}</td>
                                 <td class="label-cell Adresse">${response.records[i].address}</td>

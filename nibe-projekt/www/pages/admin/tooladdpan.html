@@ -54,7 +54,7 @@
                             <table class="table fixed_header" style="width:auto; background-color: #c5d9ec33;">
                                 <thead>
                                     <tr>
-                                        <th scope="col">#</th>
+                                        <th scope="col" style="display: none;">#</th>
                                         <th class="label-cell" scope="col">Værktøjs navn</th>
                                         <th class="label-cell" scope="col">Kategori</th>
                                         <th class="label-cell" scope="col">Mærke</th>
@@ -197,8 +197,6 @@
                         ID: $$('#editID').val(),
                     };
 
-                    console.dir(tool);
-
                     let dat;
                     let toastMessage = '';
 
@@ -209,7 +207,6 @@
                             dat = data;
                             resolve();
                         }, (error) => {
-                            console.error(error);
                             reject();
                         }, 'json');
                         
@@ -248,7 +245,7 @@
                             innerHTML += 
                             `
                             <tr>
-                                <td>${tools.records[i].ID}</td>
+                                <td style="display: none;">${tools.records[i].ID}</td>
                                 <td class="label-cell aktivNavn">${tools.records[i].activeName}</td>
                                 <td class="label-cell Kategori" value="${tools.records[i].categoryID}">${tools.records[i].categoryName}</td>
                                 <td class="label-cell Mærke">${tools.records[i].brandName}</td>

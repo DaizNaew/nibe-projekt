@@ -10,15 +10,14 @@
                                 <input id="lånerID" type="text" required="required" class="form-control form-control-sm col"/>
                             </div>
                             <div class="tableFixHead">
-                                <table class="table fixed_header" style="background-color: #c5d9ec33;">
+                                <table class="table fixed_header" style="background-color: #c5d9ec33; font-size: 12px;">
                                     <thead>
                                         <tr>
-                                            <th scope="col" style="width: 32px;">#</th>
+                                            <th scope="col" style="width: 32px; display: none;">#</th>
                                             <th class="label-cell" scope="col">Værktøjs Navn</th>
                                             <th class="label-cell" scope="col">Kategori</th>
                                             <th class="label-cell" scope="col">Mærke</th>
                                             <th class="label-cell" scope="col">Model</th>
-                                            <th class="label-cell" scope="col">Serienummer</th>
                                             <th class="label-cell" scope="col">AssetTag</th>
                                             <th class="label-cell" scope="col">Stand</th>
                                             <th class="radio-cell" scope="col">
@@ -57,15 +56,14 @@
                 <div style="padding: 25px"><!--Item 2-->
                     <div>
                         <div class="tableFixHead">
-                            <table class="table fixed_header" style="background-color: #c5d9ec33;">
+                            <table class="table fixed_header" style="background-color: #c5d9ec33; font-size: 12px;">
                                 <thead>
                                     <tr>
-                                        <th scope="col" style="width: 32px;">#</th>
+                                        <th scope="col" style="width: 32px; display: none;">#</th>
                                         <th class="label-cell" scope="col">Værktøjs Navn</th>
                                         <th class="label-cell" scope="col">Kategori</th>
                                         <th class="label-cell" scope="col">Mærke</th>
                                         <th class="label-cell" scope="col">Model</th>
-                                        <th class="label-cell" scope="col">Serienummer</th>
                                         <th class="label-cell" scope="col">AssetTag</th>
                                         <th class="label-cell" scope="col">Stand</th>
                                         <th class="radio-cell" scope="col">
@@ -108,12 +106,11 @@
                 innerHTML += 
                     `
                     <tr id="værktøjnr${værktøjsID}">
-                        <td>${værktøjsID}</td>
+                        <td style="display: none;">${værktøjsID}</td>
                         <td class="label-cell VærktøjsNavn">${response.records[i].activeName}</td>
                         <td class="label-cell Kategori">${response.records[i].categoryName}</td>
                         <td class="label-cell Mærke">${response.records[i].brandName}</td>
                         <td class="label-cell Model">${response.records[i].modelName}</td>
-                        <td class="label-cell Serienummer">${response.records[i].serialNumber}</td>
                         <td class="label-cell AssetTag">${response.records[i].assetTag}</td>
                         <td class="label-cell Stand">${response.records[i].condition}</td>
                         <td class="radio-cell">
@@ -174,7 +171,7 @@
                             }, function(e, e2){
                             }, "json");
                         }
-                    },function(e){console.log(e)})
+                    },function(e){})
                 })
 
                 await prom;
@@ -219,12 +216,11 @@
                         innerHTML += 
                             `
                             <tr>
-                                <td>${response.records[i].ID}</td>
+                                <td style="display: none;">${response.records[i].ID}</td>
                                 <td class="label-cell VærktøjsNavn">${response.records[i].equipmentNavn}</td>
                                 <td class="label-cell Kategori">${response.records[i].equipmentKategori}</td>
                                 <td class="label-cell Mærke">${response.records[i].equipmentBrand}</td>
                                 <td class="label-cell Model">${response.records[i].equipmentModel}</td>
-                                <td class="label-cell Serienummer">${response.records[i].equipmentSerieNummer}</td>
                                 <td class="label-cell AssetTag">${response.records[i].equipmentAsset}</td>
                                 <td class="label-cell Stand">${response.records[i].equipmentCondition}</td>
                                 <td class="radio-cell">
@@ -244,7 +240,7 @@
                         låneInnerHTML += 
                             `
                             <tr id="værktøjnr${response.records[0].equipmentID}">
-                                <td style="width: 32px;">${response.records[0].equipmentID}</td>
+                                <td style="display: none;">${response.records[0].equipmentID}</td>
                                 <td class="label-cell VærktøjNavn">${response.records[0].equipmentNavn}</td>
                                 <td class="label-cell Kategori">${response.records[0].categoryName}</td>
                                 <td class="label-cell Mærke">${response.records[0].equipmentBrand}</td>

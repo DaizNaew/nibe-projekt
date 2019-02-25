@@ -24,7 +24,7 @@
                             <table id="kattable" class="table fixed_header" style="background-color: #c5d9ec33">
                                 <thead>
                                     <tr>
-                                        <th scope="col" style="width: 32px;">#</th>
+                                        <th scope="col" style="display: none;">#</th>
                                         <th class="label-cell" scope="col">kategorier</th>
                                         <th class="radio-cell" scope="col">
                                             <!--<input type="checkbox" class="no-ripple"/>-->
@@ -139,7 +139,7 @@
                             innerHTML += 
                             `
                             <tr>
-                                <td style="width: 32px;">${response.categories[i].ID}</td>
+                                <td style="display: none;">${response.categories[i].ID}</td>
                                 <td class="label-cell">${response.categories[i].katNavn}</td>
                                 <td class="radio-cell">
                                     <input type="radio" value="${response.categories[i].ID}" name="radiogroup"/>

@@ -7,7 +7,7 @@
                     <table class="table fixed_header" style="width:auto; background-color: #c5d9ec33;">
                         <thead>
                             <tr>
-                                <th scope="col">#</th>
+                                <th scope="col" style="display: none;">#</th>
                                 <th class="label-cell" scope="col">Medhjælper Navn</th>
                                 <th class="label-cell" scope="col">Medhjælper Nummer</th>
                                 <th class="label-cell" scope="col">Værktøjs Navn</th>
@@ -51,7 +51,7 @@
                     } else {
                             app.dialog.alert("Lånet blev <span style='color: red; font-weight: bold;'>IKKE</span> slettet fra databasen.", "Slet lån");
                         }
-                },function(e){console.log(e)});
+                },function(e){});
             })
         })
     }
@@ -79,7 +79,7 @@
                         innerHTML += 
                         `
                         <tr>
-                            <td>${response.records[i].ID}</td>
+                            <td style="display: none;">${response.records[i].ID}</td>
                             <td class="label-cell MedhjælperNavn">${response.records[i].userName}</td>
                             <td class="label-cell MedhjælperNummer">${response.records[i].userCardID}</td>
                             <td class="label-cell VærktøjsNavn">${response.records[i].equipmentNavn}</td>

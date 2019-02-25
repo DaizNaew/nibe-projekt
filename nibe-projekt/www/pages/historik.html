@@ -7,7 +7,7 @@
                         <table class="table fixed_header" style="width:auto; background-color: #c5d9ec33;">
                             <thead>
                                 <tr>
-                                    <th scope="col">#</th>
+                                    <th scope="col" style="display: none;">#</th>
                                     <th class="label-cell" scope="col">Medhjælper Navn</th>
                                     <th class="label-cell" scope="col">Medhjælper Nummer</th>
                                     <th class="label-cell" scope="col">Værktøjs Navn</th>
@@ -56,7 +56,7 @@
                         innerHTML += 
                             `
                             <tr>
-                                <td>${i+1}</td>
+                                <td style="display: none;">${i+1}</td>
                                 <td class="label-cell MedhjælperNavn">${response.records[i].userName}</td>
                                 <td class="label-cell MedhjælperNummer">${response.records[i].userCardID}</td>
                                 <td class="label-cell VærktøjsNavn">${response.records[i].equipmentNavn}</td>

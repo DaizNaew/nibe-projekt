@@ -16,7 +16,7 @@
                                 <table class="table fixed_header" style="background-color: #c5d9ec33;">
                                     <thead>
                                         <tr>
-                                            <th scope="col" style="width: 32px;">#</th>
+                                            <th scope="col" style="display: none;">#</th>
                                             <th class="label-cell" scope="col">Værktøjs Navn</th>
                                             <th class="label-cell" scope="col">Kategori</th>
                                             <th class="label-cell" scope="col">Mærke</th>
@@ -49,7 +49,7 @@
                             <table class="table fixed_header" style="background-color: #c5d9ec33;">
                                 <thead>
                                     <tr>
-                                        <th scope="col" style="width: 32px;">#</th>
+                                        <th scope="col" style="display: none;">#</th>
                                         <th class="label-cell" scope="col">Værktøjs Navn</th>
                                         <th class="label-cell" scope="col">Kategori</th>
                                         <th class="label-cell" scope="col">Mærke</th>
@@ -87,7 +87,7 @@ function fillTable(userID) {
             innerHTML += 
                 `
                 <tr>
-                    <td>${response.records[i].ID}</td>
+                    <td style="display: none;">${response.records[i].ID}</td>
                     <td class="label-cell VærktøjsNavn">${response.records[i].equipmentNavn}</td>
                     <td class="label-cell Kategori">${response.records[i].equipmentKategori}</td>
                     <td class="label-cell Mærke">${response.records[i].equipmentBrand}</td>
@@ -223,7 +223,7 @@ document.addEventListener("click", function (e) {
                 innerHTML += 
                     `
                     <tr id="værktøjnr${værktøjsID}">
-                        <td>${udlånsID}</td>
+                        <td style="display: none;">${udlånsID}</td>
                         <td class="label-cell VærktøjsNavn">${response.records[i].activeName}</td>
                         <td class="label-cell Kategori">${response.records[i].categoryName}</td>
                         <td class="label-cell Mærke">${response.records[i].brandName}</td>
