@@ -46,9 +46,9 @@ routes = [
     componentUrl: './pages/admin/toolkat.html',
   },
   {
-    name: 'aflervering',
-    path: '/aflervering/',
-    componentUrl: './pages/aflervering.html',
+    name: 'aflevering',
+    path: '/aflevering/',
+    componentUrl: './pages/aflevering.html',
   },
   {
     name: 'historik',
