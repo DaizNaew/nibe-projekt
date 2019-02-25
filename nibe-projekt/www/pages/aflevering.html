@@ -125,7 +125,6 @@ function autocomplete(inp, arr) {
       this.parentNode.appendChild(a);
       /*for each item in the array...*/
       for (i = 0; i < arr.length; i++) {
-          console.dir(arr)
         /*check if the item starts with the same letters as the text field value:*/
         if (arr[i].userID.substr(0, val.length).toUpperCase() == val.toUpperCase()) {
           /*create a DIV element for each matching element:*/
@@ -221,7 +220,6 @@ document.addEventListener("click", function (e) {
             $$(`.tableBody`).find(`#btn${værktøjsID}`).prop("disabled",true);
             innerHTML = $$(`.låneTableBody`).html();
             for(let i = 0; i < response.records.length; i++) {
-                console.dir(response.records);
                 innerHTML += 
                     `
                     <tr id="værktøjnr${værktøjsID}">
@@ -267,7 +265,6 @@ document.addEventListener("click", function (e) {
             aflevertool : async () => {
                 let dat;
                 let toastMessage = '';
-                console.dir($$('.låneTableBody'));
                 let prom = new Promise((resolve, reject) => {
                 $$('.låneTableBody').forEach(element => {
                     for(i = 0; i < element.children.length; i++) {
@@ -278,7 +275,6 @@ document.addEventListener("click", function (e) {
                             AssetTag:  element.children[i].children[6].innerText,
                             selectedUserID: selectedUserID
                         };
-                        console.dir(loan);
 
                             app.request.post(`${app.data['serverip']}functions/loans/deliver.php`, loan, (data) => {
                                 app.methods.addToLog(`${selectedUserID}`, `Afleverede værktøjet ${loan.VærktøjsNavn} med assetTag (${loan.AssetTag})`);
@@ -286,7 +282,6 @@ document.addEventListener("click", function (e) {
                                 resolve();
                             }, (error) => {
                                 reject();
-                                console.error(error);
                             }, 'json');
                         }
                 });
@@ -296,7 +291,6 @@ document.addEventListener("click", function (e) {
                             toastMessage = 'Værktøjet blev Afleveret';
                         } else {
                             toastMessage = 'Værktøjet blev ikke Afleveret';
-                            console.dir(dat.error)
                         }
                         app.dialog.alert(toastMessage, 'Afleveret Værktøj', () => {
                             app.views.main.router.navigate("/aflervering/", {reloadCurrent: true,});
