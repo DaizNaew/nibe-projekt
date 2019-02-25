@@ -18,8 +18,13 @@ if(!isset($param)) {
     $db = $database->getConnection();
     
     // constructor with $db as database connection
+    $sql = "";
+    if(!is_int($param)) {
+        $sql = 'CALL `'.$sp.'`("'.$param.'")';
+    } else {
+        $sql = 'CALL `'.$sp.'`('.$param.')';
+    }
     
-    $sql = 'CALL '.$sp.'('.$param.')';
     
     // prepare query statement
     $stmt = $db->prepare($sql);
