@@ -15,7 +15,7 @@ var app  = new Framework7({
       userID: -1,
       adminConfirmedBool: false,
       navbarheight: 0,
-      serverip: "http://10.11.4.136/cordova/",
+      serverip: "http://10.11.5.135/cordova/",
     };
   },
   // App root methods
