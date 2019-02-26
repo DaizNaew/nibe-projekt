@@ -18,8 +18,12 @@
                             </tbody>
                         </table>
                     </div>
+                    <div class="" style="padding:0px; margin-top:25px; text-align: right;">
+                        <a><button id="loadflere" @click="loadflere" type="button" class="no-ripple col btn btn-primary godbtn">Indlæs flere</button></a>
+                    </div>
                 </div>
             </div>
+            <input id="rowcount" type="hidden" value="0"/>
         </div>
     </div>
 </template>
@@ -32,6 +36,28 @@
         },
         // Component Methods
         methods: {
+            loadflere : () => {
+                let offset = document.getElementById("rowcount").value;
+                let nyHTML = $$('.tableBody').html();
+                app.request.getJSON(`${app.data['serverip']}endpoint/logging.php?id=-1&limit=200&offset=${offset}`, (response) => {
+                    // update component state with new state
+                    document.getElementById("rowcount").value = offset + 200;
+                    for(let i = 0; i < response.records.length; i++) {
+                        nyHTML += 
+                            `
+                            <tr>
+                                <td style="display: none;">${i+1}</td>
+                                <td class="label-cell log_UserName">${response.records[i].UserName}</td>
+                                <td class="label-cell log_Handling">${response.records[i].Handling}</td>
+                                <td class="label-cell Date">${response.records[i].Date}</td>
+                            </tr>
+                            `;
+                            $$('.tableBody').html(nyHTML);
+                            console.log(i)
+                    }
+                });
+
+            },
         
         },
         // Component States
@@ -39,7 +65,7 @@
             pageMounted: (page) => {
                 let innerHTML = "";
                 // request user data on page init
-                app.request.getJSON(`${app.data['serverip']}endpoint/logging.php?id=-1`, (response) => {
+                app.request.getJSON(`${app.data['serverip']}endpoint/logging.php?id=-1&limit=200&offset=0`, (response) => {
                     // update component state with new state
                     for(let i = 0; i < response.records.length; i++) {
                         innerHTML += 
