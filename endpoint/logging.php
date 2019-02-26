@@ -14,13 +14,15 @@ include_once '../models/Logging.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $id = $_GET['id'];
+    $limit = $_GET['limit'];
+    $offset = $_GET['offset'];
 
     $database = new Database();
     $db = $database->getConnection();
 
     $Logging = new Logging($db);
     // query products
-    $stmt = $Logging->read($id);
+    $stmt = $Logging->read($id, $limit, $offset);
     $num = $stmt->rowCount();
     
     // check if more than 0 record found
