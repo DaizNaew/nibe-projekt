@@ -287,19 +287,19 @@ button:disabled, button:disabled:hover {
 #kattable thead tr>th{
   margin: 0px;
   padding: 0px;
-  padding-top: .75rem;
-  padding-bottom: .75rem;
+  padding-top: 6px;
+  padding-bottom: 6px;
 }
 
 #kattable tbody tr>td, #kattable tbody tr>th{
   margin: 0px;
   padding: 0px;
-  padding-top: .75rem;
-  padding-bottom: .75rem;
+  padding-top: 3px;
+  padding-bottom: 3px;
 }
 
 #kattable tbody tr>th:first-child, #kattable thead tr>th:first-child{
-  padding-left: .75rem;
+  padding-left: 3px;
 }
 
 #kattable tbody tr td>input, #kattable thead tr td>input{
@@ -395,4 +395,23 @@ input[type=submit] {
 
 .log_Handling, .log_UserName{
   text-align: left;
+}
+
+.tabletitle{
+  font-size: 17px;
+  font-weight: bold;
+}
+
+.tablelimit{
+  max-height: 210px;
+}
+
+.table td, .table th{
+  padding:6px !important;
+}
+
+.table thead tr th{
+  padding:8px !important;
+  font-size: 17px;
+
 }
