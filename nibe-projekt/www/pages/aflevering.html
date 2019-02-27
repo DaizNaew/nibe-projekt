@@ -250,6 +250,7 @@ document.addEventListener("click", function (e) {
                     let inputs = $$('form').find('input');
                     inputs.val('');
                     $$(`.låneTableBody`).html('');
+                    $$(`.tableBody`).html('');
                     var checkBoxObj = $$('.tableBody').find('button');
                         checkBoxObj.forEach(element => {
                             if(element.disabled) {
@@ -293,7 +294,7 @@ document.addEventListener("click", function (e) {
                             toastMessage = 'Værktøjet blev ikke Afleveret';
                         }
                         app.dialog.alert(toastMessage, 'Afleveret Værktøj', () => {
-                            app.views.main.router.navigate("/aflervering/", {reloadCurrent: true,});
+                            app.views.main.router.navigate("/aflevering/", {reloadCurrent: true,});
                         });
             },
         },
