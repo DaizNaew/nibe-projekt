@@ -261,6 +261,30 @@ document.addEventListener("click", function (e) {
                 let newAfhentDato = document.getElementById('calendar_input').value + " " + document.getElementById('input-a').value + ":00";
                 let newAfleverDato = document.getElementById('calendar_input2').value + " " + document.getElementById('input-b').value + ":00";
 
+                if(newReserverNavn == ""){
+                    app.dialog.alert("Reserver navn feltet må ikke være tomt.", "Reserver");
+                    return;
+                }
+                if(document.getElementById('calendar_input').value == ""){
+                    app.dialog.alert("Afhentnings dato feltet må ikke være tomt.", "Reserver");
+                    return;
+                }
+                if(document.getElementById('calendar_input2').value == ""){
+                    app.dialog.alert("Afleverings dato feltet må ikke være tomt.", "Reserver");
+                    return;
+                }
+                if(document.getElementById('input-a').value == ""){
+                    app.dialog.alert("Afhentnings tidspunkt feltet må ikke være tomt.", "Reserver");
+                    return;
+                }
+                if(document.getElementById('input-b').value == ""){
+                    app.dialog.alert("Afleverings tidspunkt feltet må ikke være tomt.", "Reserver");
+                    return;
+                }
+                if(arr.length == 0){
+                    app.dialog.alert("Du skal huske at vælge mindst et stykke værktøj som skal reserveres.", "Reserver");
+                    return; 
+                }
 
                 let dat;
 
