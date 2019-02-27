@@ -135,6 +135,19 @@
                         categoryID:  $$('#Kategori').val(),
                     };
 
+                    if(tool.activeName == ""){
+                    app.dialog.alert("Værktøj Navn feltet må ikke være tomt.", "Opret værktøj");
+                    return;
+                    }
+                    if(tool.assetTag == ""){
+                        app.dialog.alert("Asset Tag feltet må ikke være tomt.", "Opret værktøj");
+                        return;
+                    }
+                    if(tool.condition == ""){
+                        app.dialog.alert("Værktøjs stand feltet må ikke være tomt.", "Opret værktøj");
+                        return;
+                    }
+
                     let dat;
                     let toastMessage = '';
 
@@ -196,6 +209,19 @@
                         categoryID:  $$('#Kategori').val(),
                         ID: $$('#editID').val(),
                     };
+
+                    if(tool.activeName == ""){
+                    app.dialog.alert("Værktøj Navn feltet må ikke være tomt.", "Opret værktøj");
+                    return;
+                    }
+                    if(tool.assetTag == ""){
+                        app.dialog.alert("Asset Tag feltet må ikke være tomt.", "Opret værktøj");
+                        return;
+                    }
+                    if(tool.condition == ""){
+                        app.dialog.alert("Værktøjs stand feltet må ikke være tomt.", "Opret værktøj");
+                        return;
+                    }
 
                     let dat;
                     let toastMessage = '';
