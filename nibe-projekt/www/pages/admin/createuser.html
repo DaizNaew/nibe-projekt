@@ -114,8 +114,20 @@
                     let newAdresse = document.getElementById('Adresse').value;
                     let newMedhjælpernr = document.getElementById('Medhjælpernr').value;
                     let gruppeID = document.getElementById('Brugertype').selectedIndex +1;
-                    if(newNavn == "" || newMobilnr == "" || newAdresse == "" || newMedhjælpernr == ""){
-                        app.dialog.alert("Ingen felter må ikke være tomme.", "Opret Bruger");
+                    if(newNavn == ""){
+                        app.dialog.alert("Navn feltet må ikke være tomt.", "Opret Bruger");
+                        return;
+                    }
+                    if(newMobilnr == ""){
+                    app.dialog.alert("Mobil Nr feltet må ikke være tomt.", "Opret Bruger");
+                    return;
+                    }
+                    if(newAdresse == ""){
+                        app.dialog.alert("Adresse feltet må ikke være tomt.", "Opret Bruger");
+                        return;
+                    }
+                    if(newMedhjælpernr== ""){
+                        app.dialog.alert("Medhjælper Nr feltet må ikke være tomt.", "Opret Bruger");
                         return;
                     }
                     app.request.post(`${app.data['serverip']}endpoint/user.php`, { name: newNavn, phoneNumber: newMobilnr, address:newAdresse, cardID:newMedhjælpernr, usergruppe:gruppeID }, function(response){
