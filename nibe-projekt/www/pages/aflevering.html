@@ -261,6 +261,10 @@ document.addEventListener("click", function (e) {
             aflevertool : async () => {
                 let dat;
                 let toastMessage = '';
+                if(document.getElementById('loanerID').value == ""){
+                    app.dialog.alert("Låner ID feltet må ikke være tomt.", "Aflevering");
+                    return;
+                }
                 let prom = new Promise((resolve, reject) => {
                 $$('.låneTableBody').forEach(element => {
                     for(i = 0; i < element.children.length; i++) {
