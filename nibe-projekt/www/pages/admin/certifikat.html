@@ -177,6 +177,10 @@
                     let updatedType = document.getElementById('aktivNavn').value;
                     let updatedID = document.getElementById('ID').value;
                     let updatedtableID = document.getElementById('tableID').value;
+                    if(updatedType == ""){
+                        app.dialog.alert("Navn feltet må ikke være tomt.", "Opret certifikat/kørekort");
+                        return;
+                    }
                     app.request.post(`${app.data['serverip']}functions/certs/update.php`, { type:`${updatedType}`, ID:`${updatedID}`, tableID:`${updatedtableID}`}, function(response){
                         app.methods.addToLog(`${app.data['userID']}`, `Ændret ${updatedType}`);
                         app.views.main.router.navigate("/certifikat/", {reloadCurrent: true,});

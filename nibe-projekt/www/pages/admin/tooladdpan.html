@@ -27,7 +27,7 @@
                             </div>
                             <div class="form-row">
                                 <label for="Antal" class="col">Antal</label>
-                                <input id="Antal" type="number" class="form-control form-control-sm col" min="1" />
+                                <input id="Antal" type="number" class="form-control form-control-sm col" min="1" value="1" />
                             </div>
                             <div class="form-row">
                                 <label for="Stand" class="col">Værktøjets stand</label>
@@ -135,6 +135,23 @@
                         categoryID:  $$('#Kategori').val(),
                     };
 
+                    if(tool.activeName == ""){
+                    app.dialog.alert("Værktøj Navn feltet må ikke være tomt.", "Opret værktøj");
+                    return;
+                    }
+                    if(tool.assetTag == ""){
+                        app.dialog.alert("Asset Tag feltet må ikke være tomt.", "Opret værktøj");
+                        return;
+                    }
+                    if(tool.condition == ""){
+                        app.dialog.alert("Værktøjs stand feltet må ikke være tomt.", "Opret værktøj");
+                        return;
+                    }
+                    if(document.getElementById('Antal') == ""){
+                        app.dialog.alert("Antal feltet må ikke være tomt.", "Opret værktøj");
+                        return;
+                    }
+
                     let dat;
                     let toastMessage = '';
 
@@ -145,6 +162,7 @@
                             dat = data;
                             resolve();
                         }, (error) => {
+                            console.log(error)
                             reject();
                         }, 'json');
                         
@@ -196,6 +214,19 @@
                         categoryID:  $$('#Kategori').val(),
                         ID: $$('#editID').val(),
                     };
+
+                    if(tool.activeName == ""){
+                    app.dialog.alert("Værktøj Navn feltet må ikke være tomt.", "Opret værktøj");
+                    return;
+                    }
+                    if(tool.assetTag == ""){
+                        app.dialog.alert("Asset Tag feltet må ikke være tomt.", "Opret værktøj");
+                        return;
+                    }
+                    if(tool.condition == ""){
+                        app.dialog.alert("Værktøjs stand feltet må ikke være tomt.", "Opret værktøj");
+                        return;
+                    }
 
                     let dat;
                     let toastMessage = '';
