@@ -154,6 +154,24 @@
                 let dat;
                 let logString;
                 let newLånerID;
+                if(newLånerCard == ""){
+                    app.dialog.alert("Låner ID feltet må ikke være tomt.", "Udlån");
+                    return;
+                }
+                if(document.getElementById('calendar_input').value == ""){
+                    app.dialog.alert("Afleverings dato feltet må ikke være tomt.", "Udlån");
+                    return;
+                }
+                if(document.getElementById('input-a').value == ""){
+                    app.dialog.alert("Afleverings tidspunkt feltet må ikke være tomt.", "Udlån");
+                    return;
+                }
+                if(arr.length == 0){
+                    app.dialog.alert("Du skal huske at vælge mindst et stykke værktøj som skal udlånes.", "Udlån");
+                    return; 
+                }
+
+
                 if(globalReservationID != null){
                     arr.push(globalEquipmentID);
                     app.request.getJSON(`${app.data['serverip']}functions/reservation/delete.php?id=${globalReservationID}&equipmentID=${globalEquipmentID}`, (data) => {
