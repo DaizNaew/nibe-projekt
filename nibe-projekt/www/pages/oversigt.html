@@ -2,27 +2,29 @@
     <div class="page" data-name="oversigt">
 
         <div id="wrapper" style="padding: 25px;">
-                <div style="width:100%; text-align: center;">
-            <form class="mb-3" autocomplete="off" autocomplete="false">
+            <div style="width:100%; text-align: center;">
+                <form class="mb-3" autocomplete="off" autocomplete="false">
 
 
-                <div class="form-row" style="text-align: left">
-                    <label class="col">Medhjælper navn</label>
-                    <div class="input-wrapper">
-                        <input type="text" class="form-control form-control-sm col input-format" id="oversigtListBruger">
-                        <span><i id="calendar_icon" class="fas fa-search icon-format"></i></span>
+                    <div class="form-row" style="text-align: left">
+                        <label class="col">Medhjælper navn</label>
+                        <div class="input-wrapper">
+                            <input type="text" class="form-control form-control-sm col input-format"
+                                id="oversigtListBruger">
+                            <span><i id="calendar_icon" class="fas fa-search icon-format"></i></span>
+                        </div>
                     </div>
-                </div>
 
-                <div class="form-row" style="text-align: left">
-                    <label class="col">Værktøjets navn</label>
-                    <div class="input-wrapper">
-                        <input type="text" class="form-control form-control-sm col input-format" id="oversigtListTools">
-                        <span><i id="calendar_icon" class="fas fa-search icon-format"></i></span>
+                    <div class="form-row" style="text-align: left">
+                        <label class="col">Værktøjets navn</label>
+                        <div class="input-wrapper">
+                            <input type="text" class="form-control form-control-sm col input-format"
+                                id="oversigtListTools">
+                            <span><i id="calendar_icon" class="fas fa-search icon-format"></i></span>
+                        </div>
                     </div>
-                </div>
-            </form>
-            
+                </form>
+
                 <!--Item 2-->
                 <div style="display: inline-block;">
                     <div class="tableFixHead">
@@ -71,8 +73,8 @@
                 var app = this.$app;
                 let o = 0, p = 0;
 
-                this.oversigtListBruger.length = 0
-                this.oversigtListTools.length = 0
+                this.oversigtListBruger.length = 0;
+                this.oversigtListTools.length = 0;
 
                 // request user data on page init
                 app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllOversigt&param=-1`, (response) => {
