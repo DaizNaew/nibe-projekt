@@ -39,7 +39,6 @@
             loadflere : () => {
                 let offset = parseInt(document.getElementById("rowcount").value);
                 let nyHTML = $$('.tableBody').html();
-                console.log(offset)
                 app.request.getJSON(`${app.data['serverip']}endpoint/logging.php?id=-1&limit=200&offset=${offset}`, (response) => {
                     // update component state with new state
                     document.getElementById("rowcount").value = offset + 200;
