@@ -1,28 +1,28 @@
 <template>
-    <div class="page" data-name="navbar">
+    <div class="page" data-name="navbar" id="navbarheader">
 
 <div id="navbarwrapper"> 
     <nav class="navbar navbar-expand-sm bg-info navbar-dark">
-        <ul class="navbar-nav" @click="clearadminnav">
-          <li class="nav-item active">
+        <ul class="navbar-nav">
+          <li class="nav-item active" id="navbarudlon" @click="dothis('navbarudlon', false)">
             <a class="nav-link" href="/udlon/" data-view=".view-main" data-reload-current="true">Udlån</a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item" id="navbaraflevering" @click="dothis('navbaraflevering', false)">
             <a class="nav-link" href="/aflevering/" data-view=".view-main" data-reload-current="true">Aflevering</a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item" id="navbarreserver" @click="dothis('navbarreserver', false)">
             <a class="nav-link" href="/reserver/" data-view=".view-main" data-reload-current="true">Reserver</a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item" id="navbaroversigt" @click="dothis('navbaroversigt', false)">
             <a class="nav-link" href="/oversigt/" data-view=".view-main" data-reload-current="true">Oversigt</a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item" id="navbarreservationer" @click="dothis('navbarreservationer', false)">
             <a class="nav-link" href="/reservationer/" data-view=".view-main" data-reload-current="true">Reservationer</a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item" id="navbarhistorik" @click="dothis('navbarhistorik', false)">
             <a class="nav-link" href="/historik/" data-view=".view-main" data-reload-current="true">Historik</a>
           </li>
-          <li class="nav-item adminbutton admintab">
+          <li class="nav-item adminbutton admintab" id="navbaradminlogin" @click="dothis('navbaradminlogin', false)">
             <a class="nav-link" href="/adminlogin/" data-view=".view-main" data-reload-current="true">Administrator</a>
           </li>
         </ul>
@@ -32,22 +32,22 @@
 <div id="adminnavbarwrapper"> 
     <nav class="navbar navbar-expand-sm bg-info navbar-dark adminnav">
         <ul class="navbar-nav">
-          <li class="nav-item active adminnavli">
+          <li class="nav-item adminnavli" id="adminnavbarcreateuser" @click="dothis('adminnavbarcreateuser', true)">
             <a class="nav-link" href="/createuser/" data-view=".view-main" data-reload-current="true">Opret låner</a>
           </li>
-          <li class="nav-item adminnavli">
+          <li class="nav-item adminnavli" id="adminnavbartooladdpan" @click="dothis('adminnavbartooladdpan', true)">
             <a class="nav-link" href="/tooladdpan/" data-view=".view-main" data-reload-current="true">Opret værktøj</a>
           </li>
-          <li class="nav-item adminnavli">
+          <li class="nav-item adminnavli" id="adminnavbarcertifikat" @click="dothis('adminnavbarcertifikat', true)">
             <a class="nav-link" href="/certifikat/" data-view=".view-main" data-reload-current="true">Opret certifikat/kørekort</a>
           </li>
-          <li class="nav-item adminnavli">
+          <li class="nav-item adminnavli" id="adminnavbartoolkat" @click="dothis('adminnavbartoolkat', true)">
             <a class="nav-link" href="/toolkat/" data-view=".view-main" data-reload-current="true">Opret værktøjs kategori</a>
           </li>
-          <li class="nav-item adminnavli">
+          <li class="nav-item adminnavli" id="adminnavbaroversigt" @click="dothis('adminnavbaroversigt', true)">
             <a class="nav-link" href="/adminoversigt/" data-view=".view-main" data-reload-current="true">Udlåns oversigt</a>
           </li>
-          <li class="nav-item adminnavli">
+          <li class="nav-item adminnavli" id="adminnavbarlog" @click="dothis('adminnavbarlog', true)">
             <a class="nav-link" href="/log/" data-view=".view-main" data-reload-current="true">Log</a>
           </li>
         </ul>
@@ -61,8 +61,31 @@
     return {
     // Component Methods
         methods: {
-          clearadminnav: function () {
-            app.methods.hideAdminNavbar();
+          dothis: function (ID, isAdminPanel) {
+
+
+            let navbar = $$('#navbarwrapper').find('li');
+            let adminnavbar = $$('#adminnavbarwrapper').find('li');
+            let navbarheader = $$('#navbarheader').find('li');
+            
+
+            for(let i = 0; i < navbarheader.length; i++) {
+              if($$(navbarheader[i]).hasClass('active')){
+                $$(navbarheader[i]).removeClass('active');
+              }
+            }
+            
+            if(isAdminPanel == true){
+              $$(`#navbaradminlogin`).addClass('active');
+            }else{
+              app.methods.hideAdminNavbar();
+            }
+
+            if(ID == 'navbaradminlogin'){
+              $$(`#adminnavbarcreateuser`).addClass('active');
+            }
+
+            $$(`#${ID}`).addClass('active');
           }
         },
     }
