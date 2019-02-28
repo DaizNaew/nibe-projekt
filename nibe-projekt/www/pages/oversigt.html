@@ -3,21 +3,19 @@
 
         <div id="wrapper" style="padding: 25px;">
             <form class="mb-3" autocomplete="off" autocomplete="false">
-                <div class="input-group form-group">
-                    <label for="oversigtListBruger" class="col">Udlåner navn</label>
-                    <div class="input-group-prepend col">
-                        <input type="text" id="oversigtListBruger" required="required"
-                            class="form-control form-control-sm" autocomplete="off">
-                        <span><i class="fas fa-search input-group-text input_icon_css"></i></span>
-                    </div>
+                <div class="form-row">
+                    <label class="col">Udlåner navn</label>
+                                
+                    <div class="autocomplete">
+                        <input id="oversigtListBruger" type="text" class="form-control form-control-sm col" autocomplete="off" style="width: 400px">
+                      </div>
                 </div>
-                <div class="input-group form-group ">
-                    <label for="oversigtListTools" class="col">Værktøjets navn</label>
-                    <div class="input-group-prepend col">
-                        <input type="text" id="oversigtListTools" required="required"
-                            class="form-control form-control-sm" autocomplete="off">
-                        <span><i class="fas fa-search input-group-text input_icon_css"></i></span>
-                    </div>
+                <div class="form-row">
+                    <label class="col">Værktøjets navn</label>
+                                
+                    <div class="autocomplete">
+                        <input id="oversigtListTools" type="text" class="form-control form-control-sm col" autocomplete="off" style="width: 400px">
+                      </div>
                 </div>
             </form>
             <div style="width:100%; text-align: center;">
@@ -98,7 +96,7 @@
                                 this.oversigtListBruger.push({ navn: `${response.records[i].userName}`, ID: `${response.records[i].userCardID}` });
                                 o++;
                             }
-                            if (this.oversigtListTools[p].navn != response.records[i].userName) {
+                            if (this.oversigtListTools[p].navn != response.records[i].equipmentNavn) {
                                 this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
                                 p++;
                             }
