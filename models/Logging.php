@@ -20,15 +20,16 @@ class Logging {
 
 	// read products
 	function read($id, $limiter, $offset) {
-        $query = "SELECT *, user.name as userName FROM " . $this->table_name . " l INNER JOIN user ON user.ID = l.UserID ORDER BY Date DESC";
+        $query = "SELECT *, user.name as userName FROM " . $this->table_name . " l INNER JOIN user ON user.ID = l.UserID";
         
         if($id != '-1') {
             // select query
             $query .= " WHERE logging.UserID = ".$id;
         }
-
+        $query .= " ORDER BY Date DESC";
         $query .= " LIMIT $limiter";
         $query .= " OFFSET $offset";
+        
 
         // prepare query statement
         $stmt = $this->conn->prepare($query);
