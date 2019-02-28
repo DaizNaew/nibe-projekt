@@ -1,23 +1,26 @@
 <template>
     <div class="page" data-name="oversigt">
-        
-        <div id="wrapper">
-                <form autocomplete="off" autocomplete="false">
-                        <div class="form-row">
-                                <label for="oversigtListBruger" class="col">Udlåner navn</label>
-        
-                                <input id="oversigtListBruger" type="text" class="form-control form-control-sm col" autocomplete="off" autocomplete="false">
-                        </div>
-                        <div class="form-row">
-                                <label for="oversigtListTools" class="col">Værktøjets navn</label>
-        
-                                <input id="oversigtListTools" type="text" class="form-control form-control-sm col" autocomplete="off" autocomplete="false">
-                        </div>
-                    
-        
-                    
-                </form>
-            <div style="padding: 25px; width:100%; text-align: center;">
+
+        <div id="wrapper" style="padding: 25px;">
+            <form class="mb-3" autocomplete="off" autocomplete="false">
+                <div class="input-group form-group">
+                    <label for="oversigtListBruger" class="col">Udlåner navn</label>
+                    <div class="input-group-prepend col">
+                        <input type="text" id="oversigtListBruger" required="required"
+                            class="form-control form-control-sm" autocomplete="off">
+                        <span><i class="fas fa-search input-group-text input_icon_css"></i></span>
+                    </div>
+                </div>
+                <div class="input-group form-group ">
+                    <label for="oversigtListTools" class="col">Værktøjets navn</label>
+                    <div class="input-group-prepend col">
+                        <input type="text" id="oversigtListTools" required="required"
+                            class="form-control form-control-sm" autocomplete="off">
+                        <span><i class="fas fa-search input-group-text input_icon_css"></i></span>
+                    </div>
+                </div>
+            </form>
+            <div style="width:100%; text-align: center;">
                 <!--Item 2-->
                 <div style="display: inline-block;">
                     <div class="tableFixHead">
@@ -180,7 +183,7 @@
                             render(results);
                             return;
                         }
-                        $$('#oversigtListTools').prop({ disabled:true });
+                        $$('#oversigtListTools').prop({ disabled: true });
                         // Find matched items
                         for (var i = 0; i < this.oversigtListBruger.length; i++) {
                             if (this.oversigtListBruger[i].navn.toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(this.oversigtListBruger[i]);
@@ -192,7 +195,8 @@
                     on: {
                         closed: (ele) => {
                             //Check hvis feltet bliver sat til empty 
-                            if (this.oversigtListBruger.filter(l => (l.navn === ele.$inputEl[0].value)).length == 0) { this.fillTableDefault(); $$('#oversigtListTools').prop({ disabled:false }); } },
+                            if (this.oversigtListBruger.filter(l => (l.navn === ele.$inputEl[0].value)).length == 0) { this.fillTableDefault(); $$('#oversigtListTools').prop({ disabled: false }); }
+                        },
                         change: (ele) => { if (ele[0]) { this.fillTable(ele[0].navn) } }
                     },
                 });
@@ -208,7 +212,7 @@
                             render(results);
                             return;
                         }
-                        $$('#oversigtListBruger').prop({ disabled:true });
+                        $$('#oversigtListBruger').prop({ disabled: true });
                         // Find matched items
                         for (var i = 0; i < this.oversigtListTools.length; i++) {
                             if (this.oversigtListTools[i].navn.toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(this.oversigtListTools[i]);
@@ -220,7 +224,8 @@
                     on: {
                         closed: (ele) => {
                             //Check hvis feltet bliver sat til empty 
-                            if (this.oversigtListTools.filter(l => (l.navn === ele.$inputEl[0].value)).length == 0) { this.fillTableDefault(); $$('#oversigtListBruger').prop({ disabled:false }); } },
+                            if (this.oversigtListTools.filter(l => (l.navn === ele.$inputEl[0].value)).length == 0) { this.fillTableDefault(); $$('#oversigtListBruger').prop({ disabled: false }); }
+                        },
                         change: (ele) => { if (ele[0]) { this.fillTableToolName(ele[0].navn) } }
                     },
                 });
