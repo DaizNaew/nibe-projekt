@@ -379,7 +379,6 @@
                             render(results);
                             return;
                         }
-                        $$('#oversigtListBruger').prop({ disabled: true });
                         // Find matched items
                         for (var i = 0; i < this.oversigtListTools.length; i++) {
                             if (this.oversigtListTools[i].navn.toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(this.oversigtListTools[i]);
@@ -394,7 +393,6 @@
                             if (this.oversigtListTools.filter(l => (l.navn === ele.$inputEl[0].value)).length == 0) { this.fillTableDefault(); }
                         },
                         change: (ele) => {
-                            console.log(ele)
                             if (ele[0]) { this.fillTableToolName(ele[0].navn) }
                         }
                     },
