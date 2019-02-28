@@ -43,9 +43,24 @@ class Equipment {
     
     function write($post) {
         $aktivNavn = $post['activeName'];
-        $brand = $post['brandName'];
-        $model = $post['modelName'];
-        $serieNummer = $post['serialNumber'];
+        if(!isset($post['brandName'])) {
+            $brand = "";
+        } else {
+            $brand = $post['brandName'];
+        }
+        
+        if(!isset($post['modelName'])) {
+            $model = "";
+        } else {
+            $model = $post['modelName'];
+        }
+
+        if(!isset($post['serialNumber'])) {
+            $serieNummer = "";
+        } else {
+            $serieNummer = $post['serialNumber'];
+        }
+
         $assetTag = $post['assetTag'];
         $stand = $post['condition'];
         $katID = $post['categoryID'];
