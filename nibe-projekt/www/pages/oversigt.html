@@ -2,23 +2,27 @@
     <div class="page" data-name="oversigt">
 
         <div id="wrapper" style="padding: 25px;">
+                <div style="width:100%; text-align: center;">
             <form class="mb-3" autocomplete="off" autocomplete="false">
-                <div class="form-row">
+
+
+                <div class="form-row" style="text-align: left">
                     <label class="col">Udlåner navn</label>
-                                
-                    <div class="autocomplete">
-                        <input id="oversigtListBruger" type="text" class="form-control form-control-sm col" autocomplete="off" style="width: 400px">
-                      </div>
+                    <div id="input_container" style="position:relative;width: 400px;">
+                        <input type="text" class="form-control form-control-sm col" id="oversigtListBruger" value style="margin:0;padding-right: 30px;width: 100%;">
+                        <span><i id="calendar_icon" class="fas fa-search" style="position:absolute;bottom:0px;right:5px;width:24px;height:24px;"></i></span>
+                    </div>
                 </div>
-                <div class="form-row">
+
+                <div class="form-row" style="text-align: left">
                     <label class="col">Værktøjets navn</label>
-                                
-                    <div class="autocomplete">
-                        <input id="oversigtListTools" type="text" class="form-control form-control-sm col" autocomplete="off" style="width: 400px">
-                      </div>
+                    <div id="input_container" style="position:relative;width: 400px;">
+                        <input type="text" class="form-control form-control-sm col" id="oversigtListTools" value style="margin:0;padding-right: 30px;width: 100%;">
+                        <span><i id="calendar_icon" class="fas fa-search" style="position:absolute;bottom:0px;right:5px;width:24px;height:24px;"></i></span>
+                    </div>
                 </div>
             </form>
-            <div style="width:100%; text-align: center;">
+            
                 <!--Item 2-->
                 <div style="display: inline-block;">
                     <div class="tableFixHead">
