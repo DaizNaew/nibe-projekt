@@ -2,15 +2,17 @@
     <div class="page" data-name="reserver">
         <div id="gridwrapper">
             <div class="grid">
-                <div style="padding: 10px" id="item1"><!--Item 1-->
+                <div style="padding: 10px" id="item1">
+                    <!--Item 1-->
                     <div>
                         <form autocomplete="off">
                             <div class="form-row">
                                 <label for="ReserverNavn" class="col">Reserver navn</label>
-                                
+
                                 <div class="autocomplete">
-                                    <input id="ReserverNavn" type="text" required="required" class="form-control form-control-sm col" autocomplete="off">
-                                  </div>
+                                    <input id="ReserverNavn" type="text" required="required"
+                                        class="form-control form-control-sm col" autocomplete="off">
+                                </div>
                             </div>
                             <div class="tableFixHead">
                                 <table class="table fixed_header" style="background-color: #c5d9ec33;">
@@ -29,55 +31,67 @@
                                         </tr>
                                     </thead>
                                     <tbody class="låneTableBody">
-                                                    
+
                                     </tbody>
                                 </table>
                             </div>
                             <div class="input-group form-group">
                                 <label for="calendar_input" class="col">Afhentnings Dato</label>
-                                <div class="input-group-prepend col">    
-                                    <input type="text" id="calendar_input" required="required" class="form-control form-control-sm" autocomplete="off">
-                                    <span><i id="calendar_icon" class="far fa-calendar-alt input-group-text input_icon_css"></i></span>
+                                <div class="input-group-prepend col">
+                                    <input type="text" id="calendar_input" required="required"
+                                        class="form-control form-control-sm" autocomplete="off">
+                                    <span><i id="calendar_icon"
+                                            class="far fa-calendar-alt input-group-text input_icon_css"></i></span>
                                 </div>
                             </div>
                             <div class="input-group form-group">
-                                    <label for="input-a" class="col">Afhentnings Tidspunkt</label>
-                                    <div class="input-group-prepend col">    
-                                        <input id="input-a" value="" data-default="10:00" required="required" class="form-control form-control-sm" autocomplete="off">
-                                        <span><i id="calendar_icon" class="far fa-clock input-group-text input_icon_css"></i></span>
-                                    </div>
+                                <label for="input-a" class="col">Afhentnings Tidspunkt</label>
+                                <div class="input-group-prepend col">
+                                    <input id="input-a" value="" data-default="10:00" required="required"
+                                        class="form-control form-control-sm" autocomplete="off">
+                                    <span><i id="calendar_icon"
+                                            class="far fa-clock input-group-text input_icon_css"></i></span>
                                 </div>
-                                <hr>
-                                <div class="input-group form-group">
-                                    <label for="calendar_input2" class="col">Afleverings Dato</label>
-                                    <div class="input-group-prepend col">    
-                                        <input type="text" id="calendar_input2" required="required" class="form-control form-control-sm" autocomplete="off">
-                                        <span><i id="calendar_icon" class="far fa-calendar-alt input-group-text input_icon_css"></i></span>
-                                    </div>
+                            </div>
+                            <hr>
+                            <div class="input-group form-group">
+                                <label for="calendar_input2" class="col">Afleverings Dato</label>
+                                <div class="input-group-prepend col">
+                                    <input type="text" id="calendar_input2" required="required"
+                                        class="form-control form-control-sm" autocomplete="off">
+                                    <span><i id="calendar_icon"
+                                            class="far fa-calendar-alt input-group-text input_icon_css"></i></span>
                                 </div>
-                                <div class="input-group form-group">
-                                        <label for="input-b" class="col">Afleverings Tidspunkt</label>
-                                        <div class="input-group-prepend col">    
-                                            <input id="input-b" value="" data-default="10:00" required="required" class="form-control form-control-sm" autocomplete="off">
-                                            <span><i id="calendar_icon" class="far fa-clock input-group-text input_icon_css"></i></span>
-                                        </div>
-                                    </div>
+                            </div>
+                            <div class="input-group form-group">
+                                <label for="input-b" class="col">Afleverings Tidspunkt</label>
+                                <div class="input-group-prepend col">
+                                    <input id="input-b" value="" data-default="10:00" required="required"
+                                        class="form-control form-control-sm" autocomplete="off">
+                                    <span><i id="calendar_icon"
+                                            class="far fa-clock input-group-text input_icon_css"></i></span>
+                                </div>
+                            </div>
 
                             <div class="form-row form-button-row">
-                                <a><button id="insert" @click="reservertool" type="submit" class="no-ripple col btn btn-primary godbtn">Reserver</button></a>
-                                <a><button id="reset" @click="resetfields" type="button" class="no-ripple col btn btn-primary godbtn">Nulstil felter</button></a>
+                                <a><button id="insert" @click="reservertool" type="submit"
+                                        class="no-ripple col btn btn-primary godbtn">Reserver</button></a>
+                                <a><button id="reset" @click="resetfields" type="button"
+                                        class="no-ripple col btn btn-primary godbtn">Nulstil felter</button></a>
                             </div>
-                            <input id="ID" type="hidden"/>
+                            <input id="ID" type="hidden" />
                         </form>
                     </div>
                 </div>
-                <div style="padding: 25px"><!--Item 2-->
+                <div style="padding: 25px">
+                    <!--Item 2-->
                     <div>
                         <div class="form-row">
                             <label for="VærktøjsNavn" class="col">Værktøjs navn</label>
-                                
+
                             <div class="autocomplete">
-                                <input id="VærktøjsNavn" type="text" class="form-control form-control-sm col" autocomplete="off">
+                                <input id="VærktøjsNavn" type="text" class="form-control form-control-sm col"
+                                    autocomplete="off">
                             </div>
                         </div>
                         <div class="tableFixHead">
@@ -97,7 +111,7 @@
                                     </tr>
                                 </thead>
                                 <tbody class="tableBody">
-                                            
+
                                 </tbody>
                             </table>
                         </div>
@@ -107,25 +121,25 @@
         </div>
     </div>
 </template>
-       
-        
+
+
 <script>
     var arr = [];
 
     fjernreserverværktøj = (værktøjsID) => {
-        $$(`.tableBody`).find(`#btn${værktøjsID}`).prop("disabled",false);
+        $$(`.tableBody`).find(`#btn${værktøjsID}`).prop("disabled", false);
         $$(`.låneTableBody`).find(`#værktøjnr${værktøjsID}`).remove();
-        arr.splice( arr.indexOf(værktøjsID), 1 );
+        arr.splice(arr.indexOf(værktøjsID), 1);
     }
 
     tilføjreserverværktøj = (værktøjsID) => {
         arr.push(værktøjsID);
         let innerHTML = "";
         app.request.getJSON(`${app.data['serverip']}endpoint/equipment.php?id=${værktøjsID}`, (response) => {
-            $$(`.tableBody`).find(`#btn${værktøjsID}`).prop("disabled",true);
+            $$(`.tableBody`).find(`#btn${værktøjsID}`).prop("disabled", true);
             innerHTML = $$(`.låneTableBody`).html();
-            for(let i = 0; i < response.records.length; i++) {
-                innerHTML += 
+            for (let i = 0; i < response.records.length; i++) {
+                innerHTML +=
                     `
                     <tr id="værktøjnr${værktøjsID}">
                         <td style="display: none;">${værktøjsID}</td>
@@ -139,7 +153,7 @@
                         </td>
                     </tr>
                     `;
-                    $$('.låneTableBody').html(innerHTML);
+                $$('.låneTableBody').html(innerHTML);
             }
         })
     }
@@ -150,85 +164,85 @@
                 oversigtListTools: [],
             };
         },
-    // Component Methods
+        // Component Methods
         methods: {
-            resetfields : () => {
-                app.dialog.confirm('Er du sikker på at du vil nulstille alle felter?', 'Nulstil Felter', function(){
+            resetfields: () => {
+                app.dialog.confirm('Er du sikker på at du vil nulstille alle felter?', 'Nulstil Felter', function () {
                     let inputs = $$('form').find('input');
                     inputs.val('');
                     $$(`.låneTableBody`).html('');
                     var checkBoxObj = $$('.tableBody').find('button');
-                        checkBoxObj.forEach(element => {
-                            if(element.disabled) {
-                                element.disabled = false;
-                            }
-                        })
+                    checkBoxObj.forEach(element => {
+                        if (element.disabled) {
+                            element.disabled = false;
+                        }
+                    })
                 });
             },
 
-            reservertool : async () => {
+            reservertool: async () => {
                 let newReserverNavn = document.getElementById('ReserverNavn').value;
                 let newReserverID = document.getElementById('ID').value;
                 let newAfhentDato = document.getElementById('calendar_input').value + " " + document.getElementById('input-a').value + ":00";
                 let newAfleverDato = document.getElementById('calendar_input2').value + " " + document.getElementById('input-b').value + ":00";
 
-                if(newReserverNavn == ""){
+                if (newReserverNavn == "") {
                     app.dialog.alert("Reserver navn feltet må ikke være tomt.", "Reserver");
                     return;
                 }
-                if(document.getElementById('calendar_input').value == ""){
+                if (document.getElementById('calendar_input').value == "") {
                     app.dialog.alert("Afhentnings dato feltet må ikke være tomt.", "Reserver");
                     return;
                 }
-                if(document.getElementById('calendar_input2').value == ""){
+                if (document.getElementById('calendar_input2').value == "") {
                     app.dialog.alert("Afleverings dato feltet må ikke være tomt.", "Reserver");
                     return;
                 }
-                if(document.getElementById('input-a').value == ""){
+                if (document.getElementById('input-a').value == "") {
                     app.dialog.alert("Afhentnings tidspunkt feltet må ikke være tomt.", "Reserver");
                     return;
                 }
-                if(document.getElementById('input-b').value == ""){
+                if (document.getElementById('input-b').value == "") {
                     app.dialog.alert("Afleverings tidspunkt feltet må ikke være tomt.", "Reserver");
                     return;
                 }
-                if(arr.length == 0){
+                if (arr.length == 0) {
                     app.dialog.alert("Du skal huske at vælge mindst et stykke værktøj som skal reserveres.", "Reserver");
-                    return; 
+                    return;
                 }
 
                 let dat;
 
                 let prom = new Promise((resolve, reject) => {
 
-                    for(i=0; i<arr.length; i++) {
+                    for (i = 0; i < arr.length; i++) {
                         //Kald Endpoint med id som arr[i]
-                        app.request.post(`${app.data['serverip']}endpoint/reservation.php`, { userID: newReserverID, equipmentID: arr[i], dateStart: newAfhentDato, expectedDateEnd: newAfleverDato}, function(response){
-                            if(response.result == 1){
+                        app.request.post(`${app.data['serverip']}endpoint/reservation.php`, { userID: newReserverID, equipmentID: arr[i], dateStart: newAfhentDato, expectedDateEnd: newAfleverDato }, function (response) {
+                            if (response.result == 1) {
                                 dat = response;
                                 resolve();
-                            }else{
+                            } else {
                                 reject();
                             }
-                        }, function(e, e2){
+                        }, function (e, e2) {
                         }, "json");
                     }
                 })
 
                 await prom;
-                if(dat.result == 1) {
-                    app.dialog.alert(`Reservationen til (<span style="color: green; font-weight: bold;">${newReserverNavn}</span>) blev oprettet.`, "Reserver", function(){
-                        for(i=0; i<arr.length; i++) {
+                if (dat.result == 1) {
+                    app.dialog.alert(`Reservationen til (<span style="color: green; font-weight: bold;">${newReserverNavn}</span>) blev oprettet.`, "Reserver", function () {
+                        for (i = 0; i < arr.length; i++) {
                             app.request.getJSON(`${app.data['serverip']}endpoint/equipment.php?id=${arr[i]}`, (response) => {
                                 app.methods.addToLog(`${newReserverID}`, `Reservered ${response.records[0].activeName} med assetTag (${response.records[0].assetTag})`);
                             })
                         }
-                        app.views.main.router.navigate("/reserver/", {reloadCurrent: true,});
+                        app.views.main.router.navigate("/reserver/", { reloadCurrent: true, });
                         arr = [];
                     });
                 } else {
                     app.dialog.alert(`Reservationen til ${newReserverNavn} blev <span style='color: red; font-weight: bold;'>IKKE</span> oprettet.`, "Reserver");
-                    return; 
+                    return;
                 }
             },
 
@@ -237,8 +251,8 @@
                 let o = 0, p = 0;
                 this.oversigtListTools.length = 0
                 app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllToolsForLoan&param=-1`, (response) => {
-                    for(let i = 0; i < response.records.length; i++) {
-                        innerHTML += 
+                    for (let i = 0; i < response.records.length; i++) {
+                        innerHTML +=
                             `
                             <tr>
                                 <td style="display: none;">${response.records[i].ID}</td>
@@ -252,8 +266,8 @@
                                 </td>
                             </tr>
                             `;
-                            $$('.tableBody').html(innerHTML);
-                            if (i !== 0) {
+                        $$('.tableBody').html(innerHTML);
+                        if (i !== 0) {
                             if (this.oversigtListTools[p].navn != response.records[i].equipmentNavn) {
                                 this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
                                 p++;
@@ -267,8 +281,8 @@
             fillTableToolName(name) {
                 let innerHTML = "";
                 app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetSelectToolForLoan&param=${name}`, (response) => {
-                    for(let i = 0; i < response.records.length; i++) {
-                        innerHTML += 
+                    for (let i = 0; i < response.records.length; i++) {
+                        innerHTML +=
                             `
                             <tr>
                                 <td style="display: none;">${response.records[i].ID}</td>
@@ -282,23 +296,23 @@
                                 </td>
                             </tr>
                             `;
-                            $$('.tableBody').html(innerHTML);
+                        $$('.tableBody').html(innerHTML);
                     }
                 })
             },
-            
+
         },
 
         on: {
-            pageAfterIn: function(e, page) {
+            pageAfterIn: function (e, page) {
 
                 var myCalendar = new dhtmlXCalendarObject(
-                    {input:"calendar_input",button:"calendar_input"}
+                    { input: "calendar_input", button: "calendar_input" }
                 );
                 myCalendar.hideTime();
 
                 var myCalendar2 = new dhtmlXCalendarObject(
-                    {input:"calendar_input2",button:"calendar_input2"}
+                    { input: "calendar_input2", button: "calendar_input2" }
                 );
                 myCalendar2.hideTime();
 
@@ -315,8 +329,8 @@
             pageMounted: function (page) {
                 let userList = [];
                 app.request.getJSON(`${app.data['serverip']}endpoint/user.php?id=-1`, (response) => {
-                    for(let i = 0; i < response.records.length; i++) {
-                        userList[i] = {navn: `${response.records[i].name}`, ID: `${response.records[i].ID}`}
+                    for (let i = 0; i < response.records.length; i++) {
+                        userList[i] = { navn: `${response.records[i].name}`, ID: `${response.records[i].ID}` }
                     }
                 })
 
@@ -344,8 +358,9 @@
                     on: {
                         closed: (ele) => {
                             //Check hvis feltet bliver sat til empty 
-                            if (userList.filter(l => (l.navn === ele.$inputEl[0].value)).length == 0) { this.fillTableDefault(); } },
-                        change: (ele) => { if (ele[0]) {$$("#ID").val(ele[0].ID)} }
+                            if (userList.filter(l => (l.navn === ele.$inputEl[0].value)).length == 0) { this.fillTableDefault(); }
+                        },
+                        change: (ele) => { if (ele[0]) { $$("#ID").val(ele[0].ID) } }
                     },
                 });
 
@@ -375,15 +390,15 @@
                             //Check hvis feltet bliver sat til empty 
                             if (this.oversigtListTools.filter(l => (l.navn === ele.$inputEl[0].value)).length == 0) { this.fillTableDefault(); }
                         },
-                        change: (ele) => { 
+                        change: (ele) => {
                             console.log(ele)
-                            if (ele[0]) { this.fillTableToolName(ele[0].navn) } 
+                            if (ele[0]) { this.fillTableToolName(ele[0].navn) }
                         }
                     },
                 });
 
                 this.fillTableDefault();
-                
+
             }
         },
     }
