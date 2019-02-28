@@ -418,7 +418,7 @@ input[type=submit] {
 
 .input-wrapper{
   position:relative;
-  width: 600px;
+  width: 500px;
 }
 
 .input-format{
@@ -433,4 +433,8 @@ input[type=submit] {
   right:5px;
   width:24px;
   height:24px;
+}
+
+label{
+  margin-top: 6px !important;
 }
