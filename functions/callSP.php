@@ -10,6 +10,8 @@ include_once '../database.inc';
 
 $sp = $_GET['sp'];
 $param = $_GET['param'];
+$params = explode( ',', $param );
+
 if(!isset($param)) {
     return 'You need to supply some Param';
 } else {
@@ -19,11 +21,17 @@ if(!isset($param)) {
     
     // constructor with $db as database connection
     $sql = "";
-    if(!is_int($param)) {
-        $sql = 'CALL `'.$sp.'`("'.$param.'")';
+    if(sizeof($params) < 2) {
+        if(!is_int($param)) {
+            $sql = 'CALL `'.$sp.'`("'.$param.'")';
+        } else {
+            $sql = 'CALL `'.$sp.'`('.$param.')';
+        }
     } else {
-        $sql = 'CALL `'.$sp.'`('.$param.')';
+
+        $sql = "CALL `$sp`($param)";
     }
+    
     
     
     // prepare query statement
