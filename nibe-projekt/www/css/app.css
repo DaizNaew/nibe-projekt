@@ -415,3 +415,22 @@ input[type=submit] {
   font-size: 17px;
 
 }
+
+.input-wrapper{
+  position:relative;
+  width: 600px;
+}
+
+.input-format{
+  margin:0;
+  padding-right: 30px;
+  width: 100%;
+}
+
+.icon-format{
+  position:absolute;
+  bottom:0px;
+  right:5px;
+  width:24px;
+  height:24px;
+}
