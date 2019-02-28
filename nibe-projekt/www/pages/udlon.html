@@ -3,16 +3,23 @@
         <div id="gridwrapper">
             <div style="padding: 25px;">
                 <form>
-                    <div class="form-row">
-                        <label for="lånerID" class="col">Låner ID</label>
-                        <input id="lånerID" type="text" required="required" class="form-control form-control-sm col"
-                            autocomplete="off" />
+                    
+                    <div class="form-row" style="text-align: left">
+                        <label class="col">Låner ID</label>
+                        <div id="input_container" class="input-wrapper">
+                            <input type="text" class="form-control form-control-sm col input-format" id="lånerID" required="required">
+                            <span><i id="calendar_icon" class="far fa-address-card icon-format"></i></span>
+                        </div>
                     </div>
-                    <div class="form-row">
-                        <label for="searchfield" class="col">Søg efter værktøj</label>
-                        <input id="searchfield" type="text" required="required" class="form-control form-control-sm col"
-                            autocomplete="off" />
+
+                    <div class="form-row" style="text-align: left">
+                        <label class="col">Søg efter værktøj</label>
+                        <div id="input_container" class="input-wrapper">
+                            <input type="text" class="form-control form-control-sm col input-format" id="searchfield">
+                            <span><i id="calendar_icon" class="fas fa-search icon-format"></i></span>
+                        </div>
                     </div>
+
                     <div>
                         <label class="tabletitle">Alt tilgængeligt værktøj</label>
                         <div class="tableFixHead tablelimit">
