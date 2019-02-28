@@ -2,7 +2,7 @@
     <div class="page" data-name="createuser">
         <div id="gridwrapper">
             <div class="grid">
-                <div style="padding: 10px" id="item1"><!--Item 1-->
+                <div style="padding: 25px" id="item1"><!--Item 1-->
                     <div>
                         <form>
                             <div class="form-row">
@@ -39,6 +39,13 @@
                 </div>
                 <div style="padding: 25px"><!--Item 2-->
                     <div>
+                            <div class="form-row" style="text-align: left">
+                                    <label class="col">Medhjælper navn</label>
+                                    <div class="input-wrapper">
+                                        <input type="text" class="form-control form-control-sm col input-format" id="AddBrugerNavn" >
+                                        <span><i class="fas fa-search icon-format"></i></span>
+                                    </div>
+                                </div>
                         <div class="tableFixHead">
                             <table class="table fixed_header" style="background-color: #c5d9ec33;">
                                 <thead>
@@ -75,6 +82,7 @@
         return {
             data: function () {
                 return {
+                    oversigtListBruger: [],
                 };
             },
         // Component Methods
@@ -197,16 +205,14 @@
                     }, function(e, e2){
                     }, "json");
                     
-                }
-                
-            },
-        // Component States
-            on: {
-                pageMounted: (page) => {
+                },
+                fillTableDefault: function() {
+                    
                     let innerHTML = "";
-                    var oldrow = null;
-                    var self = this;
-                    var app = self.app;
+                    var app = this.$app;
+                    let o = 0, p = 0;
+
+                    this.oversigtListBruger.length = 0;
                     app.request.getJSON(`${app.data['serverip']}endpoint/usergroup.php?id=-1`, (response) => {
                         for(group of response.usergroups) {
                             $$('#Brugertype').append(`<option value="${group.ID}">${group.title}</option>`)
@@ -232,8 +238,51 @@
                             </tr>
                             `;
                             $$('.tableBody').html(innerHTML);
+                            if (i !== 0) {
+                                if (this.oversigtListBruger[o].navn != response.records[i].name) {
+                                    this.oversigtListBruger.push({ navn: `${response.records[i].name}`, ID: `${response.records[i].ID}` });
+                                    o++;
+                                }
+                            } else {
+                                this.oversigtListBruger.push({ navn: `${response.records[i].name}`, ID: `${response.records[i].ID}` });
+                            }
                         }
                     });
+                },
+                fillTableUserID: function(id) {
+                    let innerHTML = "";
+                    var app = this.$app;
+                    // request user data on page init
+                    app.request.getJSON(`${app.data['serverip']}endpoint/user.php?id=${id}`, (response) => {
+                        // update component state with new state
+                        for(let i = 0; i < response.records.length; i++) {
+                            innerHTML += 
+                            `
+                            <tr>
+                                <td style="display: none;">${response.records[i].ID}</td>
+                                <td class="label-cell Navn">${response.records[i].name}</td>
+                                <td class="label-cell Mobilnr">${response.records[i].phoneNumber}</td>
+                                <td class="label-cell Adresse">${response.records[i].address}</td>
+                                <td class="label-cell Medhjælpernr">${response.records[i].cardID}</td>
+                                <td class="label-cell Brugertype" style="display: none;" value="${response.records[i].usergruppe}">${response.records[i].usergruppetitle}</td>
+                                <td class="radio-cell">
+                                    <input type="radio" value="${response.records[i].ID}" name="selectedTool"/>
+                                    <i class="icon-radio"></i>
+                                </td>
+                            </tr>
+                            `;
+                            $$('.tableBody').html(innerHTML);
+                        }
+                    });
+                }
+                
+            },
+        // Component States
+            on: {
+                pageMounted: function (page) {
+                    
+                    var oldrow = null;
+                    this.fillTableDefault();
                     $$('.tableBody').on('click', (e) => {
                         if(oldrow == null){
                             oldrow = e;
@@ -244,6 +293,40 @@
                             $$(e.target.parentElement).find('input[type="radio"]').prop('checked', true);
                             $$(e.target.parentElement).css('background-color', '#a8baad');
                         
+                    });
+                    var autocompleteBrugerList = app.autocomplete.create({
+                        inputEl: '#AddBrugerNavn',
+                        openIn: 'dropdown',
+                        textProperty: "navn",
+                        valueProperty: "navn",
+                        limit: 5,
+                        source: (query, render) => {
+                            var results = [];
+                            if (query.length === 0) {
+                                render(results);
+                                return;
+                            }
+                            //$$('#oversigtListTools').prop({ disabled:true });
+                            // Find matched items
+                            for (var i = 0; i < this.oversigtListBruger.length; i++) {
+                                if (this.oversigtListBruger[i].navn.toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(this.oversigtListBruger[i]);
+                            }
+                            // Render items by passing array with result items
+                            render(results);
+
+                        },
+                        on: {
+                            closed: (ele) => {
+                                //Check hvis feltet bliver sat til empty 
+                                if (this.oversigtListBruger.filter(l => (l.navn === ele.$inputEl[0].value)).length == 0) { this.fillTableDefault(); }
+                            },
+                            change: (ele) => { 
+                                if (ele[0]) {
+                                    console.log(ele);
+                                    this.fillTableUserID(ele[0].ID)
+                                } 
+                            }
+                        },
                     });
                 }
             },
