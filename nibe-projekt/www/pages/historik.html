@@ -43,8 +43,12 @@
                             </tbody>
                         </table>
                     </div>
+                    <div class="" style="padding:0px; margin-top:25px; text-align: right;">
+                        <a><button id="loadflere" @click="loadflere" type="button" class="no-ripple col btn btn-primary godbtn">Indlæs flere</button></a>
+                    </div>
                 </div>
             </div>
+            <input id="rowcount" type="hidden" value="0"/>
         </div>
     </div>
 </template>
@@ -70,7 +74,7 @@
                 this.oversigtListTools.length = 0;
 
                 // request user data on page init
-                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllHistorik&param=-1`, (response) => {
+                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllHistorik&param=200,0`, (response) => {
                     // update component state with new state
                     for(let i = 0; i < response.records.length; i++) {
                         innerHTML += 
@@ -107,6 +111,39 @@
                     }
                 });
             },
+
+            loadflere : () => {
+                let offset = parseInt(document.getElementById("rowcount").value);
+                let nyHTML = $$('.tableBody').html();
+                console.log(offset);
+                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllHistorik&param=200,${offset}`, (response) => {
+                    // update component state with new state
+                    document.getElementById("rowcount").value = offset + 200;
+                    for(let i = 0; i < response.records.length; i++) {
+                        nyHTML += 
+                            `
+                            <tr>
+                                <td style="display: none;">${i+1}</td>
+                                <td class="label-cell MedhjælperNavn">${response.records[i].userName}</td>
+                                <td class="label-cell MedhjælperNummer">${response.records[i].userCardID}</td>
+                                <td class="label-cell VærktøjsNavn">${response.records[i].equipmentNavn}</td>
+                                <td class="label-cell Kategori">${response.records[i].equipmentKategori}</td>
+                                <td class="label-cell Mærke">${response.records[i].equipmentBrand}</td>
+                                <td class="label-cell Model">${response.records[i].equipmentModel}</td>
+                                <td class="label-cell AssetTag">${response.records[i].equipmentAsset}</td>
+                                <td class="label-cell Stand">${response.records[i].equipmentCondition}</td>
+                                <td class="label-cell DatoUdlånt">${response.records[i].dateStart}</td>
+                                <td class="label-cell ForventesTilbage">${response.records[i].expectedDateEnd}</td>
+                                <td class="label-cell FaktiskAfleveret">${response.records[i].actualDateEnd}</td>
+                            </tr>
+                            `;
+                            $$('.tableBody').html(nyHTML);
+                    }
+                });
+
+            },
+
+
             tableFillUserID: function(id) {
                 let innerHTML = "";
                 var app = this.$app;
