@@ -212,12 +212,6 @@
                     var app = this.$app;
                     let o = 0, p = 0;
 
-                    this.oversigtListBruger.length = 0;
-                    app.request.getJSON(`${app.data['serverip']}endpoint/usergroup.php?id=-1`, (response) => {
-                        for(group of response.usergroups) {
-                            $$('#Brugertype').append(`<option value="${group.ID}">${group.title}</option>`)
-                        }
-                    });
                     // request user data on page init
                     app.request.getJSON(`${app.data['serverip']}endpoint/user.php?id=-1`, (response) => {
                         // update component state with new state
@@ -282,6 +276,14 @@
                 pageMounted: function (page) {
                     
                     var oldrow = null;
+                    var app = this.$app;
+
+                    this.oversigtListBruger.length = 0;
+                    app.request.getJSON(`${app.data['serverip']}endpoint/usergroup.php?id=-1`, (response) => {
+                        for(group of response.usergroups) {
+                            $$('#Brugertype').append(`<option value="${group.ID}">${group.title}</option>`)
+                        }
+                    });
                     this.fillTableDefault();
                     $$('.tableBody').on('click', (e) => {
                         if(oldrow == null){

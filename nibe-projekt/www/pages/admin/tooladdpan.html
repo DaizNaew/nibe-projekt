@@ -270,11 +270,7 @@
                     let o = 0, p = 0;
 
                     this.oversigtListTools.length = 0;
-                    app.request.getJSON(`${app.data['serverip']}endpoint/category.php?id=-1`, (cats) => {
-                        for(cat of cats.categories) {
-                            $$('#Kategori').append(`<option value="${cat.ID}">${cat.katNavn}</option>`)
-                        }
-                    });
+                    
                     // request user data on page init
                     app.request.getJSON(`${app.data['serverip']}endpoint/equipment.php?id=-1`, (tools) => {
                         // update component state with new state
@@ -342,6 +338,12 @@
         // Component States
             on: {
                 pageMounted: function (page) {
+                    var app = this.$app;
+                    app.request.getJSON(`${app.data['serverip']}endpoint/category.php?id=-1`, (cats) => {
+                        for(cat of cats.categories) {
+                            $$('#Kategori').append(`<option value="${cat.ID}">${cat.katNavn}</option>`)
+                        }
+                    });
                    this.fillTableDefault();
                     var oldrow = null;
                     $$('.tableBody').on('click', (e) => {
