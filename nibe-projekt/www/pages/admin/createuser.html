@@ -28,6 +28,34 @@
 
                                 </select>
                             </div>
+                            <div class="form-row">
+                                <div class="tableFixHead col" style="max-height: 315px !important">
+                                    <table class="table fixed_header" style="background-color: #c5d9ec33;">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Kørekort</th>
+                                                <th scope="col">#</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="licenseTable" class="tableBody">
+                                    
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="tableFixHead col" style="max-height: 315px !important">
+                                    <table class="table fixed_header" style="background-color: #c5d9ec33;">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Certifikat</th>
+                                                <th scope="col">#</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="certificateTable" class="tableBody">
+                                    
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                             <div class="form-row form-button-row">
                                 <a><button id="insert" type="submit" @click="inserttool" class="no-ripple col btn btn-primary godbtn">Opret Bruger</button></a>
                                 <a><button id="update" type="submit" @click="updatetool" class="no-ripple col btn btn-primary godbtn" disabled>Opdater Bruger</button></a>
@@ -38,7 +66,7 @@
                     </div>
                 </div>
                 <div style="padding: 25px"><!--Item 2-->
-                    <div>
+                    <div style="max-height: 700px">
                             <div class="form-row" style="text-align: left">
                                     <label class="col">Medhjælper navn</label>
                                     <div class="input-wrapper">
@@ -46,7 +74,7 @@
                                         <span><i class="fas fa-search icon-format"></i></span>
                                     </div>
                                 </div>
-                        <div class="tableFixHead">
+                        <div class="tableFixHead" style="max-height: 512px !important">
                             <table class="table fixed_header" style="background-color: #c5d9ec33;">
                                 <thead>
                                     <tr>
@@ -61,7 +89,7 @@
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody class="tableBody">
+                                <tbody class="tableBody" id="userTable">
                                     
                                 </tbody>
                             </table>
@@ -83,6 +111,11 @@
             data: function () {
                 return {
                     oversigtListBruger: [],
+                    userCertList: [],
+                    userLiceList: [],
+                    selectedCerts: [],
+                    selectedLices: [],
+                    tables : ['#licenseTable','#certificateTable'],
                 };
             },
         // Component Methods
@@ -116,12 +149,19 @@
                     });
                     })
                 },
-                inserttool : async () => {
+                inserttool : function async () {
                     let newNavn = document.getElementById('Navn').value;
                     let newMobilnr = document.getElementById('Mobilnr').value;
                     let newAdresse = document.getElementById('Adresse').value;
                     let newMedhjælpernr = document.getElementById('Medhjælpernr').value;
                     let gruppeID = document.getElementById('Brugertype').selectedIndex +1;
+                    this.tables.forEach(table => {
+                        $$(table).find('input[type="checkbox"]').filter((index, el) => {
+                            console.error(index);
+                            console.dir(el);
+                            
+                        });
+                    })
                     if(newNavn == ""){
                         app.dialog.alert("Navn feltet må ikke være tomt.", "Opret Bruger");
                         return;
@@ -231,7 +271,7 @@
                                 </td>
                             </tr>
                             `;
-                            $$('.tableBody').html(innerHTML);
+                            $$('#userTable').html(innerHTML);
                             if (i !== 0) {
                                 if (this.oversigtListBruger[o].navn != response.records[i].name) {
                                     this.oversigtListBruger.push({ navn: `${response.records[i].name}`, ID: `${response.records[i].ID}` });
@@ -265,17 +305,69 @@
                                 </td>
                             </tr>
                             `;
-                            $$('.tableBody').html(innerHTML);
+                            $$('#userTable').html(innerHTML);
                         }
                     });
-                }
+                },
                 
+                fillCertTable: function() {
+                    let innerHTML = "";
+                    var app = this.$app;
+                    // request driverlicense on page init
+                    app.request.getJSON(`${app.data['serverip']}endpoint/certificate.php?id=-1&tableid=0`, (response) => {
+                        // update component state with new state
+                        for(let i = 0; i < response.certifikat.length; i++) {
+                            innerHTML += 
+                            `
+                            <tr>
+                                <td class="label-cell">${response.certifikat[i].type}</td>
+                                <td class="checkbox-cell">
+                                    <input type="checkbox" value="${response.certifikat[i].ID}" name="selectedCert"/>
+                                    <i class="icon-checkbox"></i>
+                                </td>
+                            </tr>
+                            `;
+                            $$('#certificateTable').html(innerHTML);
+                        }
+                    });
+                },
+
+                fillLiceTable: function() {
+                    let innerHTML = "";
+                    var app = this.$app;
+                    // request license data on page init
+                    app.request.getJSON(`${app.data['serverip']}endpoint/certificate.php?id=-1&tableid=1`, (response) => {
+                        // update component state with new state
+                        for(let i = 0; i < response.kørekort.length; i++) {
+                            innerHTML += 
+                            `
+                            <tr>
+                                <td class="label-cell">${response.kørekort[i].type}</td>
+                                <td class="checkbox-cell">
+                                    <input type="checkbox" value="${response.kørekort[i].ID}" name="selectedLice"/>
+                                    <i class="icon-checkbox"></i>
+                                </td>
+                            </tr>
+                            `;
+                            $$('#licenseTable').html(innerHTML);
+                        }
+                    });
+                },
+
+                insertCert: function(sp, userID, paramID) {
+                    //sp_InsertIntoUC  -  CERT
+                    //sp_InsertIntoUK  -  Kørekort
+                    app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=${sp}&param=${userID},${paramID}`, (response) => {
+
+                    });
+                },
             },
         // Component States
             on: {
                 pageMounted: function (page) {
+
+                    var userOldRow = null;
                     
-                    var oldrow = null;
                     var app = this.$app;
 
                     this.oversigtListBruger.length = 0;
@@ -285,17 +377,35 @@
                         }
                     });
                     this.fillTableDefault();
-                    $$('.tableBody').on('click', (e) => {
-                        if(oldrow == null){
-                            oldrow = e;
+                    this.fillLiceTable();
+                    this.fillCertTable();
+                    $$('#userTable').on('click', (e) => {
+                        
+                        if(userOldRow == null){
+                            userOldRow = e;
                         }else{
-                            $$(oldrow.target.parentElement).css('background-color', '');
-                            oldrow = e;
+                            $$(userOldRow.target.parentElement).css('background-color', '');
+                            userOldRow = e;
                         }
                             $$(e.target.parentElement).find('input[type="radio"]').prop('checked', true);
                             $$(e.target.parentElement).css('background-color', '#a8baad');
                         
                     });
+                    
+                    this.tables.forEach(table => {
+                        $$(table).on('click', (e) => {
+                            isChecked = $$(e.target.parentElement).find('input[type="checkbox"]').prop('checked');
+                            if(!isChecked) {
+                                this.
+                                $$(e.target.parentElement).find('input[type="checkbox"]').prop('checked', true);
+                                $$(e.target.parentElement).css('background-color', '#a8baad');
+                                
+                            } else {
+                                $$(e.target.parentElement).find('input[type="checkbox"]').prop('checked', false);
+                                $$(e.target.parentElement).css('background-color', '');
+                            }
+                        });
+                    })
                     var autocompleteBrugerList = app.autocomplete.create({
                         inputEl: '#AddBrugerNavn',
                         openIn: 'dropdown',
