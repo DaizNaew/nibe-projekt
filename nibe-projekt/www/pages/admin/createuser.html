@@ -387,9 +387,7 @@
                 //sp_InsertIntoUC  -  CERT
                 //sp_InsertIntoUK  -  Kørekort
                 app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=${sp}&param=${userID},${paramID}`, (response) => {
-                    console.log(response);
                 }, function (e) {
-                    console.error(e);
                 });
             },
         },
@@ -413,7 +411,6 @@
                 this.fillCertTable();
 
                 $$('.userTable').on('click', (e) => {
-                    console.log(e)
                     if (userOldRow == null) {
                         userOldRow = e;
                     } else {
@@ -467,7 +464,6 @@
                         },
                         change: (ele) => {
                             if (ele[0]) {
-                                console.log(ele);
                                 this.fillTableUserID(ele[0].ID)
                             }
                         }
