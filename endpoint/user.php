@@ -74,7 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         );
 
     } else {
-        // set response code - 404 Not found
+        // set response code - 200 OK
         http_response_code(200);
     
         // tell the user no products found
@@ -82,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             array("message" => "Kunne ikke indsætte i databasen",
             "result" => 0,
             "error" => $stmt->getMessage(),
-            "errMessage" => `Kategorien `.$_POST['name'].` findes allerede i databasen`)
+            "errMessage" => `Brugeren `.$_POST['name'].` findes allerede i databasen`)
         );
     }
 }
