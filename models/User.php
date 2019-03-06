@@ -39,6 +39,17 @@ class User {
     
         return $stmt;
     }
+
+    function getByCard($id) {
+        $query = "SELECT *, u.ID as ID, ug.ID as usergruppeID FROM " . $this->table_name . " u INNER JOIN usergruppe ug ON ug.ID = u.usergruppe WHERE u.cardID = "."'$id'";
+        // prepare query statement
+        $stmt = $this->conn->prepare($query);
+    
+        // execute query
+        $stmt->execute();
+    
+        return $stmt;
+    }
     
     function write($post) {
         $name = $post['name'];
