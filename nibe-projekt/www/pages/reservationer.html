@@ -38,6 +38,7 @@
                                     <th class="label-cell" scope="col">Stand</th>
                                     <th class="label-cell" scope="col">Reserveret Fra</th>
                                     <th class="label-cell" scope="col">Reserveret Til</th>
+                                    <th class="label-cell" scope="col">Note</th>
                                     <th class="radio-cell" scope="col">
                                         <!--<input type="checkbox" class="no-ripple"/>-->
                                         <i class="icon-radio"></i>
@@ -79,6 +80,11 @@
         })
     }
 
+    notepop = (note2pop) => {
+        app.dialog.alert(note2pop, 'Note', function () {
+        })
+    }
+
     return {
         data: function () {
             return {
@@ -93,6 +99,7 @@
                 let innerHTML = "";
                 var app = this.$app;
                 let o = 0, p = 0;
+                let note = '<i></i>'
 
                 this.oversigtListBruger.length = 0;
                 this.oversigtListTools.length = 0;
@@ -101,6 +108,12 @@
                 app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllReservationer&param=-1`, (response) => {
                     // update component state with new state
                     for (let i = 0; i < response.records.length; i++) {
+                        if(response.records[i].note != ""){
+                            note = `<i class="far fa-envelope" onclick="notepop('${response.records[i].note}')"></i>`
+                        }
+                        else{
+                            note = '<i></i>'
+                        }
                         innerHTML +=
                             `
                                 <tr>
@@ -115,6 +128,8 @@
                                     <td class="label-cell Stand">${response.records[i].equipmentCondition}</td>
                                     <td class="label-cell ReserveretFra">${response.records[i].dateStart}</td>
                                     <td class="label-cell ReserveretTil">${response.records[i].expectedDateEnd}</td>
+                                    
+                                    <td class="label-cell Note">${note}</td>
                                     <td class="input-cell">
                                         <button type="button" onclick="udlon(${response.records[i].ID})" class="no-ripple btn-primary">Udlån</button>
                                     </td>
@@ -144,11 +159,18 @@
                 oldrow = null;
                 let innerHTML = "";
                 var app = this.$app;
+                let note = '<i></i>'
 
                 // request user data on page init
                 app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetSelectReservationUser&param=${name}`, (response) => {
                     // update component state with new state
                     for (let i = 0; i < response.records.length; i++) {
+                        if(response.records[i].note != ""){
+                            note = `<i class="far fa-envelope" onclick="notepop('${response.records[i].note}')"></i>`
+                        }
+                        else{
+                            note = '<i></i>'
+                        }
                         innerHTML +=
                             `
                                 <tr>
@@ -163,6 +185,7 @@
                                     <td class="label-cell Stand">${response.records[i].equipmentCondition}</td>
                                     <td class="label-cell ReserveretFra">${response.records[i].dateStart}</td>
                                     <td class="label-cell ReserveretTil">${response.records[i].expectedDateEnd}</td>
+                                    <td class="label-cell Note">${note}</td>
                                     <td class="input-cell">
                                         <button type="button" onclick="udlon(${response.records[i].ID})" class="no-ripple btn-primary">Udlån</button>
                                     </td>
@@ -179,10 +202,17 @@
                 oldrow = null;
                 let innerHTML = "";
                 var app = this.$app;
+                let note = '<i></i>'
                 // request user data on page init
                 app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetSelectReservationToolname&param=${toolName}`, (response) => {
                     // update component state with new state
                     for (let i = 0; i < response.records.length; i++) {
+                        if(response.records[i].note != ""){
+                            note = `<i class="far fa-envelope" onclick="notepop('${response.records[i].note}')"></i>`
+                        }
+                        else{
+                            note = '<i></i>'
+                        }
                         innerHTML +=
                             `
                                 <tr>
@@ -197,6 +227,7 @@
                                     <td class="label-cell Stand">${response.records[i].equipmentCondition}</td>
                                     <td class="label-cell ReserveretFra">${response.records[i].dateStart}</td>
                                     <td class="label-cell ReserveretTil">${response.records[i].expectedDateEnd}</td>
+                                    <td class="label-cell Note">${note}</td>
                                     <td class="input-cell">
                                         <button type="button" onclick="udlon(${response.records[i].ID})" class="no-ripple btn-primary">Udlån</button>
                                     </td>
