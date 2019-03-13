@@ -115,7 +115,6 @@
             loadflere : () => {
                 let offset = parseInt(document.getElementById("rowcount").value);
                 let nyHTML = $$('.tableBody').html();
-                console.log(offset);
                 app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllHistorik&param=200,${offset}`, (response) => {
                     // update component state with new state
                     document.getElementById("rowcount").value = offset + 200;

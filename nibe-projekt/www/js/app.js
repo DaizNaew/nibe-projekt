@@ -35,9 +35,9 @@ var app  = new Framework7({
 
     addToLog: function(UserID, Handling){
       app.request.post(`${app.data['serverip']}endpoint/logging.php`, { UserID: UserID, Handling: Handling }, function(response){
-        console.log(response);
+        //console.log(response);
       }, function(e, e2){
-        console.log(e);
+        //console.log(e);
       }, "json");
     },
   },
