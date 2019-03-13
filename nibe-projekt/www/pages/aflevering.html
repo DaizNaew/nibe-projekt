@@ -155,11 +155,11 @@
                     $$(`.låneTableBody`).html('');
                     $$(`.tableBody`).html('');
                     var checkBoxObj = $$('.tableBody').find('button');
-                        checkBoxObj.forEach(element => {
-                            if(element.disabled) {
-                                element.disabled = false;
-                            }
-                        })
+                    checkBoxObj.forEach(element => {
+                        if(element.disabled) {
+                            element.disabled = false;
+                        }
+                    })
                 });
             },
             aflevertool : async () => {
@@ -180,25 +180,25 @@
                             selectedUserID: selectedUserID
                         };
 
-                            app.request.post(`${app.data['serverip']}functions/loans/deliver.php`, loan, (data) => {
-                                app.methods.addToLog(`${selectedUserID}`, `Afleverede værktøjet ${loan.VærktøjsNavn} med assetTag (${loan.AssetTag})`);
-                                dat = data;
-                                resolve();
-                            }, (error) => {
-                                reject();
-                            }, 'json');
-                        }
+                        app.request.post(`${app.data['serverip']}functions/loans/deliver.php`, loan, (data) => {
+                            app.methods.addToLog(`${selectedUserID}`, `Afleverede værktøjet ${loan.VærktøjsNavn} med assetTag (${loan.AssetTag})`);
+                            dat = data;
+                            resolve();
+                        }, (error) => {
+                            reject();
+                        }, 'json');
+                    }
                 });
             });
             await prom;
                 if(dat.result == 1) {
-                            toastMessage = 'Værktøjet blev Afleveret';
-                        } else {
-                            toastMessage = 'Værktøjet blev ikke Afleveret';
-                        }
-                        app.dialog.alert(toastMessage, 'Afleveret Værktøj', () => {
-                            app.views.main.router.navigate("/aflevering/", {reloadCurrent: true,});
-                        });
+                    toastMessage = 'Værktøjet blev Afleveret';
+                } else {
+                    toastMessage = 'Værktøjet blev ikke Afleveret';
+                }
+                app.dialog.alert(toastMessage, 'Afleveret Værktøj', () => {
+                    app.views.main.router.navigate("/aflevering/", {reloadCurrent: true,});
+                });
             },
         },
 
@@ -219,12 +219,11 @@
                             }
                         } else {
                             this.reserveList.push({
-                                    ID: `${response.records[i].ID}`,
-                                    userName: `${response.records[i].userName}`,
-                                    userID: `${response.records[i].userCardID}`
-                                })
+                                ID: `${response.records[i].ID}`,
+                                userName: `${response.records[i].userName}`,
+                                userID: `${response.records[i].userCardID}`
+                            })
                         }
-                        
                     }
                 });
                 
@@ -240,18 +239,15 @@
                             render(results);
                             return;
                         }
-                        console.dir(this.reserveList)
                         // Find matched items
                         for (var i = 0; i < this.reserveList.length; i++) {
                             if (this.reserveList[i].userID.toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(this.reserveList[i]);
                         }
                         // Render items by passing array with result items
                         render(results);
-
                     },
                     on: {
                         closed: (ele) => {
-                            console.log(ele)
                             //Check hvis feltet bliver sat til empty 
                             if (this.reserveList.filter(l => (l.userName === ele.$inputEl[0].value)).length == 0) { 
                                 $$('.tableBody').html("");
