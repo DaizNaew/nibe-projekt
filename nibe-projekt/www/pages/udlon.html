@@ -1,0 +1,373 @@
+<template>
+    <div class="page" data-name="udlon">
+        <div id="gridwrapper">
+            <div style="padding: 25px;">
+                <form>
+                    
+                    <div class="form-row" style="text-align: left">
+                        <label class="col">Låner ID</label>
+                        <div class="input-wrapper">
+                            <input type="text" class="form-control form-control-sm col input-format" id="lånerID" required="required">
+                            <span><i id="calendar_icon" class="far fa-address-card icon-format"></i></span>
+                        </div>
+                    </div>
+
+                    <div class="form-row" style="text-align: left">
+                        <label class="col">Søg efter værktøj</label>
+                        <div class="input-wrapper">
+                            <input type="text" class="form-control form-control-sm col input-format" id="searchfield">
+                            <span><i id="calendar_icon" class="fas fa-search icon-format"></i></span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="tabletitle">Alt tilgængeligt værktøj</label>
+                        <div class="tableFixHead tablelimit">
+                            <table class="table fixed_header" style="background-color: #c5d9ec33;">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" style="display: none;">#</th>
+                                        <th class="label-cell" scope="col">Værktøjs Navn</th>
+                                        <th class="label-cell" scope="col">Kategori</th>
+                                        <th class="label-cell" scope="col">Mærke</th>
+                                        <th class="label-cell" scope="col">Model</th>
+                                        <th class="label-cell" scope="col">Serienummer</th>
+                                        <th class="label-cell" scope="col">AssetTag</th>
+                                        <th class="label-cell" scope="col">Stand</th>
+                                        <th class="radio-cell" scope="col">
+                                            <!--<input type="checkbox" class="no-ripple"/>-->
+                                            <i class="icon-radio"></i>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="tableBody">
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="tabletitle" style="margin-top: 25px;">Værktøj valgt til udlån</label>
+                        <div class="tableFixHead tablelimit">
+                            <table class="table fixed_header" style="background-color: #c5d9ec33;">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" style="display: none;">#</th>
+                                        <th class="label-cell" scope="col">Værktøjs Navn</th>
+                                        <th class="label-cell" scope="col">Kategori</th>
+                                        <th class="label-cell" scope="col">Mærke</th>
+                                        <th class="label-cell" scope="col">Model</th>
+                                        <th class="label-cell" scope="col">Serienummer</th>
+                                        <th class="label-cell" scope="col">AssetTag</th>
+                                        <th class="label-cell" scope="col">Stand</th>
+                                        <th class="radio-cell" scope="col">
+                                            <!--<input type="checkbox" class="no-ripple"/>-->
+                                            <i class="icon-radio"></i>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="låneTableBody">
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="input-group form-group" style="margin-top: 25px;">
+                        <label for="calendar_input" class="col">Afleverings Dato</label>
+                        <div class="input-group-prepend col">
+                            <input type="text" id="calendar_input" required="required"
+                                class="form-control form-control-sm" autocomplete="off">
+                            <span><i id="calendar_icon"
+                                    class="far fa-calendar-alt input-group-text input_icon_css"></i></span>
+                        </div>
+                    </div>
+                    <div class="input-group form-group">
+                        <label for="input-a" class="col">Afleverings Tidspunkt</label>
+                        <div class="input-group-prepend col">
+                            <input id="input-a" value="" data-default="10:00" required="required"
+                                class="form-control form-control-sm" autocomplete="off">
+                            <span><i id="calendar_icon" class="far fa-clock input-group-text input_icon_css"></i></span>
+                        </div>
+                    </div>
+                    <div class="form-row form-button-row">
+                        <a><button id="insert" @click="udlontool" type="submit"
+                                class="no-ripple col btn btn-primary godbtn">Udlån</button></a>
+                        <a><button id="reset" @click="resetfields" type="button"
+                                class="no-ripple col btn btn-primary godbtn">Nulstil felter</button></a>
+                    </div>
+                    <input id="ID" type="hidden" />
+                </form>
+            </div>
+        </div>
+    </div>
+</template>
+
+
+<script>
+    var arr = [];
+    var globalReservationID;
+    var globalEquipmentID;
+
+    fjernudlånsværktøj = (værktøjsID) => {
+        $$(`.tableBody`).find(`#btn${værktøjsID}`).prop("disabled", false);
+        $$(`.låneTableBody`).find(`#værktøjnr${værktøjsID}`).remove();
+        arr.splice(arr.indexOf(værktøjsID), 1);
+    }
+
+    tilføjudlånsværktøj = (værktøjsID) => {
+        arr.push(værktøjsID);
+        let innerHTML = "";
+        app.request.getJSON(`${app.data['serverip']}endpoint/equipment.php?id=${værktøjsID}`, (response) => {
+            $$(`.tableBody`).find(`#btn${værktøjsID}`).prop("disabled", true);
+            innerHTML = $$(`.låneTableBody`).html();
+            for (let i = 0; i < response.records.length; i++) {
+                innerHTML +=
+                    `
+                    <tr id="værktøjnr${værktøjsID}">
+                        <td style="display: none;">${værktøjsID}</td>
+                        <td class="label-cell VærktøjsNavn">${response.records[i].activeName}</td>
+                        <td class="label-cell Kategori">${response.records[i].categoryName}</td>
+                        <td class="label-cell Mærke">${response.records[i].brandName}</td>
+                        <td class="label-cell Model">${response.records[i].modelName}</td>
+                        <td class="label-cell Serienummer">${response.records[i].serialNumber}</td>
+                        <td class="label-cell AssetTag">${response.records[i].assetTag}</td>
+                        <td class="label-cell Stand">${response.records[i].condition}</td>
+                        <td class="radio-cell">
+                            <button type="button" onclick="fjernudlånsværktøj(${response.records[0].ID})" class="no-ripple btn-primary deletebtn">Slet</button>
+                        </td>
+                    </tr>
+                    `;
+                $$('.låneTableBody').html(innerHTML);
+            }
+        })
+    }
+
+    return {
+        data: function () {
+            return {
+                oversigtListTools: [],
+            };
+        },
+        // Component Methods
+        methods: {
+            resetfields: () => {
+                app.dialog.confirm('Er du sikker på at du vil nulstille alle felter?', 'Nulstil Felter', function () {
+                    let inputs = $$('form').find('input');
+                    inputs.val('');
+                    $$(`.låneTableBody`).html('');
+                    var checkBoxObj = $$('.tableBody').find('button');
+                    checkBoxObj.forEach(element => {
+                        if (element.disabled) {
+                            element.disabled = false;
+                        }
+                    })
+                });
+            },
+            udlontool: async () => {
+                let newLånerCard = document.getElementById('lånerID').value;
+                let expectedDateEnd = document.getElementById('calendar_input').value + " " + document.getElementById('input-a').value + ":00";
+                let dat;
+                let logString;
+                let newLånerID;
+                if (newLånerCard == "") {
+                    app.dialog.alert("Låner ID feltet må ikke være tomt.", "Udlån");
+                    return;
+                }
+                if (document.getElementById('calendar_input').value == "") {
+                    app.dialog.alert("Afleverings dato feltet må ikke være tomt.", "Udlån");
+                    return;
+                }
+                if (document.getElementById('input-a').value == "") {
+                    app.dialog.alert("Afleverings tidspunkt feltet må ikke være tomt.", "Udlån");
+                    return;
+                }
+                if (arr.length == 0) {
+                    app.dialog.alert("Du skal huske at vælge mindst et stykke værktøj som skal udlånes.", "Udlån");
+                    return;
+                }
+
+
+                if (globalReservationID != null) {
+                    arr.push(globalEquipmentID);
+                    app.request.getJSON(`${app.data['serverip']}functions/reservation/delete.php?id=${globalReservationID}&equipmentID=${globalEquipmentID}`, (data) => {
+                    }, function (e) { });
+                }
+
+                let prom = new Promise((resolve, reject) => {
+                    app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_ConvertCardIDtoUserID&param=${newLånerCard}`, (data2) => {
+                        newLånerID = data2.records[0].ID;
+                        for (i = 0; i < arr.length; i++) {
+                            //Kald Endpoint med id som arr[i]
+                            app.request.post(`${app.data['serverip']}endpoint/loaned.php`, { userID: newLånerID, equipmentID: arr[i], expectedDateEnd: expectedDateEnd }, function (response) {
+                                if (response.result == 1) {
+                                    //logString += `${arr[i]}`
+                                    dat = response;
+                                    resolve();
+                                } else {
+                                    reject();
+                                }
+                            }, function (e, e2) {
+                            }, "json");
+                        }
+                    }, function (e) { })
+                })
+
+                await prom;
+                if (dat.result == 1) {
+                    app.dialog.alert(`Værktøjet blev udlånt.`, "Udlån", function () {
+                        for (i = 0; i < arr.length; i++) {
+                            app.request.getJSON(`${app.data['serverip']}endpoint/equipment.php?id=${arr[i]}`, (response) => {
+                                app.methods.addToLog(`${newLånerID}`, `Lånte ${response.records[0].activeName} med assetTag (${response.records[0].assetTag})`);
+                            })
+                        }
+                        app.views.main.router.navigate("/udlon/", { reloadCurrent: true, });
+                        arr = [];
+                    });
+                } else {
+                    app.dialog.alert(`Værktøjet blev <span style='color: red; font-weight: bold;'>IKKE</span> udlånt.`, "Udlån");
+                    return;
+                }
+            },
+
+            fillTableToolName(name) {
+                let innerHTML = "";
+                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetSelectToolsForLoan&param=${name}`, (response) => {
+                    for (let i = 0; i < response.records.length; i++) {
+                        innerHTML +=
+                            `
+                            <tr>
+                                <td style="display: none;">${response.records[i].ID}</td>
+                                <td class="label-cell VærktøjsNavn">${response.records[i].equipmentNavn}</td>
+                                <td class="label-cell Kategori">${response.records[i].equipmentKategori}</td>
+                                <td class="label-cell Mærke">${response.records[i].equipmentBrand}</td>
+                                <td class="label-cell Model">${response.records[i].equipmentModel}</td>
+                                <td class="label-cell Serienummer">${response.records[i].equipmentSerieNummer}</td>
+                                <td class="label-cell AssetTag">${response.records[i].equipmentAsset}</td>
+                                <td class="label-cell Stand">${response.records[i].equipmentCondition}</td>
+                                <td class="radio-cell">
+                                    <button type="button" id="btn${response.records[i].ID}" onclick="tilføjudlånsværktøj(${response.records[i].ID})" class="no-ripple btn-primary">Tilføj</button>
+                                </td>
+                            </tr>
+                            `;
+                        $$('.tableBody').html(innerHTML);
+                    }
+                })
+            },
+            fillTableDefault() {
+
+                let innerHTML = "";
+                let o = 0, p = 0;
+                this.oversigtListTools.length = 0
+                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllToolsForLoan&param=-1`, (response) => {
+                    for (let i = 0; i < response.records.length; i++) {
+                        innerHTML +=
+                            `
+                            <tr>
+                                <td style="display: none;">${response.records[i].ID}</td>
+                                <td class="label-cell VærktøjsNavn">${response.records[i].equipmentNavn}</td>
+                                <td class="label-cell Kategori">${response.records[i].equipmentKategori}</td>
+                                <td class="label-cell Mærke">${response.records[i].equipmentBrand}</td>
+                                <td class="label-cell Model">${response.records[i].equipmentModel}</td>
+                                <td class="label-cell Serienummer">${response.records[i].equipmentSerieNummer}</td>
+                                <td class="label-cell AssetTag">${response.records[i].equipmentAsset}</td>
+                                <td class="label-cell Stand">${response.records[i].equipmentCondition}</td>
+                                <td class="radio-cell">
+                                    <button type="button" id="btn${response.records[i].ID}" onclick="tilføjudlånsværktøj(${response.records[i].ID})" class="no-ripple btn-primary">Tilføj</button>
+                                </td>
+                            </tr>
+                            `;
+                        $$('.tableBody').html(innerHTML);
+                        if (i !== 0) {
+                            if (this.oversigtListTools[p].navn != response.records[i].equipmentNavn) {
+                                this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
+                                p++;
+                            }
+                        } else {
+                            this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
+                        }
+                    }
+                })
+            }
+        },
+
+        on: {
+            pageAfterIn: function (e, page) {
+
+                var myCalendar = new dhtmlXCalendarObject(
+                    { input: "calendar_input", button: "calendar_input" }
+                );
+                myCalendar.hideTime();
+
+                var input = $('#input-a');
+                input.clockpicker({
+                    autoclose: true,
+                    placement: 'top'
+                });
+            },
+            pageMounted: function (page) {
+                globalReservationID = page.detail.route.params.reservationID;
+                let reservationID = page.detail.route.params.reservationID;
+                let låneInnerHTML = "";
+
+                var autocompleteToolList = app.autocomplete.create({
+                    inputEl: '#searchfield',
+                    openIn: 'dropdown',
+                    textProperty: "navn",
+                    valueProperty: "navn",
+                    limit: 5,
+                    source: (query, render) => {
+                        var results = [];
+                        if (query.length === 0) {
+                            render(results);
+                            return;
+                        }
+                        $$('#oversigtListBruger').prop({ disabled: true });
+                        // Find matched items
+                        for (var i = 0; i < this.oversigtListTools.length; i++) {
+                            if (this.oversigtListTools[i].navn.toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(this.oversigtListTools[i]);
+                        }
+                        // Render items by passing array with result items
+                        render(results);
+
+                    },
+                    on: {
+                        closed: (ele) => {
+                            //Check hvis feltet bliver sat til empty 
+                            if (this.oversigtListTools.filter(l => (l.navn === ele.$inputEl[0].value)).length == 0) { this.fillTableDefault(); }
+                        },
+                        change: (ele) => {
+                            if (ele[0]) { this.fillTableToolName(ele[0].navn) }
+                        }
+                    },
+                });
+
+                this.fillTableDefault();
+
+                if (reservationID != null) {
+                    app.request.getJSON(`${app.data['serverip']}endpoint/reservation.php?id=${reservationID}`, (response) => {
+                        globalEquipmentID = response.records[0].equipmentID;
+                        låneInnerHTML +=
+                            `
+                            <tr id="værktøjnr${response.records[0].equipmentID}">
+                                <td style="display: none;">${response.records[0].equipmentID}</td>
+                                <td class="label-cell VærktøjNavn">${response.records[0].equipmentNavn}</td>
+                                <td class="label-cell Kategori">${response.records[0].categoryName}</td>
+                                <td class="label-cell Mærke">${response.records[0].equipmentBrand}</td>
+                                <td class="label-cell Model">${response.records[0].equipmentModel}</td>
+                                <td class="label-cell Serienummer">${response.records[0].equipmentSerieNummer}</td>
+                                <td class="label-cell AssetTag">${response.records[0].equipmentAsset}</td>
+                                <td class="label-cell Stand">${response.records[0].equipmentCondition}</td>
+                                <td class="radio-cell">
+                                    <button type="button" onclick="fjernudlånsværktøj(${response.records[0].equipmentID})" class="no-ripple btn-primary deletebtn">Slet</button>
+                                </td>
+                            </tr>
+                            `;
+                        $$('.låneTableBody').html(låneInnerHTML);
+                    }, function (e) {
+                    })
+                }
+            }
+        },
+    }
+
+</script>

@@ -9,61 +9,63 @@ var app  = new Framework7({
   theme: 'auto', // Automatic theme detection
   // App root data
   data: function () {
+      
     return {
-      user: {
-        firstName: 'John',
-        lastName: 'Doe',
-      },
-      // Demo products for Catalog section
-      products: [
-        {
-          id: '1',
-          title: 'Apple iPhone 8',
-          description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nisi tempora similique reiciendis, error nesciunt vero, blanditiis pariatur dolor, minima sed sapiente rerum, dolorem corrupti hic modi praesentium unde saepe perspiciatis.'
-        },
-        {
-          id: '2',
-          title: 'Apple iPhone 8 Plus',
-          description: 'Velit odit autem modi saepe ratione totam minus, aperiam, labore quia provident temporibus quasi est ut aliquid blanditiis beatae suscipit odio vel! Nostrum porro sunt sint eveniet maiores, dolorem itaque!'
-        },
-        {
-          id: '3',
-          title: 'Apple iPhone X',
-          description: 'Expedita sequi perferendis quod illum pariatur aliquam, alias laboriosam! Vero blanditiis placeat, mollitia necessitatibus reprehenderit. Labore dolores amet quos, accusamus earum asperiores officiis assumenda optio architecto quia neque, quae eum.'
-        },
-      ]
+      username: "",
+      userID: -1,
+      adminConfirmedBool: false,
+      navbarheight: 0,
+      serverip: "http://10.11.5.135/cordova/",
     };
   },
   // App root methods
   methods: {
-    helloWorld: function () {
-      app.dialog.alert('Hello World!');
+    showAdminNavbar: function (){
+      if(app.data['adminConfirmedBool'] == true) {
+        //document.getElementById('adminnavbarwrapper').style.display = "block";
+        $$('#adminnavbarwrapper').show();
+      }
+    },
+
+    hideAdminNavbar: function (){
+      app.data['adminConfirmedBool'] = false;
+      //document.getElementById('adminnavbarwrapper').style.display = "none";
+      $$('#adminnavbarwrapper').hide();
+    },
+
+    addToLog: function(UserID, Handling){
+      app.request.post(`${app.data['serverip']}endpoint/logging.php`, { UserID: UserID, Handling: Handling }, function(response){
+        //console.log(response);
+      }, function(e, e2){
+        //console.log(e);
+      }, "json");
     },
   },
   // App routes
   routes: routes,
+
+  on: {
+    pageInit: function(page){
+      let currentpage = app.views.main.router.currentPageEl.dataset.name;
+      if(currentpage == "home"){
+        app.views.main.router.navigate("/udlon/", {reloadCurrent: true,});
+        app.data['navbarheight'] = $$('#view-navbar')[0].clientHeight;
+        document.getElementById('view-home').style.top = app.data['navbarheight']+"px";
+      }
+    },
+    pageAfterIn: function(page) {
+      setTimeout(function(){
+        app.data['navbarheight'] = $$('#view-navbar')[0].clientHeight;
+        document.getElementById('view-home').style.top = app.data['navbarheight']+"px";
+      }, 0);
+    },
+  },
 });
 
 // Init/Create views
 var homeView = app.views.create('#view-home', {
   url: '/'
 });
-var catalogView = app.views.create('#view-catalog', {
-  url: '/catalog/'
-});
-var settingsView = app.views.create('#view-settings', {
-  url: '/settings/'
-});
-
-
-// Login Screen Demo
-$$('#my-login-screen .login-button').on('click', function () {
-  var username = $$('#my-login-screen [name="username"]').val();
-  var password = $$('#my-login-screen [name="password"]').val();
-
-  // Close login screen
-  app.loginScreen.close('#my-login-screen');
-
-  // Alert username and password
-  app.dialog.alert('Username: ' + username + '<br>Password: ' + password);
+var navbarView = app.views.create('#view-navbar', {
+  url: '/navbar/'
 });

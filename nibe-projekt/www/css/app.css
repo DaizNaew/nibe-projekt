@@ -1,7 +1,440 @@
 /* Your app styles here */
+
+html, body, #app{
+  width: 100%; 
+  height:100%; 
+  overflow:hidden; 
+}
+
+body { 
+  background: rgba(130,153,161,1);
+  background: -moz-linear-gradient(top, rgba(130,153,161,1) 0%, rgba(105,129,140,1) 100%);
+  background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(130,153,161,1)), color-stop(100%, rgba(105,129,140,1)));
+  background: -webkit-linear-gradient(top, rgba(130,153,161,1) 0%, rgba(105,129,140,1) 100%);
+  background: -o-linear-gradient(top, rgba(130,153,161,1) 0%, rgba(105,129,140,1) 100%);
+  background: -ms-linear-gradient(top, rgba(130,153,161,1) 0%, rgba(105,129,140,1) 100%);
+  background: linear-gradient(to bottom, rgba(130,153,161,1) 0%, rgba(105,129,140,1) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#8299a1', endColorstr='#69818c', GradientType=0 );
+}
+
 .ios .tabbar-labels .tab-link:not(.tab-link-active) .icon-ios-fill {
   display: none;
 }
 .ios .tabbar-labels .tab-link.tab-link-active .icon:not(.icon-ios-fill) {
   display: none;
+}
+
+#view-home{
+  position: inherit;
+  bottom: 0px;
+}
+
+#view-home{
+  left:0px;
+  right:0px;
+  bottom: 0px;
+  position: absolute;
+}
+
+#currentpage, #gridwrapper, .grid{
+  position: inherit;
+  left: inherit;
+  right: inherit;
+  bottom: inherit;
+  top: inherit;
+}
+#currentpage{
+  top:0px;
+}
+
+nav { 
+  width: 100%;
+  border-bottom:1px solid black;
+  border-top:1px solid black;
+  margin-bottom: 25px;
+}
+
+.navbar .navbar-nav { 
+  width: 100%;
+}
+
+.navbar .navbar-nav  > li{ 
+  width: 100%;
+  text-align: center;
+}
+
+.navbar .navbar-nav > li:not(:last-child) {
+  border-right:1px solid black;
+}
+
+.navbar .navbar-nav  > li a{ 
+  color:#0b4a54 !important; 
+}
+
+.navbar .navbar-nav  > li a:hover{ 
+  color:white !important; 
+}
+
+.navbar .navbar-nav  > .active a {
+  color:white !important;
+}
+
+#adminnavbarwrapper{
+  width: 100%;
+  text-align: center;
+  }
+    
+  .adminnav{ 
+    width: 80%;
+    display: inline-block;
+  }
+  
+  .navbar.adminnav .navbar-nav > li:first-child {
+    border-left: 1px solid black;
+  }
+  
+  .navbar.adminnav .navbar-nav > li:last-child {
+    border-right: 1px solid black;
+  }
+
+.bg-info{
+  background: rgba(0, 0, 0, 0) !important;
+ }
+
+.login { 
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin: -150px 0 0 -150px;
+	width:300px;
+	height:300px;
+}
+
+
+
+.login h1 { 
+  color: #fff; text-shadow: 0 0 10px rgba(0,0,0,0.3); letter-spacing:1px; 
+  text-align:center; 
+}
+
+.login input {
+  width: 100%;
+  margin-bottom: 10px;
+  background: rgba(0, 0, 0, 0.3);
+  border: none;
+  outline: none;
+  padding: 10px;
+  font-size: 13px;
+  color: #fff;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+  box-shadow: inset 0 -5px 45px rgba(100, 100, 100, 0.2), 0 1px 1px rgba(255, 255, 255, 0.2);
+  transition: box-shadow 0.5s ease;
+}
+
+.login input:focus {
+  box-shadow: inset 0 -5px 45px rgba(197, 197, 197, 0.4), 0 1px 1px rgba(255, 255, 255, 0.2);
+}
+
+.login .btn, .godbtn {
+  display: inline-block;
+  *display: inline;
+  *zoom: 1;
+  padding: 4px 10px 4px;
+  margin-bottom: 0;
+  font-size: 13px;
+  line-height: 18px;
+  color: #333333;
+  text-align: center;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75);
+  vertical-align: middle;
+  background-color: #f5f5f5;
+  background-image: -moz-linear-gradient(top, #ffffff, #e6e6e6);
+  background-image: -ms-linear-gradient(top, #ffffff, #e6e6e6);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), to(#e6e6e6));
+  background-image: -webkit-linear-gradient(top, #ffffff, #e6e6e6);
+  background-image: -o-linear-gradient(top, #ffffff, #e6e6e6);
+  background-image: linear-gradient(top, #ffffff, #e6e6e6);
+  background-repeat: repeat-x;
+  filter: progid:dximagetransform.microsoft.gradient(startColorstr=#ffffff, endColorstr=#e6e6e6, GradientType=0);
+  border-color: #e6e6e6 #e6e6e6 #e6e6e6;
+  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+  border: 1px solid #e6e6e6;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+  -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.login .btn-primary, .login .btn-primary:hover, .godbtn, .godbtn:hover {
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+  color: black;
+  border: 1.5px solid #0062cc;
+}
+
+.login .btn-primary, .godbtn {
+  border: 1px solid black;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.4);
+  padding: 9px 14px;
+  font-size: 15px;
+  line-height: normal;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
+
+.button-content{
+  list-style: none;
+  flex-direction: row;
+  display: flex;
+  margin: 0px;
+  padding: 0px;
+}
+
+.button-content > li {
+  width: 48%;
+}
+.button-content > li:first-child{
+  margin-right: 4%;
+}
+.btn-primary:active{
+  color: #0062cc !important;
+}
+#errorcenter{
+  margin-bottom: 1rem;
+  text-align: center;
+}
+#errorcenter > div{
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+.nameLogout{
+  margin: 0px;
+  padding: 0px;
+}
+
+#adminnavbarwrapper{
+  display: none;
+}
+
+.login.Admin { 
+	width:350px;
+}
+
+.login.Admin .button-wrapper {
+  text-align: center;
+}
+
+.login.Admin .button-wrapper .btn {
+  width:50%;
+}
+
+#item1{
+  border-right:1px solid black;
+  bottom: 5%;
+  left: 0;
+  right: 50%;
+  top: inherit;
+  position: inherit;
+}
+
+.godbtn{
+  max-width: 175px;
+  height: 55px;
+}
+
+.form-button-row>button:not(:last-child) {
+  margin-right: 5px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 0px;
+}
+
+.form-row {
+  margin: 15px 10px;
+}
+
+button:disabled, button:disabled:hover {
+  color:#909090 !important;
+  border-color: black !important;
+}
+
+.deletebtn{
+  vertical-align: middle;
+  background-color: #f5f5f5;
+  background-image: -moz-linear-gradient(top, #ca0202, #aa0000);
+  background-image: -ms-linear-gradient(top, #ca0202, #aa0000);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ca0202), to(#aa0000));
+  background-image: -webkit-linear-gradient(top, #ca0202, #aa0000);
+  background-image: -o-linear-gradient(top, #ca0202, #aa0000);
+  background-image: linear-gradient(top, #ca0202, #aa0000);
+  background-repeat: repeat-x;
+  border: 1px solid #7e111a;
+}
+
+.deletebtn:hover{
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+  color: black;
+  border: 1.5px solid #df048b;
+}
+
+#kattable thead tr>th{
+  margin: 0px;
+  padding: 0px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+
+#kattable tbody tr>td, #kattable tbody tr>th{
+  margin: 0px;
+  padding: 0px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+}
+
+#kattable tbody tr>th:first-child, #kattable thead tr>th:first-child{
+  padding-left: 3px;
+}
+
+#kattable tbody tr td>input, #kattable thead tr td>input{
+  margin-left: 10%;
+}
+
+
+.tablegrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 25px;
+  width:90%;
+}
+
+.tableFixHead    { 
+  overflow-y: auto; 
+  overflow-x: hidden;
+  max-height: 600px; 
+}
+
+.tableFixHead th { 
+  position: sticky; 
+  top: 0; 
+  background-color: #657a81;
+}
+
+tr:nth-child(even){
+  background-color: #83838333;
+}
+
+.input_icon_css{
+  background-color: transparent; 
+  border: none; 
+  margin-left: -40px; 
+  font-size: 1rem;
+}
+
+* { box-sizing: border-box; }
+body {
+  font: 16px Arial;
+}
+
+.autocomplete {
+  /*the container must be positioned relative:*/
+  position: relative;
+  display: inline-block;
+}
+
+input {
+  border: 1px solid transparent;
+  padding: 10px;
+  font-size: 16px;
+}
+
+input[type=text] {
+  width: 100%;
+}
+
+input[type=submit] {
+  background-color: DodgerBlue;
+  color: #fff;
+}
+
+.autocomplete-items {
+  position: absolute;
+  border: 1px solid #d4d4d4;
+  border-bottom: none;
+  border-top: none;
+  z-index: 99;
+  /*position the autocomplete items to be the same width as the container:*/
+  top: 100%;
+  left: 0;
+  right: 0;
+}
+
+.autocomplete-items div {
+  padding: 10px;
+  cursor: pointer;
+  background-color: #fff;
+  border-bottom: 1px solid #d4d4d4;
+}
+
+.autocomplete-items div:hover {
+  /*when hovering an item:*/
+  background-color: #e9e9e9;
+}
+
+.autocomplete-active {
+  /*when navigating through the items using the arrow keys:*/
+  background-color: DodgerBlue !important;
+  color: #ffffff;
+}
+
+.log_Handling, .log_UserName{
+  text-align: left;
+}
+
+.tabletitle{
+  font-size: 17px;
+  font-weight: bold;
+}
+
+.tablelimit{
+  max-height: 210px;
+}
+
+.table td, .table th{
+  padding:6px !important;
+}
+
+.table thead tr th{
+  padding:8px !important;
+  font-size: 17px;
+
+}
+
+.input-wrapper{
+  position:relative;
+  width: 500px;
+}
+
+.input-format{
+  margin:0;
+  padding-right: 30px;
+  width: 100%;
+}
+
+.icon-format{
+  position:absolute;
+  bottom:0px;
+  right:5px;
+  width:24px;
+  height:24px;
+}
+
+label{
+  margin-top: 6px !important;
 }
