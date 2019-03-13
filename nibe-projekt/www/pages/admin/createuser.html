@@ -222,7 +222,7 @@
                 }, "json");
 
             },
-            edittool: () => {
+            edittool: function () {
                 var checkBoxObj = $$('.tableBody').find('input[type="radio"]');
                 let inputFields = $$('form').find(`input[type="text"]`);
                 $$('form').find('#update').prop('disabled', false);
@@ -241,6 +241,11 @@
                         })
 
                     }
+                });
+                certs = this.getCert('sp_GetUC', $$(element.parentElement.parentElement).find('input[type="radio"]').val());
+                lice = this.getCert('sp_GetUK', $$(element.parentElement.parentElement).find('input[type="radio"]').val());
+                this.tables.forEach(table => {
+
                 });
             },
             updatetool: () => {
@@ -390,6 +395,13 @@
                 }, function (e) {
                 });
             },
+
+            getCert: function (sp, userID) {
+                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=${sp}&param=${userID}`, (response) => {
+                    return response.records;
+                }, function (e) {
+                });
+            }
         },
         // Component States
         on: {
