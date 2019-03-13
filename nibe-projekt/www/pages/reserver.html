@@ -37,6 +37,14 @@
                                     </tbody>
                                 </table>
                             </div>
+
+                            <div class="input-group form-group">
+                                <label for="notefelt" class="col">Note</label>
+                                <div class="input-group-prepend col">
+                                    <textarea id="notefelt" rows="6" cols="34"></textarea>
+                                </div>
+                            </div>
+
                             <div class="input-group form-group">
                                 <label for="calendar_input" class="col">Afhentnings Dato</label>
                                 <div class="input-group-prepend col">
@@ -165,6 +173,7 @@
         data: function () {
             return {
                 oversigtListTools: [],
+                userList: [],
             };
         },
         // Component Methods
@@ -188,6 +197,7 @@
                 let newReserverID = document.getElementById('ID').value;
                 let newAfhentDato = document.getElementById('calendar_input').value + " " + document.getElementById('input-a').value + ":00";
                 let newAfleverDato = document.getElementById('calendar_input2').value + " " + document.getElementById('input-b').value + ":00";
+                let newNote = document.getElementById('notefelt').value;
 
                 if (newReserverNavn == "") {
                     app.dialog.alert("Reserver navn feltet må ikke være tomt.", "Reserver");
@@ -220,7 +230,7 @@
 
                     for (i = 0; i < arr.length; i++) {
                         //Kald Endpoint med id som arr[i]
-                        app.request.post(`${app.data['serverip']}endpoint/reservation.php`, { userID: newReserverID, equipmentID: arr[i], dateStart: newAfhentDato, expectedDateEnd: newAfleverDato }, function (response) {
+                        app.request.post(`${app.data['serverip']}endpoint/reservation.php`, { userID: newReserverID, equipmentID: arr[i], dateStart: newAfhentDato, expectedDateEnd: newAfleverDato, note: newNote }, function (response) {
                             if (response.result == 1) {
                                 dat = response;
                                 resolve();
@@ -330,10 +340,9 @@
 
             },
             pageMounted: function (page) {
-                let userList = [];
                 app.request.getJSON(`${app.data['serverip']}endpoint/user.php?id=-1`, (response) => {
                     for (let i = 0; i < response.records.length; i++) {
-                        userList[i] = { navn: `${response.records[i].name}`, ID: `${response.records[i].ID}` }
+                        this.userList[i] = { navn: `${response.records[i].name}`, ID: `${response.records[i].ID}` }
                     }
                 })
 
@@ -351,8 +360,8 @@
                         }
                         //$$('#oversigtListTools').prop({ disabled:true });
                         // Find matched items
-                        for (var i = 0; i < userList.length; i++) {
-                            if (userList[i].navn.toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(userList[i]);
+                        for (var i = 0; i < this.userList.length; i++) {
+                            if (this.userList[i].navn.toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(this.userList[i]);
                         }
                         // Render items by passing array with result items
                         render(results);
@@ -361,7 +370,7 @@
                     on: {
                         closed: (ele) => {
                             //Check hvis feltet bliver sat til empty 
-                            if (userList.filter(l => (l.navn === ele.$inputEl[0].value)).length == 0) { this.fillTableDefault(); }
+                            if (this.userList.filter(l => (l.navn === ele.$inputEl[0].value)).length == 0) { this.fillTableDefault(); }
                         },
                         change: (ele) => { if (ele[0]) { $$("#ID").val(ele[0].ID) } }
                     },
