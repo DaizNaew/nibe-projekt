@@ -22,7 +22,7 @@ class Reservation {
     public $dateStart;
     public $expectedDateEnd;
     public $actualDateEnd;
-    public $description;
+    public $note;
 
     // Tool props
     public $equipmentID;
@@ -73,11 +73,11 @@ class Reservation {
         $dateStart = $post['dateStart'];
 
         $expectedDateEnd = null;
-        $description = null;
+        $note = null;
         if(isset($post['expectedDateEnd'])) $expectedDateEnd = $post['expectedDateEnd'];
-        if(isset($post['description'])) $description = $post['description'];
+        if(isset($post['note'])) $note = $post['note'];
         
-        $query = "INSERT INTO " . $this->table_name . " (userID,equipmentID,dateStart,expectedDateEnd,description) VALUES " . "('$userID', '$equipmentID', '$dateStart', '$expectedDateEnd', '$description')";
+        $query = "INSERT INTO " . $this->table_name . " (userID,equipmentID,dateStart,expectedDateEnd,note) VALUES " . "('$userID', '$equipmentID', '$dateStart', '$expectedDateEnd', '$note')";
         
         // prepare query statement
         $stmt = $this->conn->prepare($query);
