@@ -1,0 +1,487 @@
+<template>
+    <div class="page" data-name="createuser">
+        <div id="gridwrapper">
+            <div class="grid">
+                <div style="padding: 25px" id="item1">
+                    <!--Item 1-->
+                    <div>
+                        <form>
+                            <div class="form-row">
+                                <label for="Navn" class="col">Fulde Navn</label>
+                                <input id="Navn" type="text" required="required"
+                                    class="form-control form-control-sm col" />
+                            </div>
+                            <div class="form-row">
+                                <label for="Mobilnr" class="col">Mobil Nr</label>
+                                <input id="Mobilnr" type="text" class="form-control form-control-sm col" />
+                            </div>
+                            <div class="form-row">
+                                <label for="Adresse" class="col">Adresse</label>
+                                <input id="Adresse" type="text" class="form-control form-control-sm col" />
+                            </div>
+                            <div class="form-row">
+                                <label for="Medhjælpernr" class="col">Medhjælper Nr</label>
+                                <input id="Medhjælpernr" type="text" required="required"
+                                    class="form-control form-control-sm col" />
+                            </div>
+
+                            <div class="form-row">
+                                <label for="Brugertype" class="col">Bruger Type</label>
+                                <select id="Brugertype" required="required" class="form-control form-control-sm col">
+
+                                </select>
+                            </div>
+                            <div class="form-row">
+                                <div class="tableFixHead col" style="max-height: 315px !important">
+                                    <table class="table fixed_header" style="background-color: #c5d9ec33;">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Kørekort</th>
+                                                <th scope="col">#</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="tableBody licenseTable">
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="tableFixHead col" style="max-height: 315px !important">
+                                    <table class="table fixed_header" style="background-color: #c5d9ec33;">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Certifikat</th>
+                                                <th scope="col">#</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="tableBody certificateTable">
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="form-row form-button-row">
+                                <a><button id="insert" type="submit" @click="inserttool"
+                                        class="no-ripple col btn btn-primary godbtn">Opret Bruger</button></a>
+                                <a><button id="update" type="submit" @click="updatetool"
+                                        class="no-ripple col btn btn-primary godbtn" disabled>Opdater
+                                        Bruger</button></a>
+                                <a><button id="reset" type="button" @click="resetfields"
+                                        class="no-ripple col btn btn-primary godbtn">Nulstil felter</button></a>
+                            </div>
+                            <input id="editID" type="hidden" />
+                        </form>
+                    </div>
+                </div>
+                <div style="padding: 25px">
+                    <!--Item 2-->
+                    <div style="max-height: 700px">
+                        <div class="form-row" style="text-align: left">
+                            <label class="col">Medhjælper navn</label>
+                            <div class="input-wrapper">
+                                <input type="text" class="form-control form-control-sm col input-format"
+                                    id="AddBrugerNavn">
+                                <span><i class="fas fa-search icon-format"></i></span>
+                            </div>
+                        </div>
+                        <div class="tableFixHead" style="max-height: 512px !important">
+                            <table class="table fixed_header" style="background-color: #c5d9ec33;">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" style="display: none;">#</th>
+                                        <th class="label-cell" scope="col">Fulde navn</th>
+                                        <th class="label-cell" scope="col">Mobil nr</th>
+                                        <th class="label-cell" scope="col">Adresse</th>
+                                        <th class="label-cell" scope="col">Medhjælper nr</th>
+                                        <th class="radio-cell" scope="col">
+                                            <!--<input type="checkbox" class="no-ripple"/>-->
+                                            <i class="icon-radio"></i>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="tableBody userTable" >
+
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="form-row form-button-row">
+                            <a><button type="submit" @click="edittool"
+                                    class="no-ripple col btn btn-primary godbtn">Rediger Bruger</button></a>
+                            <a><button type="button" @click="deletetool"
+                                    class="no-ripple col btn btn-primary godbtn deletebtn">Slet Bruger</button></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</template>
+
+<script>
+    return {
+        data: function () {
+            return {
+                oversigtListBruger: [],
+                userCertList: [],
+                userLiceList: [],
+                selectedCerts: [],
+                selectedLices: [],
+                tables: ['.licenseTable', '.certificateTable'],
+                spNames: ['sp_InsertIntoUK', 'sp_InsertIntoUC'],
+            };
+        },
+        // Component Methods
+        methods: {
+            resetfields: function () {
+                self = this;
+                app.dialog.confirm('Er du sikker på at du vil nulstille alle felter?', 'Nulstil Felter', function () {
+                    let inputs = $$('form').find('input');
+                    inputs.val('');
+                    document.getElementById("Brugertype").value = "1";
+                    document.getElementById("update").disabled = true;
+                    document.getElementById("insert").disabled = false;
+
+                    self.tables.forEach(table => {
+                        $$(table).filter(function (index, e) {
+                            $$(e.children).find('input[type="checkbox"]').prop('checked', false);
+                            $$(e.children).css('background-color', '');
+                            $$(e.children).find('input[type="checkbox"]').removeClass('selected');
+                        });
+                    });
+                });
+            },
+            deletetool: () => {
+                var checkBoxObj = $$('.tableBody').find('input[type="radio"]');
+                app.dialog.confirm('Er du sikker på at du vil slette denne bruger fra databasen?', 'Slet Bruger', function () {
+                    checkBoxObj.forEach(element => {
+                        if (element.checked) {
+                            app.request.getJSON(`${app.data['serverip']}functions/users/delete.php?id=${element.value}`, (data) => {
+                                if (data.result == 1) {
+                                    let delbrugerNavn = element.parentElement.parentElement.children[1].innerText;
+                                    app.dialog.alert(`Brugeren (<span style='color: green; font-weight: bold;'>${delbrugerNavn}</span>) blev slettet fra databasen.`, "Slet Bruger", function () {
+                                        app.methods.addToLog(`${app.data['userID']}`, `Slettet brugeren ${delbrugerNavn}`);
+                                        app.views.main.router.navigate("/createuser/", { reloadCurrent: true, });
+                                    });
+                                } else {
+                                    app.dialog.alert("Brugeren blev <span style='color: red; font-weight: bold;'>IKKE</span> slettet fra databasen.", "Slet Bruger");
+                                }
+                            });
+                        }
+                    });
+                })
+            },
+            inserttool: function async() {
+                let newNavn = document.getElementById('Navn').value;
+                let newMobilnr = document.getElementById('Mobilnr').value;
+                let newAdresse = document.getElementById('Adresse').value;
+                let newMedhjælpernr = document.getElementById('Medhjælpernr').value;
+                let gruppeID = document.getElementById('Brugertype').selectedIndex + 1;
+                self = this;
+
+                if (newNavn == "") {
+                    app.dialog.alert("Navn feltet må ikke være tomt.", "Opret Bruger");
+                    return;
+                }
+                if (newMobilnr == "") {
+                    app.dialog.alert("Mobil Nr feltet må ikke være tomt.", "Opret Bruger");
+                    return;
+                }
+                if (newAdresse == "") {
+                    app.dialog.alert("Adresse feltet må ikke være tomt.", "Opret Bruger");
+                    return;
+                }
+                if (newMedhjælpernr == "") {
+                    app.dialog.alert("Medhjælper Nr feltet må ikke være tomt.", "Opret Bruger");
+                    return;
+                }
+                app.request.post(`${app.data['serverip']}endpoint/user.php`, { name: newNavn, phoneNumber: newMobilnr, address: newAdresse, cardID: newMedhjælpernr, usergruppe: gruppeID }, function (response) {
+                    if (response.result == 1) {
+                        i = 0;
+                        app.request.getJSON(`${app.data['serverip']}functions/users/cardid.php?id=${newMedhjælpernr}`, (res) => {
+                            uID = res.records[0].ID;
+                            tables = ['.licenseTable', '.certificateTable'];
+                            tables.forEach(table => {
+                                $$(table).find('input[type="checkbox"]').filter(function (index, el) {
+                                    if ($$(el).hasClass('selected')) {
+                                        self.insertCert(self.spNames[i], uID, el.value);
+                                    }
+                                });
+                                i++;
+                            });
+                        })
+                        app.methods.addToLog(`${app.data['userID']}`, `Oprettet brugeren ${newNavn}`);
+                        app.dialog.alert(`Brugeren (<span style="color: green; font-weight: bold;">${newNavn}</span>) blev tilføjet til databasen.`, "Opret Bruger", function () {
+                            app.views.main.router.navigate("/createuser/", { reloadCurrent: true, });
+                        });
+
+                    } else {
+                        app.dialog.alert(`${newNavn} blev <span style='color: red; font-weight: bold;'>IKKE</span> tilføjet til databasen.`, "Opret Bruger");
+                        return;
+                    }
+                }, function (e, e2) {
+                }, "json");
+
+            },
+            edittool: function () {
+                var checkBoxObj = $$('.tableBody').find('input[type="radio"]');
+                let inputFields = $$('form').find(`input[type="text"]`);
+                $$('form').find('#update').prop('disabled', false);
+                $$('form').find('#insert').prop('disabled', true);
+                checkBoxObj.forEach(element => {
+                    if (element.checked) {
+                        $$('form').find('#editID').val($$(element.parentElement.parentElement).find('input[type="radio"]').val());
+                        let cells = $$(element.parentElement.parentElement).find('.label-cell');
+                        cells.forEach(element => {
+                            input = $$(inputFields).find(`${element.classList[1]}`).val();
+                            input_data = element.firstChild.data;
+                            $$('form').find(`#${element.classList[1]}`).val(input_data);
+                            if (element.classList[1] == 'Brugertype') {
+                                $$('form').find(`#${element.classList[1]}`).val(element.firstChild.parentElement.attributes[2].value);
+                            }
+                        })
+
+                    }
+                });
+                certs = this.getCert('sp_GetUC', $$(element.parentElement.parentElement).find('input[type="radio"]').val());
+                lice = this.getCert('sp_GetUK', $$(element.parentElement.parentElement).find('input[type="radio"]').val());
+                this.tables.forEach(table => {
+
+                });
+            },
+            updatetool: () => {
+                let newUserID = document.getElementById('editID').value;
+                let newNavn = document.getElementById('Navn').value;
+                let newMobilnr = document.getElementById('Mobilnr').value;
+                let newAdresse = document.getElementById('Adresse').value;
+                let newMedhjælpernr = document.getElementById('Medhjælpernr').value;
+                let gruppeID = document.getElementById('Brugertype').selectedIndex + 1;
+
+                if (newNavn == "") {
+                    app.dialog.alert("Navn feltet må ikke være tomt.", "Opret Bruger");
+                    return;
+                }
+                if (newMobilnr == "") {
+                    app.dialog.alert("Mobil Nr feltet må ikke være tomt.", "Opret Bruger");
+                    return;
+                }
+                if (newAdresse == "") {
+                    app.dialog.alert("Adresse feltet må ikke være tomt.", "Opret Bruger");
+                    return;
+                }
+                if (newMedhjælpernr == "") {
+                    app.dialog.alert("Medhjælper Nr feltet må ikke være tomt.", "Opret Bruger");
+                    return;
+                }
+
+                app.request.post(`${app.data['serverip']}functions/users/update.php`, { ID: newUserID, name: newNavn, phoneNumber: newMobilnr, address: newAdresse, cardID: newMedhjælpernr, usergruppe: gruppeID }, function (response) {
+                    app.methods.addToLog(`${app.data['userID']}`, `Ændret på brugeren ${newNavn}`);
+                    app.views.main.router.navigate("/createuser/", { reloadCurrent: true, });
+                }, function (e, e2) {
+                }, "json");
+
+            },
+            fillTableDefault: function () {
+
+                let innerHTML = "";
+                var app = this.$app;
+                let o = 0, p = 0;
+
+                // request user data on page init
+                app.request.getJSON(`${app.data['serverip']}endpoint/user.php?id=-1`, (response) => {
+                    // update component state with new state
+                    for (let i = 0; i < response.records.length; i++) {
+                        innerHTML +=
+                            `
+                            <tr>
+                                <td style="display: none;">${response.records[i].ID}</td>
+                                <td class="label-cell Navn">${response.records[i].name}</td>
+                                <td class="label-cell Mobilnr">${response.records[i].phoneNumber}</td>
+                                <td class="label-cell Adresse">${response.records[i].address}</td>
+                                <td class="label-cell Medhjælpernr">${response.records[i].cardID}</td>
+                                <td class="label-cell Brugertype" style="display: none;" value="${response.records[i].usergruppe}">${response.records[i].usergruppetitle}</td>
+                                <td class="radio-cell">
+                                    <input type="radio" value="${response.records[i].ID}" name="selectedTool"/>
+                                    <i class="icon-radio"></i>
+                                </td>
+                            </tr>
+                            `;
+                        $$('.userTable').html(innerHTML);
+                        if (i !== 0) {
+                            if (this.oversigtListBruger[o].navn != response.records[i].name) {
+                                this.oversigtListBruger.push({ navn: `${response.records[i].name}`, ID: `${response.records[i].ID}` });
+                                o++;
+                            }
+                        } else {
+                            this.oversigtListBruger.push({ navn: `${response.records[i].name}`, ID: `${response.records[i].ID}` });
+                        }
+                    }
+                });
+            },
+            fillTableUserID: function (id) {
+                let innerHTML = "";
+                var app = this.$app;
+                // request user data on page init
+                app.request.getJSON(`${app.data['serverip']}endpoint/user.php?id=${id}`, (response) => {
+                    // update component state with new state
+                    for (let i = 0; i < response.records.length; i++) {
+                        innerHTML +=
+                            `
+                            <tr>
+                                <td style="display: none;">${response.records[i].ID}</td>
+                                <td class="label-cell Navn">${response.records[i].name}</td>
+                                <td class="label-cell Mobilnr">${response.records[i].phoneNumber}</td>
+                                <td class="label-cell Adresse">${response.records[i].address}</td>
+                                <td class="label-cell Medhjælpernr">${response.records[i].cardID}</td>
+                                <td class="label-cell Brugertype" style="display: none;" value="${response.records[i].usergruppe}">${response.records[i].usergruppetitle}</td>
+                                <td class="radio-cell">
+                                    <input type="radio" value="${response.records[i].ID}" name="selectedTool"/>
+                                    <i class="icon-radio"></i>
+                                </td>
+                            </tr>
+                            `;
+                        $$('.userTable').html(innerHTML);
+                    }
+                });
+            },
+
+            fillCertTable: function () {
+                let innerHTML = "";
+                var app = this.$app;
+                // request driverlicense on page init
+                app.request.getJSON(`${app.data['serverip']}endpoint/certificate.php?id=-1&tableid=0`, (response) => {
+                    // update component state with new state
+                    for (let i = 0; i < response.certifikat.length; i++) {
+                        innerHTML +=
+                            `
+                            <tr>
+                                <td class="label-cell">${response.certifikat[i].type}</td>
+                                <td class="checkbox-cell">
+                                    <input type="checkbox" value="${response.certifikat[i].ID}" name="selectedCert"/>
+                                    <i class="icon-checkbox"></i>
+                                </td>
+                            </tr>
+                            `;
+                        $$('.certificateTable').html(innerHTML);
+                    }
+                });
+            },
+
+            fillLiceTable: function () {
+                let innerHTML = "";
+                var app = this.$app;
+                // request license data on page init
+                app.request.getJSON(`${app.data['serverip']}endpoint/certificate.php?id=-1&tableid=1`, (response) => {
+                    // update component state with new state
+                    for (let i = 0; i < response.kørekort.length; i++) {
+                        innerHTML +=
+                            `
+                            <tr>
+                                <td class="label-cell">${response.kørekort[i].type}</td>
+                                <td class="checkbox-cell">
+                                    <input type="checkbox" value="${response.kørekort[i].ID}" name="selectedLice"/>
+                                    <i class="icon-checkbox"></i>
+                                </td>
+                            </tr>
+                            `;
+                        $$('.licenseTable').html(innerHTML);
+                    }
+                });
+            },
+
+            insertCert: function (sp, userID, paramID) {
+                //sp_InsertIntoUC  -  CERT
+                //sp_InsertIntoUK  -  Kørekort
+                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=${sp}&param=${userID},${paramID}`, (response) => {
+                }, function (e) {
+                });
+            },
+
+            getCert: function (sp, userID) {
+                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=${sp}&param=${userID}`, (response) => {
+                    return response.records;
+                }, function (e) {
+                });
+            }
+        },
+        // Component States
+        on: {
+            pageMounted: function (page) {
+
+                var userOldRow = null;
+
+                var app = this.$app;
+
+                this.oversigtListBruger.length = 0;
+                app.request.getJSON(`${app.data['serverip']}endpoint/usergroup.php?id=-1`, (response) => {
+                    for (group of response.usergroups) {
+                        $$('#Brugertype').append(`<option value="${group.ID}">${group.title}</option>`)
+                    }
+                });
+
+                this.fillTableDefault();
+                this.fillLiceTable();
+                this.fillCertTable();
+
+                $$('.userTable').on('click', (e) => {
+                    if (userOldRow == null) {
+                        userOldRow = e;
+                    } else {
+                        $$(userOldRow.target.parentElement).css('background-color', '');
+                        userOldRow = e;
+                    }
+                    $$(e.target.parentElement).find('input[type="radio"]').prop('checked', true);
+                    $$(e.target.parentElement).css('background-color', '#a8baad');
+
+                });
+
+                this.tables.forEach(table => {
+                    $$(table).on('click', (e) => {
+                        isChecked = $$(e.target.parentElement).find('input[type="checkbox"]').prop('checked');
+                        if (!isChecked) {
+                            $$(e.target.parentElement).find('input[type="checkbox"]').prop('checked', true);
+                            $$(e.target.parentElement).css('background-color', '#a8baad');
+                            $$(e.target.parentElement).find('input[type="checkbox"]').addClass('selected');
+                        } else {
+                            $$(e.target.parentElement).find('input[type="checkbox"]').prop('checked', false);
+                            $$(e.target.parentElement).css('background-color', '');
+                            $$(e.target.parentElement).find('input[type="checkbox"]').removeClass('selected');
+                        }
+                    });
+                })
+                var autocompleteBrugerList = app.autocomplete.create({
+                    inputEl: '#AddBrugerNavn',
+                    openIn: 'dropdown',
+                    textProperty: "navn",
+                    valueProperty: "navn",
+                    limit: 5,
+                    source: (query, render) => {
+                        var results = [];
+                        if (query.length === 0) {
+                            render(results);
+                            return;
+                        }
+                        //$$('#oversigtListTools').prop({ disabled:true });
+                        // Find matched items
+                        for (var i = 0; i < this.oversigtListBruger.length; i++) {
+                            if (this.oversigtListBruger[i].navn.toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(this.oversigtListBruger[i]);
+                        }
+                        // Render items by passing array with result items
+                        render(results);
+
+                    },
+                    on: {
+                        closed: (ele) => {
+                            //Check hvis feltet bliver sat til empty 
+                            if (this.oversigtListBruger.filter(l => (l.navn === ele.$inputEl[0].value)).length == 0) { this.fillTableDefault(); }
+                        },
+                        change: (ele) => {
+                            if (ele[0]) {
+                                this.fillTableUserID(ele[0].ID)
+                            }
+                        }
+                    },
+                });
+            }
+        },
+    }
+</script>

@@ -1,0 +1,407 @@
+<template>
+    <div class="page" data-name="reserver">
+        <div id="gridwrapper">
+            <div class="grid">
+                <div style="padding: 25px" id="item1">
+                    <!--Item 1-->
+                    <div>
+                        <form autocomplete="off">
+
+
+                            <div class="form-row" style="text-align: left">
+                                <label class="col">Reserver navn</label>
+                                <div class="input-wrapper">
+                                    <input type="text" class="form-control form-control-sm col input-format" id="ReserverNavn" required="required">
+                                    <span><i  class="fas fa-user-tag icon-format"></i></span>
+                                </div>
+                            </div>
+
+                            <div class="tableFixHead">
+                                <table class="table fixed_header" style="background-color: #c5d9ec33;">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col" style="display: none;">#</th>
+                                            <th class="label-cell" scope="col">Værktøjs Navn</th>
+                                            <th class="label-cell" scope="col">Kategori</th>
+                                            <th class="label-cell" scope="col">Mærke</th>
+                                            <th class="label-cell" scope="col">Model</th>
+                                            <th class="label-cell" scope="col">AssetTag</th>
+                                            <th class="radio-cell" scope="col">
+                                                <!--<input type="checkbox" class="no-ripple"/>-->
+                                                <i class="icon-radio"></i>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="låneTableBody">
+
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="input-group form-group">
+                                <label for="calendar_input" class="col">Afhentnings Dato</label>
+                                <div class="input-group-prepend col">
+                                    <input type="text" id="calendar_input" required="required"
+                                        class="form-control form-control-sm" autocomplete="off">
+                                    <span><i 
+                                            class="far fa-calendar-alt input-group-text input_icon_css"></i></span>
+                                </div>
+                            </div>
+                            <div class="input-group form-group">
+                                <label for="input-a" class="col">Afhentnings Tidspunkt</label>
+                                <div class="input-group-prepend col">
+                                    <input id="input-a" value="" data-default="10:00" required="required"
+                                        class="form-control form-control-sm" autocomplete="off">
+                                    <span><i 
+                                            class="far fa-clock input-group-text input_icon_css"></i></span>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="input-group form-group">
+                                <label for="calendar_input2" class="col">Afleverings Dato</label>
+                                <div class="input-group-prepend col">
+                                    <input type="text" id="calendar_input2" required="required"
+                                        class="form-control form-control-sm" autocomplete="off">
+                                    <span><i 
+                                            class="far fa-calendar-alt input-group-text input_icon_css"></i></span>
+                                </div>
+                            </div>
+                            <div class="input-group form-group">
+                                <label for="input-b" class="col">Afleverings Tidspunkt</label>
+                                <div class="input-group-prepend col">
+                                    <input id="input-b" value="" data-default="10:00" required="required"
+                                        class="form-control form-control-sm" autocomplete="off">
+                                    <span><i 
+                                            class="far fa-clock input-group-text input_icon_css"></i></span>
+                                </div>
+                            </div>
+
+                            <div class="form-row form-button-row">
+                                <a><button id="insert" @click="reservertool" type="submit"
+                                        class="no-ripple col btn btn-primary godbtn">Reserver</button></a>
+                                <a><button id="reset" @click="resetfields" type="button"
+                                        class="no-ripple col btn btn-primary godbtn">Nulstil felter</button></a>
+                            </div>
+                            <input id="ID" type="hidden" />
+                        </form>
+                    </div>
+                </div>
+                <div style="padding: 25px">
+                    <!--Item 2-->
+                    <div>
+
+                        <div class="form-row" style="text-align: left">
+                            <label class="col">Værktøjs navn</label>
+                            <div class="input-wrapper">
+                                <input type="text" class="form-control form-control-sm col input-format" id="VærktøjsNavn" required="required">
+                                <span><i id="calendar_icon" class="fas fa-search icon-format"></i></span>
+                            </div>
+                        </div>
+
+                        <div class="tableFixHead">
+                            <table class="table fixed_header" style="background-color: #c5d9ec33;">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" style="display: none;">#</th>
+                                        <th class="label-cell" scope="col">Værktøjs Navn</th>
+                                        <th class="label-cell" scope="col">Kategori</th>
+                                        <th class="label-cell" scope="col">Mærke</th>
+                                        <th class="label-cell" scope="col">Model</th>
+                                        <th class="label-cell" scope="col">AssetTag</th>
+                                        <th class="radio-cell" scope="col">
+                                            <!--<input type="checkbox" class="no-ripple"/>-->
+                                            <i class="icon-radio"></i>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="tableBody">
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+
+<script>
+    var arr = [];
+
+    fjernreserverværktøj = (værktøjsID) => {
+        $$(`.tableBody`).find(`#btn${værktøjsID}`).prop("disabled", false);
+        $$(`.låneTableBody`).find(`#værktøjnr${værktøjsID}`).remove();
+        arr.splice(arr.indexOf(værktøjsID), 1);
+    }
+
+    tilføjreserverværktøj = (værktøjsID) => {
+        arr.push(værktøjsID);
+        let innerHTML = "";
+        app.request.getJSON(`${app.data['serverip']}endpoint/equipment.php?id=${værktøjsID}`, (response) => {
+            $$(`.tableBody`).find(`#btn${værktøjsID}`).prop("disabled", true);
+            innerHTML = $$(`.låneTableBody`).html();
+            for (let i = 0; i < response.records.length; i++) {
+                innerHTML +=
+                    `
+                    <tr id="værktøjnr${værktøjsID}">
+                        <td style="display: none;">${værktøjsID}</td>
+                        <td class="label-cell VærktøjsNavn">${response.records[i].activeName}</td>
+                        <td class="label-cell Kategori">${response.records[i].categoryName}</td>
+                        <td class="label-cell Mærke">${response.records[i].brandName}</td>
+                        <td class="label-cell Model">${response.records[i].modelName}</td>
+                        <td class="label-cell AssetTag">${response.records[i].assetTag}</td>
+                        <td class="radio-cell">
+                            <button type="button" onclick="fjernreserverværktøj(${response.records[0].ID})" class="no-ripple btn-primary deletebtn">Slet</button>
+                        </td>
+                    </tr>
+                    `;
+                $$('.låneTableBody').html(innerHTML);
+            }
+        })
+    }
+
+    return {
+        data: function () {
+            return {
+                oversigtListTools: [],
+            };
+        },
+        // Component Methods
+        methods: {
+            resetfields: () => {
+                app.dialog.confirm('Er du sikker på at du vil nulstille alle felter?', 'Nulstil Felter', function () {
+                    let inputs = $$('form').find('input');
+                    inputs.val('');
+                    $$(`.låneTableBody`).html('');
+                    var checkBoxObj = $$('.tableBody').find('button');
+                    checkBoxObj.forEach(element => {
+                        if (element.disabled) {
+                            element.disabled = false;
+                        }
+                    })
+                });
+            },
+
+            reservertool: async () => {
+                let newReserverNavn = document.getElementById('ReserverNavn').value;
+                let newReserverID = document.getElementById('ID').value;
+                let newAfhentDato = document.getElementById('calendar_input').value + " " + document.getElementById('input-a').value + ":00";
+                let newAfleverDato = document.getElementById('calendar_input2').value + " " + document.getElementById('input-b').value + ":00";
+
+                if (newReserverNavn == "") {
+                    app.dialog.alert("Reserver navn feltet må ikke være tomt.", "Reserver");
+                    return;
+                }
+                if (document.getElementById('calendar_input').value == "") {
+                    app.dialog.alert("Afhentnings dato feltet må ikke være tomt.", "Reserver");
+                    return;
+                }
+                if (document.getElementById('calendar_input2').value == "") {
+                    app.dialog.alert("Afleverings dato feltet må ikke være tomt.", "Reserver");
+                    return;
+                }
+                if (document.getElementById('input-a').value == "") {
+                    app.dialog.alert("Afhentnings tidspunkt feltet må ikke være tomt.", "Reserver");
+                    return;
+                }
+                if (document.getElementById('input-b').value == "") {
+                    app.dialog.alert("Afleverings tidspunkt feltet må ikke være tomt.", "Reserver");
+                    return;
+                }
+                if (arr.length == 0) {
+                    app.dialog.alert("Du skal huske at vælge mindst et stykke værktøj som skal reserveres.", "Reserver");
+                    return;
+                }
+
+                let dat;
+
+                let prom = new Promise((resolve, reject) => {
+
+                    for (i = 0; i < arr.length; i++) {
+                        //Kald Endpoint med id som arr[i]
+                        app.request.post(`${app.data['serverip']}endpoint/reservation.php`, { userID: newReserverID, equipmentID: arr[i], dateStart: newAfhentDato, expectedDateEnd: newAfleverDato }, function (response) {
+                            if (response.result == 1) {
+                                dat = response;
+                                resolve();
+                            } else {
+                                reject();
+                            }
+                        }, function (e, e2) {
+                        }, "json");
+                    }
+                })
+
+                await prom;
+                if (dat.result == 1) {
+                    app.dialog.alert(`Reservationen til (<span style="color: green; font-weight: bold;">${newReserverNavn}</span>) blev oprettet.`, "Reserver", function () {
+                        for (i = 0; i < arr.length; i++) {
+                            app.request.getJSON(`${app.data['serverip']}endpoint/equipment.php?id=${arr[i]}`, (response) => {
+                                app.methods.addToLog(`${newReserverID}`, `Reservered ${response.records[0].activeName} med assetTag (${response.records[0].assetTag})`);
+                            })
+                        }
+                        app.views.main.router.navigate("/reserver/", { reloadCurrent: true, });
+                        arr = [];
+                    });
+                } else {
+                    app.dialog.alert(`Reservationen til ${newReserverNavn} blev <span style='color: red; font-weight: bold;'>IKKE</span> oprettet.`, "Reserver");
+                    return;
+                }
+            },
+
+            fillTableDefault() {
+                let innerHTML = "";
+                let o = 0, p = 0;
+                this.oversigtListTools.length = 0
+                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllToolsForLoan&param=-1`, (response) => {
+                    for (let i = 0; i < response.records.length; i++) {
+                        innerHTML +=
+                            `
+                            <tr>
+                                <td style="display: none;">${response.records[i].ID}</td>
+                                <td class="label-cell VærktøjsNavn">${response.records[i].equipmentNavn}</td>
+                                <td class="label-cell Kategori">${response.records[i].equipmentKategori}</td>
+                                <td class="label-cell Mærke">${response.records[i].equipmentBrand}</td>
+                                <td class="label-cell Model">${response.records[i].equipmentModel}</td>
+                                <td class="label-cell AssetTag">${response.records[i].equipmentAsset}</td>
+                                <td class="radio-cell">
+                                    <button type="button" id="btn${response.records[i].ID}" onclick="tilføjreserverværktøj(${response.records[i].ID})" class="no-ripple btn-primary">Tilføj</button>
+                                </td>
+                            </tr>
+                            `;
+                        $$('.tableBody').html(innerHTML);
+                        if (i !== 0) {
+                            if (this.oversigtListTools[p].navn != response.records[i].equipmentNavn) {
+                                this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
+                                p++;
+                            }
+                        } else {
+                            this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
+                        }
+                    }
+                })
+            },
+            fillTableToolName(name) {
+                let innerHTML = "";
+                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetSelectToolForLoan&param=${name}`, (response) => {
+                    for (let i = 0; i < response.records.length; i++) {
+                        innerHTML +=
+                            `
+                            <tr>
+                                <td style="display: none;">${response.records[i].ID}</td>
+                                <td class="label-cell VærktøjsNavn">${response.records[i].equipmentNavn}</td>
+                                <td class="label-cell Kategori">${response.records[i].equipmentKategori}</td>
+                                <td class="label-cell Mærke">${response.records[i].equipmentBrand}</td>
+                                <td class="label-cell Model">${response.records[i].equipmentModel}</td>
+                                <td class="label-cell AssetTag">${response.records[i].equipmentAsset}</td>
+                                <td class="radio-cell">
+                                    <button type="button" id="btn${response.records[i].ID}" onclick="tilføjreserverværktøj(${response.records[i].ID})" class="no-ripple btn-primary">Tilføj</button>
+                                </td>
+                            </tr>
+                            `;
+                        $$('.tableBody').html(innerHTML);
+                    }
+                })
+            },
+
+        },
+
+        on: {
+            pageAfterIn: function (e, page) {
+
+                var myCalendar = new dhtmlXCalendarObject(
+                    { input: "calendar_input", button: "calendar_input" }
+                );
+                myCalendar.hideTime();
+
+                var myCalendar2 = new dhtmlXCalendarObject(
+                    { input: "calendar_input2", button: "calendar_input2" }
+                );
+                myCalendar2.hideTime();
+
+                var input = $('#input-a');
+                input.clockpicker({
+                    autoclose: true
+                });
+                var input2 = $('#input-b');
+                input2.clockpicker({
+                    autoclose: true
+                });
+
+            },
+            pageMounted: function (page) {
+                let userList = [];
+                app.request.getJSON(`${app.data['serverip']}endpoint/user.php?id=-1`, (response) => {
+                    for (let i = 0; i < response.records.length; i++) {
+                        userList[i] = { navn: `${response.records[i].name}`, ID: `${response.records[i].ID}` }
+                    }
+                })
+
+                var autocompleteBrugerList = app.autocomplete.create({
+                    inputEl: '#ReserverNavn',
+                    openIn: 'dropdown',
+                    textProperty: "navn",
+                    valueProperty: "navn",
+                    limit: 5,
+                    source: (query, render) => {
+                        var results = [];
+                        if (query.length === 0) {
+                            render(results);
+                            return;
+                        }
+                        //$$('#oversigtListTools').prop({ disabled:true });
+                        // Find matched items
+                        for (var i = 0; i < userList.length; i++) {
+                            if (userList[i].navn.toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(userList[i]);
+                        }
+                        // Render items by passing array with result items
+                        render(results);
+
+                    },
+                    on: {
+                        closed: (ele) => {
+                            //Check hvis feltet bliver sat til empty 
+                            if (userList.filter(l => (l.navn === ele.$inputEl[0].value)).length == 0) { this.fillTableDefault(); }
+                        },
+                        change: (ele) => { if (ele[0]) { $$("#ID").val(ele[0].ID) } }
+                    },
+                });
+
+                var autocompleteToolList = app.autocomplete.create({
+                    inputEl: '#VærktøjsNavn',
+                    openIn: 'dropdown',
+                    textProperty: "navn",
+                    valueProperty: "navn",
+                    limit: 5,
+                    source: (query, render) => {
+                        var results = [];
+                        if (query.length === 0) {
+                            render(results);
+                            return;
+                        }
+                        // Find matched items
+                        for (var i = 0; i < this.oversigtListTools.length; i++) {
+                            if (this.oversigtListTools[i].navn.toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(this.oversigtListTools[i]);
+                        }
+                        // Render items by passing array with result items
+                        render(results);
+
+                    },
+                    on: {
+                        closed: (ele) => {
+                            //Check hvis feltet bliver sat til empty 
+                            if (this.oversigtListTools.filter(l => (l.navn === ele.$inputEl[0].value)).length == 0) { this.fillTableDefault(); }
+                        },
+                        change: (ele) => {
+                            if (ele[0]) { this.fillTableToolName(ele[0].navn) }
+                        }
+                    },
+                });
+
+                this.fillTableDefault();
+
+            }
+        },
+    }
+
+</script>

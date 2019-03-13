@@ -1,0 +1,278 @@
+<template>
+    <div class="page" data-name="reservationer">
+        <div id="wrapper">
+            <div style="padding: 25px; width:100%; text-align: center;">
+                <form class="mb-3" autocomplete="off" autocomplete="false">
+
+
+                    <div class="form-row" style="text-align: left">
+                        <label class="col">Medhjælper navn</label>
+                        <div class="input-wrapper">
+                            <input type="text" class="form-control form-control-sm col input-format" id="reservationListBruger">
+                            <span><i class="fas fa-search icon-format"></i></span>
+                        </div>
+                    </div>
+
+                    <div class="form-row" style="text-align: left">
+                        <label class="col">Værktøjets navn</label>
+                        <div class="input-wrapper">
+                            <input type="text" class="form-control form-control-sm col input-format" id="reservationListTools">
+                            <span><i class="fas fa-search icon-format"></i></span>
+                        </div>
+                    </div>
+                </form>
+                <!--Item 2-->
+                <div style="display: inline-block;">
+                    <div class="tableFixHead">
+                        <table class="table fixed_header" style="width:auto; background-color: #c5d9ec33;">
+                            <thead>
+                                <tr>
+                                    <th scope="col" style="display: none;">#</th>
+                                    <th class="label-cell" scope="col">Medhjælper Navn</th>
+                                    <th class="label-cell" scope="col">Medhjælper Nummer</th>
+                                    <th class="label-cell" scope="col">Værktøjs Navn</th>
+                                    <th class="label-cell" scope="col">Kategori</th>
+                                    <th class="label-cell" scope="col">Mærke</th>
+                                    <th class="label-cell" scope="col">Model</th>
+                                    <th class="label-cell" scope="col">AssetTag</th>
+                                    <th class="label-cell" scope="col">Stand</th>
+                                    <th class="label-cell" scope="col">Reserveret Fra</th>
+                                    <th class="label-cell" scope="col">Reserveret Til</th>
+                                    <th class="radio-cell" scope="col">
+                                        <!--<input type="checkbox" class="no-ripple"/>-->
+                                        <i class="icon-radio"></i>
+                                    </th>
+                                    <th class="radio-cell" scope="col">
+                                        <!--<input type="checkbox" class="no-ripple"/>-->
+                                        <i class="icon-radio"></i>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="tableBody">
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+
+    udlon = (reservationID) => {
+        app.views.main.router.navigate(`/udlon/${reservationID}/`, { reloadCurrent: true, });
+    }
+
+    reservationerdeletetool = (kategoriID, equipmentID) => {
+        app.dialog.confirm('Er du sikker på at du vil slette denne reservation fra databasen?', 'Slet reservation', function () {
+            app.request.getJSON(`${app.data['serverip']}functions/reservation/delete.php?id=${kategoriID}&equipmentID=${equipmentID}`, (data) => {
+                if (data.result == 1) {
+                    app.dialog.alert(`Reservation blev slettet fra databasen.`, "Slet reservation", function () {
+                        app.views.main.router.navigate("/reservationer/", { reloadCurrent: true, });
+                    });
+                } else {
+                    app.dialog.alert("Reservation blev <span style='color: red; font-weight: bold;'>IKKE</span> slettet fra databasen.", "Slet reservation");
+                }
+            });
+        })
+    }
+
+    return {
+        data: function () {
+            return {
+                oversigtListBruger: [],
+                oversigtListTools: []
+            };
+        },
+        // Component Methods
+        methods: {
+            fillTableDefault() {
+                oldrow = null;
+                let innerHTML = "";
+                var app = this.$app;
+                let o = 0, p = 0;
+
+                this.oversigtListBruger.length = 0;
+                this.oversigtListTools.length = 0;
+
+                // request user data on page init
+                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllReservationer&param=-1`, (response) => {
+                    // update component state with new state
+                    for (let i = 0; i < response.records.length; i++) {
+                        innerHTML +=
+                            `
+                                <tr>
+                                    <td style="display: none;">${response.records[i].ID}</td>
+                                    <td class="label-cell MedhjælperNavn">${response.records[i].userName}</td>
+                                    <td class="label-cell MedhjælperNummer">${response.records[i].userCardID}</td>
+                                    <td class="label-cell VærktøjsNavn">${response.records[i].equipmentNavn}</td>
+                                    <td class="label-cell Kategori">${response.records[i].equipmentKategori}</td>
+                                    <td class="label-cell Mærke">${response.records[i].equipmentBrand}</td>
+                                    <td class="label-cell Model">${response.records[i].equipmentModel}</td>
+                                    <td class="label-cell AssetTag">${response.records[i].equipmentAsset}</td>
+                                    <td class="label-cell Stand">${response.records[i].equipmentCondition}</td>
+                                    <td class="label-cell ReserveretFra">${response.records[i].dateStart}</td>
+                                    <td class="label-cell ReserveretTil">${response.records[i].expectedDateEnd}</td>
+                                    <td class="input-cell">
+                                        <button type="button" onclick="udlon(${response.records[i].ID})" class="no-ripple btn-primary">Udlån</button>
+                                    </td>
+                                    <td class="input-cell">
+                                        <button type="button" onclick="reservationerdeletetool(${response.records[i].ID}, ${response.records[i].equipmentID})" class="no-ripple btn-primary deletebtn">Slet</button>
+                                    </td>
+                                </tr>
+                                `;
+                        $$('.tableBody').html(innerHTML);
+                        if (i !== 0) {
+                            if (this.oversigtListBruger[o].navn != response.records[i].userName) {
+                                this.oversigtListBruger.push({ navn: `${response.records[i].userName}`, ID: `${response.records[i].userCardID}` });
+                                o++;
+                            }
+                            if (this.oversigtListTools[p].navn != response.records[i].equipmentNavn) {
+                                this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
+                                p++;
+                            }
+                        } else {
+                            this.oversigtListBruger.push({ navn: `${response.records[i].userName}`, ID: `${response.records[i].userCardID}` });
+                            this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
+                        }
+                    }
+                });
+            },
+            fillTableReserveName(name) {
+                oldrow = null;
+                let innerHTML = "";
+                var app = this.$app;
+
+                // request user data on page init
+                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetSelectReservationUser&param=${name}`, (response) => {
+                    // update component state with new state
+                    for (let i = 0; i < response.records.length; i++) {
+                        innerHTML +=
+                            `
+                                <tr>
+                                    <td style="display: none;">${response.records[i].ID}</td>
+                                    <td class="label-cell MedhjælperNavn">${response.records[i].userName}</td>
+                                    <td class="label-cell MedhjælperNummer">${response.records[i].userCardID}</td>
+                                    <td class="label-cell VærktøjsNavn">${response.records[i].equipmentNavn}</td>
+                                    <td class="label-cell Kategori">${response.records[i].equipmentKategori}</td>
+                                    <td class="label-cell Mærke">${response.records[i].equipmentBrand}</td>
+                                    <td class="label-cell Model">${response.records[i].equipmentModel}</td>
+                                    <td class="label-cell AssetTag">${response.records[i].equipmentAsset}</td>
+                                    <td class="label-cell Stand">${response.records[i].equipmentCondition}</td>
+                                    <td class="label-cell ReserveretFra">${response.records[i].dateStart}</td>
+                                    <td class="label-cell ReserveretTil">${response.records[i].expectedDateEnd}</td>
+                                    <td class="input-cell">
+                                        <button type="button" onclick="udlon(${response.records[i].ID})" class="no-ripple btn-primary">Udlån</button>
+                                    </td>
+                                    <td class="input-cell">
+                                        <button type="button" onclick="reservationerdeletetool(${response.records[i].ID}, ${response.records[i].equipmentID})" class="no-ripple btn-primary deletebtn">Slet</button>
+                                    </td>
+                                </tr>
+                                `;
+                        $$('.tableBody').html(innerHTML);
+                    }
+                });
+            },
+            fillTableToolName(toolName) {
+                oldrow = null;
+                let innerHTML = "";
+                var app = this.$app;
+                // request user data on page init
+                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetSelectReservationToolname&param=${toolName}`, (response) => {
+                    // update component state with new state
+                    for (let i = 0; i < response.records.length; i++) {
+                        innerHTML +=
+                            `
+                                <tr>
+                                    <td style="display: none;">${response.records[i].ID}</td>
+                                    <td class="label-cell MedhjælperNavn">${response.records[i].userName}</td>
+                                    <td class="label-cell MedhjælperNummer">${response.records[i].userCardID}</td>
+                                    <td class="label-cell VærktøjsNavn">${response.records[i].equipmentNavn}</td>
+                                    <td class="label-cell Kategori">${response.records[i].equipmentKategori}</td>
+                                    <td class="label-cell Mærke">${response.records[i].equipmentBrand}</td>
+                                    <td class="label-cell Model">${response.records[i].equipmentModel}</td>
+                                    <td class="label-cell AssetTag">${response.records[i].equipmentAsset}</td>
+                                    <td class="label-cell Stand">${response.records[i].equipmentCondition}</td>
+                                    <td class="label-cell ReserveretFra">${response.records[i].dateStart}</td>
+                                    <td class="label-cell ReserveretTil">${response.records[i].expectedDateEnd}</td>
+                                    <td class="input-cell">
+                                        <button type="button" onclick="udlon(${response.records[i].ID})" class="no-ripple btn-primary">Udlån</button>
+                                    </td>
+                                    <td class="input-cell">
+                                        <button type="button" onclick="reservationerdeletetool(${response.records[i].ID}, ${response.records[i].equipmentID})" class="no-ripple btn-primary deletebtn">Slet</button>
+                                    </td>
+                                </tr>
+                                `;
+                        $$('.tableBody').html(innerHTML);
+                    }
+                });
+            },
+        },
+        // Component States
+        on: {
+            pageMounted: function (page) {
+                this.fillTableDefault();
+                var autocompleteBrugerList = app.autocomplete.create({
+                    inputEl: '#reservationListBruger',
+                    openIn: 'dropdown',
+                    textProperty: "navn",
+                    valueProperty: "navn",
+                    limit: 5,
+                    source: (query, render) => {
+                        var results = [];
+                        if (query.length === 0) {
+                            render(results);
+                            return;
+                        }
+                        $$('#reservationListTools').prop({ disabled: true });
+                        // Find matched items
+                        for (var i = 0; i < this.oversigtListBruger.length; i++) {
+                            if (this.oversigtListBruger[i].navn.toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(this.oversigtListBruger[i]);
+                        }
+                        // Render items by passing array with result items
+                        render(results);
+
+                    },
+                    on: {
+                        closed: (ele) => {
+                            //Check hvis feltet bliver sat til empty 
+                            if (this.oversigtListBruger.filter(l => (l.navn === ele.$inputEl[0].value)).length == 0) { this.fillTableDefault(); $$('#reservationListTools').prop({ disabled: false }); }
+                        },
+                        change: (ele) => { if (ele[0]) { this.fillTableReserveName(ele[0].ID) } }
+                    },
+                });
+                var autocompleteToolList = app.autocomplete.create({
+                    inputEl: '#reservationListTools',
+                    openIn: 'dropdown',
+                    textProperty: "navn",
+                    valueProperty: "navn",
+                    limit: 5,
+                    source: (query, render) => {
+                        var results = [];
+                        if (query.length === 0) {
+                            render(results);
+                            return;
+                        }
+                        $$('#reservationListBruger').prop({ disabled: true });
+                        // Find matched items
+                        for (var i = 0; i < this.oversigtListTools.length; i++) {
+                            if (this.oversigtListTools[i].navn.toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(this.oversigtListTools[i]);
+                        }
+                        // Render items by passing array with result items
+                        render(results);
+
+                    },
+                    on: {
+                        closed: (ele) => {
+                            //Check hvis feltet bliver sat til empty 
+                            if (this.oversigtListTools.filter(l => (l.navn === ele.$inputEl[0].value)).length == 0) { this.fillTableDefault(); $$('#reservationListBruger').prop({ disabled: false }); }
+                        },
+                        change: (ele) => { if (ele[0]) { this.fillTableToolName(ele[0].navn) } }
+                    },
+                });
+            }
+        },
+    }
+</script>

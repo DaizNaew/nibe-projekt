@@ -1,0 +1,336 @@
+<template>
+    <div class="page" data-name="aflevering">
+        <div id="gridwrapper">
+                    <div style="padding: 25px;">
+                        <form autocomplete="off">
+
+                            <div class="form-row" style="text-align: left">
+                                <label class="col">Låner ID</label>
+                                <div class="input-wrapper">
+                                    <input type="text" class="form-control form-control-sm col input-format" id="loanerID" required="required">
+                                    <span><i id="calendar_icon" class="far fa-address-card icon-format"></i></span>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="tabletitle">Alt udlånt værktøj</label>
+                                <div class="tableFixHead tablelimit">
+                                    <table class="table fixed_header" style="background-color: #c5d9ec33;">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col" style="display: none;">#</th>
+                                                <th class="label-cell" scope="col">Værktøjs Navn</th>
+                                                <th class="label-cell" scope="col">Kategori</th>
+                                                <th class="label-cell" scope="col">Mærke</th>
+                                                <th class="label-cell" scope="col">Model</th>
+                                                <th class="label-cell" scope="col">Serienummer</th>
+                                                <th class="label-cell" scope="col">AssetTag</th>
+                                                <th class="label-cell" scope="col">Stand</th>
+                                                <th class="radio-cell" scope="col">
+                                                    <!--<input type="checkbox" class="no-ripple"/>-->
+                                                    <i class="icon-radio"></i>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="tableBody">
+                                                        
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <label class="tabletitle" style="margin-top: 25px;">Værktøj valgt til aflevering</label>
+                            <div class="tableFixHead tablelimit">
+                                <table class="table fixed_header" style="background-color: #c5d9ec33;">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col" style="display: none;">#</th>
+                                            <th class="label-cell" scope="col">Værktøjs Navn</th>
+                                            <th class="label-cell" scope="col">Kategori</th>
+                                            <th class="label-cell" scope="col">Mærke</th>
+                                            <th class="label-cell" scope="col">Model</th>
+                                            <th class="label-cell" scope="col">Serienummer</th>
+                                            <th class="label-cell" scope="col">AssetTag</th>
+                                            <th class="label-cell" scope="col">Stand</th>
+                                            <th class="radio-cell" scope="col">
+                                                <!--<input type="checkbox" class="no-ripple"/>-->
+                                                <i class="icon-radio"></i>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="låneTableBody">
+                                                    
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="form-row form-button-row">
+                                <a><button id="insert" @click="aflevertool" type="submit" class="no-ripple col btn btn-primary godbtn">Aflever</button></a>
+                                <a><button id="reset" @click="resetfields" type="button" class="no-ripple col btn btn-primary godbtn">Nulstil felter</button></a>
+                            </div>
+                            <input id="ID" type="hidden"/>
+                        </form>
+                    </div>
+        </div>
+    </div>
+</template>
+       
+        
+<script>
+    var arr = [];
+    var loanerAssetTag;
+
+function fillTable(userID) {
+    let innerHTML = "";
+    app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetSingleToolsForAflevering&param=${userID}`, (response) => {
+        for(let i = 0; i < response.records.length; i++) {
+            innerHTML += 
+                `
+                <tr>
+                    <td style="display: none;">${response.records[i].ID}</td>
+                    <td class="label-cell VærktøjsNavn">${response.records[i].equipmentNavn}</td>
+                    <td class="label-cell Kategori">${response.records[i].equipmentKategori}</td>
+                    <td class="label-cell Mærke">${response.records[i].equipmentBrand}</td>
+                    <td class="label-cell Model">${response.records[i].equipmentModel}</td>
+                    <td class="label-cell Serienummer">${response.records[i].equipmentSerieNummer}</td>
+                    <td class="label-cell AssetTag">${response.records[i].equipmentAsset}</td>
+                    <td class="label-cell Stand">${response.records[i].equipmentCondition}</td>
+                    <td class="radio-cell">
+                        <button type="button" id="btn${response.records[i].equipmentID}" onclick="tilføjafleveringsværktøj(${response.records[i].equipmentID},${response.records[i].ID})" class="no-ripple btn-primary">Tilføj</button>
+                    </td>
+                </tr>
+                `;
+            $$('.tableBody').html(innerHTML);
+        }
+    });
+}
+
+    
+function autocomplete(inp, arr) {
+  /*the autocomplete function takes two arguments,
+  the text field element and an array of possible autocompleted values:*/
+  var currentFocus;
+  /*execute a function when someone writes in the text field:*/
+  inp.addEventListener("input", function(e) {
+      var a, b, i, val = this.value;
+      /*close any already open lists of autocompleted values*/
+      closeAllLists();
+      if (!val) { return false;}
+      currentFocus = -1;
+      /*create a DIV element that will contain the items (values):*/
+      a = document.createElement("DIV");
+      a.setAttribute("id", this.id + "autocomplete-list");
+      a.setAttribute("class", "autocomplete-items");
+      /*append the DIV element as a child of the autocomplete container:*/
+      this.parentNode.appendChild(a);
+      /*for each item in the array...*/
+      for (i = 0; i < arr.length; i++) {
+        /*check if the item starts with the same letters as the text field value:*/
+        if (arr[i].userID.substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+          /*create a DIV element for each matching element:*/
+          b = document.createElement("DIV");
+          /*make the matching letters bold:*/
+          b.innerHTML = "<strong>" + arr[i].userID.substr(0, val.length) + "</strong>";
+          b.innerHTML += arr[i].userID.substr(val.length);
+          /*insert a input field that will hold the current array item's value:*/
+          b.innerHTML += "<input type='hidden' value='" + arr[i].userName + "' id='" + arr[i].userID + "'>";
+          /*execute a function when someone clicks on the item value (DIV element):*/
+              b.addEventListener("click", function(e) {
+                /*insert the value for the autocomplete text field:*/
+                document.getElementById("ID").value = this.getElementsByTagName("input")[0].id;
+                loanerUserID = document.getElementById("ID").value;
+                inp.value = this.getElementsByTagName("input")[0].value;
+                selectedUserID = loanerUserID;
+                fillTable(loanerUserID);
+                /*close the list of autocompleted values,
+                (or any other open lists of autocompleted values:*/
+                closeAllLists();
+            });
+          a.appendChild(b);
+        }
+      }
+  });
+  /*execute a function presses a key on the keyboard:*/
+  inp.addEventListener("keydown", function(e) {
+      var x = document.getElementById(this.id + "autocomplete-list");
+      if (x) x = x.getElementsByTagName("div");
+      if (e.keyCode == 40) {
+        /*If the arrow DOWN key is pressed,
+        increase the currentFocus variable:*/
+        currentFocus++;
+        /*and and make the current item more visible:*/
+        addActive(x);
+      } else if (e.keyCode == 38) { //up
+        /*If the arrow UP key is pressed,
+        decrease the currentFocus variable:*/
+        currentFocus--;
+        /*and and make the current item more visible:*/
+        addActive(x);
+      } else if (e.keyCode == 13) {
+        /*If the ENTER key is pressed, prevent the form from being submitted,*/
+        e.preventDefault();
+        if (currentFocus > -1) {
+          /*and simulate a click on the "active" item:*/
+          if (x) x[currentFocus].click();
+        }
+      }
+  });
+  function addActive(x) {
+    /*a function to classify an item as "active":*/
+    if (!x) return false;
+    /*start by removing the "active" class on all items:*/
+    removeActive(x);
+    if (currentFocus >= x.length) currentFocus = 0;
+    if (currentFocus < 0) currentFocus = (x.length - 1);
+    /*add class "autocomplete-active":*/
+    x[currentFocus].classList.add("autocomplete-active");
+  }
+  function removeActive(x) {
+    /*a function to remove the "active" class from all autocomplete items:*/
+    for (var i = 0; i < x.length; i++) {
+      x[i].classList.remove("autocomplete-active");
+    }
+  }
+  function closeAllLists(elmnt) {
+    /*close all autocomplete lists in the document,
+    except the one passed as an argument:*/
+    var x = document.getElementsByClassName("autocomplete-items");
+    for (var i = 0; i < x.length; i++) {
+      if (elmnt != x[i] && elmnt != inp) {
+      x[i].parentNode.removeChild(x[i]);
+    }
+  }
+}
+/*execute a function when someone clicks in the document:*/
+document.addEventListener("click", function (e) {
+    closeAllLists(e.target);
+});
+}
+
+    fjernafleveringsværktøj = (værktøjsID) => {
+        $$(`.tableBody`).find(`#btn${værktøjsID}`).prop("disabled",false);
+        $$(`.låneTableBody`).find(`#værktøjnr${værktøjsID}`).remove();
+        arr.splice( arr.indexOf(værktøjsID), 1 );
+    }
+
+    tilføjafleveringsværktøj = (værktøjsID, udlånsID) => {
+        arr.push(værktøjsID);
+        let innerHTML = "";
+        app.request.getJSON(`${app.data['serverip']}endpoint/equipment.php?id=${værktøjsID}`, (response) => {
+            $$(`.tableBody`).find(`#btn${værktøjsID}`).prop("disabled",true);
+            innerHTML = $$(`.låneTableBody`).html();
+            for(let i = 0; i < response.records.length; i++) {
+                innerHTML += 
+                    `
+                    <tr id="værktøjnr${værktøjsID}">
+                        <td style="display: none;">${udlånsID}</td>
+                        <td class="label-cell VærktøjsNavn">${response.records[i].activeName}</td>
+                        <td class="label-cell Kategori">${response.records[i].categoryName}</td>
+                        <td class="label-cell Mærke">${response.records[i].brandName}</td>
+                        <td class="label-cell Model">${response.records[i].modelName}</td>
+                        <td class="label-cell Serienummer">${response.records[i].serialNumber}</td>
+                        <td class="label-cell AssetTag">${response.records[i].assetTag}</td>
+                        <td class="label-cell Stand">${response.records[i].condition}</td>
+                        <td class="radio-cell">
+                            <button type="button" onclick="fjernudlånsværktøj(${response.records[0].ID})" class="no-ripple btn-primary deletebtn">Slet</button>
+                        </td>
+                    </tr>
+                    `;
+                    $$('.låneTableBody').html(innerHTML);
+            }
+        })
+    }
+
+    return {
+        data: function () {
+            return {
+                selectedUserID: 0
+            };
+        },
+    // Component Methods
+        methods: {
+            resetfields : () => {
+                app.dialog.confirm('Er du sikker på at du vil nulstille alle felter?', 'Nulstil Felter', function(){
+                    let inputs = $$('form').find('input');
+                    inputs.val('');
+                    $$(`.låneTableBody`).html('');
+                    $$(`.tableBody`).html('');
+                    var checkBoxObj = $$('.tableBody').find('button');
+                        checkBoxObj.forEach(element => {
+                            if(element.disabled) {
+                                element.disabled = false;
+                            }
+                        })
+                });
+            },
+            aflevertool : async () => {
+                let dat;
+                let toastMessage = '';
+                if(document.getElementById('loanerID').value == ""){
+                    app.dialog.alert("Låner ID feltet må ikke være tomt.", "Aflevering");
+                    return;
+                }
+                let prom = new Promise((resolve, reject) => {
+                $$('.låneTableBody').forEach(element => {
+                    for(i = 0; i < element.children.length; i++) {
+                        let loan = {
+                            id: element.children[i].children[0].innerText,
+                            VærktøjsNavn: element.children[i].children[1].innerText,
+                            equipmentID: (element.children[i].id).split("værktøjnr").pop(),
+                            AssetTag:  element.children[i].children[6].innerText,
+                            selectedUserID: selectedUserID
+                        };
+
+                            app.request.post(`${app.data['serverip']}functions/loans/deliver.php`, loan, (data) => {
+                                app.methods.addToLog(`${selectedUserID}`, `Afleverede værktøjet ${loan.VærktøjsNavn} med assetTag (${loan.AssetTag})`);
+                                dat = data;
+                                resolve();
+                            }, (error) => {
+                                reject();
+                            }, 'json');
+                        }
+                });
+            });
+            await prom;
+                if(dat.result == 1) {
+                            toastMessage = 'Værktøjet blev Afleveret';
+                        } else {
+                            toastMessage = 'Værktøjet blev ikke Afleveret';
+                        }
+                        app.dialog.alert(toastMessage, 'Afleveret Værktøj', () => {
+                            app.views.main.router.navigate("/aflevering/", {reloadCurrent: true,});
+                        });
+            },
+        },
+
+        on: {
+            pageMounted: (page) => {
+                
+                let reserveList = [];
+                let o = 0;
+                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllToolsForAflevering&param=-1`, (response) => {
+                    for(let i = 0; i < response.records.length; i++) {
+                        if(i !== 0) {
+                            if(reserveList[o].userID != response.records[i].userCardID) {
+
+                                reserveList.push({
+                                    ID: `${response.records[i].ID}`,
+                                    userName: `${response.records[i].userName}`,
+                                    userID: `${response.records[i].userCardID}`
+                                });
+                                o++;
+                            }
+                        } else {
+                            reserveList.push({
+                                    ID: `${response.records[i].ID}`,
+                                    userName: `${response.records[i].userName}`,
+                                    userID: `${response.records[i].userCardID}`
+                                })
+                        }
+                        
+                    }
+                autocomplete(document.getElementById("loanerID"), reserveList);
+                })
+            }
+        },
+    }
+
+</script>

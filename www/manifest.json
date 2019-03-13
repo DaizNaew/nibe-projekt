@@ -1,0 +1,18 @@
+{
+  "background_color": "#FFF",
+  "display": "standalone",
+  "name": "nibelager",
+  "short_name": "nibelager",
+  "version": "dk.nibefestival.nibelager",
+  "description": "Et lager styrings system til de frivilige på nibe festivallen",
+  "author": "Apache Cordova Team",
+  "icons": [
+    {
+      "src": "res/favigfx.png",
+      "type": "image/png",
+      "sizes": "undefinedxundefined"
+    }
+  ],
+  "start_url": "index.html",
+  "theme_color": "green"
+}

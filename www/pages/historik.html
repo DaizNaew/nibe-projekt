@@ -1,0 +1,269 @@
+<template>
+    <div class="page" data-name="historik">
+        <div id="wrapper">
+            <div style="padding: 25px; width:100%; text-align: center;"><!--Item 2-->
+                <form class="mb-3" autocomplete="off" autocomplete="false">
+                    <div class="form-row" style="text-align: left">
+                        <label class="col">Medhjælper navn</label>
+                        <div class="input-wrapper">
+                            <input type="text" class="form-control form-control-sm col input-format" id="historikListBruger">
+                            <span><i class="fas fa-search icon-format"></i></span>
+                        </div>
+                    </div>
+    
+                    <div class="form-row" style="text-align: left">
+                        <label class="col">Værktøjets navn</label>
+                        <div class="input-wrapper">
+                            <input type="text" class="form-control form-control-sm col input-format" id="historikListVærktøj">
+                            <span><i class="fas fa-search icon-format"></i></span>
+                        </div>
+                    </div>
+                </form>
+                <div style="display: inline-block;">
+                    <div class="tableFixHead">
+                        <table class="table fixed_header" style="width:auto; background-color: #c5d9ec33;">
+                            <thead>
+                                <tr>
+                                    <th scope="col" style="display: none;">#</th>
+                                    <th class="label-cell" scope="col">Medhjælper Navn</th>
+                                    <th class="label-cell" scope="col">Medhjælper Nummer</th>
+                                    <th class="label-cell" scope="col">Værktøjs Navn</th>
+                                    <th class="label-cell" scope="col">Kategori</th>
+                                    <th class="label-cell" scope="col">Mærke</th>
+                                    <th class="label-cell" scope="col">Model</th>
+                                    <th class="label-cell" scope="col">AssetTag</th>
+                                    <th class="label-cell" scope="col">Stand</th>
+                                    <th class="label-cell" scope="col">Dato Udlånt</th>
+                                    <th class="label-cell" scope="col">Forventes Tilbage</th>
+                                    <th class="label-cell" scope="col">Faktisk Afleveret</th>
+                                </tr>
+                            </thead>
+                            <tbody class="tableBody">
+                                    
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="" style="padding:0px; margin-top:25px; text-align: right;">
+                        <a><button id="loadflere" @click="loadflere" type="button" class="no-ripple col btn btn-primary godbtn">Indlæs flere</button></a>
+                    </div>
+                </div>
+            </div>
+            <input id="rowcount" type="hidden" value="0"/>
+        </div>
+    </div>
+</template>
+        
+<script>
+    return {
+        data: function () {
+            return {
+                oversigtListBruger: [],
+                oversigtListTools: []
+            };
+        },
+        // Component Methods
+        methods: {
+            tableFillDefault: function() {
+                let innerHTML = "";
+                var oldrow = null;
+
+                var app = this.$app;
+                let o = 0, p = 0;
+
+                this.oversigtListBruger.length = 0;
+                this.oversigtListTools.length = 0;
+
+                // request user data on page init
+                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllHistorik&param=200,0`, (response) => {
+                    // update component state with new state
+                    for(let i = 0; i < response.records.length; i++) {
+                        innerHTML += 
+                            `
+                            <tr>
+                                <td style="display: none;">${i+1}</td>
+                                <td class="label-cell MedhjælperNavn">${response.records[i].userName}</td>
+                                <td class="label-cell MedhjælperNummer">${response.records[i].userCardID}</td>
+                                <td class="label-cell VærktøjsNavn">${response.records[i].equipmentNavn}</td>
+                                <td class="label-cell Kategori">${response.records[i].equipmentKategori}</td>
+                                <td class="label-cell Mærke">${response.records[i].equipmentBrand}</td>
+                                <td class="label-cell Model">${response.records[i].equipmentModel}</td>
+                                <td class="label-cell AssetTag">${response.records[i].equipmentAsset}</td>
+                                <td class="label-cell Stand">${response.records[i].equipmentCondition}</td>
+                                <td class="label-cell DatoUdlånt">${response.records[i].dateStart}</td>
+                                <td class="label-cell ForventesTilbage">${response.records[i].expectedDateEnd}</td>
+                                <td class="label-cell FaktiskAfleveret">${response.records[i].actualDateEnd}</td>
+                            </tr>
+                            `;
+                            $$('.tableBody').html(innerHTML);
+                            if (i !== 0) {
+                                if (this.oversigtListBruger[o].navn != response.records[i].userName) {
+                                    this.oversigtListBruger.push({ navn: `${response.records[i].userName}`, ID: `${response.records[i].userCardID}` });
+                                    o++;
+                                }
+                                if (this.oversigtListTools[p].navn != response.records[i].equipmentNavn) {
+                                    this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
+                                    p++;
+                                }
+                            } else {
+                                this.oversigtListBruger.push({ navn: `${response.records[i].userName}`, ID: `${response.records[i].userCardID}` });
+                                this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
+                            }
+                    }
+                });
+            },
+
+            loadflere : () => {
+                let offset = parseInt(document.getElementById("rowcount").value);
+                let nyHTML = $$('.tableBody').html();
+                console.log(offset);
+                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllHistorik&param=200,${offset}`, (response) => {
+                    // update component state with new state
+                    document.getElementById("rowcount").value = offset + 200;
+                    for(let i = 0; i < response.records.length; i++) {
+                        nyHTML += 
+                            `
+                            <tr>
+                                <td style="display: none;">${i+1}</td>
+                                <td class="label-cell MedhjælperNavn">${response.records[i].userName}</td>
+                                <td class="label-cell MedhjælperNummer">${response.records[i].userCardID}</td>
+                                <td class="label-cell VærktøjsNavn">${response.records[i].equipmentNavn}</td>
+                                <td class="label-cell Kategori">${response.records[i].equipmentKategori}</td>
+                                <td class="label-cell Mærke">${response.records[i].equipmentBrand}</td>
+                                <td class="label-cell Model">${response.records[i].equipmentModel}</td>
+                                <td class="label-cell AssetTag">${response.records[i].equipmentAsset}</td>
+                                <td class="label-cell Stand">${response.records[i].equipmentCondition}</td>
+                                <td class="label-cell DatoUdlånt">${response.records[i].dateStart}</td>
+                                <td class="label-cell ForventesTilbage">${response.records[i].expectedDateEnd}</td>
+                                <td class="label-cell FaktiskAfleveret">${response.records[i].actualDateEnd}</td>
+                            </tr>
+                            `;
+                            $$('.tableBody').html(nyHTML);
+                    }
+                });
+
+            },
+
+
+            tableFillUserID: function(id) {
+                let innerHTML = "";
+                var app = this.$app;
+                // request user data on page init
+                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetSelectHistorikUsercardID&param=${id}`, (response) => {
+                    // update component state with new state
+                    for(let i = 0; i < response.records.length; i++) {
+                        innerHTML += 
+                            `
+                            <tr>
+                                <td style="display: none;">${i+1}</td>
+                                <td class="label-cell MedhjælperNavn">${response.records[i].userName}</td>
+                                <td class="label-cell MedhjælperNummer">${response.records[i].userCardID}</td>
+                                <td class="label-cell VærktøjsNavn">${response.records[i].equipmentNavn}</td>
+                                <td class="label-cell Kategori">${response.records[i].equipmentKategori}</td>
+                                <td class="label-cell Mærke">${response.records[i].equipmentBrand}</td>
+                                <td class="label-cell Model">${response.records[i].equipmentModel}</td>
+                                <td class="label-cell AssetTag">${response.records[i].equipmentAsset}</td>
+                                <td class="label-cell Stand">${response.records[i].equipmentCondition}</td>
+                                <td class="label-cell DatoUdlånt">${response.records[i].dateStart}</td>
+                                <td class="label-cell ForventesTilbage">${response.records[i].expectedDateEnd}</td>
+                                <td class="label-cell FaktiskAfleveret">${response.records[i].actualDateEnd}</td>
+                            </tr>
+                            `;
+                            $$('.tableBody').html(innerHTML);
+                    }
+                });
+            },
+            tableFillToolName: function(name) {
+                let innerHTML = "";
+                var app = this.$app;
+                // request user data on page init
+                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetSelectHistorikToolName&param=${name}`, (response) => {
+                    // update component state with new state
+                    for(let i = 0; i < response.records.length; i++) {
+                        innerHTML += 
+                            `
+                            <tr>
+                                <td style="display: none;">${i+1}</td>
+                                <td class="label-cell MedhjælperNavn">${response.records[i].userName}</td>
+                                <td class="label-cell MedhjælperNummer">${response.records[i].userCardID}</td>
+                                <td class="label-cell VærktøjsNavn">${response.records[i].equipmentNavn}</td>
+                                <td class="label-cell Kategori">${response.records[i].equipmentKategori}</td>
+                                <td class="label-cell Mærke">${response.records[i].equipmentBrand}</td>
+                                <td class="label-cell Model">${response.records[i].equipmentModel}</td>
+                                <td class="label-cell AssetTag">${response.records[i].equipmentAsset}</td>
+                                <td class="label-cell Stand">${response.records[i].equipmentCondition}</td>
+                                <td class="label-cell DatoUdlånt">${response.records[i].dateStart}</td>
+                                <td class="label-cell ForventesTilbage">${response.records[i].expectedDateEnd}</td>
+                                <td class="label-cell FaktiskAfleveret">${response.records[i].actualDateEnd}</td>
+                            </tr>
+                            `;
+                            $$('.tableBody').html(innerHTML);
+                    }
+                });
+            }
+        },
+        // Component States
+        on: {
+            pageMounted: function (page) {
+                this.tableFillDefault();
+                var autocompleteBrugerList = app.autocomplete.create({
+                    inputEl: '#historikListBruger',
+                    openIn: 'dropdown',
+                    textProperty: "navn",
+                    valueProperty: "navn",
+                    limit: 5,
+                    source: (query, render) => {
+                        var results = [];
+                        if (query.length === 0) {
+                            render(results);
+                            return;
+                        }
+                        $$('#historikListVærktøj').prop({ disabled: true });
+                        // Find matched items
+                        for (var i = 0; i < this.oversigtListBruger.length; i++) {
+                            if (this.oversigtListBruger[i].navn.toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(this.oversigtListBruger[i]);
+                        }
+                        // Render items by passing array with result items
+                        render(results);
+
+                    },
+                    on: {
+                        closed: (ele) => {
+                            //Check hvis feltet bliver sat til empty 
+                            if (this.oversigtListBruger.filter(l => (l.navn === ele.$inputEl[0].value)).length == 0) { this.tableFillDefault(); $$('#historikListVærktøj').prop({ disabled: false }); }
+                        },
+                        change: (ele) => { if (ele[0]) { this.tableFillUserID(ele[0].ID) } }
+                    },
+                });
+                var autocompleteToolList = app.autocomplete.create({
+                    inputEl: '#historikListVærktøj',
+                    openIn: 'dropdown',
+                    textProperty: "navn",
+                    valueProperty: "navn",
+                    limit: 5,
+                    source: (query, render) => {
+                        var results = [];
+                        if (query.length === 0) {
+                            render(results);
+                            return;
+                        }
+                        $$('#historikListBruger').prop({ disabled: true });
+                        // Find matched items
+                        for (var i = 0; i < this.oversigtListTools.length; i++) {
+                            if (this.oversigtListTools[i].navn.toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(this.oversigtListTools[i]);
+                        }
+                        // Render items by passing array with result items
+                        render(results);
+
+                    },
+                    on: {
+                        closed: (ele) => {
+                            //Check hvis feltet bliver sat til empty 
+                            if (this.oversigtListTools.filter(l => (l.navn === ele.$inputEl[0].value)).length == 0) { this.tableFillDefault(); $$('#historikListBruger').prop({ disabled: false }); }
+                        },
+                        change: (ele) => { if (ele[0]) { this.tableFillToolName(ele[0].navn) } }
+                    },
+                });
+            }
+        },
+    }
+</script>
