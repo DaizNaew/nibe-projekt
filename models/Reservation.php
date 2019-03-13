@@ -71,9 +71,14 @@ class Reservation {
         $userID = $post['userID'];
         $equipmentID = $post['equipmentID'];
         $dateStart = $post['dateStart'];
+        
+        if(!isset($post['note'])) {
+            $note = null;
+        } else {
+            $note = $post['note'];
+        }
 
         $expectedDateEnd = null;
-        $note = null;
         if(isset($post['expectedDateEnd'])) $expectedDateEnd = $post['expectedDateEnd'];
         if(isset($post['note'])) $note = $post['note'];
         
