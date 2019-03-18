@@ -259,12 +259,16 @@
                 }
             },
 
-            fillTableDefault() {
+            fillTableDefault: async function() {
+                let total = 0;
                 let innerHTML = "";
-                let o = 0, p = 0;
+                let p = 0;
+                let innerHTML2 = "";
+                let p2 = 0;
                 this.oversigtListTools.length = 0
-                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllToolsForLoan&param=-1`, (response) => {
+                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllToolsForLoan&param=200,0`, (response) => {
                     for (let i = 0; i < response.records.length; i++) {
+                        total++;
                         innerHTML +=
                             `
                             <tr>
@@ -290,6 +294,39 @@
                         }
                     }
                 })
+
+                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllToolsForLoan&param=20000,200`, (response) => {
+                    for (let i = 0; i < response.records.length; i++) {
+                        total++;
+                        innerHTML2 +=
+                            `
+                            <tr>
+                                <td style="display: none;">${response.records[i].ID}</td>
+                                <td class="label-cell VærktøjsNavn">${response.records[i].equipmentNavn}</td>
+                                <td class="label-cell Kategori">${response.records[i].equipmentKategori}</td>
+                                <td class="label-cell Mærke">${response.records[i].equipmentBrand}</td>
+                                <td class="label-cell Model">${response.records[i].equipmentModel}</td>
+                                <td class="label-cell AssetTag">${response.records[i].equipmentAsset}</td>
+                                <td class="radio-cell">
+                                    <button type="button" id="btn${response.records[i].ID}" onclick="tilføjreserverværktøj(${response.records[i].ID})" class="no-ripple btn-primary">Tilføj</button>
+                                </td>
+                            </tr>
+                            `;
+                        $$('.tableBody').html(innerHTML2);
+                        if (i !== 0) {
+                            if (this.oversigtListTools[p2].navn != response.records[i].equipmentNavn) {
+                                this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
+                                p2++;
+                            }
+                        } else {
+                            this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
+                        }
+                    }
+                })
+
+                setTimeout(function(){
+                console.log("Reserver: " + total)
+            }, 5000);
             },
             fillTableToolName(name) {
                 let innerHTML = "";
