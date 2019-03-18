@@ -393,7 +393,7 @@ input[type=submit] {
   color: #ffffff;
 }
 
-.log_Handling, .log_UserName{
+.log_Handling, .log_UserName, .list_name, .list_phonenumber, .list_address, .list_cardID, .list_kørekort, .list_certifikat, .list_usertype{
   text-align: left;
 }
 
