@@ -67,19 +67,22 @@
         // Component Methods
         methods: {
 
-            fillTableDefault() {
-
+            fillTableDefault: async function() {
+                let total = 0;
                 let innerHTML = "";
+                let innerHTML2 = "";
                 var app = this.$app;
                 let o = 0, p = 0;
+                let o2 = 0, p2 = 0;
 
                 this.oversigtListBruger.length = 0;
                 this.oversigtListTools.length = 0;
 
                 // request user data on page init
-                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllOversigt&param=-1`, (response) => {
+                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllOversigt&param=200,0`, (response) => {
                     // update component state with new state
                     for (let i = 0; i < response.records.length; i++) {
+                        total++;
                         innerHTML +=
                             `
                                 <tr id="oversigt${response.records[i].ID}">
@@ -112,6 +115,46 @@
                         }
                     }
                 });
+
+                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllOversigt&param=20000,200`, (response) => {
+                    // update component state with new state
+                    for (let i = 0; i < response.records.length; i++) {
+                        total++;
+                        innerHTML2 +=
+                            `
+                                <tr id="oversigt${response.records[i].ID}">
+                                    <td>${response.records[i].ID}</td>
+                                    <td class="label-cell MedhjælperNavn">${response.records[i].userName}</td>
+                                    <td class="label-cell MedhjælperNummer">${response.records[i].userCardID}</td>
+                                    <td class="label-cell VærktøjsNavn">${response.records[i].equipmentNavn}</td>
+                                    <td class="label-cell Kategori">${response.records[i].equipmentKategori}</td>
+                                    <td class="label-cell Mærke">${response.records[i].equipmentBrand}</td>
+                                    <td class="label-cell Model">${response.records[i].equipmentModel}</td>
+                                    <td class="label-cell AssetTag">${response.records[i].equipmentAsset}</td>
+                                    <td class="label-cell Stand">${response.records[i].equipmentCondition}</td>
+                                    <td class="label-cell DatoUdlånt">${response.records[i].dateStart}</td>
+                                    <td class="label-cell ForventesTilbage">${response.records[i].expectedDateEnd}</td>
+                                </tr>
+                                `;
+                        $$('.tableBody').html(innerHTML2);
+                        if (i !== 0) {
+                            if (this.oversigtListBruger[o2].navn != response.records[i].userName) {
+                                this.oversigtListBruger.push({ navn: `${response.records[i].userName}`, ID: `${response.records[i].userCardID}` });
+                                o2++;
+                            }
+                            if (this.oversigtListTools[p2].navn != response.records[i].equipmentNavn) {
+                                this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
+                                p2++;
+                            }
+                        } else {
+                            this.oversigtListBruger.push({ navn: `${response.records[i].userName}`, ID: `${response.records[i].userCardID}` });
+                            this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
+                        }
+                    }
+                });
+                setTimeout(function(){
+                console.log("Oversigt: " + total)
+            }, 5000);
             },
             //sp_GetSelectOversigtByToolName
             fillTableToolName(toolName) {
