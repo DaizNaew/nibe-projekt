@@ -70,7 +70,6 @@
             fillTableDefault: async function() {
                 let total = 0;
                 let innerHTML = "";
-                let innerHTML2 = "";
                 var app = this.$app;
                 let o = 0, p = 0;
                 let o2 = 0, p2 = 0;
@@ -120,7 +119,7 @@
                     // update component state with new state
                     for (let i = 0; i < response.records.length; i++) {
                         total++;
-                        innerHTML2 +=
+                        innerHTML +=
                             `
                                 <tr id="oversigt${response.records[i].ID}">
                                     <td>${response.records[i].ID}</td>
@@ -136,7 +135,7 @@
                                     <td class="label-cell ForventesTilbage">${response.records[i].expectedDateEnd}</td>
                                 </tr>
                                 `;
-                        $$('.tableBody').html(innerHTML2);
+                        $$('.tableBody').html(innerHTML);
                         if (i !== 0) {
                             if (this.oversigtListBruger[o2].navn != response.records[i].userName) {
                                 this.oversigtListBruger.push({ navn: `${response.records[i].userName}`, ID: `${response.records[i].userCardID}` });
