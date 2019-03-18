@@ -94,18 +94,21 @@
         },
         // Component Methods
         methods: {
-            fillTableDefault() {
+            fillTableDefault: async function() {
+                let total = 0;
                 oldrow = null;
                 let innerHTML = "";
                 var app = this.$app;
                 let o = 0, p = 0;
+                let o2 = 0, p2 = 0;
                 let note = '<i></i>'
+                let note2 = '<i></i>'
 
                 this.oversigtListBruger.length = 0;
                 this.oversigtListTools.length = 0;
 
                 // request user data on page init
-                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllReservationer&param=-1`, (response) => {
+                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllReservationer&param=2,0`, (response) => {
                     // update component state with new state
                     for (let i = 0; i < response.records.length; i++) {
                         if(response.records[i].note != ""){
@@ -114,6 +117,7 @@
                         else{
                             note = '<i></i>'
                         }
+                        total++;
                         innerHTML +=
                             `
                                 <tr>
@@ -154,6 +158,60 @@
                         }
                     }
                 });
+
+                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllReservationer&param=20000,2`, (response) => {
+                    // update component state with new state
+                    for (let i = 0; i < response.records.length; i++) {
+                        if(response.records[i].note != ""){
+                            note2 = `<i class="far fa-envelope" onclick="notepop('${response.records[i].note}')"></i>`
+                        }
+                        else{
+                            note2 = '<i></i>'
+                        }
+                        total++;
+                        innerHTML +=
+                            `
+                                <tr>
+                                    <td style="display: none;">${response.records[i].ID}</td>
+                                    <td class="label-cell MedhjælperNavn">${response.records[i].userName}</td>
+                                    <td class="label-cell MedhjælperNummer">${response.records[i].userCardID}</td>
+                                    <td class="label-cell VærktøjsNavn">${response.records[i].equipmentNavn}</td>
+                                    <td class="label-cell Kategori">${response.records[i].equipmentKategori}</td>
+                                    <td class="label-cell Mærke">${response.records[i].equipmentBrand}</td>
+                                    <td class="label-cell Model">${response.records[i].equipmentModel}</td>
+                                    <td class="label-cell AssetTag">${response.records[i].equipmentAsset}</td>
+                                    <td class="label-cell Stand">${response.records[i].equipmentCondition}</td>
+                                    <td class="label-cell ReserveretFra">${response.records[i].dateStart}</td>
+                                    <td class="label-cell ReserveretTil">${response.records[i].expectedDateEnd}</td>
+                                    
+                                    <td class="label-cell Note">${note}</td>
+                                    <td class="input-cell">
+                                        <button type="button" onclick="udlon(${response.records[i].ID})" class="no-ripple btn-primary">Udlån</button>
+                                    </td>
+                                    <td class="input-cell">
+                                        <button type="button" onclick="reservationerdeletetool(${response.records[i].ID}, ${response.records[i].equipmentID})" class="no-ripple btn-primary deletebtn">Slet</button>
+                                    </td>
+                                </tr>
+                                `;
+                        $$('.tableBody').html(innerHTML);
+                        if (i !== 0) {
+                            if (this.oversigtListBruger[o2].navn != response.records[i].userName) {
+                                this.oversigtListBruger.push({ navn: `${response.records[i].userName}`, ID: `${response.records[i].userCardID}` });
+                                o2++;
+                            }
+                            if (this.oversigtListTools[p2].navn != response.records[i].equipmentNavn) {
+                                this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
+                                p2++;
+                            }
+                        } else {
+                            this.oversigtListBruger.push({ navn: `${response.records[i].userName}`, ID: `${response.records[i].userCardID}` });
+                            this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
+                        }
+                    }
+                });
+                setTimeout(function(){
+                console.log("Reservationer: " + total)
+                }, 5000);
             },
             fillTableReserveName(name) {
                 oldrow = null;
