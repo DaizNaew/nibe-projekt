@@ -265,16 +265,18 @@
                 },
                 fillTableDefault: function() {
                     let innerHTML = "";
-                    
+                    let total = 0;
                     var app = this.$app;
-                    let o = 0, p = 0;
+                    let p = 0;
+                    let p2 = 0;
 
                     this.oversigtListTools.length = 0;
                     
                     // request user data on page init
-                    app.request.getJSON(`${app.data['serverip']}endpoint/equipment.php?id=-1`, (tools) => {
+                    app.request.getJSON(`${app.data['serverip']}endpoint/equipment.php?id=-1&limit=200&offset=0`, (tools) => {
                         // update component state with new state
                         for(let i = 0; i < tools.records.length; i++) {
+                            total++;
                             innerHTML += 
                             `
                             <tr>
@@ -303,6 +305,42 @@
                             }
                         }
                     });
+
+                    app.request.getJSON(`${app.data['serverip']}endpoint/equipment.php?id=-1&limit=20000&offset=200`, (tools) => {
+                        // update component state with new state
+                        for(let i = 0; i < tools.records.length; i++) {
+                            total++;
+                            innerHTML += 
+                            `
+                            <tr>
+                                <td style="display: none;">${tools.records[i].ID}</td>
+                                <td class="label-cell aktivNavn">${tools.records[i].activeName}</td>
+                                <td class="label-cell Kategori" value="${tools.records[i].categoryID}">${tools.records[i].categoryName}</td>
+                                <td class="label-cell Mærke">${tools.records[i].brandName}</td>
+                                <td class="label-cell Model">${tools.records[i].modelName}</td>
+                                <td class="label-cell Serienummer">${tools.records[i].serialNumber}</td>
+                                <td class="label-cell AssetTag">${tools.records[i].assetTag}</td>
+                                <td class="label-cell Stand" style="display:none;">${tools.records[i].condition}</td>
+                                <td class="radio-cell">
+                                    <input type="radio" value="${tools.records[i].ID}" name="selectedTool"/>
+                                    <i class="icon-radio"></i>
+                                </td>
+                            </tr>
+                            `;
+                            $$('.tableBody').html(innerHTML);
+                            if (i !== 0) {
+                                if (this.oversigtListTools[p2].navn != tools.records[i].activeName) {
+                                    this.oversigtListTools.push({ navn: `${tools.records[i].activeName}`, ID: `${tools.records[i].ID}` });
+                                    p2++;
+                                }
+                            } else {
+                                this.oversigtListTools.push({ navn: `${tools.records[i].activeName}`, ID: `${tools.records[i].ID}` });
+                            }
+                        }
+                    });
+                    setTimeout(function(){
+                        console.log("Opret værktøj: " + total)
+                    }, 5000);
                 },
                 fillTableToolName: function(name) {
                     let innerHTML = "";
