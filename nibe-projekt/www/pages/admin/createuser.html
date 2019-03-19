@@ -227,8 +227,31 @@
                 let inputFields = $$('form').find(`input[type="text"]`);
                 $$('form').find('#update').prop('disabled', false);
                 $$('form').find('#insert').prop('disabled', true);
-                checkBoxObj.forEach(element => {
+                checkBoxObj.forEach(async (element) => {
                     if (element.checked) {
+                        let userID = $$(element.parentElement.parentElement).find('input[type="radio"]').val();
+
+                        app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetUC&param=${userID}`, (response) => {
+                            let thong = response.records;
+                                $$(this.tables[1]).find('input[type="checkbox"]').filter(function (index, el) {
+                                    thong.forEach(thing => {
+                                        if(el.value == thing.certifikatID){
+                                            el.checked = true;
+                                        }
+                                    })
+                                });
+                        });
+                        app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetUK&param=${userID}`, (response) => {
+                            let thong = response.records;
+                                $$(this.tables[0]).find('input[type="checkbox"]').filter(function (index, el) {
+                                    thong.forEach(thing => {
+                                        if(el.value == thing.kørekortID){
+                                            el.checked = true;
+                                        }
+                                    })
+                                });
+                        });
+
                         $$('form').find('#editID').val($$(element.parentElement.parentElement).find('input[type="radio"]').val());
                         let cells = $$(element.parentElement.parentElement).find('.label-cell');
                         cells.forEach(element => {
@@ -242,11 +265,7 @@
 
                     }
                 });
-                certs = this.getCert('sp_GetUC', $$(element.parentElement.parentElement).find('input[type="radio"]').val());
-                lice = this.getCert('sp_GetUK', $$(element.parentElement.parentElement).find('input[type="radio"]').val());
-                this.tables.forEach(table => {
-
-                });
+                
             },
             updatetool: () => {
                 let newUserID = document.getElementById('editID').value;
@@ -397,9 +416,8 @@
             },
 
             getCert: function (sp, userID) {
-                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=${sp}&param=${userID}`, (response) => {
-                    return response.records;
-                }, function (e) {
+                return app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=${sp}&param=${userID}`, (response) => {
+                    
                 });
             }
         },
