@@ -211,7 +211,7 @@
                         })
                         app.methods.addToLog(`${app.data['userID']}`, `Oprettet brugeren ${newNavn}`);
                         app.dialog.alert(`Brugeren (<span style="color: green; font-weight: bold;">${newNavn}</span>) blev tilføjet til databasen.`, "Opret Bruger", function () {
-                            app.views.main.router.navigate("/createuser/", { reloadCurrent: true, });
+                        app.views.main.router.navigate("/createuser/", { reloadCurrent: true, });
                         });
 
                     } else {
@@ -237,6 +237,8 @@
                                     thong.forEach(thing => {
                                         if(el.value == thing.certifikatID){
                                             el.checked = true;
+                                            el.className = el.className + "selected";
+                                            el.parentElement.parentElement.style.backgroundColor = "#a8baad";
                                         }
                                     })
                                 });
@@ -247,6 +249,8 @@
                                     thong.forEach(thing => {
                                         if(el.value == thing.kørekortID){
                                             el.checked = true;
+                                            el.className = el.className + "selected";
+                                            el.parentElement.parentElement.style.backgroundColor = "#a8baad";
                                         }
                                     })
                                 });
@@ -267,13 +271,16 @@
                 });
                 
             },
-            updatetool: () => {
+            updatetool: function () {
                 let newUserID = document.getElementById('editID').value;
                 let newNavn = document.getElementById('Navn').value;
                 let newMobilnr = document.getElementById('Mobilnr').value;
                 let newAdresse = document.getElementById('Adresse').value;
                 let newMedhjælpernr = document.getElementById('Medhjælpernr').value;
                 let gruppeID = document.getElementById('Brugertype').selectedIndex + 1;
+                let spInsertNames = ['sp_InsertIntoUK', 'sp_InsertIntoUC'];
+                let spDeleteNames = ['sp_DeleteUK', 'sp_DeleteUC'];
+                self = this;
 
                 if (newNavn == "") {
                     app.dialog.alert("Navn feltet må ikke være tomt.", "Opret Bruger");
@@ -293,8 +300,34 @@
                 }
 
                 app.request.post(`${app.data['serverip']}functions/users/update.php`, { ID: newUserID, name: newNavn, phoneNumber: newMobilnr, address: newAdresse, cardID: newMedhjælpernr, usergruppe: gruppeID }, function (response) {
-                    app.methods.addToLog(`${app.data['userID']}`, `Ændret på brugeren ${newNavn}`);
-                    app.views.main.router.navigate("/createuser/", { reloadCurrent: true, });
+                    i = 0;
+                    o = 0;
+                    app.request.getJSON(`${app.data['serverip']}functions/users/cardid.php?id=${newMedhjælpernr}`, (res) => {
+                        uID = res.records[0].ID;
+                        tables = ['.licenseTable', '.certificateTable'];
+
+                        tables.forEach(table1 => {
+                            $$(table1).find('input[type="checkbox"]').filter(function (index1, el1) {
+                                if ($$(el1).hasClass('selected') == false) {
+                                    self.deleteCert(spDeleteNames[o], uID, el1.value);
+                                }
+                            });
+                            o++;
+                        });
+
+
+                        tables.forEach(table2 => {
+                            $$(table2).find('input[type="checkbox"]').filter(function (index2, el2) {
+                                if ($$(el2).hasClass('selected')) {
+                                    self.insertCert(spInsertNames[i], uID, el2.value);
+                                }
+                            });
+                            i++;
+                        });
+                        app.methods.addToLog(`${app.data['userID']}`, `Ændret på brugeren ${newNavn}`);
+                        //app.views.main.router.navigate("/createuser/", { reloadCurrent: true, });
+                    })
+                    
                 }, function (e, e2) {
                 }, "json");
 
@@ -410,6 +443,14 @@
             insertCert: function (sp, userID, paramID) {
                 //sp_InsertIntoUC  -  CERT
                 //sp_InsertIntoUK  -  Kørekort
+                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=${sp}&param=${userID},${paramID}`, (response) => {
+                }, function (e) {
+                });
+            },
+
+            deleteCert: function (sp, userID, paramID) {
+                //sp_DeleteUC  -  CERT
+                //sp_DeleteoUK  -  Kørekort
                 app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=${sp}&param=${userID},${paramID}`, (response) => {
                 }, function (e) {
                 });
