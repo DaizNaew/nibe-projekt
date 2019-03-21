@@ -120,8 +120,8 @@
                         $$('form').find('#update').prop('disabled', true);
                         $$('form').find('#insert').prop('disabled', false);
                         $$('form').find(`#Kategori`).val(0);
-                        $$('form').find(`#certKrav`).val(0);
-                        $$('form').find(`#kortKrav`).val(0);
+                        $$('form').find(`#certKrav`).val("-1");
+                        $$('form').find(`#kortKrav`).val("-1");
                     });
                 },
                 deletetool : () => {
@@ -416,7 +416,7 @@
                             <tr>
                                 <td style="display: none;">${tools.records[i].ID}</td>
                                 <td class="label-cell aktivNavn">${tools.records[i].aktivNavn}</td>
-                                <td class="label-cell Kategori" value="${tools.records[i].categoryID}">${tools.records[i].katNavn}</td>
+                                <td class="label-cell Kategori" value="${tools.records[i].katID}">${tools.records[i].katNavn}</td>
                                 <td class="label-cell Mærke">${tools.records[i].brand}</td>
                                 <td class="label-cell Model">${tools.records[i].model}</td>
                                 <td class="label-cell Serienummer">${tools.records[i].serieNummer}</td>
