@@ -242,11 +242,28 @@
                         checkBoxObj.forEach(element => {
                             if(element.checked) {
                                 $$('form').find('#editID').val($$(element.parentElement.parentElement).find('input[type="radio"]').val());
+                                let equipmentID = $$('form').find('#editID').val()
+
+                                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetSingleEquipmentCertifikat&param=${equipmentID}`, (response) => {
+                                    $$('form').find(`#certKrav`).val(response.records[0].certifikatID);
+                                },function(e, e2){
+                                    $$('form').find(`#certKrav`).val("-1");
+                                })
+
+                                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetSingleEquipmentKørekort&param=${equipmentID}`, (response) => {
+                                    $$('form').find(`#kortKrav`).val(response.records[0].kørekortID);
+                                },function(e, e2){
+                                    $$('form').find(`#kortKrav`).val("-1");
+                                })
+
+
                                 let cells = $$(element.parentElement.parentElement).find('.label-cell');
                                 cells.forEach(element => {
                                     input = $$(inputFields).find(`${element.classList[1]}`).val();
-                                    input_data = element.firstChild.data;
-                                    $$('form').find(`#${element.classList[1]}`).val(input_data);
+                                    if(element.firstChild != null){
+                                        input_data = element.firstChild.data;
+                                        $$('form').find(`#${element.classList[1]}`).val(input_data);
+                                    }
                                     if(element.classList[1] == 'Kategori') {
                                         $$('form').find(`#${element.classList[1]}`).val(element.firstChild.parentElement.attributes[1].value);
                                     }
