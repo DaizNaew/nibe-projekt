@@ -305,7 +305,39 @@
                         app.request.post(`${app.data['serverip']}functions/tools/update.php`, tool, (data) => {
                             app.methods.addToLog(`${app.data['userID']}`, `Ændret værktøjet ${tool.activeName} med assetTag (${tool.assetTag})`);
                             dat = data;
-                            resolve();
+                            let equipmentID = $$('form').find('#editID').val();
+                            let certKravID = $$('form').find(`#certKrav`).val();
+                            let kortKravID = $$('form').find(`#kortKrav`).val();
+
+                            app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_DeleteEC&param=${equipmentID}`, (response) => {});
+                            app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_DeleteEK&param=${equipmentID}`, (response) => {});
+
+                            if(certKravID != -1 || kortKravID != -1){
+                                if(certKravID != -1){
+                                    app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_InsertIntoEC&param=${equipmentID},${certKravID}`, (response) =>{
+                                        if(kortKravID == -1){
+                                            resolve();
+                                        }else{
+                                            app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_InsertIntoEK&param=${equipmentID},${kortKravID}`, (response) =>{
+                                                resolve();
+                                            })
+                                        }
+                                    })
+                                }else{
+                                    if(kortKravID == -1){
+                                        resolve();
+                                    }else{
+                                        app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_InsertIntoEK&param=${equipmentID},${kortKravID}`, (response) =>{
+                                            resolve();
+                                        })
+                                    }
+
+                                }
+                            }else{
+                                resolve();
+                            }
+
+                            
                         }, (error) => {
                             reject();
                         }, 'json');
