@@ -315,7 +315,6 @@
                             o++;
                         });
 
-
                         tables.forEach(table2 => {
                             $$(table2).find('input[type="checkbox"]').filter(function (index2, el2) {
                                 if ($$(el2).hasClass('selected')) {
@@ -324,8 +323,9 @@
                             });
                             i++;
                         });
+                        
                         app.methods.addToLog(`${app.data['userID']}`, `Ændret på brugeren ${newNavn}`);
-                        //app.views.main.router.navigate("/createuser/", { reloadCurrent: true, });
+                        app.views.main.router.navigate("/createuser/", { reloadCurrent: true, });
                     })
                     
                 }, function (e, e2) {
