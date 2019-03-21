@@ -129,6 +129,8 @@
                         var checkBoxObj = $$('.tableBody').find('input[type="radio"]');
                         checkBoxObj.forEach(element => {
                             if(element.checked) {
+                                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_DeleteEC&param=${element.value}`, (response) =>{})
+                                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_DeleteEK&param=${element.value}`, (response) =>{})
                                 app.request.getJSON(`${app.data['serverip']}functions/tools/delete.php?id=${element.value}`, (data) => {
                                     if(data.result == 1) {
                                         app.methods.addToLog(`${app.data['userID']}`, `Slettet værktøjet ${element.parentElement.parentElement.children[1].innerHTML} med assetTag (${element.parentElement.parentElement.children[6].innerHTML})`);
