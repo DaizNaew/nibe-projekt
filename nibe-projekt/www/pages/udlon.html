@@ -169,6 +169,7 @@
                 let dat;
                 let logString;
                 let newLånerID;
+                let lånerCerts = [];
                 if (newLånerCard == "") {
                     app.dialog.alert("Låner ID feltet må ikke være tomt.", "Udlån");
                     return;
@@ -196,7 +197,32 @@
                 let prom = new Promise((resolve, reject) => {
                     app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_ConvertCardIDtoUserID&param=${newLånerCard}`, (data2) => {
                         newLånerID = data2.records[0].ID;
+                        app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetUC&param=${newLånerID}`, (res) => {
+                            lånerCerts = res.records;
+                        })
                         for (i = 0; i < arr.length; i++) {
+                            app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetSingleEquipmentCertifikat&param=${arr[i]}`, (res2) => {
+                                let certRequired = res2.records[0].certifikatID;
+                                let hasaccess = false;
+                                if(res2.records != null){
+                                    for (o = 0; o < lånerCerts.length; o++) {
+                                    if(lånerCerts[o].certifikatID == certRequired){
+                                        //USER HAS THE REQUIRED CERTIFICATE
+                                        hasaccess = true;
+                                        break;
+                                    }
+                                    }
+                                    if(hasaccess == false){
+                                        app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetSelectToolByID&param=${arr[o]}`, (res3) => {
+                                            app.dialog.alert(`Vær opmærksom på at brugeren <span style='color: red; font-weight: bold;'>IKKE</span> har det krævet certifikat/kørekort til ${res3.records[0].aktivNavn}`, "Udlån");
+                                        },function(e, e2){console.log(e + " " + e2)})
+                                    }
+                                }else{
+                                    //THERE IS NO REQUIREMENTS FOR WHAT IS BEING LOANED
+                                }
+                            
+
+                            })
                             //Kald Endpoint med id som arr[i]
                             app.request.post(`${app.data['serverip']}endpoint/loaned.php`, { userID: newLånerID, equipmentID: arr[i], expectedDateEnd: expectedDateEnd }, function (response) {
                                 if (response.result == 1) {
@@ -206,8 +232,7 @@
                                 } else {
                                     reject();
                                 }
-                            }, function (e, e2) {
-                            }, "json");
+                            }, function (e, e2) { console.log(e + " " + e2) }, "json")
                         }
                     }, function (e) { })
                 })
