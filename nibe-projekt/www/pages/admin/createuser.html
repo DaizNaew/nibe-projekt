@@ -211,7 +211,7 @@
                         })
                         app.methods.addToLog(`${app.data['userID']}`, `Oprettet brugeren ${newNavn}`);
                         app.dialog.alert(`Brugeren (<span style="color: green; font-weight: bold;">${newNavn}</span>) blev tilføjet til databasen.`, "Opret Bruger", function () {
-                            app.views.main.router.navigate("/createuser/", { reloadCurrent: true, });
+                        app.views.main.router.navigate("/createuser/", { reloadCurrent: true, });
                         });
 
                     } else {
@@ -227,8 +227,35 @@
                 let inputFields = $$('form').find(`input[type="text"]`);
                 $$('form').find('#update').prop('disabled', false);
                 $$('form').find('#insert').prop('disabled', true);
-                checkBoxObj.forEach(element => {
+                checkBoxObj.forEach(async (element) => {
                     if (element.checked) {
+                        let userID = $$(element.parentElement.parentElement).find('input[type="radio"]').val();
+
+                        app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetUC&param=${userID}`, (response) => {
+                            let thong = response.records;
+                                $$(this.tables[1]).find('input[type="checkbox"]').filter(function (index, el) {
+                                    thong.forEach(thing => {
+                                        if(el.value == thing.certifikatID){
+                                            el.checked = true;
+                                            el.className = el.className + "selected";
+                                            el.parentElement.parentElement.style.backgroundColor = "#a8baad";
+                                        }
+                                    })
+                                });
+                        });
+                        app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetUK&param=${userID}`, (response) => {
+                            let thong = response.records;
+                                $$(this.tables[0]).find('input[type="checkbox"]').filter(function (index, el) {
+                                    thong.forEach(thing => {
+                                        if(el.value == thing.kørekortID){
+                                            el.checked = true;
+                                            el.className = el.className + "selected";
+                                            el.parentElement.parentElement.style.backgroundColor = "#a8baad";
+                                        }
+                                    })
+                                });
+                        });
+
                         $$('form').find('#editID').val($$(element.parentElement.parentElement).find('input[type="radio"]').val());
                         let cells = $$(element.parentElement.parentElement).find('.label-cell');
                         cells.forEach(element => {
@@ -242,19 +269,18 @@
 
                     }
                 });
-                certs = this.getCert('sp_GetUC', $$(element.parentElement.parentElement).find('input[type="radio"]').val());
-                lice = this.getCert('sp_GetUK', $$(element.parentElement.parentElement).find('input[type="radio"]').val());
-                this.tables.forEach(table => {
-
-                });
+                
             },
-            updatetool: () => {
+            updatetool: function () {
                 let newUserID = document.getElementById('editID').value;
                 let newNavn = document.getElementById('Navn').value;
                 let newMobilnr = document.getElementById('Mobilnr').value;
                 let newAdresse = document.getElementById('Adresse').value;
                 let newMedhjælpernr = document.getElementById('Medhjælpernr').value;
                 let gruppeID = document.getElementById('Brugertype').selectedIndex + 1;
+                let spInsertNames = ['sp_InsertIntoUK', 'sp_InsertIntoUC'];
+                let spDeleteNames = ['sp_DeleteUK', 'sp_DeleteUC'];
+                self = this;
 
                 if (newNavn == "") {
                     app.dialog.alert("Navn feltet må ikke være tomt.", "Opret Bruger");
@@ -274,8 +300,34 @@
                 }
 
                 app.request.post(`${app.data['serverip']}functions/users/update.php`, { ID: newUserID, name: newNavn, phoneNumber: newMobilnr, address: newAdresse, cardID: newMedhjælpernr, usergruppe: gruppeID }, function (response) {
-                    app.methods.addToLog(`${app.data['userID']}`, `Ændret på brugeren ${newNavn}`);
-                    app.views.main.router.navigate("/createuser/", { reloadCurrent: true, });
+                    i = 0;
+                    o = 0;
+                    app.request.getJSON(`${app.data['serverip']}functions/users/cardid.php?id=${newMedhjælpernr}`, (res) => {
+                        uID = res.records[0].ID;
+                        tables = ['.licenseTable', '.certificateTable'];
+
+                        tables.forEach(table1 => {
+                            $$(table1).find('input[type="checkbox"]').filter(function (index1, el1) {
+                                if ($$(el1).hasClass('selected') == false) {
+                                    self.deleteCert(spDeleteNames[o], uID, el1.value);
+                                }
+                            });
+                            o++;
+                        });
+
+                        tables.forEach(table2 => {
+                            $$(table2).find('input[type="checkbox"]').filter(function (index2, el2) {
+                                if ($$(el2).hasClass('selected')) {
+                                    self.insertCert(spInsertNames[i], uID, el2.value);
+                                }
+                            });
+                            i++;
+                        });
+                        
+                        app.methods.addToLog(`${app.data['userID']}`, `Ændret på brugeren ${newNavn}`);
+                        app.views.main.router.navigate("/createuser/", { reloadCurrent: true, });
+                    })
+                    
                 }, function (e, e2) {
                 }, "json");
 
@@ -396,10 +448,17 @@
                 });
             },
 
-            getCert: function (sp, userID) {
-                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=${sp}&param=${userID}`, (response) => {
-                    return response.records;
+            deleteCert: function (sp, userID, paramID) {
+                //sp_DeleteUC  -  CERT
+                //sp_DeleteoUK  -  Kørekort
+                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=${sp}&param=${userID},${paramID}`, (response) => {
                 }, function (e) {
+                });
+            },
+
+            getCert: function (sp, userID) {
+                return app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=${sp}&param=${userID}`, (response) => {
+                    
                 });
             }
         },
