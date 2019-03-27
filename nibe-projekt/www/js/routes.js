@@ -91,6 +91,11 @@ routes = [
     componentUrl: './pages/admin/log.html',
   },
   {
+    name: 'userList',
+    path: '/userList/',
+    componentUrl: './pages/admin/userList.html',
+  },
+  {
     name: 'oversigt',
     path: '/oversigt/',
     componentUrl: './pages/oversigt.html',
