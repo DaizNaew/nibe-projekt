@@ -285,6 +285,7 @@
                 this.oversigtListTools.length = 0
                 let p2 = 0;
 
+            let prom = new Promise()(() => {
                 app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllToolsForLoan&param=200,0`, (response) => {
                     for (let i = 0; i < response.records.length; i++) {
                         total++;
@@ -315,6 +316,9 @@
                         }
                     }
                 })
+            })
+
+                
 
                 app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllToolsForLoan&param=20000,200`, (response) => {
                     for (let i = 0; i < response.records.length; i++) {
