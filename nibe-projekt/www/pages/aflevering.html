@@ -85,7 +85,7 @@
                         </table>
                     </div>
                     <div class="form-row form-button-row">
-                        <a><button id="insert" @click="aflevertool" type="submit"
+                        <a><button id="aflever" @click="aflevertool" type="submit"
                                 class="no-ripple col btn btn-primary godbtn">Aflever</button></a>
                         <a><button id="reset" @click="resetfields" type="button"
                                 class="no-ripple col btn btn-primary godbtn">Nulstil felter</button></a>
@@ -98,13 +98,16 @@
 </template>
 
 <script>
-    var arr = [];
+    var toolsForDeliver = [];
 
     fjernafleveringsværktøj = (værktøjsID, asset) => {
         $$(`.låneTableBody`).find(`#værktøjnr${værktøjsID}`).remove();
-        console.dir(arr)
+        console.dir(toolsForDeliver)
         console.dir(asset)
-        arr.splice(arr.indexOf(asset), 1);
+        toolsForDeliver.splice(toolsForDeliver.indexOf(asset), 1);
+        if($$('låneTableBody').html ="") {
+            $$("#aflever").prop("disabled", true);
+        }
     }
 
     addFromTable = (værktøjsID) => {
@@ -126,11 +129,12 @@
                         </td>
                     </tr>
                     `;
-            arr.push(response.records[0].assetTag);
+            toolsForDeliver.push(response.records[0].assetTag);
             $$('.låneTableBody').html(innerHTML);
             $$('.tableBody').html("");
             $$('#dupeTable').hide();
             $$("#assetTagForAfl").prop('disabled', false);
+            $$("#aflever").prop("disabled", false);
 
         })
     }
@@ -160,27 +164,23 @@
                     })
                 });
             },
-            //Ret denne function til at bruge arr for at lave den mere optimeret
+            //Ret denne function til at bruge toolsForDeliver for at lave den mere optimeret
             aflevertool: async () => {
                 let dat;
                 let toastMessage = '';
-                if (document.getElementById('loanerID').value == "") {
-                    app.dialog.alert("Låner ID feltet må ikke være tomt.", "Aflevering");
-                    return;
-                }
+                let loan;
                 let prom = new Promise((resolve, reject) => {
                     $$('.låneTableBody').forEach(element => {
                         for (i = 0; i < element.children.length; i++) {
-                            let loan = {
+                            loan = {
                                 id: element.children[i].children[0].innerText,
                                 VærktøjsNavn: element.children[i].children[1].innerText,
                                 equipmentID: (element.children[i].id).split("værktøjnr").pop(),
                                 AssetTag: element.children[i].children[6].innerText,
-                                selectedUserID: selectedUserID
                             };
 
                             app.request.post(`${app.data['serverip']}functions/loans/deliver.php`, loan, (data) => {
-                                app.methods.addToLog(`${selectedUserID}`, `Afleverede værktøjet ${loan.VærktøjsNavn} med assetTag (${loan.AssetTag})`);
+                                app.methods.addToLog(`204`, `Afleverede værktøjet ${loan.VærktøjsNavn} med assetTag (${loan.AssetTag})`);
                                 dat = data;
                                 resolve();
                             }, (error) => {
@@ -196,6 +196,7 @@
                     toastMessage = 'Værktøjet blev ikke Afleveret';
                 }
                 app.dialog.alert(toastMessage, 'Afleveret Værktøj', () => {
+                    toolsForDeliver.splice(toolsForDeliver.indexOf(loan.AssetTag), 1);
                     app.views.main.router.navigate("/aflevering/", { reloadCurrent: true, });
                 });
             },
@@ -230,7 +231,7 @@
                             $$('#dupeTable').show();
                             this.fillTable(response.records[i])
                         } else {
-                            if (arr.includes(response.records[i].equipmentID)) break;
+                            if (toolsForDeliver.includes(response.records[i].equipmentID)) break;
                             innerHTML +=
                                 `
                                 <tr id="værktøjnr${response.records[i].equipmentID}">
@@ -247,14 +248,15 @@
                                     </td>
                                 </tr>
                                 `;
-                            arr.push(response.records[i].equipmentID);
+                            toolsForDeliver.push(response.records[i].equipmentID);
                             $$('.låneTableBody').html(innerHTML);
+                            $$("#aflever").prop("disabled", false);
                         }
                     }
                 })
             },
             scantool: function () {
-                if (arr.includes($$("#assetTagForAfl").val())) return $$("#assetTagForAfl").val('');
+                if (toolsForDeliver.includes($$("#assetTagForAfl").val())) return $$("#assetTagForAfl").val('');
                 $$("#assetTagForAfl").prop('disabled', true);
                 //app.dialog.confirm(`Indsæt dette værktøj? ${$$("#assetTagForAfl").val()}`);
                 this.tilføjafleveringsværktøj($$("#assetTagForAfl").val());
@@ -289,6 +291,7 @@
             },
             pageAfterIn: function (e, page) {
                 $$("#assetTagForAfl").focus();
+                $$("#aflever").prop("disabled", true);
             },
         },
     }
