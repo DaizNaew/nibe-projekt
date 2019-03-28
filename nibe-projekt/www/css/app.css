@@ -438,3 +438,29 @@ input[type=submit] {
 label{
   margin-top: 6px !important;
 }
+
+.specialbox{
+  width: 90%;
+  height: 100px;
+  margin-left: 5%;
+  border-style: solid;
+  border-color: #4e4e4ece;
+  border-width: 1px 1px 1px 1px;
+  box-shadow: 0 1px 0 rgb(36, 36, 36);
+
+}
+
+.specialinput{
+  margin-left: -100% !important;
+  width: 50px !important;
+  z-index: -5;
+  position: fixed;
+}
+
+.specialtext{
+  text-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  letter-spacing: 1px;
+  color: #fff;
+  text-align: center;
+  margin-top: 35px !important;
+}
