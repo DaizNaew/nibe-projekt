@@ -23,6 +23,8 @@
                     <div>
                         <label class="tabletitle">Alt tilgængeligt værktøj</label>
                         <div class="tableFixHead tablelimit">
+                            <div id="tableoverlay"></div>
+                            <div class="preloader color-multi"></div>
                             <table class="table fixed_header" style="background-color: #c5d9ec33;">
                                 <thead>
                                     <tr>
@@ -40,8 +42,9 @@
                                         </th>
                                     </tr>
                                 </thead>
+                                
+                                
                                 <tbody class="tableBody">
-
                                 </tbody>
                             </table>
                         </div>
@@ -354,7 +357,6 @@
 
         on: {
             pageAfterIn: function (e, page) {
-
                 var myCalendar = new dhtmlXCalendarObject(
                     { input: "calendar_input", button: "calendar_input" }
                 );
@@ -367,6 +369,8 @@
                 });
             },
             pageMounted: function (page) {
+                let width = $$('.tableFixHead').width();
+                $$('#tableoverlay').css('width', `${width}px`);
                 globalReservationID = page.detail.route.params.reservationID;
                 let reservationID = page.detail.route.params.reservationID;
                 let låneInnerHTML = "";
