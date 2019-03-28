@@ -115,7 +115,7 @@ class Loaned {
         $final = strtotime($date);
         $time_posted = date("Y-m-d H:i:s", $final);
 
-        $query = "UPDATE " . $this->table_name . " SET actualDateEnd = '" . $time_posted . "', udløbet = '1' WHERE ID = " . $id;
+        $query = "UPDATE " . $this->table_name . " SET actualDateEnd = '" . $time_posted . "', udløbet = '1' WHERE equipmentID = " . $equipmentID;
 
         // prepare query statement
         $stmt = $this->conn->prepare($query);
