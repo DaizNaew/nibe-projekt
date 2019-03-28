@@ -15,7 +15,7 @@
                     <div>
                         <div class="form-row" style="text-align: left">
                             <label class="col">Tryk for at kunne scanne at låne et værktøj</label>
-                            <a style="display:none"><button id="lonTool" type="submit" @click="scantool" class="no-ripple col btn btn-primary godbtn">Scan Værktøj</button></a>
+                            <a style="display:none"><button id="lonTool" type="submit" @click="scantoolforlon" class="no-ripple col btn btn-primary godbtn">Scan Værktøj</button></a>
                             <div class="input-wrapper">
                                 <input type="text" class="form-control form-control-sm col input-format" id="assetTagForLon" required="required">
                             </div>
@@ -91,9 +91,9 @@
     }
 
     tilføjudlånsværktøj = (værktøjsID) => {
-        arr.push(værktøjsID);
         let innerHTML = "";
         app.request.getJSON(`${app.data['serverip']}endpoint/equipment.php?id=${værktøjsID}`, (response) => {
+            arr.push(værktøjsID);
             $$(`.tableBody`).find(`#btn${værktøjsID}`).prop("disabled", true);
             innerHTML = $$(`.låneTableBody`).html();
             for (let i = 0; i < response.records.length; i++) {
@@ -228,7 +228,7 @@
                     return;
                 }
             },
-            scantool: async function() {
+            scantoolforlon: function() {
                 let newAssetTag = document.getElementById('assetTagForLon').value;
                 $$('#assetTagForLon').val('');
                 app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetSelectToolByAsset&param=${newAssetTag}`, (data) => {
@@ -238,13 +238,13 @@
                         tilføjudlånsværktøj(data.records[0].ID);
                     }
                     
-                })
+                },function(e, e2){})
             },
         },
 
         on: {
             pageAfterIn: function (e, page) {
-
+                arr = [];
                 var myCalendar = new dhtmlXCalendarObject(
                     { input: "calendar_input", button: "calendar_input" }
                 );
