@@ -226,6 +226,7 @@
                     //app.request.getJSON(`${app.data['serverip']}endpoint/equipment.php?id=${værktøjsID}`, (response) => {
                     //$$(`.tableBody`).find(`#btn${værktøjsID}`).prop("disabled",true);
                     innerHTML = $$(`.låneTableBody`).html();
+                    $$("#assetTagForAfl").prop('disabled', true);
                     for (let i = 0; i < response.records.length; i++) {
                         if (response.records.length > 1) {
                             $$('#dupeTable').show();
@@ -257,7 +258,7 @@
             },
             scantool: function () {
                 if (toolsForDeliver.includes($$("#assetTagForAfl").val())) return $$("#assetTagForAfl").val('');
-                $$("#assetTagForAfl").prop('disabled', true);
+                
                 //app.dialog.confirm(`Indsæt dette værktøj? ${$$("#assetTagForAfl").val()}`);
                 this.tilføjafleveringsværktøj($$("#assetTagForAfl").val());
                 $$("#assetTagForAfl").val('');
@@ -266,7 +267,9 @@
 
         on: {
             pageMounted: function (page) {
+                /*
                 let o = 0;
+
                 app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllToolsForAflevering&param=-1`, (response) => {
                     for (let i = 0; i < response.records.length; i++) {
                         if (i !== 0) {
@@ -288,8 +291,10 @@
                         }
                     }
                 });
+                */
             },
             pageAfterIn: function (e, page) {
+                toolsForDeliver = [];
                 $$("#assetTagForAfl").focus();
                 $$("#aflever").prop("disabled", true);
             },
