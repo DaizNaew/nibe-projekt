@@ -359,13 +359,12 @@
                             `;
                         $$('.userTable').html(innerHTML);
                         if (i !== 0) {
-                            if (this.oversigtListBruger[o].navn != response.records[i].name) {
-                                this.oversigtListBruger.push({ navn: `${response.records[i].name}`, ID: `${response.records[i].ID}` });
-                                o++;
+                            if(!this.oversigtListBruger.some(liste => liste.navn == response.records[i].userName )) {
+                                    this.oversigtListBruger.push({ navn: `${response.records[i].userName}`, ID: `${response.records[i].userCardID}` });
+                                }
+                            } else {
+                                this.oversigtListBruger.push({ navn: `${response.records[i].userName}`, ID: `${response.records[i].userCardID}` });
                             }
-                        } else {
-                            this.oversigtListBruger.push({ navn: `${response.records[i].name}`, ID: `${response.records[i].ID}` });
-                        }
                     }
                 });
             },

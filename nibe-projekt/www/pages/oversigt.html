@@ -67,7 +67,7 @@
         // Component Methods
         methods: {
 
-            fillTableDefault: async function() {
+            fillTableDefault: function() {
                 let total = 0;
                 let innerHTML = "";
                 var app = this.$app;
@@ -100,6 +100,18 @@
                                 `;
                         $$('.tableBody').html(innerHTML);
                         if (i !== 0) {
+                            if(!this.oversigtListBruger.some(liste => liste.navn == response.records[i].userName )) {
+                                    this.oversigtListBruger.push({ navn: `${response.records[i].userName}`, ID: `${response.records[i].userCardID}` });
+                                }
+                                if(!this.oversigtListTools.some(liste => liste.navn == response.records[i].equipmentNavn )) {
+                                    this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
+                                }
+                            } else {
+                                this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
+                                this.oversigtListBruger.push({ navn: `${response.records[i].userName}`, ID: `${response.records[i].userCardID}` });
+                            }
+                            /*
+                        if (i !== 0) {
                             if (this.oversigtListBruger[o].navn != response.records[i].userName) {
                                 this.oversigtListBruger.push({ navn: `${response.records[i].userName}`, ID: `${response.records[i].userCardID}` });
                                 o++;
@@ -112,6 +124,7 @@
                             this.oversigtListBruger.push({ navn: `${response.records[i].userName}`, ID: `${response.records[i].userCardID}` });
                             this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
                         }
+                        */
                     }
                 });
 
@@ -137,6 +150,18 @@
                                 `;
                         $$('.tableBody').html(innerHTML);
                         if (i !== 0) {
+                            if(!this.oversigtListBruger.some(liste => liste.navn == response.records[i].userName )) {
+                                    this.oversigtListBruger.push({ navn: `${response.records[i].userName}`, ID: `${response.records[i].userCardID}` });
+                                }
+                                if(!this.oversigtListTools.some(liste => liste.navn == response.records[i].equipmentNavn )) {
+                                    this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
+                                }
+                            } else {
+                                this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
+                                this.oversigtListBruger.push({ navn: `${response.records[i].userName}`, ID: `${response.records[i].userCardID}` });
+                            }
+                        /*
+                        if (i !== 0) {
                             if (this.oversigtListBruger[o2].navn != response.records[i].userName) {
                                 this.oversigtListBruger.push({ navn: `${response.records[i].userName}`, ID: `${response.records[i].userCardID}` });
                                 o2++;
@@ -149,6 +174,7 @@
                             this.oversigtListBruger.push({ navn: `${response.records[i].userName}`, ID: `${response.records[i].userCardID}` });
                             this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
                         }
+                        */
                     }
                 });
                 setTimeout(function(){
