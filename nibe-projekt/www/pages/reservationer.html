@@ -108,7 +108,7 @@
                 this.oversigtListTools.length = 0;
 
                 // request user data on page init
-                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllReservationer&param=2,0`, (response) => {
+                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllReservationer&param=50,0`, (response) => {
                     // update component state with new state
                     for (let i = 0; i < response.records.length; i++) {
                         if(response.records[i].note != ""){
@@ -158,7 +158,7 @@
                     }
                 });
 
-                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllReservationer&param=20000,2`, (response) => {
+                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllReservationer&param=100,50`, (response) => {
                     // update component state with new state
                     for (let i = 0; i < response.records.length; i++) {
                         if(response.records[i].note != ""){
@@ -183,7 +183,7 @@
                                     <td class="label-cell ReserveretFra">${response.records[i].dateStart}</td>
                                     <td class="label-cell ReserveretTil">${response.records[i].expectedDateEnd}</td>
                                     
-                                    <td class="label-cell Note">${note}</td>
+                                    <td class="label-cell Note">${note2}</td>
                                     <td class="input-cell">
                                         <button type="button" onclick="udlon(${response.records[i].ID})" class="no-ripple btn-primary">Udlån</button>
                                     </td>
