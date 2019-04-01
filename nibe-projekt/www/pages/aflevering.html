@@ -245,7 +245,7 @@
                                     <td class="label-cell AssetTag">${response.records[i].equipmentAsset}</td>
                                     <td class="label-cell Stand">${response.records[i].equipmentCondition}</td>
                                     <td class="radio-cell">
-                                        <button type="button" @click="fjernafleveringsværktøj(${response.records[0].equipmentID})" class="no-ripple btn-primary deletebtn">Slet</button>
+                                        <button type="button" onclick="fjernafleveringsværktøj(${response.records[i].equipmentID})" class="no-ripple btn-primary deletebtn">Slet</button>
                                     </td>
                                 </tr>
                                 `;
