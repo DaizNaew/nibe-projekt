@@ -102,8 +102,6 @@
 
     fjernafleveringsværktøj = (værktøjsID, asset) => {
         $$(`.låneTableBody`).find(`#værktøjnr${værktøjsID}`).remove();
-        console.dir(toolsForDeliver)
-        console.dir(asset)
         toolsForDeliver.splice(toolsForDeliver.indexOf(asset), 1);
         if($$('låneTableBody').html ="") {
             $$("#aflever").prop("disabled", true);

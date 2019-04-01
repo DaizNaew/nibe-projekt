@@ -200,7 +200,7 @@
                                                 resolve();
                                             })
                                         }
-                                    },function(e){console.log(e)})
+                                    },function(e){console.error(e)})
                                 }else{
                                     if(kortkravID == -1){
                                             resolve();
@@ -432,7 +432,6 @@
                         }
                     });
                     setTimeout(function(){
-                        console.log("Opret værktøj: " + total)
                     }, 5000);
                 },
                 fillTableToolName: function(name) {

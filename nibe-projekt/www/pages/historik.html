@@ -115,7 +115,6 @@
                 
                 let offset = parseInt(document.getElementById("rowcount").value);
                 
-                console.dir(offset)
                 let nyHTML = $$('.tableBody').html();
                 app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllHistorik&param=200,${offset}`, (response) => {
                     // update component state with new state

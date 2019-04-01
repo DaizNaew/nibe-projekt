@@ -190,7 +190,7 @@
                                     if(hasaccess == false){
                                         app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetSelectToolByID&param=${arr[o]}`, (res3) => {
                                             app.dialog.alert(`Vær opmærksom på at brugeren <span style='color: red; font-weight: bold;'>IKKE</span> har det krævet certifikat/kørekort til ${res3.records[0].aktivNavn}`, "Udlån");
-                                        },function(e, e2){console.log(e + " " + e2)})
+                                        },function(e, e2){console.error(e + " " + e2)})
                                     }
                                 }else{
                                     //THERE IS NO REQUIREMENTS FOR WHAT IS BEING LOANED
@@ -207,7 +207,7 @@
                                 } else {
                                     reject();
                                 }
-                            }, function (e, e2) { console.log(e + " " + e2) }, "json")
+                            }, function (e, e2) { console.error(e + " " + e2) }, "json")
                         }
                     }, function (e) { })
                 })
