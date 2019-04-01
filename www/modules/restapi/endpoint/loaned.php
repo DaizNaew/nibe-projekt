@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 "equipmentID" => $equipmentID,
                 "dateStart" => $dateStart,
                 "expectedDateEnd" => $expectedDateEnd,
-                "description" => $description,
+                "note" => $note,
                 "udløbet" => $udløbet,
                 "aktivNavn" => $aktivNavn,
                 "brand" => $brand,

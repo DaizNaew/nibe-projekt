@@ -46,7 +46,7 @@ if(!isset($param)) {
     
         $products_arr=array();
         $products_arr["records"]=array();
-     
+     try {
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
             
             $product_item=$row;
@@ -59,6 +59,11 @@ if(!isset($param)) {
      
         // show sp data in json format
         echo json_encode($products_arr);
+    } catch (Exception $e) {
+        echo json_encode(
+            array("message" => "Ingen Data blev returneret")
+        );
+    }
     }else{
      
         // set response code - 404 Not found

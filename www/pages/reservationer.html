@@ -38,6 +38,7 @@
                                     <th class="label-cell" scope="col">Stand</th>
                                     <th class="label-cell" scope="col">Reserveret Fra</th>
                                     <th class="label-cell" scope="col">Reserveret Til</th>
+                                    <th class="label-cell" scope="col">Note</th>
                                     <th class="radio-cell" scope="col">
                                         <!--<input type="checkbox" class="no-ripple"/>-->
                                         <i class="icon-radio"></i>
@@ -79,6 +80,11 @@
         })
     }
 
+    notepop = (note2pop) => {
+        app.dialog.alert(note2pop, 'Note', function () {
+        })
+    }
+
     return {
         data: function () {
             return {
@@ -88,19 +94,30 @@
         },
         // Component Methods
         methods: {
-            fillTableDefault() {
+            fillTableDefault: async function() {
+                let total = 0;
                 oldrow = null;
                 let innerHTML = "";
                 var app = this.$app;
                 let o = 0, p = 0;
+                let o2 = 0, p2 = 0;
+                let note = '<i></i>'
+                let note2 = '<i></i>'
 
                 this.oversigtListBruger.length = 0;
                 this.oversigtListTools.length = 0;
 
                 // request user data on page init
-                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllReservationer&param=-1`, (response) => {
+                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllReservationer&param=50,0`, (response) => {
                     // update component state with new state
                     for (let i = 0; i < response.records.length; i++) {
+                        if(response.records[i].note != ""){
+                            note = `<i class="far fa-envelope" onclick="notepop('${response.records[i].note}')"></i>`
+                        }
+                        else{
+                            note = '<i></i>'
+                        }
+                        total++;
                         innerHTML +=
                             `
                                 <tr>
@@ -115,6 +132,58 @@
                                     <td class="label-cell Stand">${response.records[i].equipmentCondition}</td>
                                     <td class="label-cell ReserveretFra">${response.records[i].dateStart}</td>
                                     <td class="label-cell ReserveretTil">${response.records[i].expectedDateEnd}</td>
+                                    
+                                    <td class="label-cell Note">${note}</td>
+                                    <td class="input-cell">
+                                        <button type="button" onclick="udlon(${response.records[i].ID})" class="no-ripple btn-primary">Udlån</button>
+                                    </td>
+                                    <td class="input-cell">
+                                        <button type="button" onclick="reservationerdeletetool(${response.records[i].ID}, ${response.records[i].equipmentID})" class="no-ripple btn-primary deletebtn">Slet</button>
+                                    </td>
+                                </tr>
+                                `;
+                        $$('.tableBody').html(innerHTML);
+                        
+                        if (i !== 0) {
+                            if(!this.oversigtListBruger.some(liste => liste.navn == response.records[i].userName )) {
+                                    this.oversigtListBruger.push({ navn: `${response.records[i].userName}`, ID: `${response.records[i].userCardID}` });
+                                }
+                                if(!this.oversigtListTools.some(liste => liste.navn == response.records[i].equipmentNavn )) {
+                                    this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
+                                }
+                            } else {
+                                this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
+                                this.oversigtListBruger.push({ navn: `${response.records[i].userName}`, ID: `${response.records[i].userCardID}` });
+                            }
+                    }
+                });
+
+                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllReservationer&param=100,50`, (response) => {
+                    // update component state with new state
+                    for (let i = 0; i < response.records.length; i++) {
+                        if(response.records[i].note != ""){
+                            note2 = `<i class="far fa-envelope" onclick="notepop('${response.records[i].note}')"></i>`
+                        }
+                        else{
+                            note2 = '<i></i>'
+                        }
+                        total++;
+                        innerHTML +=
+                            `
+                                <tr>
+                                    <td style="display: none;">${response.records[i].ID}</td>
+                                    <td class="label-cell MedhjælperNavn">${response.records[i].userName}</td>
+                                    <td class="label-cell MedhjælperNummer">${response.records[i].userCardID}</td>
+                                    <td class="label-cell VærktøjsNavn">${response.records[i].equipmentNavn}</td>
+                                    <td class="label-cell Kategori">${response.records[i].equipmentKategori}</td>
+                                    <td class="label-cell Mærke">${response.records[i].equipmentBrand}</td>
+                                    <td class="label-cell Model">${response.records[i].equipmentModel}</td>
+                                    <td class="label-cell AssetTag">${response.records[i].equipmentAsset}</td>
+                                    <td class="label-cell Stand">${response.records[i].equipmentCondition}</td>
+                                    <td class="label-cell ReserveretFra">${response.records[i].dateStart}</td>
+                                    <td class="label-cell ReserveretTil">${response.records[i].expectedDateEnd}</td>
+                                    
+                                    <td class="label-cell Note">${note2}</td>
                                     <td class="input-cell">
                                         <button type="button" onclick="udlon(${response.records[i].ID})" class="no-ripple btn-primary">Udlån</button>
                                     </td>
@@ -125,30 +194,38 @@
                                 `;
                         $$('.tableBody').html(innerHTML);
                         if (i !== 0) {
-                            if (this.oversigtListBruger[o].navn != response.records[i].userName) {
-                                this.oversigtListBruger.push({ navn: `${response.records[i].userName}`, ID: `${response.records[i].userCardID}` });
-                                o++;
-                            }
-                            if (this.oversigtListTools[p].navn != response.records[i].equipmentNavn) {
+                            if(!this.oversigtListBruger.some(liste => liste.navn == response.records[i].userName )) {
+                                    this.oversigtListBruger.push({ navn: `${response.records[i].userName}`, ID: `${response.records[i].userCardID}` });
+                                }
+                                if(!this.oversigtListTools.some(liste => liste.navn == response.records[i].equipmentNavn )) {
+                                    this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
+                                }
+                            } else {
                                 this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
-                                p++;
+                                this.oversigtListBruger.push({ navn: `${response.records[i].userName}`, ID: `${response.records[i].userCardID}` });
                             }
-                        } else {
-                            this.oversigtListBruger.push({ navn: `${response.records[i].userName}`, ID: `${response.records[i].userCardID}` });
-                            this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
-                        }
                     }
                 });
+                setTimeout(function(){
+                console.log("Reservationer: " + total)
+                }, 5000);
             },
             fillTableReserveName(name) {
                 oldrow = null;
                 let innerHTML = "";
                 var app = this.$app;
+                let note = '<i></i>'
 
                 // request user data on page init
                 app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetSelectReservationUser&param=${name}`, (response) => {
                     // update component state with new state
                     for (let i = 0; i < response.records.length; i++) {
+                        if(response.records[i].note != ""){
+                            note = `<i class="far fa-envelope" onclick="notepop('${response.records[i].note}')"></i>`
+                        }
+                        else{
+                            note = '<i></i>'
+                        }
                         innerHTML +=
                             `
                                 <tr>
@@ -163,6 +240,7 @@
                                     <td class="label-cell Stand">${response.records[i].equipmentCondition}</td>
                                     <td class="label-cell ReserveretFra">${response.records[i].dateStart}</td>
                                     <td class="label-cell ReserveretTil">${response.records[i].expectedDateEnd}</td>
+                                    <td class="label-cell Note">${note}</td>
                                     <td class="input-cell">
                                         <button type="button" onclick="udlon(${response.records[i].ID})" class="no-ripple btn-primary">Udlån</button>
                                     </td>
@@ -179,10 +257,17 @@
                 oldrow = null;
                 let innerHTML = "";
                 var app = this.$app;
+                let note = '<i></i>'
                 // request user data on page init
                 app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetSelectReservationToolname&param=${toolName}`, (response) => {
                     // update component state with new state
                     for (let i = 0; i < response.records.length; i++) {
+                        if(response.records[i].note != ""){
+                            note = `<i class="far fa-envelope" onclick="notepop('${response.records[i].note}')"></i>`
+                        }
+                        else{
+                            note = '<i></i>'
+                        }
                         innerHTML +=
                             `
                                 <tr>
@@ -197,6 +282,7 @@
                                     <td class="label-cell Stand">${response.records[i].equipmentCondition}</td>
                                     <td class="label-cell ReserveretFra">${response.records[i].dateStart}</td>
                                     <td class="label-cell ReserveretTil">${response.records[i].expectedDateEnd}</td>
+                                    <td class="label-cell Note">${note}</td>
                                     <td class="input-cell">
                                         <button type="button" onclick="udlon(${response.records[i].ID})" class="no-ripple btn-primary">Udlån</button>
                                     </td>

@@ -75,6 +75,7 @@
 
                 // request user data on page init
                 app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllHistorik&param=200,0`, (response) => {
+                    document.getElementById("rowcount").value = 200;
                     // update component state with new state
                     for(let i = 0; i < response.records.length; i++) {
                         innerHTML += 
@@ -96,26 +97,25 @@
                             `;
                             $$('.tableBody').html(innerHTML);
                             if (i !== 0) {
-                                if (this.oversigtListBruger[o].navn != response.records[i].userName) {
+                            if(!this.oversigtListBruger.some(liste => liste.navn == response.records[i].userName )) {
                                     this.oversigtListBruger.push({ navn: `${response.records[i].userName}`, ID: `${response.records[i].userCardID}` });
-                                    o++;
                                 }
-                                if (this.oversigtListTools[p].navn != response.records[i].equipmentNavn) {
+                                if(!this.oversigtListTools.some(liste => liste.navn == response.records[i].equipmentNavn )) {
                                     this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
-                                    p++;
                                 }
                             } else {
-                                this.oversigtListBruger.push({ navn: `${response.records[i].userName}`, ID: `${response.records[i].userCardID}` });
                                 this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
+                                this.oversigtListBruger.push({ navn: `${response.records[i].userName}`, ID: `${response.records[i].userCardID}` });
                             }
                     }
                 });
             },
 
             loadflere : () => {
+                
                 let offset = parseInt(document.getElementById("rowcount").value);
+                
                 let nyHTML = $$('.tableBody').html();
-                console.log(offset);
                 app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllHistorik&param=200,${offset}`, (response) => {
                     // update component state with new state
                     document.getElementById("rowcount").value = offset + 200;
@@ -138,6 +138,17 @@
                             </tr>
                             `;
                             $$('.tableBody').html(nyHTML);
+                            if (i !== 0) {
+                            if(!this.oversigtListBruger.some(liste => liste.navn == response.records[i].userName )) {
+                                    this.oversigtListBruger.push({ navn: `${response.records[i].userName}`, ID: `${response.records[i].userCardID}` });
+                                }
+                                if(!this.oversigtListTools.some(liste => liste.navn == response.records[i].equipmentNavn )) {
+                                    this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
+                                }
+                            } else {
+                                this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
+                                this.oversigtListBruger.push({ navn: `${response.records[i].userName}`, ID: `${response.records[i].userCardID}` });
+                            }
                     }
                 });
 

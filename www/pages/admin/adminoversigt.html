@@ -68,14 +68,16 @@
     // Component States
         on: {
             pageMounted: (page) => {
+                let total = 0;
                 let innerHTML = "";
                 var oldrow = null;
                 var self = this;
                 var app = self.app;
                 // request user data on page init
-                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllOversigt&param=-1`, (response) => {
+                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllOversigt&param=200,0`, (response) => {
                     // update component state with new state
                     for(let i = 0; i < response.records.length; i++) {
+                        total++;
                         innerHTML += 
                         `
                         <tr>
@@ -98,6 +100,35 @@
                         $$('.tableBody').html(innerHTML);
                     }
                 });
+
+                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllOversigt&param=20000,200`, (response) => {
+                    // update component state with new state
+                    for(let i = 0; i < response.records.length; i++) {
+                        total++;
+                        innerHTML += 
+                        `
+                        <tr>
+                            <td style="display: none;">${response.records[i].ID}</td>
+                            <td class="label-cell MedhjælperNavn">${response.records[i].userName}</td>
+                            <td class="label-cell MedhjælperNummer">${response.records[i].userCardID}</td>
+                            <td class="label-cell VærktøjsNavn">${response.records[i].equipmentNavn}</td>
+                            <td class="label-cell Kategori">${response.records[i].equipmentKategori}</td>
+                            <td class="label-cell Mærke">${response.records[i].equipmentBrand}</td>
+                            <td class="label-cell Model">${response.records[i].equipmentModel}</td>
+                            <td class="label-cell AssetTag">${response.records[i].equipmentAsset}</td>
+                            <td class="label-cell Stand">${response.records[i].equipmentCondition}</td>
+                            <td class="label-cell DatoUdlånt">${response.records[i].dateStart}</td>
+                            <td class="label-cell ForventesTilbage">${response.records[i].expectedDateEnd}</td>
+                            <td class="input-cell">
+                                <button type="button" onclick="deletetool(${response.records[i].ID}, ${response.records[i].equipmentID})" class="no-ripple btn-primary deletebtn">Slet</button>
+                            </td>
+                        </tr>
+                        `;
+                        $$('.tableBody').html(innerHTML);
+                    }
+                });
+                setTimeout(function(){
+            }, 5000);
             }
         },
     }

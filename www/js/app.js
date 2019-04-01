@@ -1,6 +1,7 @@
 // Dom7
 var $$ = Dom7;
 
+
 // Framework7 App main instance
 var app  = new Framework7({
   root: '#app', // App root element
@@ -35,9 +36,9 @@ var app  = new Framework7({
 
     addToLog: function(UserID, Handling){
       app.request.post(`${app.data['serverip']}endpoint/logging.php`, { UserID: UserID, Handling: Handling }, function(response){
-        console.log(response);
+        //console.log(response);
       }, function(e, e2){
-        console.log(e);
+        //console.log(e);
       }, "json");
     },
   },
@@ -58,6 +59,28 @@ var app  = new Framework7({
         app.data['navbarheight'] = $$('#view-navbar')[0].clientHeight;
         document.getElementById('view-home').style.top = app.data['navbarheight']+"px";
       }, 0);
+
+      let currentpage = app.views.main.router.currentPageEl.dataset.name;
+      if(currentpage == "udlon"){
+
+      }else{
+        var idleTime = 0;
+        setInterval(function(){
+          idleTime++;
+          if(idleTime > 5){
+            app.views.main.router.navigate("/udlon/", {reloadCurrent: true,});
+          }
+        }, 60000);
+        
+  
+        $$(document).mousemove(function(e){
+          idleTime = 0;
+        });
+
+        $$(document).keypress(function(e){
+          idleTime = 0;
+        });
+      }
     },
   },
 });

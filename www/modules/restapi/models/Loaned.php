@@ -22,7 +22,7 @@ class Loaned {
     public $dateStart;
     public $expectedDateEnd;
     public $actualDateEnd;
-    public $description;
+    public $note;
 
     // Tool props
     public $toolID;
@@ -68,11 +68,11 @@ class Loaned {
         $equipmentID = $post['equipmentID'];
 
         $expectedDateEnd = null;
-        $description = null;
+        $note = null;
         if(isset($post['expectedDateEnd'])) $expectedDateEnd = $post['expectedDateEnd'];
-        if(isset($post['description'])) $description = $post['description'];
+        if(isset($post['note'])) $note = $post['note'];
 
-        $query = "INSERT INTO " . $this->table_name . " (userID,equipmentID,expectedDateEnd,description) VALUES " . "('$userID', '$equipmentID', '$expectedDateEnd', '$description')";
+        $query = "INSERT INTO " . $this->table_name . " (userID,equipmentID,expectedDateEnd,note) VALUES " . "('$userID', '$equipmentID', '$expectedDateEnd', '$note')";
         
         // prepare query statement
         $stmt = $this->conn->prepare($query);
@@ -115,7 +115,7 @@ class Loaned {
         $final = strtotime($date);
         $time_posted = date("Y-m-d H:i:s", $final);
 
-        $query = "UPDATE " . $this->table_name . " SET actualDateEnd = '" . $time_posted . "', udløbet = '1' WHERE ID = " . $id;
+        $query = "UPDATE " . $this->table_name . " SET actualDateEnd = '" . $time_posted . "', udløbet = '1' WHERE equipmentID = " . $equipmentID;
 
         // prepare query statement
         $stmt = $this->conn->prepare($query);

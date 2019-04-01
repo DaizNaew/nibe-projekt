@@ -11,6 +11,19 @@ include_once '../database.inc';
 include_once '../models/Equipment.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+
+    if(empty($_GET['limit'])){
+        $limit = 20000;
+    }else{
+        $limit = $_GET['limit'];
+    }
+
+    if(empty($_GET['offset'])){
+        $offset = 0;
+    }else{
+        $offset = $_GET['offset'];
+    }
+
     $id = $_GET['id'];
 
     $database = new Database();
@@ -18,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
     $equipment = new Equipment($db);
     // query products
-    $stmt = $equipment->read($id);
+    $stmt = $equipment->read($id, $limit, $offset);
     $num = $stmt->rowCount();
     
     // check if more than 0 record found

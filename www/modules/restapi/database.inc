@@ -2,7 +2,7 @@
 class Database{
  
     // specify your own database credentials
-    private $host="10.11.5.135";
+    private $host="127.0.0.1";
 	private $db_name="nibe-projekt";
     private $username="nibe";
     private $password="Masterfatman1337";
