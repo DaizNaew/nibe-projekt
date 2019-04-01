@@ -391,11 +391,11 @@
                             `;
                             $$('.tableBody').html(innerHTML);
                             if (i !== 0) {
-                                if(!this.oversigtListTools.some(liste => liste.navn == response.records[i].equipmentNavn )) {
-                                    this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
+                                if(!this.oversigtListTools.some(liste => liste.navn == tools.records[i].equipmentNavn )) {
+                                    this.oversigtListTools.push({ navn: `${tools.records[i].equipmentNavn}`, ID: `${tools.records[i].ID}` });
                                 }
                             } else {
-                                this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
+                                this.oversigtListTools.push({ navn: `${tools.records[i].equipmentNavn}`, ID: `${tools.records[i].ID}` });
                             }
                         }
                     });
@@ -423,11 +423,11 @@
                             `;
                             $$('.tableBody').html(innerHTML);
                             if (i !== 0) {
-                                if(!this.oversigtListTools.some(liste => liste.navn == response.records[i].equipmentNavn )) {
-                                    this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
+                                if(!this.oversigtListTools.some(liste => liste.navn == tools.records[i].equipmentNavn )) {
+                                    this.oversigtListTools.push({ navn: `${tools.records[i].equipmentNavn}`, ID: `${tools.records[i].ID}` });
                                 }
                             } else {
-                                this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
+                                this.oversigtListTools.push({ navn: `${tools.records[i].equipmentNavn}`, ID: `${tools.records[i].ID}` });
                             }
                         }
                     });
