@@ -52,6 +52,7 @@ if(!isset($param)) {
             $product_item=$row;
      
             array_push($products_arr["records"], $product_item);
+            $products_arr['result'] = 1;
         }
     
         // set response code - 200 OK
@@ -61,17 +62,19 @@ if(!isset($param)) {
         echo json_encode($products_arr);
     } catch (Exception $e) {
         echo json_encode(
-            array("message" => "Ingen Data blev returneret")
+            array("message" => "Ingen Data blev returneret",
+                "result" => "0")
         );
     }
     }else{
      
         // set response code - 404 Not found
-        http_response_code(404);
+        http_response_code(200);
      
         // tell the user no sp found
         echo json_encode(
-            array("message" => "Ingen Data fundet")
+            array("message" => "Ingen Data fundet",
+            "result" => "0")
         );
     }
 }
