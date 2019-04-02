@@ -223,12 +223,14 @@
                 app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetToolForAfleveringByAssetTag&param=${assetTag}`, (response) => {
                     //app.request.getJSON(`${app.data['serverip']}endpoint/equipment.php?id=${værktøjsID}`, (response) => {
                     //$$(`.tableBody`).find(`#btn${værktøjsID}`).prop("disabled",true);
+                    if(response.result == 0) return;
                     innerHTML = $$(`.låneTableBody`).html();
                     $$("#assetTagForAfl").prop('disabled', true);
                     for (let i = 0; i < response.records.length; i++) {
+                        
                         if (response.records.length > 1) {
                             $$('#dupeTable').show();
-                            this.fillTable(response.records[i])
+                            this.fillTable(response.records[i]);
                         } else {
                             if (toolsForDeliver.includes(response.records[i].equipmentID)) break;
                             innerHTML +=
@@ -256,6 +258,7 @@
                 })
             },
             scantool: function () {
+                if($$("#assetTagForAfl").val() === "") return;
                 if (toolsForDeliver.includes($$("#assetTagForAfl").val())) return $$("#assetTagForAfl").val('');
                 
                 //app.dialog.confirm(`Indsæt dette værktøj? ${$$("#assetTagForAfl").val()}`);
