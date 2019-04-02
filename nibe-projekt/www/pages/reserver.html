@@ -1,7 +1,7 @@
 <template>
     <div class="page" data-name="reserver">
             <div class="tableoverlay">
-                    <div class="preloader color-multi"></div>
+                    <div class="loader"></div>
             </div>
         <div id="gridwrapper">
             <div class="grid">
@@ -264,7 +264,6 @@
 
             fillTableDefault: function() {
                     $$('.tableoverlay').show();
-                    console.log("kom")
                     let total = 0;
                     let innerHTML = "";
                     let p = 0;

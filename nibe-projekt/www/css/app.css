@@ -477,11 +477,22 @@ label{
   z-index: 2;
   display: none;
 }
-.preloader{
+
+.loader {
+  border: 10px solid #e0e0e0;
+  border-top: 10px solid rgb(41, 182, 224);
+  border-bottom: 10px solid rgb(41, 182, 224);
+  border-radius: 100%;
+  width: 65px;
+  height: 65px;
+  animation: spin 1s linear infinite;
+  top:50%;
+  left: 50%;
   position: fixed; 
   z-index: 3;
-  top:49%;
-  left: 49%;
-  width: 50px !important;
-  height: 50px !important;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
