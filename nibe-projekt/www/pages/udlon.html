@@ -258,6 +258,8 @@
                 });
             },
             pageMounted: function (page) {
+                let width = $$('.tableFixHead').width();
+                $$('#tableoverlay').css('width', `${width}px`);
                 globalReservationID = page.detail.route.params.reservationID;
                 let reservationID = page.detail.route.params.reservationID;
                 let låneInnerHTML = "";

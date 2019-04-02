@@ -439,6 +439,7 @@ label{
   margin-top: 6px !important;
 }
 
+
 .specialbox{
   width: 90%;
   height: 100px;
@@ -463,4 +464,18 @@ label{
   color: #fff;
   text-align: center;
   margin-top: 35px !important;
+  
+#tableoverlay{
+  position: fixed;
+  width: 100%;
+  height: 210px;
+  background-color: rgba(0, 0, 0, 0.320);
+  z-index: 2;
+}
+.preloader{
+  position: fixed; 
+  z-index: 3;
+  margin-left:50%; 
+  margin-top:105px;
+  
 }

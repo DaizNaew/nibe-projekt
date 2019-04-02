@@ -266,31 +266,7 @@
 
         on: {
             pageMounted: function (page) {
-                /*
-                let o = 0;
-
-                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllToolsForAflevering&param=-1`, (response) => {
-                    for (let i = 0; i < response.records.length; i++) {
-                        if (i !== 0) {
-                            if (this.reserveList[o].userID != response.records[i].userCardID) {
-
-                                this.reserveList.push({
-                                    ID: `${response.records[i].ID}`,
-                                    userName: `${response.records[i].userName}`,
-                                    userID: `${response.records[i].userCardID}`
-                                });
-                                o++;
-                            }
-                        } else {
-                            this.reserveList.push({
-                                ID: `${response.records[i].ID}`,
-                                userName: `${response.records[i].userName}`,
-                                userID: `${response.records[i].userCardID}`
-                            })
-                        }
-                    }
-                });
-                */
+              
             },
             pageAfterIn: function (e, page) {
                 toolsForDeliver = [];

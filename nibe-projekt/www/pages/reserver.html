@@ -290,7 +290,6 @@
                             } else {
                                 this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
                             }
-                            
                         }
                     })
 
@@ -375,7 +374,6 @@
 
             },
             pageMounted: function (page) {
-                
                 app.request.getJSON(`${app.data['serverip']}endpoint/user.php?id=-1`, (response) => {
                     for (let i = 0; i < response.records.length; i++) {
                         this.userList[i] = { navn: `${response.records[i].name}`, ID: `${response.records[i].ID}` }
