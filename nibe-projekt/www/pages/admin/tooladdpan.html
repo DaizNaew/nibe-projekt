@@ -69,7 +69,7 @@
                                         <span><i class="fas fa-search icon-format"></i></span>
                                     </div>
                                 </div>
-                        <div class="tableFixHead">
+                        <div class="tableFixHead" style="max-height: 450px;">
                             <table class="table fixed_header" style="width:auto; background-color: #c5d9ec33;">
                                 <thead>
                                     <tr>
@@ -200,7 +200,7 @@
                                                 resolve();
                                             })
                                         }
-                                    },function(e){console.log(e)})
+                                    },function(e){console.error(e)})
                                 }else{
                                     if(kortkravID == -1){
                                             resolve();
@@ -391,12 +391,11 @@
                             `;
                             $$('.tableBody').html(innerHTML);
                             if (i !== 0) {
-                                if (this.oversigtListTools[p].navn != tools.records[i].activeName) {
-                                    this.oversigtListTools.push({ navn: `${tools.records[i].activeName}`, ID: `${tools.records[i].ID}` });
-                                    p++;
+                                if(!this.oversigtListTools.some(liste => liste.navn == tools.records[i].equipmentNavn )) {
+                                    this.oversigtListTools.push({ navn: `${tools.records[i].equipmentNavn}`, ID: `${tools.records[i].ID}` });
                                 }
                             } else {
-                                this.oversigtListTools.push({ navn: `${tools.records[i].activeName}`, ID: `${tools.records[i].ID}` });
+                                this.oversigtListTools.push({ navn: `${tools.records[i].equipmentNavn}`, ID: `${tools.records[i].ID}` });
                             }
                         }
                     });
@@ -424,18 +423,14 @@
                             `;
                             $$('.tableBody').html(innerHTML);
                             if (i !== 0) {
-                                if (this.oversigtListTools[p2].navn != tools.records[i].activeName) {
-                                    this.oversigtListTools.push({ navn: `${tools.records[i].activeName}`, ID: `${tools.records[i].ID}` });
-                                    p2++;
+                                if(!this.oversigtListTools.some(liste => liste.navn == tools.records[i].equipmentNavn )) {
+                                    this.oversigtListTools.push({ navn: `${tools.records[i].equipmentNavn}`, ID: `${tools.records[i].ID}` });
                                 }
                             } else {
-                                this.oversigtListTools.push({ navn: `${tools.records[i].activeName}`, ID: `${tools.records[i].ID}` });
+                                this.oversigtListTools.push({ navn: `${tools.records[i].equipmentNavn}`, ID: `${tools.records[i].ID}` });
                             }
                         }
                     });
-                    setTimeout(function(){
-                        console.log("Opret værktøj: " + total)
-                    }, 5000);
                 },
                 fillTableToolName: function(name) {
                     let innerHTML = "";

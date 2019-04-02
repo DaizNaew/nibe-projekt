@@ -1,117 +1,139 @@
 <template>
     <div class="page" data-name="aflevering">
         <div id="gridwrapper">
-                    <div style="padding: 25px;">
-                        <form autocomplete="off">
+            <div style="padding: 25px;">
+                <form autocomplete="off">
 
-                            <div class="form-row" style="text-align: left">
-                                <label class="col">Låner ID</label>
-                                <div class="input-wrapper">
-                                    <input type="text" class="form-control form-control-sm col input-format" id="loanerID" required="required">
-                                    <span><i id="calendar_icon" class="far fa-address-card icon-format"></i></span>
-                                </div>
+                    <div>
+                        <div class="form-row" style="text-align: left">
+                            <label class="col">Tryk for at kunne scanne og aflevere værktøj</label>
+                            <a style="display:none"><button id="afltool" type="submit" @click="scantool"
+                                    class="no-ripple col btn btn-primary godbtn">Scan Værktøj</button></a>
+
+                            <div class="input-wrapper">
+                                <input type="text" class="form-control form-control-sm col input-format" id="assetTagForAfl" required="required">
+                                <span><i id="" class="fas fa-wrench icon-format"></i></span>
                             </div>
 
-                            <div>
-                                <label class="tabletitle">Alt udlånt værktøj</label>
-                                <div class="tableFixHead tablelimit">
-                                    <table class="table fixed_header" style="background-color: #c5d9ec33;">
-                                        <thead>
-                                            <tr>
-                                                <th scope="col" style="display: none;">#</th>
-                                                <th class="label-cell" scope="col">Værktøjs Navn</th>
-                                                <th class="label-cell" scope="col">Kategori</th>
-                                                <th class="label-cell" scope="col">Mærke</th>
-                                                <th class="label-cell" scope="col">Model</th>
-                                                <th class="label-cell" scope="col">Serienummer</th>
-                                                <th class="label-cell" scope="col">AssetTag</th>
-                                                <th class="label-cell" scope="col">Stand</th>
-                                                <th class="radio-cell" scope="col">
-                                                    <!--<input type="checkbox" class="no-ripple"/>-->
-                                                    <i class="icon-radio"></i>
-                                                </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody class="tableBody">
-                                                        
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                            <label class="tabletitle" style="margin-top: 25px;">Værktøj valgt til aflevering</label>
-                            <div class="tableFixHead tablelimit">
-                                <table class="table fixed_header" style="background-color: #c5d9ec33;">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col" style="display: none;">#</th>
-                                            <th class="label-cell" scope="col">Værktøjs Navn</th>
-                                            <th class="label-cell" scope="col">Kategori</th>
-                                            <th class="label-cell" scope="col">Mærke</th>
-                                            <th class="label-cell" scope="col">Model</th>
-                                            <th class="label-cell" scope="col">Serienummer</th>
-                                            <th class="label-cell" scope="col">AssetTag</th>
-                                            <th class="label-cell" scope="col">Stand</th>
-                                            <th class="radio-cell" scope="col">
-                                                <!--<input type="checkbox" class="no-ripple"/>-->
-                                                <i class="icon-radio"></i>
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="låneTableBody">
-                                                    
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="form-row form-button-row">
-                                <a><button id="insert" @click="aflevertool" type="submit" class="no-ripple col btn btn-primary godbtn">Aflever</button></a>
-                                <a><button id="reset" @click="resetfields" type="button" class="no-ripple col btn btn-primary godbtn">Nulstil felter</button></a>
-                            </div>
-                            <input id="ID" type="hidden"/>
-                        </form>
+
+                        </div>
                     </div>
+
+                    <!-- Søge felt -->
+                    <div style="display: none !important">
+                        <div class="form-row" style="text-align: left">
+                            <label class="col">Låner ID</label>
+                            <div class="input-wrapper">
+                                <input type="text" class="form-control form-control-sm col input-format" id="loanerID"
+                                    required="required">
+                                <span><i id="calendar_icon" class="far fa-address-card icon-format"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- END SØGE FELT -->
+
+                    <!-- Table som skal fyldes hvis der er mere end 1 værktøj med det scannede assettag -->
+                    <div style="display: none !important" id="dupeTable">
+                        <label class="tabletitle">Duplikater af udlånt værktøj</label>
+                        <div class="tableFixHead tablelimit">
+                            <table class="table fixed_header" style="background-color: #c5d9ec33;">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" style="display: none;">#</th>
+                                        <th class="label-cell" scope="col">udlåner</th>
+                                        <th class="label-cell" scope="col">Værktøjs Navn</th>
+                                        <th class="label-cell" scope="col">Kategori</th>
+                                        <th class="label-cell" scope="col">Mærke</th>
+                                        <th class="label-cell" scope="col">Model</th>
+                                        <th class="label-cell" scope="col">AssetTag</th>
+                                        <th class="radio-cell" scope="col">
+                                            <!--<input type="checkbox" class="no-ripple"/>-->
+                                            <i class="icon-radio"></i>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="tableBody">
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- END TABLE -->
+
+                    <label class="tabletitle" style="margin-top: 25px;">Værktøj valgt til aflevering</label>
+                    <div class="tableFixHead tablelimit">
+                        <table class="table fixed_header" style="background-color: #c5d9ec33;">
+                            <thead>
+                                <tr>
+                                    <th scope="col" style="display: none;">#</th>
+                                    <th class="label-cell" scope="col">Værktøjs Navn</th>
+                                    <th class="label-cell" scope="col">Kategori</th>
+                                    <th class="label-cell" scope="col">Mærke</th>
+                                    <th class="label-cell" scope="col">Model</th>
+                                    <th class="label-cell" scope="col">Serienummer</th>
+                                    <th class="label-cell" scope="col">AssetTag</th>
+                                    <th class="label-cell" scope="col">Stand</th>
+                                    <th class="radio-cell" scope="col">
+                                        <!--<input type="checkbox" class="no-ripple"/>-->
+                                        <i class="icon-radio"></i>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="låneTableBody">
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="form-row form-button-row">
+                        <a><button id="aflever" @click="aflevertool" type="submit"
+                                class="no-ripple col btn btn-primary godbtn">Aflever</button></a>
+                        <a><button id="reset" @click="resetfields" type="button"
+                                class="no-ripple col btn btn-primary godbtn">Nulstil felter</button></a>
+                    </div>
+                    <input id="ID" type="hidden" />
+                </form>
+            </div>
         </div>
     </div>
 </template>
-       
-        
+
 <script>
-    var arr = [];
-    var loanerAssetTag;
+    var toolsForDeliver = [];
 
-
-
-
-    fjernafleveringsværktøj = (værktøjsID) => {
-        $$(`.tableBody`).find(`#btn${værktøjsID}`).prop("disabled",false);
+    fjernafleveringsværktøj = (værktøjsID, asset) => {
         $$(`.låneTableBody`).find(`#værktøjnr${værktøjsID}`).remove();
-        arr.splice( arr.indexOf(værktøjsID), 1 );
+        toolsForDeliver.splice(toolsForDeliver.indexOf(asset), 1);
+        if($$('låneTableBody').html ="") {
+            $$("#aflever").prop("disabled", true);
+        }
     }
 
-    tilføjafleveringsværktøj = (værktøjsID, udlånsID) => {
-        arr.push(værktøjsID);
-        let innerHTML = "";
+    addFromTable = (værktøjsID) => {
         app.request.getJSON(`${app.data['serverip']}endpoint/equipment.php?id=${værktøjsID}`, (response) => {
-            $$(`.tableBody`).find(`#btn${værktøjsID}`).prop("disabled",true);
             innerHTML = $$(`.låneTableBody`).html();
-            for(let i = 0; i < response.records.length; i++) {
-                innerHTML += 
-                    `
+            innerHTML +=
+                `
                     <tr id="værktøjnr${værktøjsID}">
-                        <td style="display: none;">${udlånsID}</td>
-                        <td class="label-cell VærktøjsNavn">${response.records[i].activeName}</td>
-                        <td class="label-cell Kategori">${response.records[i].categoryName}</td>
-                        <td class="label-cell Mærke">${response.records[i].brandName}</td>
-                        <td class="label-cell Model">${response.records[i].modelName}</td>
-                        <td class="label-cell Serienummer">${response.records[i].serialNumber}</td>
-                        <td class="label-cell AssetTag">${response.records[i].assetTag}</td>
-                        <td class="label-cell Stand">${response.records[i].condition}</td>
+                        <td style="display: none;">${response.records[0].ID}</td>
+                        <td class="label-cell VærktøjsNavn">${response.records[0].activeName}</td>
+                        <td class="label-cell Kategori">${response.records[0].categoryName}</td>
+                        <td class="label-cell Mærke">${response.records[0].brandName}</td>
+                        <td class="label-cell Model">${response.records[0].modelName}</td>
+                        <td class="label-cell Serienummer">${response.records[0].serialNumber}</td>
+                        <td class="label-cell AssetTag">${response.records[0].assetTag}</td>
+                        <td class="label-cell Stand">${response.records[0].condition}</td>
                         <td class="radio-cell">
-                            <button type="button" onclick="fjernudlånsværktøj(${response.records[0].ID})" class="no-ripple btn-primary deletebtn">Slet</button>
+                            <button type="button" onclick="fjernafleveringsværktøj(${response.records[0].ID},${response.records[0].assetTag})" class="no-ripple btn-primary deletebtn">Slet</button>
                         </td>
                     </tr>
                     `;
-                    $$('.låneTableBody').html(innerHTML);
-            }
+            toolsForDeliver.push(response.records[0].assetTag);
+            $$('.låneTableBody').html(innerHTML);
+            $$('.tableBody').html("");
+            $$('#dupeTable').hide();
+            $$("#assetTagForAfl").prop('disabled', false);
+            $$("#aflever").prop("disabled", false);
+
         })
     }
 
@@ -122,141 +144,135 @@
                 reserveList: [],
             };
         },
-    // Component Methods
+        // Component Methods
         methods: {
-            fillTable: function (userID) {
-                let innerHTML = "";
-                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetSingleToolsForAflevering&param=${userID}`, (response) => {
-                    for(let i = 0; i < response.records.length; i++) {
-                        innerHTML += 
-                            `
-                            <tr>
-                                <td style="display: none;">${response.records[i].ID}</td>
-                                <td class="label-cell VærktøjsNavn">${response.records[i].equipmentNavn}</td>
-                                <td class="label-cell Kategori">${response.records[i].equipmentKategori}</td>
-                                <td class="label-cell Mærke">${response.records[i].equipmentBrand}</td>
-                                <td class="label-cell Model">${response.records[i].equipmentModel}</td>
-                                <td class="label-cell Serienummer">${response.records[i].equipmentSerieNummer}</td>
-                                <td class="label-cell AssetTag">${response.records[i].equipmentAsset}</td>
-                                <td class="label-cell Stand">${response.records[i].equipmentCondition}</td>
-                                <td class="radio-cell">
-                                    <button type="button" id="btn${response.records[i].equipmentID}" onclick="tilføjafleveringsværktøj(${response.records[i].equipmentID},${response.records[i].ID})" class="no-ripple btn-primary">Tilføj</button>
-                                </td>
-                            </tr>
-                            `;
-                        $$('.tableBody').html(innerHTML);
-                    }
-                });
-            },
-            resetfields : () => {
-                app.dialog.confirm('Er du sikker på at du vil nulstille alle felter?', 'Nulstil Felter', function(){
+            resetfields: () => {
+                app.dialog.confirm('Er du sikker på at du vil nulstille alle felter?', 'Nulstil Felter', function () {
+                    $$("#assetTagForAfl").prop('disabled', false);
                     let inputs = $$('form').find('input');
                     inputs.val('');
                     $$(`.låneTableBody`).html('');
                     $$(`.tableBody`).html('');
+                    $$('#dupeTable').hide();
                     var checkBoxObj = $$('.tableBody').find('button');
                     checkBoxObj.forEach(element => {
-                        if(element.disabled) {
+                        if (element.disabled) {
                             element.disabled = false;
                         }
                     })
                 });
             },
-            aflevertool : async () => {
+            //Ret denne function til at bruge toolsForDeliver for at lave den mere optimeret
+            aflevertool: async () => {
                 let dat;
                 let toastMessage = '';
-                if(document.getElementById('loanerID').value == ""){
-                    app.dialog.alert("Låner ID feltet må ikke være tomt.", "Aflevering");
-                    return;
-                }
+                let loan;
                 let prom = new Promise((resolve, reject) => {
-                $$('.låneTableBody').forEach(element => {
-                    for(i = 0; i < element.children.length; i++) {
-                        let loan = {
-                            id: element.children[i].children[0].innerText,
-                            VærktøjsNavn: element.children[i].children[1].innerText,
-                            equipmentID: (element.children[i].id).split("værktøjnr").pop(),
-                            AssetTag:  element.children[i].children[6].innerText,
-                            selectedUserID: selectedUserID
-                        };
+                    $$('.låneTableBody').forEach(element => {
+                        for (i = 0; i < element.children.length; i++) {
+                            loan = {
+                                id: element.children[i].children[0].innerText,
+                                VærktøjsNavn: element.children[i].children[1].innerText,
+                                equipmentID: (element.children[i].id).split("værktøjnr").pop(),
+                                AssetTag: element.children[i].children[6].innerText,
+                            };
 
-                        app.request.post(`${app.data['serverip']}functions/loans/deliver.php`, loan, (data) => {
-                            app.methods.addToLog(`${selectedUserID}`, `Afleverede værktøjet ${loan.VærktøjsNavn} med assetTag (${loan.AssetTag})`);
-                            dat = data;
-                            resolve();
-                        }, (error) => {
-                            reject();
-                        }, 'json');
-                    }
+                            app.request.post(`${app.data['serverip']}functions/loans/deliver.php`, loan, (data) => {
+                                app.methods.addToLog(`204`, `Afleverede værktøjet ${loan.VærktøjsNavn} med assetTag (${loan.AssetTag})`);
+                                dat = data;
+                                resolve();
+                            }, (error) => {
+                                reject();
+                            }, 'json');
+                        }
+                    });
                 });
-            });
-            await prom;
-                if(dat.result == 1) {
+                await prom;
+                if (dat.result == 1) {
                     toastMessage = 'Værktøjet blev Afleveret';
                 } else {
                     toastMessage = 'Værktøjet blev ikke Afleveret';
                 }
                 app.dialog.alert(toastMessage, 'Afleveret Værktøj', () => {
-                    app.views.main.router.navigate("/aflevering/", {reloadCurrent: true,});
+                    toolsForDeliver.splice(toolsForDeliver.indexOf(loan.AssetTag), 1);
+                    app.views.main.router.navigate("/aflevering/", { reloadCurrent: true, });
                 });
+            },
+            fillTable: function (response) {
+                let innerHTML = $$('.tableBody').html();
+                innerHTML +=
+                    `
+                            <tr>
+                                <td style="display: none;">${response.ID}</td>
+                                <td class="label-cell udlåner">${response.userName}</td>
+                                <td class="label-cell VærktøjsNavn">${response.equipmentNavn}</td>
+                                <td class="label-cell Kategori">${response.equipmentKategori}</td>
+                                <td class="label-cell Mærke">${response.equipmentBrand}</td>
+                                <td class="label-cell Model">${response.equipmentModel}</td>
+                                <td class="label-cell AssetTag">${response.equipmentAsset}</td>
+                                <td class="radio-cell">
+                                    <button type="button" id="btn${response.equipmentID}" onclick="addFromTable(${response.equipmentID})" class="no-ripple btn-primary">Tilføj</button>
+                                </td>
+                            </tr>
+                            `;
+                $$('.tableBody').html(innerHTML);
+            },
+            tilføjafleveringsværktøj: function (assetTag) {
+
+                let innerHTML = "";
+                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetToolForAfleveringByAssetTag&param=${assetTag}`, (response) => {
+                    //app.request.getJSON(`${app.data['serverip']}endpoint/equipment.php?id=${værktøjsID}`, (response) => {
+                    //$$(`.tableBody`).find(`#btn${værktøjsID}`).prop("disabled",true);
+                    innerHTML = $$(`.låneTableBody`).html();
+                    $$("#assetTagForAfl").prop('disabled', true);
+                    for (let i = 0; i < response.records.length; i++) {
+                        if (response.records.length > 1) {
+                            $$('#dupeTable').show();
+                            this.fillTable(response.records[i])
+                        } else {
+                            if (toolsForDeliver.includes(response.records[i].equipmentID)) break;
+                            innerHTML +=
+                                `
+                                <tr id="værktøjnr${response.records[i].equipmentID}">
+                                    <td style="display: none;">${response.records[i].userCardID}</td>
+                                    <td class="label-cell VærktøjsNavn">${response.records[i].equipmentNavn}</td>
+                                    <td class="label-cell Kategori">${response.records[i].equipmentKategori}</td>
+                                    <td class="label-cell Mærke">${response.records[i].equipmentBrand}</td>
+                                    <td class="label-cell Model">${response.records[i].equipmentModel}</td>
+                                    <td class="label-cell Serienummer">${response.records[i].equipmentSerieNummer}</td>
+                                    <td class="label-cell AssetTag">${response.records[i].equipmentAsset}</td>
+                                    <td class="label-cell Stand">${response.records[i].equipmentCondition}</td>
+                                    <td class="radio-cell">
+                                        <button type="button" onclick="fjernafleveringsværktøj(${response.records[i].equipmentID})" class="no-ripple btn-primary deletebtn">Slet</button>
+                                    </td>
+                                </tr>
+                                `;
+                            toolsForDeliver.push(response.records[i].equipmentID);
+                            $$('.låneTableBody').html(innerHTML);
+                            $$("#aflever").prop("disabled", false);
+                            $$("#assetTagForAfl").prop('disabled', false);
+                        }
+                    }
+                })
+            },
+            scantool: function () {
+                if (toolsForDeliver.includes($$("#assetTagForAfl").val())) return $$("#assetTagForAfl").val('');
+                
+                //app.dialog.confirm(`Indsæt dette værktøj? ${$$("#assetTagForAfl").val()}`);
+                this.tilføjafleveringsværktøj($$("#assetTagForAfl").val());
+                $$("#assetTagForAfl").val('');
             },
         },
 
         on: {
             pageMounted: function (page) {
-                let o = 0;
-                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllToolsForAflevering&param=-1`, (response) => {
-                    for(let i = 0; i < response.records.length; i++) {
-                        if(i !== 0) {
-                            if(this.reserveList[o].userID != response.records[i].userCardID) {
-
-                                this.reserveList.push({
-                                    ID: `${response.records[i].ID}`,
-                                    userName: `${response.records[i].userName}`,
-                                    userID: `${response.records[i].userCardID}`
-                                });
-                                o++;
-                            }
-                        } else {
-                            this.reserveList.push({
-                                ID: `${response.records[i].ID}`,
-                                userName: `${response.records[i].userName}`,
-                                userID: `${response.records[i].userCardID}`
-                            })
-                        }
-                    }
-                });
-                
-                var autocompleteUserIDList = app.autocomplete.create({
-                    inputEl: '#loanerID',
-                    openIn: 'dropdown',
-                    textProperty: "userName",
-                    valueProperty: "userName",
-                    limit: 5,
-                    source: (query, render) => {
-                        var results = [];
-                        if (query.length === 0) {
-                            render(results);
-                            return;
-                        }
-                        // Find matched items
-                        for (var i = 0; i < this.reserveList.length; i++) {
-                            if (this.reserveList[i].userID.toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(this.reserveList[i]);
-                        }
-                        // Render items by passing array with result items
-                        render(results);
-                    },
-                    on: {
-                        closed: (ele) => {
-                            //Check hvis feltet bliver sat til empty 
-                            if (this.reserveList.filter(l => (l.userName === ele.$inputEl[0].value)).length == 0) { 
-                                $$('.tableBody').html("");
-                            }
-                        },
-                        change: (ele) => { if (ele[0]) { this.fillTable(ele[0].userID) } }
-                    },
-                });
-            }
+              
+            },
+            pageAfterIn: function (e, page) {
+                toolsForDeliver = [];
+                $$("#assetTagForAfl").focus();
+                $$("#aflever").prop("disabled", true);
+            },
         },
     }
 </script>

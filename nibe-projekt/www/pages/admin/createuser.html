@@ -32,7 +32,7 @@
                                 </select>
                             </div>
                             <div class="form-row">
-                                <div class="tableFixHead col" style="max-height: 315px !important">
+                                <div class="tableFixHead col" style="max-height: 270px !important">
                                     <table class="table fixed_header" style="background-color: #c5d9ec33;">
                                         <thead>
                                             <tr>
@@ -45,7 +45,7 @@
                                         </tbody>
                                     </table>
                                 </div>
-                                <div class="tableFixHead col" style="max-height: 315px !important">
+                                <div class="tableFixHead col" style="max-height: 270px !important">
                                     <table class="table fixed_header" style="background-color: #c5d9ec33;">
                                         <thead>
                                             <tr>
@@ -83,7 +83,7 @@
                                 <span><i class="fas fa-search icon-format"></i></span>
                             </div>
                         </div>
-                        <div class="tableFixHead" style="max-height: 512px !important">
+                        <div class="tableFixHead" style="max-height: 475px !important">
                             <table class="table fixed_header" style="background-color: #c5d9ec33;">
                                 <thead>
                                     <tr>
@@ -359,13 +359,12 @@
                             `;
                         $$('.userTable').html(innerHTML);
                         if (i !== 0) {
-                            if (this.oversigtListBruger[o].navn != response.records[i].name) {
-                                this.oversigtListBruger.push({ navn: `${response.records[i].name}`, ID: `${response.records[i].ID}` });
-                                o++;
+                            if(!this.oversigtListBruger.some(liste => liste.navn == response.records[i].userName )) {
+                                    this.oversigtListBruger.push({ navn: `${response.records[i].userName}`, ID: `${response.records[i].userCardID}` });
+                                }
+                            } else {
+                                this.oversigtListBruger.push({ navn: `${response.records[i].userName}`, ID: `${response.records[i].userCardID}` });
                             }
-                        } else {
-                            this.oversigtListBruger.push({ navn: `${response.records[i].name}`, ID: `${response.records[i].ID}` });
-                        }
                     }
                 });
             },

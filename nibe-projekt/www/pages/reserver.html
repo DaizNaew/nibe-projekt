@@ -10,7 +10,7 @@
 
                             <div class="form-row" style="text-align: left">
                                 <label class="col">Reserver navn</label>
-                                <div class="input-wrapper">
+                                <div class="input-wrapper" style="width:400px !important;">
                                     <input type="text" class="form-control form-control-sm col input-format" id="ReserverNavn" required="required">
                                     <span><i  class="fas fa-user-tag icon-format"></i></span>
                                 </div>
@@ -259,73 +259,71 @@
                 }
             },
 
-            fillTableDefault: async function() {
-                let total = 0;
-                let innerHTML = "";
-                let p = 0;
-                let p2 = 0;
-                this.oversigtListTools.length = 0
-                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllToolsForLoan&param=200,0`, (response) => {
-                    for (let i = 0; i < response.records.length; i++) {
-                        total++;
-                        innerHTML +=
-                            `
-                            <tr>
-                                <td style="display: none;">${response.records[i].ID}</td>
-                                <td class="label-cell VærktøjsNavn">${response.records[i].equipmentNavn}</td>
-                                <td class="label-cell Kategori">${response.records[i].equipmentKategori}</td>
-                                <td class="label-cell Mærke">${response.records[i].equipmentBrand}</td>
-                                <td class="label-cell Model">${response.records[i].equipmentModel}</td>
-                                <td class="label-cell AssetTag">${response.records[i].equipmentAsset}</td>
-                                <td class="radio-cell">
-                                    <button type="button" id="btn${response.records[i].ID}" onclick="tilføjreserverværktøj(${response.records[i].ID})" class="no-ripple btn-primary">Tilføj</button>
-                                </td>
-                            </tr>
-                            `;
-                        $$('.tableBody').html(innerHTML);
-                        if (i !== 0) {
-                            if (this.oversigtListTools[p].navn != response.records[i].equipmentNavn) {
+            fillTableDefault: function() {
+                    let total = 0;
+                    let innerHTML = "";
+                    let p = 0;
+                    let p2 = 0;
+                    this.oversigtListTools.length = 0
+                    app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllToolsForLoan&param=200,0`, (response) => {
+                        for (let i = 0; i < response.records.length; i++) {
+                            total++;
+                            innerHTML +=
+                                `
+                                <tr>
+                                    <td style="display: none;">${response.records[i].ID}</td>
+                                    <td class="label-cell VærktøjsNavn">${response.records[i].equipmentNavn}</td>
+                                    <td class="label-cell Kategori">${response.records[i].equipmentKategori}</td>
+                                    <td class="label-cell Mærke">${response.records[i].equipmentBrand}</td>
+                                    <td class="label-cell Model">${response.records[i].equipmentModel}</td>
+                                    <td class="label-cell AssetTag">${response.records[i].equipmentAsset}</td>
+                                    <td class="radio-cell">
+                                        <button type="button" id="btn${response.records[i].ID}" onclick="tilføjreserverværktøj(${response.records[i].ID})" class="no-ripple btn-primary">Tilføj</button>
+                                    </td>
+                                </tr>
+                                `;
+                            $$('.tableBody').html(innerHTML);
+                            if (i !== 0) {
+                                if(!this.oversigtListTools.some(liste => liste.navn == response.records[i].equipmentNavn )) {
+                                    this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
+                                }
+                            } else {
                                 this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
-                                p++;
                             }
-                        } else {
-                            this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
                         }
-                    }
-                })
+                    })
 
-                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllToolsForLoan&param=20000,200`, (response) => {
-                    for (let i = 0; i < response.records.length; i++) {
-                        total++;
-                        innerHTML +=
-                            `
-                            <tr>
-                                <td style="display: none;">${response.records[i].ID}</td>
-                                <td class="label-cell VærktøjsNavn">${response.records[i].equipmentNavn}</td>
-                                <td class="label-cell Kategori">${response.records[i].equipmentKategori}</td>
-                                <td class="label-cell Mærke">${response.records[i].equipmentBrand}</td>
-                                <td class="label-cell Model">${response.records[i].equipmentModel}</td>
-                                <td class="label-cell AssetTag">${response.records[i].equipmentAsset}</td>
-                                <td class="radio-cell">
-                                    <button type="button" id="btn${response.records[i].ID}" onclick="tilføjreserverværktøj(${response.records[i].ID})" class="no-ripple btn-primary">Tilføj</button>
-                                </td>
-                            </tr>
-                            `;
-                        $$('.tableBody').html(innerHTML);
-                        if (i !== 0) {
-                            if (this.oversigtListTools[p2].navn != response.records[i].equipmentNavn) {
+                    app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllToolsForLoan&param=20000,200`, (response) => {
+                        for (let i = 0; i < response.records.length; i++) {
+                            total++;
+                            innerHTML +=
+                                `
+                                <tr>
+                                    <td style="display: none;">${response.records[i].ID}</td>
+                                    <td class="label-cell VærktøjsNavn">${response.records[i].equipmentNavn}</td>
+                                    <td class="label-cell Kategori">${response.records[i].equipmentKategori}</td>
+                                    <td class="label-cell Mærke">${response.records[i].equipmentBrand}</td>
+                                    <td class="label-cell Model">${response.records[i].equipmentModel}</td>
+                                    <td class="label-cell AssetTag">${response.records[i].equipmentAsset}</td>
+                                    <td class="radio-cell">
+                                        <button type="button" id="btn${response.records[i].ID}" onclick="tilføjreserverværktøj(${response.records[i].ID})" class="no-ripple btn-primary">Tilføj</button>
+                                    </td>
+                                </tr>
+                                `;
+                            $$('.tableBody').html(innerHTML);
+                            if (i !== 0) {
+                                if(!this.oversigtListTools.some(liste => liste.navn == response.records[i].equipmentNavn )) {
+                                    this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
+                                }
+                            } else {
                                 this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
-                                p2++;
                             }
-                        } else {
-                            this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
+                            
                         }
-                    }
-                })
+                    })
 
-                setTimeout(function(){
-                console.log("Reserver: " + total)
-            }, 5000);
+                    setTimeout(function(){
+                }, 5000)
             },
             fillTableToolName(name) {
                 let innerHTML = "";
@@ -411,39 +409,40 @@
                         change: (ele) => { if (ele[0]) { $$("#ID").val(ele[0].ID) } }
                     },
                 });
-
-                var autocompleteToolList = app.autocomplete.create({
-                    inputEl: '#VærktøjsNavn',
-                    openIn: 'dropdown',
-                    textProperty: "navn",
-                    valueProperty: "navn",
-                    limit: 5,
-                    source: (query, render) => {
-                        var results = [];
-                        if (query.length === 0) {
-                            render(results);
-                            return;
-                        }
-                        // Find matched items
-                        for (var i = 0; i < this.oversigtListTools.length; i++) {
-                            if (this.oversigtListTools[i].navn.toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(this.oversigtListTools[i]);
-                        }
-                        // Render items by passing array with result items
-                        render(results);
-
-                    },
-                    on: {
-                        closed: (ele) => {
-                            //Check hvis feltet bliver sat til empty 
-                            if (this.oversigtListTools.filter(l => (l.navn === ele.$inputEl[0].value)).length == 0) { this.fillTableDefault(); }
-                        },
-                        change: (ele) => {
-                            if (ele[0]) { this.fillTableToolName(ele[0].navn) }
-                        }
-                    },
-                });
-
                 this.fillTableDefault();
+                    var autocompleteToolList = app.autocomplete.create({
+                        inputEl: '#VærktøjsNavn',
+                        openIn: 'dropdown',
+                        textProperty: "navn",
+                        valueProperty: "navn",
+                        limit: 5,
+                        source: (query, render) => {
+                            var results = [];
+                            if (query.length === 0) {
+                                render(results);
+                                return;
+                            }
+                            // Find matched items
+                            for (var i = 0; i < this.oversigtListTools.length; i++) {
+                                if (this.oversigtListTools[i].navn.toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(this.oversigtListTools[i]);
+                            }
+                            // Render items by passing array with result items
+                            render(results);
+
+                        },
+                        on: {
+                            closed: (ele) => {
+                                //Check hvis feltet bliver sat til empty 
+                                if (this.oversigtListTools.filter(l => (l.navn === ele.$inputEl[0].value)).length == 0) { this.fillTableDefault(); }
+                            },
+                            change: (ele) => {
+                                if (ele[0]) { this.fillTableToolName(ele[0].navn) }
+                            }
+                        },
+                    });
+                
+
+                
 
             }
         },
