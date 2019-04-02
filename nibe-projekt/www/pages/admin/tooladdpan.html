@@ -1,5 +1,8 @@
 <template>
     <div class="page" data-name="tooladdpan">
+        <div id="tableoverlay">
+            <div class="preloader color-multi"></div>
+        </div>
         <div id="gridwrapper">
             <div class="grid">
                 <div style="padding: 25px" id="item1"><!--Item 1-->
@@ -359,6 +362,7 @@
                         });
                 },
                 fillTableDefault: function() {
+                    $$('#tableoverlay').show();
                     let innerHTML = "";
                     let total = 0;
                     var app = this.$app;
@@ -397,6 +401,11 @@
                             } else {
                                 this.oversigtListTools.push({ navn: `${tools.records[i].equipmentNavn}`, ID: `${tools.records[i].ID}` });
                             }
+                            if(tools.records.length < 200){
+                                if(i+1 == tools.records.length ){
+                                    $$('#tableoverlay').hide();
+                                }
+                            }
                         }
                     });
 
@@ -428,6 +437,9 @@
                                 }
                             } else {
                                 this.oversigtListTools.push({ navn: `${tools.records[i].equipmentNavn}`, ID: `${tools.records[i].ID}` });
+                            }
+                            if(i+1 == tools.records.length ){
+                                $$('#tableoverlay').hide();
                             }
                         }
                     });
@@ -466,6 +478,7 @@
         // Component States
             on: {
                 pageMounted: function (page) {
+                    $$('#tableoverlay').show();
                     var app = this.$app;
                     app.request.getJSON(`${app.data['serverip']}endpoint/category.php?id=-1`, (cats) => {
                         for(cat of cats.categories) {
