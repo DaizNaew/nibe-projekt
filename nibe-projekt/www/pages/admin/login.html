@@ -7,11 +7,15 @@
         <div id="errorcenter" style="display: none">
             <div id="errorbox" class="alert alert-danger"></div>
         </div>
-        <p>Scan dit kort for at logge ind</p>
+        <div class="specialbox">
+                <p class="specialtext">Scan dit kort</p>
+        </div>
+        
         <form>
-            <input id="cardID" type="text" name="u" placeholder="Kort ID" required="required" autofocus/>
+            
+            <input id="cardID" type="text" name="u" placeholder="Kort ID" required="required" class="specialinput" autofocus/>
             <div class="button-wrapper">
-                <a><button @click="userVerify" class="btn btn-primary btn-block no-ripple">Godkend</button></a>
+                <a><button @click="userVerify" class="btn btn-primary btn-block no-ripple" style="display:none">Godkend</button></a>
             </div>
         </form>
     </div>
@@ -27,6 +31,12 @@
                 let userID = app.data['userID'];
 
                 app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllAdmins&param=${cardID}`, (response) =>{
+                    if(response.result == 0){
+                        document.getElementById('cardID').value = "";
+                        document.getElementById('errorcenter').style.display = "block";
+                        document.getElementById('errorbox').innerHTML = "Kortet tilhøre ikke en Administrator"
+                        return
+                    }
                     if(response.records[0].cardID == cardID) {
                         app.data['username'] = response.records[0].name;
                         app.data['userID'] = response.records[0].ID;
@@ -37,6 +47,8 @@
                     } else {
                         document.getElementById('errorcenter').style.display = "block";
                         document.getElementById('errorbox').innerHTML = "Kortet tilhøre ikke en Administrator"
+                        document.getElementById('cardID').value
+                        return
                     }
                 },function(e){});
             },
@@ -44,6 +56,7 @@
         on: {
             pageAfterIn: function(e, page) {
                 document.getElementById("cardID").focus(); 
+                setInterval(()=>{$$("#cardID").focus()}, 1000)
             },
         }
     }

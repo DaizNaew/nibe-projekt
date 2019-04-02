@@ -12,43 +12,17 @@
                         </div>
                     </div>
 
-                    <div class="form-row" style="text-align: left">
-                        <label class="col">Søg efter værktøj</label>
-                        <div class="input-wrapper">
-                            <input type="text" class="form-control form-control-sm col input-format" id="searchfield">
-                            <span><i id="calendar_icon" class="fas fa-search icon-format"></i></span>
+                    <div>
+                        <div class="form-row" style="text-align: left">
+                            <label class="col">Tryk for at kunne scanne at låne et værktøj</label>
+                            <a style="display:none"><button id="lonTool" type="submit" @click="scantoolforlon" class="no-ripple col btn btn-primary godbtn">Scan Værktøj</button></a>
+                            <div class="input-wrapper">
+                                <input type="text" class="form-control form-control-sm col input-format" id="assetTagForLon" required="required">
+                                <span><i id="" class="fas fa-wrench icon-format"></i></span>
+                            </div>
                         </div>
                     </div>
 
-                    <div>
-                        <label class="tabletitle">Alt tilgængeligt værktøj</label>
-                        <div class="tableFixHead tablelimit">
-                            <div id="tableoverlay"></div>
-                            <div class="preloader color-multi"></div>
-                            <table class="table fixed_header" style="background-color: #c5d9ec33;">
-                                <thead>
-                                    <tr>
-                                        <th scope="col" style="display: none;">#</th>
-                                        <th class="label-cell" scope="col">Værktøjs Navn</th>
-                                        <th class="label-cell" scope="col">Kategori</th>
-                                        <th class="label-cell" scope="col">Mærke</th>
-                                        <th class="label-cell" scope="col">Model</th>
-                                        <th class="label-cell" scope="col">Serienummer</th>
-                                        <th class="label-cell" scope="col">AssetTag</th>
-                                        <th class="label-cell" scope="col">Stand</th>
-                                        <th class="radio-cell" scope="col">
-                                            <!--<input type="checkbox" class="no-ripple"/>-->
-                                            <i class="icon-radio"></i>
-                                        </th>
-                                    </tr>
-                                </thead>
-                                
-                                
-                                <tbody class="tableBody">
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
                     <div>
                         <label class="tabletitle" style="margin-top: 25px;">Værktøj valgt til udlån</label>
                         <div class="tableFixHead tablelimit">
@@ -118,9 +92,9 @@
     }
 
     tilføjudlånsværktøj = (værktøjsID) => {
-        arr.push(værktøjsID);
         let innerHTML = "";
         app.request.getJSON(`${app.data['serverip']}endpoint/equipment.php?id=${værktøjsID}`, (response) => {
+            arr.push(værktøjsID);
             $$(`.tableBody`).find(`#btn${værktøjsID}`).prop("disabled", true);
             innerHTML = $$(`.låneTableBody`).html();
             for (let i = 0; i < response.records.length; i++) {
@@ -142,13 +116,12 @@
                     `;
                 $$('.låneTableBody').html(innerHTML);
             }
-        })
+        });
     }
 
     return {
         data: function () {
             return {
-                oversigtListTools: [],
             };
         },
         // Component Methods
@@ -218,7 +191,7 @@
                                     if(hasaccess == false){
                                         app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetSelectToolByID&param=${arr[o]}`, (res3) => {
                                             app.dialog.alert(`Vær opmærksom på at brugeren <span style='color: red; font-weight: bold;'>IKKE</span> har det krævet certifikat/kørekort til ${res3.records[0].aktivNavn}`, "Udlån");
-                                        },function(e, e2){console.log(e + " " + e2)})
+                                        },function(e, e2){console.error(e + " " + e2)})
                                     }
                                 }else{
                                     //THERE IS NO REQUIREMENTS FOR WHAT IS BEING LOANED
@@ -235,7 +208,7 @@
                                 } else {
                                     reject();
                                 }
-                            }, function (e, e2) { console.log(e + " " + e2) }, "json")
+                            }, function (e, e2) { console.error(e + " " + e2) }, "json")
                         }
                     }, function (e) { })
                 })
@@ -256,107 +229,23 @@
                     return;
                 }
             },
-
-            fillTableToolName(name) {
-                let innerHTML = "";
-                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetSelectToolsForLoan&param=${name}`, (response) => {
-                    for (let i = 0; i < response.records.length; i++) {
-                        innerHTML +=
-                            `
-                            <tr>
-                                <td style="display: none;">${response.records[i].ID}</td>
-                                <td class="label-cell VærktøjsNavn">${response.records[i].equipmentNavn}</td>
-                                <td class="label-cell Kategori">${response.records[i].equipmentKategori}</td>
-                                <td class="label-cell Mærke">${response.records[i].equipmentBrand}</td>
-                                <td class="label-cell Model">${response.records[i].equipmentModel}</td>
-                                <td class="label-cell Serienummer">${response.records[i].equipmentSerieNummer}</td>
-                                <td class="label-cell AssetTag">${response.records[i].equipmentAsset}</td>
-                                <td class="label-cell Stand">${response.records[i].equipmentCondition}</td>
-                                <td class="radio-cell">
-                                    <button type="button" id="btn${response.records[i].ID}" onclick="tilføjudlånsværktøj(${response.records[i].ID})" class="no-ripple btn-primary">Tilføj</button>
-                                </td>
-                            </tr>
-                            `;
-                        $$('.tableBody').html(innerHTML);
+            scantoolforlon: function() {
+                let newAssetTag = document.getElementById('assetTagForLon').value;
+                $$('#assetTagForLon').val('');
+                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetSelectToolByAsset&param=${newAssetTag}`, (data) => {
+                    if(arr.includes(data.records[0].ID)){
+                        return
+                    }else{
+                        tilføjudlånsværktøj(data.records[0].ID);
                     }
-                })
+                    
+                },function(e, e2){})
             },
-            fillTableDefault: async function() {
-                let total = 0;
-                let innerHTML = "";
-                let p = 0;
-                this.oversigtListTools.length = 0
-                let p2 = 0;
-
-                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllToolsForLoan&param=200,0`, (response) => {
-                    for (let i = 0; i < response.records.length; i++) {
-                        total++;
-                        innerHTML +=
-                            `
-                            <tr>
-                                <td style="display: none;">${response.records[i].ID}</td>
-                                <td class="label-cell VærktøjsNavn">${response.records[i].equipmentNavn}</td>
-                                <td class="label-cell Kategori">${response.records[i].equipmentKategori}</td>
-                                <td class="label-cell Mærke">${response.records[i].equipmentBrand}</td>
-                                <td class="label-cell Model">${response.records[i].equipmentModel}</td>
-                                <td class="label-cell Serienummer">${response.records[i].equipmentSerieNummer}</td>
-                                <td class="label-cell AssetTag">${response.records[i].equipmentAsset}</td>
-                                <td class="label-cell Stand">${response.records[i].equipmentCondition}</td>
-                                <td class="radio-cell">
-                                    <button type="button" id="btn${response.records[i].ID}" onclick="tilføjudlånsværktøj(${response.records[i].ID})" class="no-ripple btn-primary">Tilføj</button>
-                                </td>
-                            </tr>
-                            `;
-                        $$('.tableBody').html(innerHTML);
-                        if (i !== 0) {
-                            if (this.oversigtListTools[p].navn != response.records[i].equipmentNavn) {
-                                this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
-                                p++;
-                            }
-                        } else {
-                            this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
-                        }
-                    }
-                })
-
-                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllToolsForLoan&param=20000,200`, (response) => {
-                    for (let i = 0; i < response.records.length; i++) {
-                        total++;
-                        innerHTML +=
-                            `
-                            <tr>
-                                <td style="display: none;">${response.records[i].ID}</td>
-                                <td class="label-cell VærktøjsNavn">${response.records[i].equipmentNavn}</td>
-                                <td class="label-cell Kategori">${response.records[i].equipmentKategori}</td>
-                                <td class="label-cell Mærke">${response.records[i].equipmentBrand}</td>
-                                <td class="label-cell Model">${response.records[i].equipmentModel}</td>
-                                <td class="label-cell Serienummer">${response.records[i].equipmentSerieNummer}</td>
-                                <td class="label-cell AssetTag">${response.records[i].equipmentAsset}</td>
-                                <td class="label-cell Stand">${response.records[i].equipmentCondition}</td>
-                                <td class="radio-cell">
-                                    <button type="button" id="btn${response.records[i].ID}" onclick="tilføjudlånsværktøj(${response.records[i].ID})" class="no-ripple btn-primary">Tilføj</button>
-                                </td>
-                            </tr>
-                            `;
-                        $$('.tableBody').html(innerHTML);
-                        if (i !== 0) {
-                            if (this.oversigtListTools[p2].navn != response.records[i].equipmentNavn) {
-                                this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
-                                p2++;
-                            }
-                        } else {
-                            this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
-                        }
-                    }
-                })
-            setTimeout(function(){
-                console.log("Udlån: " + total)
-            }, 5000);
-            }
         },
 
         on: {
             pageAfterIn: function (e, page) {
+                arr = [];
                 var myCalendar = new dhtmlXCalendarObject(
                     { input: "calendar_input", button: "calendar_input" }
                 );
@@ -374,40 +263,6 @@
                 globalReservationID = page.detail.route.params.reservationID;
                 let reservationID = page.detail.route.params.reservationID;
                 let låneInnerHTML = "";
-
-                var autocompleteToolList = app.autocomplete.create({
-                    inputEl: '#searchfield',
-                    openIn: 'dropdown',
-                    textProperty: "navn",
-                    valueProperty: "navn",
-                    limit: 5,
-                    source: (query, render) => {
-                        var results = [];
-                        if (query.length === 0) {
-                            render(results);
-                            return;
-                        }
-                        $$('#oversigtListBruger').prop({ disabled: true });
-                        // Find matched items
-                        for (var i = 0; i < this.oversigtListTools.length; i++) {
-                            if (this.oversigtListTools[i].navn.toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(this.oversigtListTools[i]);
-                        }
-                        // Render items by passing array with result items
-                        render(results);
-
-                    },
-                    on: {
-                        closed: (ele) => {
-                            //Check hvis feltet bliver sat til empty 
-                            if (this.oversigtListTools.filter(l => (l.navn === ele.$inputEl[0].value)).length == 0) { this.fillTableDefault(); }
-                        },
-                        change: (ele) => {
-                            if (ele[0]) { this.fillTableToolName(ele[0].navn) }
-                        }
-                    },
-                });
-
-                this.fillTableDefault();
 
                 if (reservationID != null) {
                     app.request.getJSON(`${app.data['serverip']}endpoint/reservation.php?id=${reservationID}`, (response) => {
