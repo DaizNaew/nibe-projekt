@@ -1,6 +1,6 @@
 <template>
     <div class="page" data-name="reserver">
-            <div id="tableoverlay">
+            <div class="tableoverlay">
                     <div class="preloader color-multi"></div>
             </div>
         <div id="gridwrapper">
@@ -263,7 +263,7 @@
             },
 
             fillTableDefault: function() {
-                    $$('#tableoverlay').show();
+                    $$('.tableoverlay').show();
                     console.log("kom")
                     let total = 0;
                     let innerHTML = "";
@@ -298,7 +298,7 @@
                         }
                         if(response.records.length < 200){
                             if(i+1 == response.records.length ){
-                                $$('#tableoverlay').hide();
+                                $$('.tableoverlay').hide();
                             }
                         }
                     })
@@ -329,7 +329,7 @@
                                 this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
                             }
                             if(i+1 == response.records.length ){
-                                $$('#tableoverlay').hide();
+                                $$('.tableoverlay').hide();
                             }
                         }
                     })
@@ -386,7 +386,7 @@
 
             },
             pageMounted: function (page) {
-                $$('#tableoverlay').show();
+                $$('.tableoverlay').show();
                 app.request.getJSON(`${app.data['serverip']}endpoint/user.php?id=-1`, (response) => {
                     for (let i = 0; i < response.records.length; i++) {
                         this.userList[i] = { navn: `${response.records[i].name}`, ID: `${response.records[i].ID}` }

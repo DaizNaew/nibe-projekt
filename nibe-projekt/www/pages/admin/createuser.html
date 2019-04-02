@@ -1,6 +1,6 @@
 <template>
     <div class="page" data-name="createuser">
-        <div id="tableoverlay">
+        <div class="tableoverlay">
             <div class="preloader color-multi"></div>
         </div>
         <div id="gridwrapper">
@@ -336,7 +336,7 @@
 
             },
             fillTableDefault: function () {
-                $$('#tableoverlay').show()
+                $$('.tableoverlay').show()
                 let innerHTML = "";
                 var app = this.$app;
                 let o = 0, p = 0;
@@ -369,7 +369,7 @@
                                 this.oversigtListBruger.push({ navn: `${response.records[i].userName}`, ID: `${response.records[i].userCardID}` });
                             }
                         if(i+1 == response.records.length ){
-                            $$('#tableoverlay').hide();
+                            $$('.tableoverlay').hide();
                         }
                     }
                 });
@@ -470,7 +470,7 @@
         // Component States
         on: {
             pageMounted: function (page) {
-                $$('#tableoverlay').show();
+                $$('.tableoverlay').show();
                 var userOldRow = null;
 
                 var app = this.$app;
