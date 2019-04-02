@@ -1,5 +1,8 @@
 <template>
     <div class="page" data-name="reserver">
+            <div class="tableoverlay">
+                    <div class="preloader color-multi"></div>
+            </div>
         <div id="gridwrapper">
             <div class="grid">
                 <div style="padding: 25px" id="item1">
@@ -260,6 +263,8 @@
             },
 
             fillTableDefault: function() {
+                    $$('.tableoverlay').show();
+                    console.log("kom")
                     let total = 0;
                     let innerHTML = "";
                     let p = 0;
@@ -291,6 +296,11 @@
                                 this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
                             }
                         }
+                        if(response.records.length < 200){
+                            if(i+1 == response.records.length ){
+                                $$('.tableoverlay').hide();
+                            }
+                        }
                     })
 
                     app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllToolsForLoan&param=20000,200`, (response) => {
@@ -318,7 +328,9 @@
                             } else {
                                 this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
                             }
-                            
+                            if(i+1 == response.records.length ){
+                                $$('.tableoverlay').hide();
+                            }
                         }
                     })
 
@@ -374,6 +386,7 @@
 
             },
             pageMounted: function (page) {
+                $$('.tableoverlay').show();
                 app.request.getJSON(`${app.data['serverip']}endpoint/user.php?id=-1`, (response) => {
                     for (let i = 0; i < response.records.length; i++) {
                         this.userList[i] = { navn: `${response.records[i].name}`, ID: `${response.records[i].ID}` }

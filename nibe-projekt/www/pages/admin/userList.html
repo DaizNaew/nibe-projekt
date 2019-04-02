@@ -33,6 +33,7 @@
     return {
         data: function () {
             return {
+                userArr : [],
             };
         },
         // Component Methods
@@ -41,7 +42,7 @@
         },
         // Component States
         on: {
-            pageMounted: (page) => {
+            pageMounted: function (page) {
                 let innerHTML = "";
                 // request user data on page init
                 app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllUserInfo&param=-1`, (response) => {
@@ -53,6 +54,7 @@
                         if(response.records[i].certifikatType == null){
                             response.records[i].certifikatType = "Ingen"
                         }
+                        this.userArr.push(response.records[i]);
                         innerHTML += 
                             `
                             <tr>
