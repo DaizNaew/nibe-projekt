@@ -110,21 +110,6 @@
                                 this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
                                 this.oversigtListBruger.push({ navn: `${response.records[i].userName}`, ID: `${response.records[i].userCardID}` });
                             }
-                            /*
-                        if (i !== 0) {
-                            if (this.oversigtListBruger[o].navn != response.records[i].userName) {
-                                this.oversigtListBruger.push({ navn: `${response.records[i].userName}`, ID: `${response.records[i].userCardID}` });
-                                o++;
-                            }
-                            if (this.oversigtListTools[p].navn != response.records[i].equipmentNavn) {
-                                this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
-                                p++;
-                            }
-                        } else {
-                            this.oversigtListBruger.push({ navn: `${response.records[i].userName}`, ID: `${response.records[i].userCardID}` });
-                            this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
-                        }
-                        */
                     }
                 });
 
@@ -160,21 +145,6 @@
                                 this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
                                 this.oversigtListBruger.push({ navn: `${response.records[i].userName}`, ID: `${response.records[i].userCardID}` });
                             }
-                        /*
-                        if (i !== 0) {
-                            if (this.oversigtListBruger[o2].navn != response.records[i].userName) {
-                                this.oversigtListBruger.push({ navn: `${response.records[i].userName}`, ID: `${response.records[i].userCardID}` });
-                                o2++;
-                            }
-                            if (this.oversigtListTools[p2].navn != response.records[i].equipmentNavn) {
-                                this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
-                                p2++;
-                            }
-                        } else {
-                            this.oversigtListBruger.push({ navn: `${response.records[i].userName}`, ID: `${response.records[i].userCardID}` });
-                            this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
-                        }
-                        */
                     }
                 });
                 setTimeout(function(){
