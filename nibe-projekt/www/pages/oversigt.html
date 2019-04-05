@@ -1,11 +1,8 @@
 <template>
     <div class="page" data-name="oversigt">
-
         <div id="wrapper" style="padding: 25px;">
             <div style="width:100%; text-align: center;">
                 <form class="mb-3" autocomplete="off" autocomplete="false">
-
-
                     <div class="form-row" style="text-align: left">
                         <label class="col">Medhjælper navn</label>
                         <div class="input-wrapper">
@@ -14,7 +11,6 @@
                             <span><i class="fas fa-search icon-format"></i></span>
                         </div>
                     </div>
-
                     <div class="form-row" style="text-align: left">
                         <label class="col">Værktøjets navn</label>
                         <div class="input-wrapper">
@@ -51,9 +47,7 @@
                 </div>
             </div>
         </div>
-
     </div>
-
 </template>
 
 <script>
@@ -71,8 +65,6 @@
                 let total = 0;
                 let innerHTML = "";
                 var app = this.$app;
-                let o = 0, p = 0;
-                let o2 = 0, p2 = 0;
 
                 this.oversigtListBruger.length = 0;
                 this.oversigtListTools.length = 0;
@@ -147,8 +139,6 @@
                             }
                     }
                 });
-                setTimeout(function(){
-            }, 5000);
             },
             //sp_GetSelectOversigtByToolName
             fillTableToolName(toolName) {
