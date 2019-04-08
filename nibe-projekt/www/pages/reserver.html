@@ -103,13 +103,13 @@
                         <div class="form-row" style="text-align: left">
                             <label class="col">Værktøjs navn</label>
                             <div class="input-wrapper">
-                                <input type="text" class="form-control form-control-sm col input-format" id="VærktøjsNavn" required="required">
+                                <input type="text" class="form-control form-control-sm col input-format" id="VærktøjsNavn" required="required" >
                                 <span><i id="calendar_icon" class="fas fa-search icon-format"></i></span>
                             </div>
                         </div>
 
                         <div class="tableFixHead">
-                            <table class="table fixed_header" style="background-color: #c5d9ec33;">
+                            <table class="table fixed_header" style="background-color: #c5d9ec33;" id="toolTable">
                                 <thead>
                                     <tr>
                                         <th scope="col" style="display: none;">#</th>
@@ -124,7 +124,7 @@
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody class="tableBody">
+                                <tbody class="tableBody" >
 
                                 </tbody>
                             </table>
@@ -264,14 +264,10 @@
 
             fillTableDefault: function() {
                     $$('.tableoverlay').show();
-                    let total = 0;
                     let innerHTML = "";
-                    let p = 0;
-                    let p2 = 0;
                     this.oversigtListTools.length = 0
                     app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllToolsForLoan&param=200,0`, (response) => {
                         for (let i = 0; i < response.records.length; i++) {
-                            total++;
                             innerHTML +=
                                 `
                                 <tr>
@@ -304,7 +300,6 @@
 
                     app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllToolsForLoan&param=20000,200`, (response) => {
                         for (let i = 0; i < response.records.length; i++) {
-                            total++;
                             innerHTML +=
                                 `
                                 <tr>
@@ -332,31 +327,28 @@
                             }
                         }
                     })
-
-                    setTimeout(function(){
-                }, 5000)
             },
-            fillTableToolName(name) {
-                let innerHTML = "";
-                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetSelectToolForLoan&param=${name}`, (response) => {
-                    for (let i = 0; i < response.records.length; i++) {
-                        innerHTML +=
-                            `
-                            <tr>
-                                <td style="display: none;">${response.records[i].ID}</td>
-                                <td class="label-cell VærktøjsNavn">${response.records[i].equipmentNavn}</td>
-                                <td class="label-cell Kategori">${response.records[i].equipmentKategori}</td>
-                                <td class="label-cell Mærke">${response.records[i].equipmentBrand}</td>
-                                <td class="label-cell Model">${response.records[i].equipmentModel}</td>
-                                <td class="label-cell AssetTag">${response.records[i].equipmentAsset}</td>
-                                <td class="radio-cell">
-                                    <button type="button" id="btn${response.records[i].ID}" onclick="tilføjreserverværktøj(${response.records[i].ID})" class="no-ripple btn-primary">Tilføj</button>
-                                </td>
-                            </tr>
-                            `;
-                        $$('.tableBody').html(innerHTML);
+
+            searchToolName(inputFieldID, tableID) {
+                $$(`#${inputFieldID}`).keyup(field => {
+                    let input, filter, table, tr, td, txtValue;
+                    input = field.target;
+                    filter = input.value.toUpperCase();
+                    table = $$(`#${tableID}`);
+                    tr = table.find('tr');
+
+                    for(i = 0; i < tr.length; i++) {
+                        td = tr[i].getElementsByTagName("td")[1];
+                        if (td) {
+                            txtValue = td.textContent || td.innerText;
+                            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                                tr[i].style.display = "";
+                            } else {
+                                tr[i].style.display = "none";
+                            }
+                        }
                     }
-                })
+                });
             },
 
         },
@@ -404,7 +396,6 @@
                             render(results);
                             return;
                         }
-                        //$$('#oversigtListTools').prop({ disabled:true });
                         // Find matched items
                         for (var i = 0; i < this.userList.length; i++) {
                             if (this.userList[i].navn.toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(this.userList[i]);
@@ -421,41 +412,10 @@
                         change: (ele) => { if (ele[0]) { $$("#ID").val(ele[0].ID) } }
                     },
                 });
+
                 this.fillTableDefault();
-                    var autocompleteToolList = app.autocomplete.create({
-                        inputEl: '#VærktøjsNavn',
-                        openIn: 'dropdown',
-                        textProperty: "navn",
-                        valueProperty: "navn",
-                        limit: 5,
-                        source: (query, render) => {
-                            var results = [];
-                            if (query.length === 0) {
-                                render(results);
-                                return;
-                            }
-                            // Find matched items
-                            for (var i = 0; i < this.oversigtListTools.length; i++) {
-                                if (this.oversigtListTools[i].navn.toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(this.oversigtListTools[i]);
-                            }
-                            // Render items by passing array with result items
-                            render(results);
 
-                        },
-                        on: {
-                            closed: (ele) => {
-                                //Check hvis feltet bliver sat til empty 
-                                if (this.oversigtListTools.filter(l => (l.navn === ele.$inputEl[0].value)).length == 0) { this.fillTableDefault(); }
-                            },
-                            change: (ele) => {
-                                if (ele[0]) { this.fillTableToolName(ele[0].navn) }
-                            }
-                        },
-                    });
-                
-
-                
-
+                this.searchToolName('VærktøjsNavn', 'toolTable');
             }
         },
     }
