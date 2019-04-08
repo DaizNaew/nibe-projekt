@@ -61,6 +61,7 @@ var app  = new Framework7({
       }, 0);
 
       let currentpage = app.views.main.router.currentPageEl.dataset.name;
+      let navbarheader = $$('#navbarheader').find('li');
       if(currentpage == "udlon"){
 
       }else{
@@ -68,6 +69,13 @@ var app  = new Framework7({
         setInterval(function(){
           idleTime++;
           if(idleTime > 5){
+            app.methods.hideAdminNavbar();
+            for(let i = 0; i < navbarheader.length; i++) {
+              if($$(navbarheader[i]).hasClass('active')){
+                $$(navbarheader[i]).removeClass('active');
+              }
+            }
+            $$(`#navbarudlon`).addClass('active');
             app.views.main.router.navigate("/udlon/", {reloadCurrent: true,});
           }
         }, 60000);
