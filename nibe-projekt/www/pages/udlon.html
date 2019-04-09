@@ -81,23 +81,43 @@
 
 
 <script>
+    // Oprettede arr til at holde styr på hvilke værktøj er valgt til udlån
     var arr = [];
+    //Oprettede 2 vars til at store ID's (Hvis brugeren kommer fra reservationer)
     var globalReservationID;
     var globalEquipmentID;
 
+    /**
+    * Funktion der bruges til at fjerne værktøj fra "Værktøj valgt til udlån" tabellen
+    * @param {string} værktøjsID IDet på værktøjet vi ønsker at fjerne.
+    **/
     fjernudlånsværktøj = (værktøjsID) => {
+        //Finder knappen der tilhøre det med sendte element og re-enabler den
         $$(`.tableBody`).find(`#btn${værktøjsID}`).prop("disabled", false);
+        //Bruger framework7 til at finde det med sendte element og fjerner det fra "Værktøj valgt til udlån" tabellen
         $$(`.låneTableBody`).find(`#værktøjnr${værktøjsID}`).remove();
+        //Fjernede det med sendte element fra arrayet
         arr.splice(arr.indexOf(værktøjsID), 1);
     }
 
+    /**
+     * Funktion der bruges til at tilføje værktøj til "Værktøj valgt til udlån" tabellen
+     * @param {string} værktøjsID IDet på værktøjet vi ønsker at tilføje.
+    **/
     tilføjudlånsværktøj = (værktøjsID) => {
+        //Temp variable som bruges til at store vores table data i indtil det bliver indsat i tabellen
         let innerHTML = "";
+        //Tager med sendte variable og bruger den i et kald til endpointet
         app.request.getJSON(`${app.data['serverip']}endpoint/equipment.php?id=${værktøjsID}`, (response) => {
+            //Når kaldet til endpointet er færdigt pusher vi den med sendte variable til arrayet
             arr.push(værktøjsID);
+            //Finder knappen som tilhøre det med sendte element og disabler den
             $$(`.tableBody`).find(`#btn${værktøjsID}`).prop("disabled", true);
+            //Tager alle elementer som allerede findes i "Værktøj valgt til udlån" tabellen og ligger i vores temp variable
             innerHTML = $$(`.låneTableBody`).html();
+            //Looper igennem alle elementer vi modtog fra vores endpoint
             for (let i = 0; i < response.records.length; i++) {
+                //Ligger hvert element ind i vores temp variable
                 innerHTML +=
                     `
                     <tr id="værktøjnr${værktøjsID}">
@@ -114,6 +134,7 @@
                         </td>
                     </tr>
                     `;
+                    //Tager alt data fra vores temp variable og pusher til vores table
                 $$('.låneTableBody').html(innerHTML);
             }
         });
@@ -124,146 +145,217 @@
             return {
             };
         },
-        // Component Methods
+        // Framework7 Component Methods
         methods: {
+
+            /**
+             * Funktion der bruges til at tømme alle felter & tables
+            **/
             resetfields: () => {
+                //Prompter brugeren for at sikre os at knappen ikke blev trykket på ved et uheld
                 app.dialog.confirm('Er du sikker på at du vil nulstille alle felter?', 'Nulstil Felter', function () {
+                    //Finder alle input felter og ligger dem i variable
                     let inputs = $$('form').find('input');
+                    //Sætter alle input felter til at være tomme
                     inputs.val('');
+                    //Sætter "Værktøj valgt til udlån" tabellen til at være tom
                     $$(`.låneTableBody`).html('');
+                    //Finder alle knapper i vores table
                     var checkBoxObj = $$('.tableBody').find('button');
+                    //Looper igennem hvert element (hver knap)
                     checkBoxObj.forEach(element => {
+                        //Hvis knappen er disabled
                         if (element.disabled) {
+                            //Disabled no more
                             element.disabled = false;
                         }
                     })
                 });
             },
+
+            /**
+             * Funktion der bruges til at udlåne værktøj med
+            **/
             udlontool: async () => {
+                //Tager brugerens lånerkortID og ligger i en variable
                 let newLånerCard = document.getElementById('lånerID').value;
+                //Tager den forventet afleverings dato og ligger i en variable
                 let expectedDateEnd = document.getElementById('calendar_input').value + " " + document.getElementById('input-a').value + ":00";
+                //Opretter nogen variabler som skal bruges længere nede i funktionen
                 let dat;
                 let logString;
                 let newLånerID;
                 let lånerCerts = [];
+                //Checker at required felter ikke er tomme
                 if (newLånerCard == "") {
                     app.dialog.alert("Låner ID feltet må ikke være tomt.", "Udlån");
                     return;
                 }
+                //Checker at required felter ikke er tomme
                 if (document.getElementById('calendar_input').value == "") {
                     app.dialog.alert("Afleverings dato feltet må ikke være tomt.", "Udlån");
                     return;
                 }
+                //Checker at required felter ikke er tomme
                 if (document.getElementById('input-a').value == "") {
                     app.dialog.alert("Afleverings tidspunkt feltet må ikke være tomt.", "Udlån");
                     return;
                 }
+                //Checker at required felter ikke er tomme
                 if (arr.length == 0) {
                     app.dialog.alert("Du skal huske at vælge mindst et stykke værktøj som skal udlånes.", "Udlån");
                     return;
                 }
 
-
+                //Checker om et reservations ID blev sendt med
                 if (globalReservationID != null) {
+                    //Pusher equipmentIDet fra reservationen til arrayet som holder styr på hvad der skal udlånes
                     arr.push(globalEquipmentID);
+                    //Sletter reservationen da værktøjet nu er udlånt
                     app.request.getJSON(`${app.data['serverip']}functions/reservation/delete.php?id=${globalReservationID}&equipmentID=${globalEquipmentID}`, (data) => {
                     }, function (e) { });
                 }
 
+                //Laver et promise for at sikre os at alt her i bliver kørt i sync
                 let prom = new Promise((resolve, reject) => {
+                    //Kalder et endpoint med brugerens lånerkortID for at få brugerensID
                     app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_ConvertCardIDtoUserID&param=${newLånerCard}`, (data2) => {
+                        //Tager brugerensID og ligger i en variable
                         newLånerID = data2.records[0].ID;
+                        //Kalder et endpoint med brugerensID for at få alle brugerens certifikater
                         app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetUC&param=${newLånerID}`, (res) => {
+                            //Tager brugerens certifikater og ligger i en variable
                             lånerCerts = res.records;
                         })
+                        //Starter et loop så vi kan loop igennem alle værktøj som skal udlånes for at checke efter certifikat requirements
                         for (i = 0; i < arr.length; i++) {
+                            //Kalder et endpoint med equipmentID for at hente equipments certifikat requirements
                             app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetSingleEquipmentCertifikat&param=${arr[i]}`, (res2) => {
+                                //Tager det requirede certifikat og ligger i en variable
                                 let certRequired = res2.records[0].certifikatID;
+                                //Laver en variable til at holde styr på om vi skal prompt brugeren
                                 let hasaccess = false;
+                                //Vi sikre os at equipment faktisk har et requirement
                                 if(res2.records != null){
+                                    //Vi looper igennem alle brugeres certifikater
                                     for (o = 0; o < lånerCerts.length; o++) {
-                                    if(lånerCerts[o].certifikatID == certRequired){
-                                        //USER HAS THE REQUIRED CERTIFICATE
-                                        hasaccess = true;
-                                        break;
+                                        //Vi checker om det certifikat vi er kommet til matcher det som er required
+                                        if(lånerCerts[o].certifikatID == certRequired){
+                                            //Brugerens certifikat matcher det required så vi sætter vores bool til true
+                                            hasaccess = true;
+                                            //Break ud af vores loop
+                                            break;
+                                        }
                                     }
-                                    }
+                                    //I tilfælde at brugeren ikke har det required certifikat
                                     if(hasaccess == false){
+                                        //Vi kalder vores endpoint for at hente navnet ud på equipmentet
                                         app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetSelectToolByID&param=${arr[o]}`, (res3) => {
+                                            //Prompter brugeren med hvilket equipment der ikke blev fundet det required certifikat til
                                             app.dialog.alert(`Vær opmærksom på at brugeren <span style='color: red; font-weight: bold;'>IKKE</span> har det krævet certifikat/kørekort til ${res3.records[0].aktivNavn}`, "Udlån");
                                         },function(e, e2){console.error(e + " " + e2)})
                                     }
                                 }else{
-                                    //THERE IS NO REQUIREMENTS FOR WHAT IS BEING LOANED
+                                    //I tilfælde af vores equipment ikke har et requirement
                                 }
                             
 
                             })
-                            //Kald Endpoint med id som arr[i]
+                            //Kalder et endpoint for at udlåne equipmentet 
                             app.request.post(`${app.data['serverip']}endpoint/loaned.php`, { userID: newLånerID, equipmentID: arr[i], expectedDateEnd: expectedDateEnd }, function (response) {
+                                //Checker om det faktisk blev sat til at være udlånt
                                 if (response.result == 1) {
-                                    //logString += `${arr[i]}`
+                                    //Ligger vores svar fra endpointet i en variable som vi kan bruge udenfor vores app.request
                                     dat = response;
+                                    //Vi resolver vores promise
                                     resolve();
                                 } else {
+                                    //Vi rejecter vores promise
                                     reject();
                                 }
                             }, function (e, e2) { console.error(e + " " + e2) }, "json")
                         }
                     }, function (e) { })
                 })
-
+                //Vi afventer vores promise
                 await prom;
+                //Checker om vores udlåns kald gik som det skulle
                 if (dat.result == 1) {
+                    //Vi prompter brugeren med at deres equipment blev udlånt
                     app.dialog.alert(`Værktøjet blev udlånt.`, "Udlån", function () {
+                        //Vi looper igennem hvert stykke equipment
                         for (i = 0; i < arr.length; i++) {
+                            //Kalder et endpoint for at hente equipment navn & assetTag ud til logging
                             app.request.getJSON(`${app.data['serverip']}endpoint/equipment.php?id=${arr[i]}`, (response) => {
+                                //Vi logger hvert stykke equipment
                                 app.methods.addToLog(`${newLånerID}`, `Lånte ${response.records[0].activeName} med assetTag (${response.records[0].assetTag})`);
                             })
                         }
+                        //Vi reloader siden
                         app.views.main.router.navigate("/udlon/", { reloadCurrent: true, });
+                        //Vi tømmer vores array så det er klar til brug næste gang
                         arr = [];
                     });
                 } else {
+                    //I tilfælde noget fik galt prompter vi brugeren med at deres equipment ikke blev udlånt
                     app.dialog.alert(`Værktøjet blev <span style='color: red; font-weight: bold;'>IKKE</span> udlånt.`, "Udlån");
+                    //Vi returner
                     return;
                 }
             },
+            /**
+             * Funktion tager scanners input, søger i databsen og indsætter det ind i tabellen
+            **/
             scantoolforlon: function() {
+                //Tager inputtet fra scanners felt og ligger i en variable
                 let newAssetTag = document.getElementById('assetTagForLon').value;
+                //Tømmer scanner feltet for ease of use
                 $$('#assetTagForLon').val('');
+                //Kalder et endpoint for at hente alt information om det scannede stykke equipment
                 app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetSelectToolByAsset&param=${newAssetTag}`, (data) => {
+                    //Vi checker at det scannede stykke værktøj ikke allerede er lagt i tabellen
                     if(arr.includes(data.records[0].ID)){
+                        //Hvis det er så returner vi
                         return
                     }else{
+                        //Ellers tilføjer vi det til tabellen
                         tilføjudlånsværktøj(data.records[0].ID);
                     }
                     
                 },function(e, e2){})
             },
         },
-
+        //On giver os mulighed for at reagerer på events
         on: {
+            //pageAfterIn trigger når siden bliver synlig
             pageAfterIn: function (e, page) {
+                //Sætter vores array til at være tomt
                 arr = [];
+                //Opretter kalender objekt
                 var myCalendar = new dhtmlXCalendarObject(
                     { input: "calendar_input", button: "calendar_input" }
                 );
                 myCalendar.hideTime();
 
+                //Opretter time-picker objekt
                 var input = $('#input-a');
                 input.clockpicker({
                     autoclose: true,
                     placement: 'top'
                 });
             },
+            //pageMounted trigger når siden bliver insat i DOMen
             pageMounted: function (page) {
+                //Sætter variablerne til at kigge efter route params
                 globalReservationID = page.detail.route.params.reservationID;
                 let reservationID = page.detail.route.params.reservationID;
+                //Temp variable som bruges i tilfælde af en reservations param blev sendt med til at store table data i
                 let låneInnerHTML = "";
-
+                //Checker om et reservations ID blev sendt med
                 if (reservationID != null) {
+                    //Kalder et endpoint med reservationID for at få alt information om reservationen & equipmentet
                     app.request.getJSON(`${app.data['serverip']}endpoint/reservation.php?id=${reservationID}`, (response) => {
+                        //Sætte equipmentIDet i variablen globalEquipmentID da den skal bruges andre steder
                         globalEquipmentID = response.records[0].equipmentID;
                         låneInnerHTML +=
                             `
@@ -281,6 +373,7 @@
                                 </td>
                             </tr>
                             `;
+                        //Tager alt data fra vores temp variable og pusher til vores table
                         $$('.låneTableBody').html(låneInnerHTML);
                     }, function (e) {
                     })
