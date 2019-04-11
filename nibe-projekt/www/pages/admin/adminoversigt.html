@@ -24,7 +24,7 @@
                 </form>
                 <div style="display: inline-block;">
                     <div class="tableFixHead">
-                        <table class="table fixed_header" style="width:auto; background-color: #c5d9ec33;">
+                        <table class="table fixed_header" style="width:auto; background-color: #c5d9ec33;" id="admOversigtTable">
                             <thead>
                                 <tr>
                                     <th scope="col" style="display: none;">#</th>
@@ -79,18 +79,12 @@
     return {
         data: function () {
             return {
-                oversigtListBruger: [],
-                oversigtListTools: []
             };
         },
         // Component Methods
         methods: {
             fillTableDefault: function () {
                 let innerHTML = "";
-                var app = this.$app;
-
-                this.oversigtListBruger.length = 0;
-                this.oversigtListTools.length = 0;
 
                 // request user data on page init
                 app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllOversigt&param=200,0`, (response) => {
@@ -116,17 +110,6 @@
                         </tr>
                         `;
                         $$('.tableBody').html(innerHTML);
-                        if (i !== 0) {
-                            if (!this.oversigtListBruger.some(liste => liste.navn == response.records[i].userName)) {
-                                this.oversigtListBruger.push({ navn: `${response.records[i].userName}`, ID: `${response.records[i].userCardID}` });
-                            }
-                            if (!this.oversigtListTools.some(liste => liste.navn == response.records[i].equipmentNavn)) {
-                                this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
-                            }
-                        } else {
-                            this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
-                            this.oversigtListBruger.push({ navn: `${response.records[i].userName}`, ID: `${response.records[i].userCardID}` });
-                        }
                     }
                 });
 
@@ -153,145 +136,24 @@
                         </tr>
                         `;
                         $$('.tableBody').html(innerHTML);
-                        if (i !== 0) {
-                            if (!this.oversigtListBruger.some(liste => liste.navn == response.records[i].userName)) {
-                                this.oversigtListBruger.push({ navn: `${response.records[i].userName}`, ID: `${response.records[i].userCardID}` });
-                            }
-                            if (!this.oversigtListTools.some(liste => liste.navn == response.records[i].equipmentNavn)) {
-                                this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
-                            }
-                        } else {
-                            this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
-                            this.oversigtListBruger.push({ navn: `${response.records[i].userName}`, ID: `${response.records[i].userCardID}` });
-                        }
                     }
                 });
             },
-            fillTableToolName(toolName) {
-                var app = this.$app;
-                let innerHTML = "";
-                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetSelectOversigtByToolName&param=${toolName}`, (response) => {
-                    $$('.tableBody').html("");
-                    // update component state with new state
-                    for (let i = 0; i < response.records.length; i++) {
-                        innerHTML +=
-                            `
-                                                <tr id="oversigt${response.records[i].ID}">
-                                                    <td style="display: none;">${response.records[i].ID}</td>
-                            <td class="label-cell MedhjælperNavn">${response.records[i].userName}</td>
-                            <td class="label-cell MedhjælperNummer">${response.records[i].userCardID}</td>
-                            <td class="label-cell VærktøjsNavn">${response.records[i].equipmentNavn}</td>
-                            <td class="label-cell Kategori">${response.records[i].equipmentKategori}</td>
-                            <td class="label-cell Mærke">${response.records[i].equipmentBrand}</td>
-                            <td class="label-cell Model">${response.records[i].equipmentModel}</td>
-                            <td class="label-cell AssetTag">${response.records[i].equipmentAsset}</td>
-                            <td class="label-cell Stand">${response.records[i].equipmentCondition}</td>
-                            <td class="label-cell DatoUdlånt">${response.records[i].dateStart}</td>
-                            <td class="label-cell ForventesTilbage">${response.records[i].expectedDateEnd}</td>
-                            <td class="input-cell">
-                                <button type="button" onclick="deletetool(${response.records[i].ID}, ${response.records[i].equipmentID})" class="no-ripple btn-primary deletebtn">Slet</button>
-                            </td>
-                                                </tr>
-                                                `;
-                        $$('.tableBody').html(innerHTML);
-                    }
-                }, (error) => { console.error(error) });
-            },
-            fillTable(userName) {
-                var app = this.$app;
-                let innerHTML = "";
-                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetSelectOversigt&param=${userName}`, (response) => {
-                    $$('.tableBody').html("");
-                    // update component state with new state
-                    for (let i = 0; i < response.records.length; i++) {
-                        innerHTML +=
-                            `
-                                                <tr id="oversigt${response.records[i].ID}">
-                                                    <td style="display: none;">${response.records[i].ID}</td>
-                            <td class="label-cell MedhjælperNavn">${response.records[i].userName}</td>
-                            <td class="label-cell MedhjælperNummer">${response.records[i].userCardID}</td>
-                            <td class="label-cell VærktøjsNavn">${response.records[i].equipmentNavn}</td>
-                            <td class="label-cell Kategori">${response.records[i].equipmentKategori}</td>
-                            <td class="label-cell Mærke">${response.records[i].equipmentBrand}</td>
-                            <td class="label-cell Model">${response.records[i].equipmentModel}</td>
-                            <td class="label-cell AssetTag">${response.records[i].equipmentAsset}</td>
-                            <td class="label-cell Stand">${response.records[i].equipmentCondition}</td>
-                            <td class="label-cell DatoUdlånt">${response.records[i].dateStart}</td>
-                            <td class="label-cell ForventesTilbage">${response.records[i].expectedDateEnd}</td>
-                            <td class="input-cell">
-                                <button type="button" onclick="deletetool(${response.records[i].ID}, ${response.records[i].equipmentID})" class="no-ripple btn-primary deletebtn">Slet</button>
-                            </td>
-                                                </tr>
-                                                `;
-                        $$('.tableBody').html(innerHTML);
-                    }
-                }, (error) => { console.error(error) });
-            }
-
         },
         // Component States
         on: {
             pageMounted: function (page) {
+
+                //Function til at fylde tabellen med alle værktøjer som kan reserveres fra databasen
                 this.fillTableDefault();
 
-                var autocompleteBrugerList = app.autocomplete.create({
-                    inputEl: '#admOversigtListBruger',
-                    openIn: 'dropdown',
-                    textProperty: "navn",
-                    valueProperty: "navn",
-                    limit: 5,
-                    source: (query, render) => {
-                        var results = [];
-                        if (query.length === 0) {
-                            render(results);
-                            return;
-                        }
-                        $$('#admOversigtListTools').prop({ disabled: true });
-                        // Find matched items
-                        for (var i = 0; i < this.oversigtListBruger.length; i++) {
-                            if (this.oversigtListBruger[i].navn.toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(this.oversigtListBruger[i]);
-                        }
-                        // Render items by passing array with result items
-                        render(results);
+                //Function som gør det muligt at søge i tabellen med værktøj
+                //Første param er selve input feltets ID
+                //Andet param er selve tabellens ID
+                //Tredje param er det nummer i tabellens TD som skal søges i, her er 1 det første felt, dvs medhjælper navn
+                app.methods.searchFunction('admOversigtListBruger','admOversigtTable',1);
+                app.methods.searchFunction('admOversigtListTools','admOversigtTable',3);
 
-                    },
-                    on: {
-                        closed: (ele) => {
-                            //Check hvis feltet bliver sat til empty 
-                            if (this.oversigtListBruger.filter(l => (l.navn === ele.$inputEl[0].value)).length == 0) { this.fillTableDefault(); $$('#admOversigtListTools').prop({ disabled: false }); }
-                        },
-                        change: (ele) => { if (ele[0]) { this.fillTable(ele[0].navn) } }
-                    },
-                });
-                var autocompleteToolList = app.autocomplete.create({
-                    inputEl: '#admOversigtListTools',
-                    openIn: 'dropdown',
-                    textProperty: "navn",
-                    valueProperty: "navn",
-                    limit: 5,
-                    source: (query, render) => {
-                        var results = [];
-                        if (query.length === 0) {
-                            render(results);
-                            return;
-                        }
-                        $$('#admOversigtListBruger').prop({ disabled: true });
-                        // Find matched items
-                        for (var i = 0; i < this.oversigtListTools.length; i++) {
-                            if (this.oversigtListTools[i].navn.toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(this.oversigtListTools[i]);
-                        }
-                        // Render items by passing array with result items
-                        render(results);
-
-                    },
-                    on: {
-                        closed: (ele) => {
-                            //Check hvis feltet bliver sat til empty 
-                            if (this.oversigtListTools.filter(l => (l.navn === ele.$inputEl[0].value)).length == 0) { this.fillTableDefault(); $$('#admOversigtListBruger').prop({ disabled: false }); }
-                        },
-                        change: (ele) => { if (ele[0]) { this.fillTableToolName(ele[0].navn) } }
-                    },
-                });
             }
         },
     }
