@@ -62,53 +62,82 @@
 
 <script>
 
+    /**
+     * Funktion der bruges til at redirect med et reservationsID
+     * @param {string} reservationID IDet på reservationen vi ønsker at udlåne.
+    **/
     udlon = (reservationID) => {
+        //Redirecter til udlånes siden med reservationsID
         app.views.main.router.navigate(`/udlon/${reservationID}/`, { reloadCurrent: true, });
     }
 
-    reservationerdeletetool = (kategoriID, equipmentID) => {
+    /**
+     * Funktion der bruges til at slette reservationer med
+     * @param {string} reservationID IDet på reservationen vi ønsker at slette
+     * @param {string} equipmentID IDet på equipmenten vi ønsker at slette.
+    **/
+    reservationerdeletetool = (reservationID, equipmentID) => {
+        //Prompter brugeren om de er sikker på de vil slette reservationen
         app.dialog.confirm('Er du sikker på at du vil slette denne reservation fra databasen?', 'Slet reservation', function () {
-            app.request.getJSON(`${app.data['serverip']}functions/reservation/delete.php?id=${kategoriID}&equipmentID=${equipmentID}`, (data) => {
+            //Kalder vores endpoint med de 2 med sendte variabler som sletter reservationen og markere equipmentet ikke længere som reserveret
+            app.request.getJSON(`${app.data['serverip']}functions/reservation/delete.php?id=${reservationID}&equipmentID=${equipmentID}`, (data) => {
+                //Checker om det gik som det skulle
                 if (data.result == 1) {
+                    //Prompter brugeren med success
                     app.dialog.alert(`Reservation blev slettet fra databasen.`, "Slet reservation", function () {
+                        //Refresher siden
                         app.views.main.router.navigate("/reservationer/", { reloadCurrent: true, });
                     });
                 } else {
+                    //Prompter brugeren med failure
                     app.dialog.alert("Reservation blev <span style='color: red; font-weight: bold;'>IKKE</span> slettet fra databasen.", "Slet reservation");
                 }
             });
         })
     }
 
+    /**
+     * Funktion der bruges til at sende en alert når der bliver klikket på note ikonet
+     * @param {string} note2pop Beskeden som skal sende med i alerten
+    **/
     notepop = (note2pop) => {
         app.dialog.alert(note2pop, 'Note', function () {
         })
     }
 
+    //Start på Framework7 og dens håndtering af internt data i dette page view
     return {
+        /**
+        * Det datasæt som framework bruger internt i dette view, de kan ikke tilgås udefra.
+        */
         data: function () {
             return {
             };
         },
-        // Component Methods
+        // Framework7 Component Methods
         methods: {
+            /**
+             * Denne funktion sørger for at query databasen via vores restAPI, og formatere selve responset og indsætte det i tabellen
+             */
             fillTableDefault: async function() {
+                // Definer en ny let som en string
                 let innerHTML = "";
-                let o = 0, p = 0;
-                let o2 = 0, p2 = 0;
+                // Definer 2 nye let variabler som styre om vores note ikon skal vises
                 let note = '<i></i>'
                 let note2 = '<i></i>'
 
-                // request user data on page init
-                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllReservationer&param=50,0`, (response) => {
-                    // update component state with new state
+                // Query databasen med alle data om de første 200 reservationer
+                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllReservationer&param=200,0`, (response) => {
+                    // Loop igennem alle response fra restAPIen
                     for (let i = 0; i < response.records.length; i++) {
+                        // Checker om der er en note vedlagt reservationen
                         if(response.records[i].note != ""){
                             note = `<i class="far fa-envelope" onclick="notepop('${response.records[i].note}')"></i>`
                         }
                         else{
                             note = '<i></i>'
                         }
+                        // Formaterer og tilføjer dataen til 'innerHTML'
                         innerHTML +=
                             `
                                 <tr>
@@ -133,19 +162,23 @@
                                     </td>
                                 </tr>
                                 `;
+                        // Til sidst bliver den html der er inde i 'tableBody' sat til at være den nye 'innerHTML'
                         $$('.tableBody').html(innerHTML);
                     }
                 });
 
-                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllReservationer&param=100,50`, (response) => {
-                    // update component state with new state
+                // Query databasen med alle data om de næste 20000 reservationer start fra 200
+                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllReservationer&param=20000,200`, (response) => {
+                    // Loop igennem alle response fra restAPIen
                     for (let i = 0; i < response.records.length; i++) {
+                        // Checker om der er en note vedlagt reservationen
                         if(response.records[i].note != ""){
                             note2 = `<i class="far fa-envelope" onclick="notepop('${response.records[i].note}')"></i>`
                         }
                         else{
                             note2 = '<i></i>'
                         }
+                        // Formaterer og tilføjer dataen til 'innerHTML'
                         innerHTML +=
                             `
                                 <tr>
@@ -170,43 +203,7 @@
                                     </td>
                                 </tr>
                                 `;
-                        $$('.tableBody').html(innerHTML);
-                    }
-                });
-
-                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllReservationer&param=20000,2`, (response) => {
-                    // update component state with new state
-                    for (let i = 0; i < response.records.length; i++) {
-                        if(response.records[i].note != ""){
-                            note2 = `<i class="far fa-envelope" onclick="notepop('${response.records[i].note}')"></i>`
-                        }
-                        else{
-                            note2 = '<i></i>'
-                        }
-                        innerHTML +=
-                            `
-                                <tr>
-                                    <td style="display: none;">${response.records[i].ID}</td>
-                                    <td class="label-cell MedhjælperNavn">${response.records[i].userName}</td>
-                                    <td class="label-cell MedhjælperNummer">${response.records[i].userCardID}</td>
-                                    <td class="label-cell VærktøjsNavn">${response.records[i].equipmentNavn}</td>
-                                    <td class="label-cell Kategori">${response.records[i].equipmentKategori}</td>
-                                    <td class="label-cell Mærke">${response.records[i].equipmentBrand}</td>
-                                    <td class="label-cell Model">${response.records[i].equipmentModel}</td>
-                                    <td class="label-cell AssetTag">${response.records[i].equipmentAsset}</td>
-                                    <td class="label-cell Stand">${response.records[i].equipmentCondition}</td>
-                                    <td class="label-cell ReserveretFra">${response.records[i].dateStart}</td>
-                                    <td class="label-cell ReserveretTil">${response.records[i].expectedDateEnd}</td>
-                                    
-                                    <td class="label-cell Note">${note}</td>
-                                    <td class="input-cell">
-                                        <button type="button" onclick="udlon(${response.records[i].ID})" class="no-ripple btn-primary">Udlån</button>
-                                    </td>
-                                    <td class="input-cell">
-                                        <button type="button" onclick="reservationerdeletetool(${response.records[i].ID}, ${response.records[i].equipmentID})" class="no-ripple btn-primary deletebtn">Slet</button>
-                                    </td>
-                                </tr>
-                                `;
+                        // Til sidst bliver den html der er inde i 'tableBody' sat til at være den nye 'innerHTML'
                         $$('.tableBody').html(innerHTML);
                     }
                 });
