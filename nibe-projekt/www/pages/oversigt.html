@@ -51,29 +51,35 @@
 </template>
 
 <script>
+    //Start på Framework7 og dens håndtering af internt data i dette page view
     return {
+        /**
+        * Det datasæt som framework bruger internt i dette view, de kan ikke tilgås udefra.
+        */
         data: function () {
             return {
+                //De arrays her bliver brugt til at store alt data som skal kunne søges i
                 oversigtListBruger: [],
                 oversigtListTools: []
             };
         },
-        // Component Methods
+        // Framework7 Component Methods
         methods: {
-
+            /**
+             * Denne funktion sørger for at query databasen via vores restAPI, og formatere selve responset og indsætte det i tabellen
+             */
             fillTableDefault: function() {
-                let total = 0;
+                
                 let innerHTML = "";
-                var app = this.$app;
-
+                // Tømmer vores arrays
                 this.oversigtListBruger.length = 0;
                 this.oversigtListTools.length = 0;
 
-                // request user data on page init
+                // Query databasen med alle data om de første 200 stykker værktøj som er udlånt
                 app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllOversigt&param=200,0`, (response) => {
-                    // update component state with new state
+                    // Loop igennem alle response fra restAPIen
                     for (let i = 0; i < response.records.length; i++) {
-                        total++;
+                        // Formaterer og tilføjer dataen til 'innerHTML'
                         innerHTML +=
                             `
                                 <tr id="oversigt${response.records[i].ID}">
@@ -90,6 +96,7 @@
                                     <td class="label-cell ForventesTilbage">${response.records[i].expectedDateEnd}</td>
                                 </tr>
                                 `;
+                        // Til sidst bliver den html der er inde i 'tableBody' sat til at være den nye 'innerHTML'
                         $$('.tableBody').html(innerHTML);
                         if (i !== 0) {
                             if(!this.oversigtListBruger.some(liste => liste.navn == response.records[i].userName )) {
@@ -105,10 +112,11 @@
                     }
                 });
 
+                // Query databasen med alle data om de næste 20000 værktøj start fra 200 som der allerede er udlånt
                 app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllOversigt&param=20000,200`, (response) => {
-                    // update component state with new state
+                    // Loop igennem alle response fra restAPIen
                     for (let i = 0; i < response.records.length; i++) {
-                        total++;
+                        // Formaterer og tilføjer dataen til 'innerHTML'
                         innerHTML +=
                             `
                                 <tr id="oversigt${response.records[i].ID}">
@@ -125,6 +133,7 @@
                                     <td class="label-cell ForventesTilbage">${response.records[i].expectedDateEnd}</td>
                                 </tr>
                                 `;
+                        // Til sidst bliver den html der er inde i 'tableBody' sat til at være den nye 'innerHTML'
                         $$('.tableBody').html(innerHTML);
                         if (i !== 0) {
                             if(!this.oversigtListBruger.some(liste => liste.navn == response.records[i].userName )) {
