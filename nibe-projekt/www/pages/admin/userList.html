@@ -30,7 +30,7 @@
                 </form>
                 <div style="display: inline-block; width: 85%;">
                     <div class="tableFixHead">
-                        <table class="table fixed_header" style="width:100%; background-color: #c5d9ec33;">
+                        <table class="table fixed_header" style="width:100%; background-color: #c5d9ec33;" id="userTable">
                             <thead>
                                 <tr>
                                     <th scope="col" style="display: none;">#</th>
@@ -44,7 +44,7 @@
                                 </tr>
                             </thead>
                             <tbody class="tableBody">
-                                    
+                            
                             </tbody>
                         </table>
                     </div>
@@ -56,17 +56,19 @@
 </template>
         
 <script>
+    //Start på Framework7 og dens håndtering af internt data i dette page view
     return {
+        /**
+        * Det datasæt som framework bruger internt i dette view, de kan ikke tilgås udefra.
+        */
         data: function () {
             return {
-                userArr : [],
             };
         },
         // Component Methods
         methods: {
             fillTableDefault: function() {
                 let innerHTML = "";
-                this.userArr.length = 0;
 
                 // request user data on page init
                 app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllUserInfo&param=-1`, (response) => {
@@ -78,7 +80,6 @@
                         if(response.records[i].certifikatType == null){
                             response.records[i].certifikatType = "Ingen"
                         }
-                        this.userArr.push(response.records[i]);
                         innerHTML += 
                             `
                             <tr>
@@ -93,81 +94,64 @@
                             </tr>
                             `;
                             $$('.tableBody').html(innerHTML);
-                            if (i !== 0) {
-                            if(!this.userArr.some(liste => liste.name == response.records[i].userName )) {
-                                    this.userArr.push({ name: `${response.records[i].userName}`, ID: `${response.records[i].userCardID}` });
-                                }
-                            } else {
-                                this.userArr.push({ name: `${response.records[i].userName}`, ID: `${response.records[i].userCardID}` });
-                            }
                     }
                 });
             },
-            fillTable: function(navn) {
-                let innerHTML = "";
-                // request user data on page init
-                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetSelectUserInfo&param=${navn}`, (response) => {
-                    // update component state with new state
-                    for(let i = 0; i < response.records.length; i++) {
-                        if(response.records[i].kørekortType == null){
-                            response.records[i].kørekortType = "Ingen"
+            /**
+             * Denne function søger i realtime i en tabel, hvor der indtastes kriterier i et input felt, som så kigger i et array,
+             * Hvis arrayet indeholder noget som matcher kriterierne, laver den en 'style.display="none"' på alt det som ikke matcher,
+             * som gør at det bliver skjult for brugeren.
+             * @param {string} inputFieldID Dette parameter er det input felt som der bliver skrevet i for at søge i tabellen, 
+             *                              hvor selve parametret er ID navnet på input feltet.
+             * @param {string} tableID Dette parameter er det table som vi gerne vil søge igennem, hvor selve parametret er ID navnet på tabellen.
+             * @param {int} rowCount Dette parameter er den position hvor i tabellen vi gerne vil filtrere resultater med
+            */
+            searchFunction: function(inputFieldID, tableID, rowCount) {
+                //Vi bruger dom7 til at vælge vores input felt, og så reagere vi på keyup events via et callback
+                $$(`#${inputFieldID}`).keyup(field => {
+                    //Definer lets som der skal bruges i functionen
+                    let input, filter, table, tr, td, txtValue;
+                    //Sætter input variablen til at være vores input field object
+                    input = field.target;
+                    //Sætter det som skal bruges til at filtre i databasen til værende selve input feltets value
+                    filter = input.value.toUpperCase();
+                    //Sætter Table variablen til at være vores table object som skal søges i
+                    table = $$(`#${tableID}`);
+                    //Sætter tr variablen til at være alle de elemener i tabellen som matcher vores kriteria som er tr
+                    tr = table.find('tr');
+
+                    //Start på for loop for at kigge igennem alle tabel rows og finde noget der matcher
+                    for(i = 0; i < tr.length; i++) {
+                        //Sætter td til at være det specifikke element i tr som vi vil søge igennem
+                        td = tr[i].getElementsByTagName("td")[rowCount];
+                        //Checker om der faktisk er sat noget til td
+                        if (td) {
+                            //Finder den text value som er i td
+                            txtValue = td.textContent || td.innerText;
+                            //Checker om text valuen passer med noget af det vi søger efter
+                            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                                //Sætter rowets display til ikke at være none, så det faktisk er synligt
+                                tr[i].style.display = "";
+                            } else {
+                                //Ellers sætter vi display til at være none, så det ikke kan ses af brugeren.
+                                tr[i].style.display = "none";
+                            }
                         }
-                        if(response.records[i].certifikatType == null){
-                            response.records[i].certifikatType = "Ingen"
-                        }
-                        this.userArr.push(response.records[i]);
-                        innerHTML += 
-                            `
-                            <tr>
-                                <td style="display: none;">${i+1}</td>
-                                <td class="label-cell list_name">${response.records[i].name}</td>
-                                <td class="label-cell list_phonenumber">${response.records[i].phoneNumber}</td>
-                                <td class="label-cell list_address">${response.records[i].address}</td>
-                                <td class="label-cell list_cardID">${response.records[i].cardID}</td>
-                                <td class="label-cell list_kørekort">${response.records[i].kørekortType}</td>
-                                <td class="label-cell list_certifikat">${response.records[i].certifikatType}</td>
-                                <td class="label-cell list_usertype">${response.records[i].title}</td>
-                            </tr>
-                            `;
-                            $$('.tableBody').html(innerHTML);
                     }
                 });
-            }
-        },
+            },//Slut searchFunction() funktion
         // Component States
+        },
+        
         on: {
             pageMounted: function (page) {
 
                 this.fillTableDefault();
 
-                var autocompleteBrugerList = app.autocomplete.create({
-                    inputEl: '#admOversigtListBrugere',
-                    openIn: 'dropdown',
-                    textProperty: "name",
-                    valueProperty: "name",
-                    limit: 5,
-                    source: (query, render) => {
-                        var results = [];
-                        if (query.length === 0) {
-                            render(results);
-                            return;
-                        }
-                        // Find matched items
-                        for (var i = 0; i < this.userArr.length; i++) {
-                            if (this.userArr[i].name.toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(this.userArr[i]);
-                        }
-                        // Render items by passing array with result items
-                        render(results);
+                this.searchFunction('admOversigtListBrugere','userTable',1);
+                this.searchFunction('admOversigtListKørekort','userTable',5);
+                this.searchFunction('admOversigtListCertifikat','userTable',6)
 
-                    },
-                    on: {
-                        closed: (ele) => {
-                            //Check hvis feltet bliver sat til empty 
-                            if (this.userArr.filter(l => (l.name === ele.$inputEl[0].value)).length == 0) { this.fillTableDefault(); }
-                        },
-                        change: (ele) => { if (ele[0]) { this.fillTable(ele[0].name) } }
-                    },
-                });
             }
         },
     }
