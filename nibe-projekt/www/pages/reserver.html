@@ -347,7 +347,7 @@
             fillTableDefault: function () {
                 //Viser preloader overlayet så brugeren ikke kan gøre noget på siden indtil den er færdig med at loade
                 $$('.tableoverlay').show();
-                // Tager alt HTML fra 'låneTableBody' og ligger den til 'innerHTML' leten
+                // Definer en ny let som en string
                 let innerHTML = "";
                 // Query databasen med alle data om de første 200 værktøj der kan udlånes
                 app.request.getJSON(
