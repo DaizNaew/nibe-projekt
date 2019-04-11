@@ -24,7 +24,7 @@
                 <!--Item 2-->
                 <div style="display: inline-block;">
                     <div class="tableFixHead">
-                        <table class="table fixed_header" style="width:auto; background-color: #c5d9ec33;">
+                        <table id="reservationsTable" class="table fixed_header" style="width:auto; background-color: #c5d9ec33;">
                             <thead>
                                 <tr>
                                     <th scope="col" style="display: none;">#</th>
@@ -88,24 +88,16 @@
     return {
         data: function () {
             return {
-                oversigtListBruger: [],
-                oversigtListTools: []
             };
         },
         // Component Methods
         methods: {
             fillTableDefault: async function() {
-                let total = 0;
-                oldrow = null;
                 let innerHTML = "";
-                var app = this.$app;
                 let o = 0, p = 0;
                 let o2 = 0, p2 = 0;
                 let note = '<i></i>'
                 let note2 = '<i></i>'
-
-                this.oversigtListBruger.length = 0;
-                this.oversigtListTools.length = 0;
 
                 // request user data on page init
                 app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllReservationer&param=50,0`, (response) => {
@@ -117,7 +109,6 @@
                         else{
                             note = '<i></i>'
                         }
-                        total++;
                         innerHTML +=
                             `
                                 <tr>
@@ -143,18 +134,6 @@
                                 </tr>
                                 `;
                         $$('.tableBody').html(innerHTML);
-                        
-                        if (i !== 0) {
-                            if(!this.oversigtListBruger.some(liste => liste.navn == response.records[i].userName )) {
-                                    this.oversigtListBruger.push({ navn: `${response.records[i].userName}`, ID: `${response.records[i].userCardID}` });
-                                }
-                                if(!this.oversigtListTools.some(liste => liste.navn == response.records[i].equipmentNavn )) {
-                                    this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
-                                }
-                            } else {
-                                this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
-                                this.oversigtListBruger.push({ navn: `${response.records[i].userName}`, ID: `${response.records[i].userCardID}` });
-                            }
                     }
                 });
 
@@ -167,7 +146,6 @@
                         else{
                             note2 = '<i></i>'
                         }
-                        total++;
                         innerHTML +=
                             `
                                 <tr>
@@ -193,17 +171,6 @@
                                 </tr>
                                 `;
                         $$('.tableBody').html(innerHTML);
-                        if (i !== 0) {
-                            if(!this.oversigtListBruger.some(liste => liste.navn == response.records[i].userName )) {
-                                    this.oversigtListBruger.push({ navn: `${response.records[i].userName}`, ID: `${response.records[i].userCardID}` });
-                                }
-                                if(!this.oversigtListTools.some(liste => liste.navn == response.records[i].equipmentNavn )) {
-                                    this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
-                                }
-                            } else {
-                                this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
-                                this.oversigtListBruger.push({ navn: `${response.records[i].userName}`, ID: `${response.records[i].userCardID}` });
-                            }
                     }
                 });
 
@@ -216,7 +183,6 @@
                         else{
                             note2 = '<i></i>'
                         }
-                        total++;
                         innerHTML +=
                             `
                                 <tr>
@@ -242,104 +208,6 @@
                                 </tr>
                                 `;
                         $$('.tableBody').html(innerHTML);
-                        if (i !== 0) {
-                            if (this.oversigtListBruger[o2].navn != response.records[i].userName) {
-                                this.oversigtListBruger.push({ navn: `${response.records[i].userName}`, ID: `${response.records[i].userCardID}` });
-                                o2++;
-                            }
-                            if (this.oversigtListTools[p2].navn != response.records[i].equipmentNavn) {
-                                this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
-                                p2++;
-                            }
-                        } else {
-                            this.oversigtListBruger.push({ navn: `${response.records[i].userName}`, ID: `${response.records[i].userCardID}` });
-                            this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
-                        }
-                    }
-                });
-            },
-            fillTableReserveName(name) {
-                oldrow = null;
-                let innerHTML = "";
-                var app = this.$app;
-                let note = '<i></i>'
-
-                // request user data on page init
-                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetSelectReservationUser&param=${name}`, (response) => {
-                    // update component state with new state
-                    for (let i = 0; i < response.records.length; i++) {
-                        if(response.records[i].note != ""){
-                            note = `<i class="far fa-envelope" onclick="notepop('${response.records[i].note}')"></i>`
-                        }
-                        else{
-                            note = '<i></i>'
-                        }
-                        innerHTML +=
-                            `
-                                <tr>
-                                    <td style="display: none;">${response.records[i].ID}</td>
-                                    <td class="label-cell MedhjælperNavn">${response.records[i].userName}</td>
-                                    <td class="label-cell MedhjælperNummer">${response.records[i].userCardID}</td>
-                                    <td class="label-cell VærktøjsNavn">${response.records[i].equipmentNavn}</td>
-                                    <td class="label-cell Kategori">${response.records[i].equipmentKategori}</td>
-                                    <td class="label-cell Mærke">${response.records[i].equipmentBrand}</td>
-                                    <td class="label-cell Model">${response.records[i].equipmentModel}</td>
-                                    <td class="label-cell AssetTag">${response.records[i].equipmentAsset}</td>
-                                    <td class="label-cell Stand">${response.records[i].equipmentCondition}</td>
-                                    <td class="label-cell ReserveretFra">${response.records[i].dateStart}</td>
-                                    <td class="label-cell ReserveretTil">${response.records[i].expectedDateEnd}</td>
-                                    <td class="label-cell Note">${note}</td>
-                                    <td class="input-cell">
-                                        <button type="button" onclick="udlon(${response.records[i].ID})" class="no-ripple btn-primary">Udlån</button>
-                                    </td>
-                                    <td class="input-cell">
-                                        <button type="button" onclick="reservationerdeletetool(${response.records[i].ID}, ${response.records[i].equipmentID})" class="no-ripple btn-primary deletebtn">Slet</button>
-                                    </td>
-                                </tr>
-                                `;
-                        $$('.tableBody').html(innerHTML);
-                    }
-                });
-            },
-            fillTableToolName(toolName) {
-                oldrow = null;
-                let innerHTML = "";
-                var app = this.$app;
-                let note = '<i></i>'
-                // request user data on page init
-                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetSelectReservationToolname&param=${toolName}`, (response) => {
-                    // update component state with new state
-                    for (let i = 0; i < response.records.length; i++) {
-                        if(response.records[i].note != ""){
-                            note = `<i class="far fa-envelope" onclick="notepop('${response.records[i].note}')"></i>`
-                        }
-                        else{
-                            note = '<i></i>'
-                        }
-                        innerHTML +=
-                            `
-                                <tr>
-                                    <td style="display: none;">${response.records[i].ID}</td>
-                                    <td class="label-cell MedhjælperNavn">${response.records[i].userName}</td>
-                                    <td class="label-cell MedhjælperNummer">${response.records[i].userCardID}</td>
-                                    <td class="label-cell VærktøjsNavn">${response.records[i].equipmentNavn}</td>
-                                    <td class="label-cell Kategori">${response.records[i].equipmentKategori}</td>
-                                    <td class="label-cell Mærke">${response.records[i].equipmentBrand}</td>
-                                    <td class="label-cell Model">${response.records[i].equipmentModel}</td>
-                                    <td class="label-cell AssetTag">${response.records[i].equipmentAsset}</td>
-                                    <td class="label-cell Stand">${response.records[i].equipmentCondition}</td>
-                                    <td class="label-cell ReserveretFra">${response.records[i].dateStart}</td>
-                                    <td class="label-cell ReserveretTil">${response.records[i].expectedDateEnd}</td>
-                                    <td class="label-cell Note">${note}</td>
-                                    <td class="input-cell">
-                                        <button type="button" onclick="udlon(${response.records[i].ID})" class="no-ripple btn-primary">Udlån</button>
-                                    </td>
-                                    <td class="input-cell">
-                                        <button type="button" onclick="reservationerdeletetool(${response.records[i].ID}, ${response.records[i].equipmentID})" class="no-ripple btn-primary deletebtn">Slet</button>
-                                    </td>
-                                </tr>
-                                `;
-                        $$('.tableBody').html(innerHTML);
                     }
                 });
             },
@@ -348,64 +216,13 @@
         on: {
             pageMounted: function (page) {
                 this.fillTableDefault();
-                var autocompleteBrugerList = app.autocomplete.create({
-                    inputEl: '#reservationListBruger',
-                    openIn: 'dropdown',
-                    textProperty: "navn",
-                    valueProperty: "navn",
-                    limit: 5,
-                    source: (query, render) => {
-                        var results = [];
-                        if (query.length === 0) {
-                            render(results);
-                            return;
-                        }
-                        $$('#reservationListTools').prop({ disabled: true });
-                        // Find matched items
-                        for (var i = 0; i < this.oversigtListBruger.length; i++) {
-                            if (this.oversigtListBruger[i].navn.toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(this.oversigtListBruger[i]);
-                        }
-                        // Render items by passing array with result items
-                        render(results);
 
-                    },
-                    on: {
-                        closed: (ele) => {
-                            //Check hvis feltet bliver sat til empty 
-                            if (this.oversigtListBruger.filter(l => (l.navn === ele.$inputEl[0].value)).length == 0) { this.fillTableDefault(); $$('#reservationListTools').prop({ disabled: false }); }
-                        },
-                        change: (ele) => { if (ele[0]) { this.fillTableReserveName(ele[0].ID) } }
-                    },
-                });
-                var autocompleteToolList = app.autocomplete.create({
-                    inputEl: '#reservationListTools',
-                    openIn: 'dropdown',
-                    textProperty: "navn",
-                    valueProperty: "navn",
-                    limit: 5,
-                    source: (query, render) => {
-                        var results = [];
-                        if (query.length === 0) {
-                            render(results);
-                            return;
-                        }
-                        $$('#reservationListBruger').prop({ disabled: true });
-                        // Find matched items
-                        for (var i = 0; i < this.oversigtListTools.length; i++) {
-                            if (this.oversigtListTools[i].navn.toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(this.oversigtListTools[i]);
-                        }
-                        // Render items by passing array with result items
-                        render(results);
-
-                    },
-                    on: {
-                        closed: (ele) => {
-                            //Check hvis feltet bliver sat til empty 
-                            if (this.oversigtListTools.filter(l => (l.navn === ele.$inputEl[0].value)).length == 0) { this.fillTableDefault(); $$('#reservationListBruger').prop({ disabled: false }); }
-                        },
-                        change: (ele) => { if (ele[0]) { this.fillTableToolName(ele[0].navn) } }
-                    },
-                });
+                //Function som gør det muligt at søge i tabellen med værktøj
+                //Første param er selve input feltets ID
+                //Andet param er selve tabellens ID
+                //Tredje param er det nummer i tabellens TD som skal søges i, her er 1 det første felt, dvs værktøjsnavn
+                app.methods.searchFunction('reservationListBruger', 'reservationsTable', 1);
+                app.methods.searchFunction('reservationListTools', 'reservationsTable', 3);
             }
         },
     }
