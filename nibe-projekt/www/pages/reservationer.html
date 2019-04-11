@@ -209,9 +209,11 @@
                 });
             },
         },
-        // Component States
+        // on giver os mulighed for at gøre ting når siden reagere med forskellige events, fx init eller pagemounted
         on: {
+            //Kører når denne page melder at den er blevet mountet men ikke nødvendigvis er i view
             pageMounted: function (page) {
+                //Function til at fylde tabellen med alle reservationer fra databasen
                 this.fillTableDefault();
 
                 //Function som gør det muligt at søge i tabellen med værktøj
