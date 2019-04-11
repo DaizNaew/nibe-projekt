@@ -24,7 +24,8 @@
                 </form>
                 <div style="display: inline-block;">
                     <div class="tableFixHead">
-                        <table class="table fixed_header" style="width:auto; background-color: #c5d9ec33;" id="admOversigtTable">
+                        <table class="table fixed_header" style="width:auto; background-color: #c5d9ec33;"
+                            id="admOversigtTable">
                             <thead>
                                 <tr>
                                     <th scope="col" style="display: none;">#</th>
@@ -56,42 +57,78 @@
 </template>
 
 <script>
-
+    /**
+     * Funktion til at slette et værktøj fra listen over nuværende udlånt værktøj, dette gøres hvis et værktøj er blevet udlånt forkert
+     * @param {int} ID Det ID som det valgte værktøj er tildelt i udlåns tabellen
+     * @param {int} equipmentID Det ID som værktøjet har i databasen
+     */ 
     deletetool = (ID, equipmentID) => {
+        // Dialog confirm box for at brugeren kan vælge om de er sikker på at slette et lån
         app.dialog.confirm('Er du sikker på at du vil slette dette lån fra databasen?', 'Slet lån', function () {
+            // Get request til restAPIen for at hente det lånte værktøjs data
             app.request.getJSON(`${app.data['serverip']}endpoint/loaned.php?id=${ID}`, (response) => {
+                // let til at store selve navnet på værktøjet
                 let itemname = response.records[0].aktivNavn;
+                // let til at store selve assettagget på værktøjet
                 let itemtag = response.records[0].assetTag;
-                app.request.getJSON(`${app.data['serverip']}functions/loans/delete.php?id=${ID}&equipmentID=${equipmentID}`, (data) => {
-                    if (data.result == 1) {
-                        app.dialog.alert(`Lånet blev slettet fra databasen.`, "Slet lån", function () {
-                            app.methods.addToLog(`${app.data['userID']}`, `Slettet lånet for ${itemname} med assetTag (${itemtag})`);
-                            app.views.main.router.navigate("/adminoversigt/", { reloadCurrent: true, });
-                        });
-                    } else {
-                        app.dialog.alert("Lånet blev <span style='color: red; font-weight: bold;'>IKKE</span> slettet fra databasen.", "Slet lån");
-                    }
-                }, function (e) { });
-            })
-        })
-    }
-
+                // Get request til restAPIen for at slette værktøjet fra listen over udlånt værktøj i databasen
+                app.request.getJSON(
+                    `${app.data['serverip']}functions/loans/delete.php?id=${ID}&equipmentID=${equipmentID}`,
+                    (data) => {
+                        // Checker resultatet vi får tilbage fra restAPIen
+                        if (data.result == 1) {
+                            // Hvis resultatet er 1, så fortæller vi brugeren at lånet blev slettet i en dialog alert box
+                            app.dialog.alert(`Lånet blev slettet fra databasen.`, "Slet lån",
+                                function () {
+                                    // Vi sætter til loggen at en admin slettede noget fra udlånt værktøj listen
+                                    app.methods.addToLog(`${app.data['userID']}`,
+                                        `Slettet lånet for ${itemname} med assetTag (${itemtag})`
+                                    );
+                                    // Derefter bliver brugeren routed til oversigten igen for at "refreshe" listen
+                                    app.views.main.router.navigate("/adminoversigt/", {
+                                        reloadCurrent: true,
+                                    });
+                                });
+                        } else {
+                            // Ellers bliver brugeren fortalt at lånet ikke blev slettet
+                            app.dialog.alert(
+                                "Lånet blev <span style='color: red; font-weight: bold;'>IKKE</span> slettet fra databasen.",
+                                "Slet lån");
+                        }
+                    },
+                    // Funktion til at håndtere hvis restAPIen smider en error
+                    function (e) {
+                        // Log erroren i konsollen
+                        console.error(e);
+                    });//Slut af delete loan endpoint
+            });// Slut på getrequest af værktøj ID
+        });// Slut på confirm dialogbox
+    }// Slut på deletetool() Funktionen
+    //Start på Framework7 og dens håndtering af internt data i dette page view
     return {
+        /**
+         * Det datasæt som framework bruger internt i dette view, de kan ikke tilgås udefra.
+         */
         data: function () {
-            return {
-            };
+            return {};
         },
         // Component Methods
         methods: {
+            /**
+             * Denne funktion sørger for at query databasen via vores restAPI, og formatere selve responset og indsætte det i tabellen
+             */
             fillTableDefault: function () {
+                // Definer en ny let som en string
                 let innerHTML = "";
 
-                // request user data on page init
-                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllOversigt&param=200,0`, (response) => {
-                    // update component state with new state
-                    for (let i = 0; i < response.records.length; i++) {
-                        innerHTML +=
-                            `
+                // Query databasen med alle data om de første 200 værktøj der er udlånt lige nu
+                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllOversigt&param=200,0`,
+                    (response) => {
+                        // Loop igennem alle response fra restAPIen
+                        for (let i = 0; i < response.records.length; i++) {
+                            // Formaterer og tilføjer dataen til 'innerHTML'
+                            innerHTML +=
+                                `
                         <tr>
                             <td style="display: none;">${response.records[i].ID}</td>
                             <td class="label-cell MedhjælperNavn">${response.records[i].userName}</td>
@@ -109,15 +146,19 @@
                             </td>
                         </tr>
                         `;
+                        // Til sidst bliver den html der er inde i 'tableBody' sat til at være den nye 'innerHTML'
                         $$('.tableBody').html(innerHTML);
-                    }
-                });
-
-                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllOversigt&param=20000,200`, (response) => {
-                    // update component state with new state
-                    for (let i = 0; i < response.records.length; i++) {
-                        innerHTML +=
-                            `
+                        }
+                    });
+                // Query databasen med alle data om de næste 20000 værktøj start fra 200 der er udlånt lige nu
+                app.request.getJSON(
+                    `${app.data['serverip']}functions/callsp.php?sp=sp_GetAllOversigt&param=20000,200`, (
+                        response) => {
+                        // Loop igennem alle response fra restAPIen
+                        for (let i = 0; i < response.records.length; i++) {
+                            // Formaterer og tilføjer dataen til 'innerHTML'
+                            innerHTML +=
+                                `
                         <tr>
                             <td style="display: none;">${response.records[i].ID}</td>
                             <td class="label-cell MedhjælperNavn">${response.records[i].userName}</td>
@@ -135,13 +176,15 @@
                             </td>
                         </tr>
                         `;
-                        $$('.tableBody').html(innerHTML);
-                    }
-                });
-            },
-        },
-        // Component States
+                            // Til sidst bliver den html der er inde i 'tableBody' sat til at være den nye 'innerHTML'
+                            $$('.tableBody').html(innerHTML);
+                        } // slut på for loop
+                    }); // Slut på get request til restAPI
+            }, //Slut filltableDefault() funktion
+        }, //Slut på method blokken
+        // on giver os mulighed for at gøre ting når siden reagere med forskellige events, fx init eller pagemounted
         on: {
+            //Kører når denne page melder at den er blevet mountet men ikke nødvendigvis er i view
             pageMounted: function (page) {
 
                 //Function til at fylde tabellen med alle værktøjer som kan reserveres fra databasen
@@ -151,10 +194,10 @@
                 //Første param er selve input feltets ID
                 //Andet param er selve tabellens ID
                 //Tredje param er det nummer i tabellens TD som skal søges i, her er 1 det første felt, dvs medhjælper navn
-                app.methods.searchFunction('admOversigtListBruger','admOversigtTable',1);
-                app.methods.searchFunction('admOversigtListTools','admOversigtTable',3);
+                app.methods.searchFunction('admOversigtListBruger', 'admOversigtTable', 1);
+                app.methods.searchFunction('admOversigtListTools', 'admOversigtTable', 3);
 
-            }
-        },
+            } // Slut på pageMounted evented
+        }, // Slut på on <events>
     }
 </script>
