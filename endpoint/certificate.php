@@ -32,25 +32,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     // check if more than 0 record found
     if($num>0){
         // Laver et nyt array af arrays for at store de returnerede datasæt
-        $products_arr=array();
-        $products_arr[$nameArr[$tblID]]=array();
+        $certificates_arr=array();
+        $certificates_arr[$nameArr[$tblID]]=array();
         // Så længe der findes data i datasættet, så gør vi denne funktion
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
             // Derefter udpakkes $row så alle de variabler det indeholder nu er at findes som lokale variabler, så bliver arrayet bare populated med data
             extract($row);
-            $product_item=array(
+            $certificate_item=array(
                 "ID" => $ID,
                 "type" => $type,
             );
             // Tager dataet og pusher til det array som blev lavet til at store selve datasættet
-            array_push($products_arr[$nameArr[$tblID]], $product_item);
+            array_push($certificates_arr[$nameArr[$tblID]], $certificate_item);
         }
     
         // set response code - 200 OK
         http_response_code(200);
     
         // show Certificate returned dataset in json format
-        echo json_encode($products_arr);
+        echo json_encode($certificates_arr);
     }else{
     
         // set response code - 404 Not found
