@@ -201,7 +201,7 @@
                 userList: [],
             };
         },
-        // Component Methods
+        // Framework7 Component Methods
         methods: {
             /**
              * Denne Funktion er til at nulstille alle input felter og elementer på siden
@@ -283,7 +283,7 @@
                 let prom = new Promise((resolve, reject) => {
                     // For loop for at sikre at alle tingene på reserver listen bliver reserveret
                     for (i = 0; i < arr.length; i++) {
-                        //Kald Endpoint med id som arr[i]
+                        //Kald Endpoint med alle de stored information for at lave reservationen
                         app.request.post(`${app.data['serverip']}endpoint/reservation.php`, {
                             userID: newReserverID,
                             equipmentID: arr[i],
