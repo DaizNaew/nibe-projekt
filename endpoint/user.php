@@ -34,7 +34,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
             // Derefter udpakkes $row så alle de variabler det indeholder nu er at findes som lokale variabler, så bliver arrayet bare populated med data
             extract($row);
-            
             $user_item=array(
                 "ID" => $ID,
                 "name" => $name,
@@ -94,4 +93,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         );
     }
 }
-?>
