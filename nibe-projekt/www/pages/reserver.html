@@ -167,7 +167,7 @@
             $$(`.tableBody`).find(`#btn${værktøjsID}`).prop("disabled", true);
             // Tager alt HTML fra 'låneTableBody' og ligger den til 'innerHTML' leten
             innerHTML = $$(`.låneTableBody`).html();
-            // For loop for at sikre at vi tager alle responds fra databasen
+            // For loop for at sikre at vi tager alle responses fra databasen
             for (let i = 0; i < response.records.length; i++) {
                 // Her lægges resultatet til 'innerHTML', formateret som et row til tabellen
                 innerHTML +=
