@@ -71,37 +71,47 @@
                 // Laver en 'innerHTML' let som bruges til at fylde tabellen
                 let innerHTML = "";
 
-                // Query databasen med alle data om de næste 20000 værktøj start fra 200 der kan udlånes
-                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllUserInfo&param=-1`, (
+                // Let til at holde antal rækker af brugere i databasen
+                let numberOfRowsInDB;
+                // Laver et request til DB for at få at vide hvor mange brugere der er i systemet
+                app.request.getJSON(
+                    `${app.data['serverip']}functions/callsp.php?sp=sp_CountToolsForReserve&param=0`, (
                     response) => {
-                    // Loop igennem alle response fra restAPIen
-                    for (let i = 0; i < response.records.length; i++) {
-                        // Checker hvis brugeren har et kørekort, hvis ikke siger vi at de har ingen
-                        if (response.records[i].kørekortType == null) {
-                            response.records[i].kørekortType = "Ingen"
-                        }
-                        // Checker hvis brugeren har et certifikat, hvis ikke siger vi at de har ingen
-                        if (response.records[i].certifikatType == null) {
-                            response.records[i].certifikatType = "Ingen"
-                        }
-                        // Formaterer og tilføjer dataen til 'innerHTML'
-                        innerHTML +=
-                            `
-                            <tr>
-                                <td style="display: none;">${i+1}</td>
-                                <td class="label-cell list_name">${response.records[i].name}</td>
-                                <td class="label-cell list_phonenumber">${response.records[i].phoneNumber}</td>
-                                <td class="label-cell list_address">${response.records[i].address}</td>
-                                <td class="label-cell list_cardID">${response.records[i].cardID}</td>
-                                <td class="label-cell list_kørekort">${response.records[i].kørekortType}</td>
-                                <td class="label-cell list_certifikat">${response.records[i].certifikatType}</td>
-                                <td class="label-cell list_usertype">${response.records[i].title}</td>
-                            </tr>
-                            `;
-                        // Til sidst bliver den html der er inde i 'tableBody' sat til at være den nye 'innerHTML'
-                        $$('.tableBody').html(innerHTML);
-                    }// Slut på for loop
-                });// Slut request til restAPI
+                        numberOfRowsInDB = response.records[0].rowNum;
+
+                        // Query databasen med alle data om alle brugere i systemet
+                        app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllUserInfo&param=${numberOfRowsInDB}`, (
+                            response) => {
+                            // Loop igennem alle response fra restAPIen
+                            for (let i = 0; i < response.records.length; i++) {
+                                // Checker hvis brugeren har et kørekort, hvis ikke siger vi at de har ingen
+                                if (response.records[i].kørekortType == null) {
+                                    response.records[i].kørekortType = "Ingen"
+                                }
+                                // Checker hvis brugeren har et certifikat, hvis ikke siger vi at de har ingen
+                                if (response.records[i].certifikatType == null) {
+                                    response.records[i].certifikatType = "Ingen"
+                                }
+                                // Formaterer og tilføjer dataen til 'innerHTML'
+                                innerHTML +=
+                                    `
+                                    <tr>
+                                        <td style="display: none;">${i+1}</td>
+                                        <td class="label-cell list_name">${response.records[i].name}</td>
+                                        <td class="label-cell list_phonenumber">${response.records[i].phoneNumber}</td>
+                                        <td class="label-cell list_address">${response.records[i].address}</td>
+                                        <td class="label-cell list_cardID">${response.records[i].cardID}</td>
+                                        <td class="label-cell list_kørekort">${response.records[i].kørekortType}</td>
+                                        <td class="label-cell list_certifikat">${response.records[i].certifikatType}</td>
+                                        <td class="label-cell list_usertype">${response.records[i].title}</td>
+                                    </tr>
+                                    `;
+                                // Til sidst bliver den html der er inde i 'tableBody' sat til at være den nye 'innerHTML'
+                                $$('.tableBody').html(innerHTML);
+                            }// Slut på for loop
+                        });// Slut request til restAPI
+                    }
+                );
             },// Slut fillTableDefault() funktion
         },// Slut på method blokken
 
