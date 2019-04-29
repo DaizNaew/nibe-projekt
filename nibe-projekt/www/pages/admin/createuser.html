@@ -293,6 +293,8 @@
                         let userID = $$(element.parentElement.parentElement).find('input[type="radio"]').val();
                         //Kalder endpoint med brugerens ID for at få alle brugerens certifikater
                         app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetUC&param=${userID}`, (response) => {
+                            // Check om der findes nogle certifikater til den valgte bruger
+                            if(response.result != 1) return;
                             //Store endpoint data i en temp variable
                             let thong = response.records;
                                 //Vi bruger filter til at finde alle checkboxes fra tables[1]
@@ -313,6 +315,8 @@
                         });
                         //Kalder endpoint med brugerens ID for at få alle brugerens kørekort
                         app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetUK&param=${userID}`, (response) => {
+                            // Check om der findes nogle kørekort til den valgte bruger
+                            if(response.result != 1) return;
                             //Store endpoint data i en temp variable
                             let thong = response.records;
                             //Vi bruger filter til at finde alle checkboxes fra tables[0]
