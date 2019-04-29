@@ -65,15 +65,15 @@
                 </div>
                 <div style="padding: 25px"><!--Item 2-->
                     <div>
-                            <div class="form-row" style="text-align: left">
-                                    <label class="col">Værktøjs navn</label>
-                                    <div class="input-wrapper">
-                                        <input type="text" class="form-control form-control-sm col input-format" id="AddVærktøjsNavn">
-                                        <span><i class="fas fa-search icon-format"></i></span>
-                                    </div>
-                                </div>
+                        <div class="form-row" style="text-align: left">
+                            <label class="col">Værktøjs navn</label>
+                            <div class="input-wrapper">
+                                <input type="text" class="form-control form-control-sm col input-format" id="AddVærktøjsNavn">
+                                <span><i class="fas fa-search icon-format"></i></span>
+                            </div>
+                        </div>
                         <div class="tableFixHead" style="max-height: 450px;">
-                            <table class="table fixed_header" style="width:auto; background-color: #c5d9ec33;">
+                            <table class="table fixed_header" style="width:auto; background-color: #c5d9ec33;" id="toolTable">
                                 <thead>
                                     <tr>
                                         <th scope="col" style="display: none;">#</th>
@@ -110,7 +110,6 @@
         return {
             data: function () {
                 return {
-                    oversigtListTools: [],
                 };
             },
         // Component Methods
@@ -366,114 +365,72 @@
                     let innerHTML = "";
                     let total = 0;
                     var app = this.$app;
-                    let p = 0;
-                    let p2 = 0;
+                    let numberOfRowsInDB;
 
-                    this.oversigtListTools.length = 0;
-                    
-                    // request user data on page init
-                    app.request.getJSON(`${app.data['serverip']}endpoint/equipment.php?id=-1&limit=200&offset=0`, (tools) => {
-                        // update component state with new state
-                        for(let i = 0; i < tools.records.length; i++) {
-                            total++;
-                            innerHTML += 
-                            `
-                            <tr>
-                                <td style="display: none;">${tools.records[i].ID}</td>
-                                <td class="label-cell aktivNavn">${tools.records[i].activeName}</td>
-                                <td class="label-cell Kategori" value="${tools.records[i].categoryID}">${tools.records[i].categoryName}</td>
-                                <td class="label-cell Mærke">${tools.records[i].brandName}</td>
-                                <td class="label-cell Model">${tools.records[i].modelName}</td>
-                                <td class="label-cell Serienummer">${tools.records[i].serialNumber}</td>
-                                <td class="label-cell AssetTag">${tools.records[i].assetTag}</td>
-                                <td class="label-cell Stand" style="display:none;">${tools.records[i].condition}</td>
-                                <td class="radio-cell">
-                                    <input type="radio" value="${tools.records[i].ID}" name="selectedTool"/>
-                                    <i class="icon-radio"></i>
-                                </td>
-                            </tr>
-                            `;
-                            $$('.tableBody').html(innerHTML);
-                            if (i !== 0) {
-                                if(!this.oversigtListTools.some(liste => liste.navn == tools.records[i].equipmentNavn )) {
-                                    this.oversigtListTools.push({ navn: `${tools.records[i].equipmentNavn}`, ID: `${tools.records[i].ID}` });
+                    app.request.getJSON(
+                        `${app.data['serverip']}functions/callsp.php?sp=sp_CountAllTools&param=0`, (
+                        response) => {
+                            numberOfRowsInDB = response.records[0].rowNum;
+                        // request user data on page init
+                        app.request.getJSON(`${app.data['serverip']}endpoint/equipment.php?id=-1&limit=${numberOfRowsInDB/2}&offset=0`, (tools) => {
+                            // update component state with new state
+                            for(let i = 0; i < tools.records.length; i++) {
+                                total++;
+                                innerHTML += 
+                                `
+                                <tr>
+                                    <td style="display: none;">${tools.records[i].ID}</td>
+                                    <td class="label-cell aktivNavn">${tools.records[i].activeName}</td>
+                                    <td class="label-cell Kategori" value="${tools.records[i].categoryID}">${tools.records[i].categoryName}</td>
+                                    <td class="label-cell Mærke">${tools.records[i].brandName}</td>
+                                    <td class="label-cell Model">${tools.records[i].modelName}</td>
+                                    <td class="label-cell Serienummer">${tools.records[i].serialNumber}</td>
+                                    <td class="label-cell AssetTag">${tools.records[i].assetTag}</td>
+                                    <td class="label-cell Stand" style="display:none;">${tools.records[i].condition}</td>
+                                    <td class="radio-cell">
+                                        <input type="radio" value="${tools.records[i].ID}" name="selectedTool"/>
+                                        <i class="icon-radio"></i>
+                                    </td>
+                                </tr>
+                                `;
+                                $$('.tableBody').html(innerHTML);
+                                if(tools.records.length < 200){
+                                    if(i+1 == tools.records.length ){
+                                        $$('.tableoverlay').hide();
+                                    }
                                 }
-                            } else {
-                                this.oversigtListTools.push({ navn: `${tools.records[i].equipmentNavn}`, ID: `${tools.records[i].ID}` });
                             }
-                            if(tools.records.length < 200){
+                        });
+
+                        app.request.getJSON(`${app.data['serverip']}endpoint/equipment.php?id=-1&limit=${numberOfRowsInDB}&offset=${numberOfRowsInDB/2}`, (tools) => {
+                            // update component state with new state
+                            for(let i = 0; i < tools.records.length; i++) {
+                                total++;
+                                innerHTML += 
+                                `
+                                <tr>
+                                    <td style="display: none;">${tools.records[i].ID}</td>
+                                    <td class="label-cell aktivNavn">${tools.records[i].activeName}</td>
+                                    <td class="label-cell Kategori" value="${tools.records[i].categoryID}">${tools.records[i].categoryName}</td>
+                                    <td class="label-cell Mærke">${tools.records[i].brandName}</td>
+                                    <td class="label-cell Model">${tools.records[i].modelName}</td>
+                                    <td class="label-cell Serienummer">${tools.records[i].serialNumber}</td>
+                                    <td class="label-cell AssetTag">${tools.records[i].assetTag}</td>
+                                    <td class="label-cell Stand" style="display:none;">${tools.records[i].condition}</td>
+                                    <td class="radio-cell">
+                                        <input type="radio" value="${tools.records[i].ID}" name="selectedTool"/>
+                                        <i class="icon-radio"></i>
+                                    </td>
+                                </tr>
+                                `;
+                                $$('.tableBody').html(innerHTML);
                                 if(i+1 == tools.records.length ){
                                     $$('.tableoverlay').hide();
                                 }
                             }
-                        }
-                    });
-
-                    app.request.getJSON(`${app.data['serverip']}endpoint/equipment.php?id=-1&limit=20000&offset=200`, (tools) => {
-                        // update component state with new state
-                        for(let i = 0; i < tools.records.length; i++) {
-                            total++;
-                            innerHTML += 
-                            `
-                            <tr>
-                                <td style="display: none;">${tools.records[i].ID}</td>
-                                <td class="label-cell aktivNavn">${tools.records[i].activeName}</td>
-                                <td class="label-cell Kategori" value="${tools.records[i].categoryID}">${tools.records[i].categoryName}</td>
-                                <td class="label-cell Mærke">${tools.records[i].brandName}</td>
-                                <td class="label-cell Model">${tools.records[i].modelName}</td>
-                                <td class="label-cell Serienummer">${tools.records[i].serialNumber}</td>
-                                <td class="label-cell AssetTag">${tools.records[i].assetTag}</td>
-                                <td class="label-cell Stand" style="display:none;">${tools.records[i].condition}</td>
-                                <td class="radio-cell">
-                                    <input type="radio" value="${tools.records[i].ID}" name="selectedTool"/>
-                                    <i class="icon-radio"></i>
-                                </td>
-                            </tr>
-                            `;
-                            $$('.tableBody').html(innerHTML);
-                            if (i !== 0) {
-                                if(!this.oversigtListTools.some(liste => liste.navn == tools.records[i].equipmentNavn )) {
-                                    this.oversigtListTools.push({ navn: `${tools.records[i].equipmentNavn}`, ID: `${tools.records[i].ID}` });
-                                }
-                            } else {
-                                this.oversigtListTools.push({ navn: `${tools.records[i].equipmentNavn}`, ID: `${tools.records[i].ID}` });
-                            }
-                            if(i+1 == tools.records.length ){
-                                $$('.tableoverlay').hide();
-                            }
-                        }
+                        });
                     });
                 },
-                fillTableToolName: function(name) {
-                    let innerHTML = "";
-                    
-                    var app = this.$app;
-                    // request user data on page init
-                    app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetSelectTool&param=${name}`, (tools) => {
-                        // update component state with new state
-                        for(let i = 0; i < tools.records.length; i++) {
-                            innerHTML += 
-                            `
-                            <tr>
-                                <td style="display: none;">${tools.records[i].ID}</td>
-                                <td class="label-cell aktivNavn">${tools.records[i].aktivNavn}</td>
-                                <td class="label-cell Kategori" value="${tools.records[i].katID}">${tools.records[i].katNavn}</td>
-                                <td class="label-cell Mærke">${tools.records[i].brand}</td>
-                                <td class="label-cell Model">${tools.records[i].model}</td>
-                                <td class="label-cell Serienummer">${tools.records[i].serieNummer}</td>
-                                <td class="label-cell AssetTag">${tools.records[i].assetTag}</td>
-                                <td class="label-cell Stand" style="display:none;">${tools.records[i].stand}</td>
-                                <td class="radio-cell">
-                                    <input type="radio" value="${tools.records[i].ID}" name="selectedTool"/>
-                                    <i class="icon-radio"></i>
-                                </td>
-                            </tr>
-                            `;
-                            $$('.tableBody').html(innerHTML);
-                        }
-                    });
-                },
-                
             },
         // Component States
             on: {
@@ -498,7 +455,7 @@
                         }
                     });
 
-                   this.fillTableDefault();
+                    this.fillTableDefault();
                     var oldrow = null;
                     $$('.tableBody').on('click', (e) => {
                         if(oldrow == null){
@@ -511,37 +468,11 @@
                             $$(e.target.parentElement).css('background-color', '#a8baad');
                         
                     });
-
-                    var autocompleteToolList = app.autocomplete.create({
-                        inputEl: '#AddVærktøjsNavn',
-                        openIn: 'dropdown',
-                        textProperty: "navn",
-                        valueProperty: "navn",
-                        limit: 5,
-                        source: (query, render) => {
-                            var results = [];
-                            if (query.length === 0) {
-                                render(results);
-                                return;
-                            }
-                            // Find matched items
-                            for (var i = 0; i < this.oversigtListTools.length; i++) {
-                                if (this.oversigtListTools[i].navn.toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(this.oversigtListTools[i]);
-                            }
-                            // Render items by passing array with result items
-                            render(results);
-
-                        },
-                        on: {
-                            closed: (ele) => {
-                                //Check hvis feltet bliver sat til empty 
-                                if (this.oversigtListTools.filter(l => (l.navn === ele.$inputEl[0].value)).length == 0) { this.fillTableDefault(); }
-                            },
-                            change: (ele) => {
-                                if (ele[0]) { this.fillTableToolName(ele[0].navn) }
-                            }
-                        },
-                    });
+                    //Function som gør det muligt at søge i tabellen med værktøj
+                    //Første param er selve input feltets ID
+                    //Andet param er selve tabellens ID
+                    //Tredje param er det nummer i tabellens TD som skal søges i, her er 1 det første felt, dvs værktøjsnavn
+                    app.methods.searchFunction('AddVærktøjsNavn', 'toolTable', 1);
                 }
             },
         }
