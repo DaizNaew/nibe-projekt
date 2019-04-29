@@ -211,25 +211,25 @@
                  * @callback
                  */
                 app.dialog.confirm('Er du sikker på at du vil nulstille alle felter?', 'Nulstil Felter',
-            function () {
-                    // Dette køres hvis brugeren trykker ja
-                    // Finder alle input felter i vores form på siden
-                    let inputs = $$('form').find('input');
-                    // sætter alle inputs values til at være ''
-                    inputs.val('');
-                    // Sætter 'låneTableBody's html til at være ''
-                    $$(`.låneTableBody`).html('');
-                    // Finder alle knapper i 'tableBody' og lægger dem til 'checkBoxObj' variablen
-                    var checkBoxObj = $$('.tableBody').find('button');
-                    // Vi looper igennem alle objekter assigned til 'checkBoxObj' som en callback
-                    checkBoxObj.forEach(element => {
-                        // Tjekker om de enkelte elementers 'disabled' property er true
-                        if (element.disabled) {
-                            // Hvis ja, sætter vi deres value til false
-                            element.disabled = false;
-                        }
-                    }); //Slut på forEach loopet
-                }); //Slut på confirm dialog box construction
+                    function () {
+                        // Dette køres hvis brugeren trykker ja
+                        // Finder alle input felter i vores form på siden
+                        let inputs = $$('form').find('input');
+                        // sætter alle inputs values til at være ''
+                        inputs.val('');
+                        // Sætter 'låneTableBody's html til at være ''
+                        $$(`.låneTableBody`).html('');
+                        // Finder alle knapper i 'tableBody' og lægger dem til 'checkBoxObj' variablen
+                        var checkBoxObj = $$('.tableBody').find('button');
+                        // Vi looper igennem alle objekter assigned til 'checkBoxObj' som en callback
+                        checkBoxObj.forEach(element => {
+                            // Tjekker om de enkelte elementers 'disabled' property er true
+                            if (element.disabled) {
+                                // Hvis ja, sætter vi deres value til false
+                                element.disabled = false;
+                            }
+                        }); //Slut på forEach loopet
+                    }); //Slut på confirm dialog box construction
             }, //Slut på resetfields() funktionen
 
             /**
@@ -319,10 +319,10 @@
                                 //Sørg for at tilføje til loggen over hvad der er sket i systemet
                                 app.request.getJSON(
                                     `${app.data['serverip']}endpoint/equipment.php?id=${arr[i]}`, (
-                                    response) => {
+                                        response) => {
                                         app.methods.addToLog(`${newReserverID}`,
                                             `Reservered ${response.records[0].activeName} med assetTag (${response.records[0].assetTag})`
-                                            );
+                                        );
                                     })
                             }
                             //Navigere tilbage til den nuværende side for at reloade den
@@ -348,21 +348,24 @@
                 // Let til at holde antal rækker af værktøj som kan reserveres i databasen
                 let numberOfRowsInDB;
                 // Laver et request til DB for at få at vide hvor mange værktøj der kan reserveres
-                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_CountToolsForReserve&param=0`, (response) => {
-                    numberOfRowsInDB = response.records[0].rowNum;
-                //Viser preloader overlayet så brugeren ikke kan gøre noget på siden indtil den er færdig med at loade
-                $$('.tableoverlay').show();
-                // Definer en ny let som en string
-                let innerHTML = "";
-                // Query databasen med alle data om de første 200 værktøj der kan udlånes
                 app.request.getJSON(
-                    `${app.data['serverip']}functions/callsp.php?sp=sp_GetAllToolsForLoan&param=${numberOfRowsInDB/2},0`, (
-                        response) => {
-                        // Loop igennem alle response fra restAPIen
-                        for (let i = 0; i < response.records.length; i++) {
-                            // Formaterer og tilføjer dataen til 'innerHTML'
-                            innerHTML +=
-                                `
+                    `${app.data['serverip']}functions/callsp.php?sp=sp_CountToolsForReserve&param=0`, (
+                    response) => {
+                        numberOfRowsInDB = response.records[0].rowNum;
+                        //Viser preloader overlayet så brugeren ikke kan gøre noget på siden indtil den er færdig med at loade
+                        $$('.tableoverlay').show();
+                        // Definer en ny let som en string
+                        let innerHTML = "";
+                        // Query databasen med alle data om de første 200 værktøj der kan udlånes
+                        app.request.getJSON(
+                            `${app.data['serverip']}functions/callsp.php?sp=sp_GetAllToolsForLoan&param=${numberOfRowsInDB/2},0`,
+                            (
+                                response) => {
+                                // Loop igennem alle response fra restAPIen
+                                for (let i = 0; i < response.records.length; i++) {
+                                    // Formaterer og tilføjer dataen til 'innerHTML'
+                                    innerHTML +=
+                                        `
                                 <tr>
                                     <td style="display: none;">${response.records[i].ID}</td>
                                     <td class="label-cell VærktøjsNavn">${response.records[i].equipmentNavn}</td>
@@ -375,27 +378,27 @@
                                     </td>
                                 </tr>
                                 `;
-                            // Til sidst bliver den html der er inde i 'tableBody' sat til at være den nye 'innerHTML'
-                            $$('.tableBody').html(innerHTML);
-                            // Check til at se om alle værktøjene er blevet tilføjet
-                            if (response.records.length < 200) {
-                                //Derefter gemmer vi preloader overlayet igen
-                                if (i + 1 == response.records.length) {
-                                    $$('.tableoverlay').hide();
-                                }
-                            }
-                        }
-
-                    });
-                // Query databasen med alle data om de næste 20000 værktøj start fra 200 der kan udlånes
-                app.request.getJSON(
-                    `${app.data['serverip']}functions/callsp.php?sp=sp_GetAllToolsForLoan&param=${numberOfRowsInDB},${numberOfRowsInDB/2}`, (
-                        response) => {
-                        // Loop igennem alle response fra restAPIen
-                        for (let i = 0; i < response.records.length; i++) {
-                            // Formaterer og tilføjer dataen til 'innerHTML'
-                            innerHTML +=
-                                `
+                                    // Til sidst bliver den html der er inde i 'tableBody' sat til at være den nye 'innerHTML'
+                                    $$('.tableBody').html(innerHTML);
+                                    // Check til at se om alle værktøjene er blevet tilføjet
+                                    if (response.records.length < 200) {
+                                        //Derefter gemmer vi preloader overlayet igen
+                                        if (i + 1 == response.records.length) {
+                                            $$('.tableoverlay').hide();
+                                        }
+                                    }
+                                } // Slut på for loop
+                            });
+                        // Query databasen med alle data om de næste 20000 værktøj start fra 200 der kan udlånes
+                        app.request.getJSON(
+                            `${app.data['serverip']}functions/callsp.php?sp=sp_GetAllToolsForLoan&param=${numberOfRowsInDB},${numberOfRowsInDB/2}`,
+                            (
+                                response) => {
+                                // Loop igennem alle response fra restAPIen
+                                for (let i = 0; i < response.records.length; i++) {
+                                    // Formaterer og tilføjer dataen til 'innerHTML'
+                                    innerHTML +=
+                                        `
                                 <tr>
                                     <td style="display: none;">${response.records[i].ID}</td>
                                     <td class="label-cell VærktøjsNavn">${response.records[i].equipmentNavn}</td>
@@ -408,16 +411,16 @@
                                     </td>
                                 </tr>
                                 `;
-                            // Til sidst bliver den html der er inde i 'tableBody' sat til at være den nye 'innerHTML'
-                            $$('.tableBody').html(innerHTML);
-                            // Check til at se om alle værktøjene er blevet tilføjet
-                            // Derefter gemmer vi preloader overlayet igen
-                            if (i + 1 == response.records.length) {
-                                $$('.tableoverlay').hide();
-                            }
-                        }
+                                    // Til sidst bliver den html der er inde i 'tableBody' sat til at være den nye 'innerHTML'
+                                    $$('.tableBody').html(innerHTML);
+                                    // Check til at se om alle værktøjene er blevet tilføjet
+                                    // Derefter gemmer vi preloader overlayet igen
+                                    if (i + 1 == response.records.length) {
+                                        $$('.tableoverlay').hide();
+                                    }
+                                } // Slut på for loop
+                            });
                     });
-                });
             }, //Slut filltableDefault() funktion
         }, //Slut på method blokken
 

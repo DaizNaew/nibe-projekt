@@ -61,7 +61,7 @@
      * Funktion til at slette et værktøj fra listen over nuværende udlånt værktøj, dette gøres hvis et værktøj er blevet udlånt forkert
      * @param {int} ID Det ID som det valgte værktøj er tildelt i udlåns tabellen
      * @param {int} equipmentID Det ID som værktøjet har i databasen
-     */ 
+     */
     deletetool = (ID, equipmentID) => {
         // Dialog confirm box for at brugeren kan vælge om de er sikker på at slette et lån
         app.dialog.confirm('Er du sikker på at du vil slette dette lån fra databasen?', 'Slet lån', function () {
@@ -100,10 +100,10 @@
                     function (e) {
                         // Log erroren i konsollen
                         console.error(e);
-                    });//Slut af delete loan endpoint
-            });// Slut på getrequest af værktøj ID
-        });// Slut på confirm dialogbox
-    }// Slut på deletetool() Funktionen
+                    }); //Slut af delete loan endpoint
+            }); // Slut på getrequest af værktøj ID
+        }); // Slut på confirm dialogbox
+    } // Slut på deletetool() Funktionen
     //Start på Framework7 og dens håndtering af internt data i dette page view
     return {
         /**
@@ -120,66 +120,77 @@
             fillTableDefault: function () {
                 // Definer en ny let som en string
                 let innerHTML = "";
-
-                // Query databasen med alle data om de første 200 værktøj der er udlånt lige nu
-                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllOversigt&param=200,0`,
-                    (response) => {
-                        // Loop igennem alle response fra restAPIen
-                        for (let i = 0; i < response.records.length; i++) {
-                            // Formaterer og tilføjer dataen til 'innerHTML'
-                            innerHTML +=
-                                `
-                        <tr>
-                            <td style="display: none;">${response.records[i].ID}</td>
-                            <td class="label-cell MedhjælperNavn">${response.records[i].userName}</td>
-                            <td class="label-cell MedhjælperNummer">${response.records[i].userCardID}</td>
-                            <td class="label-cell VærktøjsNavn">${response.records[i].equipmentNavn}</td>
-                            <td class="label-cell Kategori">${response.records[i].equipmentKategori}</td>
-                            <td class="label-cell Mærke">${response.records[i].equipmentBrand}</td>
-                            <td class="label-cell Model">${response.records[i].equipmentModel}</td>
-                            <td class="label-cell AssetTag">${response.records[i].equipmentAsset}</td>
-                            <td class="label-cell Stand">${response.records[i].equipmentCondition}</td>
-                            <td class="label-cell DatoUdlånt">${response.records[i].dateStart}</td>
-                            <td class="label-cell ForventesTilbage">${response.records[i].expectedDateEnd}</td>
-                            <td class="input-cell">
-                                <button type="button" onclick="deletetool(${response.records[i].ID}, ${response.records[i].equipmentID})" class="no-ripple btn-primary deletebtn">Slet</button>
-                            </td>
-                        </tr>
-                        `;
-                        // Til sidst bliver den html der er inde i 'tableBody' sat til at være den nye 'innerHTML'
-                        $$('.tableBody').html(innerHTML);
-                        }
-                    });
-                // Query databasen med alle data om de næste 20000 værktøj start fra 200 der er udlånt lige nu
+                let numberOfRowsInDB;
+                // Laver et request til DB for at få at vide hvor mange værktøj der kan reserveres
                 app.request.getJSON(
-                    `${app.data['serverip']}functions/callsp.php?sp=sp_GetAllOversigt&param=20000,200`, (
+                    `${app.data['serverip']}functions/callsp.php?sp=sp_CountToolsForReserve&param=0`, (
                         response) => {
-                        // Loop igennem alle response fra restAPIen
-                        for (let i = 0; i < response.records.length; i++) {
-                            // Formaterer og tilføjer dataen til 'innerHTML'
-                            innerHTML +=
-                                `
-                        <tr>
-                            <td style="display: none;">${response.records[i].ID}</td>
-                            <td class="label-cell MedhjælperNavn">${response.records[i].userName}</td>
-                            <td class="label-cell MedhjælperNummer">${response.records[i].userCardID}</td>
-                            <td class="label-cell VærktøjsNavn">${response.records[i].equipmentNavn}</td>
-                            <td class="label-cell Kategori">${response.records[i].equipmentKategori}</td>
-                            <td class="label-cell Mærke">${response.records[i].equipmentBrand}</td>
-                            <td class="label-cell Model">${response.records[i].equipmentModel}</td>
-                            <td class="label-cell AssetTag">${response.records[i].equipmentAsset}</td>
-                            <td class="label-cell Stand">${response.records[i].equipmentCondition}</td>
-                            <td class="label-cell DatoUdlånt">${response.records[i].dateStart}</td>
-                            <td class="label-cell ForventesTilbage">${response.records[i].expectedDateEnd}</td>
-                            <td class="input-cell">
-                                <button type="button" onclick="deletetool(${response.records[i].ID}, ${response.records[i].equipmentID})" class="no-ripple btn-primary deletebtn">Slet</button>
-                            </td>
-                        </tr>
-                        `;
-                            // Til sidst bliver den html der er inde i 'tableBody' sat til at være den nye 'innerHTML'
-                            $$('.tableBody').html(innerHTML);
-                        } // slut på for loop
-                    }); // Slut på get request til restAPI
+                        numberOfRowsInDB = response.records[0].rowNum;
+
+                        // Query databasen med alle data om den første halvdel af alle udlånt værktøj
+                        app.request.getJSON(
+                            `${app.data['serverip']}functions/callsp.php?sp=sp_GetAllOversigt&param=${numberOfRowsInDB/2},0`,
+                            (response) => {
+                                // Loop igennem alle response fra restAPIen
+                                for (let i = 0; i < response.records.length; i++) {
+                                    // Formaterer og tilføjer dataen til 'innerHTML'
+                                    innerHTML +=
+                                        `
+                                <tr>
+                                    <td style="display: none;">${response.records[i].ID}</td>
+                                    <td class="label-cell MedhjælperNavn">${response.records[i].userName}</td>
+                                    <td class="label-cell MedhjælperNummer">${response.records[i].userCardID}</td>
+                                    <td class="label-cell VærktøjsNavn">${response.records[i].equipmentNavn}</td>
+                                    <td class="label-cell Kategori">${response.records[i].equipmentKategori}</td>
+                                    <td class="label-cell Mærke">${response.records[i].equipmentBrand}</td>
+                                    <td class="label-cell Model">${response.records[i].equipmentModel}</td>
+                                    <td class="label-cell AssetTag">${response.records[i].equipmentAsset}</td>
+                                    <td class="label-cell Stand">${response.records[i].equipmentCondition}</td>
+                                    <td class="label-cell DatoUdlånt">${response.records[i].dateStart}</td>
+                                    <td class="label-cell ForventesTilbage">${response.records[i].expectedDateEnd}</td>
+                                    <td class="input-cell">
+                                        <button type="button" onclick="deletetool(${response.records[i].ID}, ${response.records[i].equipmentID})" class="no-ripple btn-primary deletebtn">Slet</button>
+                                    </td>
+                                </tr>
+                                `;
+                                    // Til sidst bliver den html der er inde i 'tableBody' sat til at være den nye 'innerHTML'
+                                    $$('.tableBody').html(innerHTML);
+                                }
+                            });
+                        // Query databasen med alle data om den sidste halvdel af alle udlånt værktøj
+                        app.request.getJSON(
+                            `${app.data['serverip']}functions/callsp.php?sp=sp_GetAllOversigt&param=${numberOfRowsInDB},${numberOfRowsInDB/2}`,
+                            (
+                                response) => {
+                                // Loop igennem alle response fra restAPIen
+                                for (let i = 0; i < response.records.length; i++) {
+                                    // Formaterer og tilføjer dataen til 'innerHTML'
+                                    innerHTML +=
+                                        `
+                                <tr>
+                                    <td style="display: none;">${response.records[i].ID}</td>
+                                    <td class="label-cell MedhjælperNavn">${response.records[i].userName}</td>
+                                    <td class="label-cell MedhjælperNummer">${response.records[i].userCardID}</td>
+                                    <td class="label-cell VærktøjsNavn">${response.records[i].equipmentNavn}</td>
+                                    <td class="label-cell Kategori">${response.records[i].equipmentKategori}</td>
+                                    <td class="label-cell Mærke">${response.records[i].equipmentBrand}</td>
+                                    <td class="label-cell Model">${response.records[i].equipmentModel}</td>
+                                    <td class="label-cell AssetTag">${response.records[i].equipmentAsset}</td>
+                                    <td class="label-cell Stand">${response.records[i].equipmentCondition}</td>
+                                    <td class="label-cell DatoUdlånt">${response.records[i].dateStart}</td>
+                                    <td class="label-cell ForventesTilbage">${response.records[i].expectedDateEnd}</td>
+                                    <td class="input-cell">
+                                        <button type="button" onclick="deletetool(${response.records[i].ID}, ${response.records[i].equipmentID})" class="no-ripple btn-primary deletebtn">Slet</button>
+                                    </td>
+                                </tr>
+                                `;
+                                    // Til sidst bliver den html der er inde i 'tableBody' sat til at være den nye 'innerHTML'
+                                    $$('.tableBody').html(innerHTML);
+                                } // slut på for loop
+                            }
+                        ); // Slut på get request til restAPI
+                    }
+                ); // Slut på request til restAPI for at hente antal af værktøj
             }, //Slut filltableDefault() funktion
         }, //Slut på method blokken
         // on giver os mulighed for at gøre ting når siden reagere med forskellige events, fx init eller pagemounted

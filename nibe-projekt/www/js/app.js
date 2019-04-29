@@ -105,7 +105,7 @@ var app = new Framework7({
      * @param {int} timeToWait Dette parameter er det antal minutter der skal ventes inden der skal navigeres tilbage til udlon
      */
     idleTimer: function(timeToWait) {
-      let InterValTime = 1 * 1000 * 60; // Variabel som indeholder 60000, som svarer til et minut i ms
+      let InterValTime = 1000 * 60; // Variabel som indeholder 60000, som svarer til et minut i ms
       // En variabel som indeholder en array af alle list items i navbaren som HTMLObjekter
       let navbarheader = $$('#navbarheader').find('li'); 
       idleTime = 0; // variabel som indeholder det antal minutter der ikke er sket noget på siden
