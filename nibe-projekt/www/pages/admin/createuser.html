@@ -9,23 +9,25 @@
                     <!--Item 1-->
                     <div>
                         <form>
-                            <div class="form-row">
-                                <label for="Navn" class="col">Fulde Navn</label>
-                                <input id="Navn" type="text" required="required"
-                                    class="form-control form-control-sm col" />
-                            </div>
-                            <div class="form-row">
-                                <label for="Mobilnr" class="col">Mobil Nr</label>
-                                <input id="Mobilnr" type="text" class="form-control form-control-sm col" />
-                            </div>
-                            <div class="form-row">
-                                <label for="Adresse" class="col">Adresse</label>
-                                <input id="Adresse" type="text" class="form-control form-control-sm col" />
-                            </div>
-                            <div class="form-row">
-                                <label for="Medhjælpernr" class="col">Medhjælper Nr</label>
-                                <input id="Medhjælpernr" type="text" required="required"
-                                    class="form-control form-control-sm col" />
+                            <div class="textFields">
+                                <div class="form-row">
+                                    <label for="Navn" class="col">Fulde Navn</label>
+                                    <input id="Navn" type="text" required="required"
+                                        class="form-control form-control-sm col" />
+                                </div>
+                                <div class="form-row">
+                                    <label for="Mobilnr" class="col">Mobil Nr</label>
+                                    <input id="Mobilnr" type="text" class="form-control form-control-sm col" />
+                                </div>
+                                <div class="form-row">
+                                    <label for="Adresse" class="col">Adresse</label>
+                                    <input id="Adresse" type="text" class="form-control form-control-sm col" />
+                                </div>
+                                <div class="form-row">
+                                    <label for="Medhjælpernr" class="col">Medhjælper Nr</label>
+                                    <input id="Medhjælpernr" type="text" required="required"
+                                        class="form-control form-control-sm col" />
+                                </div>
                             </div>
 
                             <div class="form-row">
@@ -145,7 +147,7 @@
                 //Prompter brugeren for at sikre os at knappen ikke blev trykket på ved et uheld
                 app.dialog.confirm('Er du sikker på at du vil nulstille alle felter?', 'Nulstil Felter', function () {
                     // Finder alle input felter i vores form på siden
-                    let inputs = $$('form').find('input');
+                    let inputs = $$('.textFields').find('input');
                     //Sætter inputs til ""
                     inputs.val('');
                     //Sætter brugertype til 1 (som er default)
@@ -157,14 +159,17 @@
 
                     //Vi looper igennem hvert table i "tables" arrayet
                     self.tables.forEach(table => {
-                        //Vi bruger filter til at finde alle elemter fra table
+                        //Vi bruger filter til at finde alle elementer fra table
                         $$(table).filter(function (index, e) {
-                            //Unchecker alle checkboxes
-                            $$(e.children).find('input[type="checkbox"]').prop('checked', false);
-                            //Fjerner alle highlights i tabellenerne
-                            $$(e.children).css('background-color', '');
-                            //Fjerner selected klassen fra alle elementer
-                            $$(e.children).find('input[type="checkbox"]').removeClass('selected');
+                            isChecked = $$(e.children).find('input[type="checkbox"]').prop('checked');
+                            if(isChecked) {
+                                //Unchecker alle checkboxes
+                                $$(e.children).find('input[type="checkbox"]').prop('checked', false);
+                                //Fjerner alle highlights i tabellenerne
+                                $$(e.children).css('background-color', '');
+                                //Fjerner selected klassen fra alle elementer
+                                $$(e.children).find('input[type="checkbox"]').removeClass('selected');
+                            }
                         });
                     });
                 });
