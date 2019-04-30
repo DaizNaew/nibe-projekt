@@ -1,20 +1,20 @@
 {
     "name": "dk.nibefestival.nibelager",
     "displayName": "nibelager",
-    "version": "1.0.0",
-    "description": "A sample Apache Cordova application that responds to the deviceready event.",
+    "version": "1.1.0",
+    "description": "Et lagersystem til nibe festivallen",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/thebestorgyouhaveeverseen/nibe-projekt.git"
+        "url": "git+https://github.com/DaizNaew/nibe-projekt.git"
     },
-    "main": "index.js",
+    "main": "init.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "copy-f7": "cpy node_modules/framework7/js/*.* www/framework7/js && cpy node_modules/framework7/css/*.* www/framework7/css && cpy node_modules/framework7-icons/fonts/*.* www/fonts && cpy node_modules/material-design-icons/iconfont/*.{eot,ttf,woff,woff2} www/fonts",
         "postinstall": "npm run copy-f7"
     },
-    "author": "Apache Cordova Team",
-    "license": "Apache-2.0",
+    "author": "Michael Toft & Jimmie Andersen @ SKP TECHCOLLEGE AALBORG",
+    "license": "MIT",
     "dependencies": {
         "axios": "^0.18.0",
         "cordova-android": "^7.1.4",
