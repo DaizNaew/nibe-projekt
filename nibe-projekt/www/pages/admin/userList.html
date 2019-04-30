@@ -77,6 +77,7 @@
                 app.request.getJSON(
                     `${app.data['serverip']}functions/callsp.php?sp=sp_CountToolsForReserve&param=0`, (
                     response) => {
+                        //Fylder vores let med antallet af entries
                         numberOfRowsInDB = response.records[0].rowNum;
 
                         // Query databasen med alle data om alle brugere i systemet
