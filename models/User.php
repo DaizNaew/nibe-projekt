@@ -99,6 +99,16 @@ class User {
      */
     function delete($id) {
 
+        // Der gøres alt det her for at sikre os at brugeren får slettet alle sine certifikater før end vi prøver at slette brugeren
+        $qc = "DELETE FROM user_certifikat WHERE userID =".$id;
+        $sc = $this->conn->prepare($qc);
+        $sc->execute();
+
+        // Der gøres alt det her for at sikre os at brugeren får slettet alle sine kørekort før end vi prøver at slette brugeren
+        $qk = "DELETE FROM user_kørekort WHERE userID =".$id;
+        $sk = $this->conn->prepare($qk);
+        $sk->execute();
+
         // Delete query statement
         $query = "DELETE FROM " . $this->table_name . " WHERE ID = ".$id;
         
