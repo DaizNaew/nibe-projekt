@@ -123,7 +123,7 @@
                 let numberOfRowsInDB;
                 // Laver et request til DB for at få at vide hvor mange værktøj der kan reserveres
                 app.request.getJSON(
-                    `${app.data['serverip']}functions/callsp.php?sp=sp_CountToolsForReserve&param=0`, (
+                    `${app.data['serverip']}functions/callsp.php?sp=sp_CountToolsInOversigt&param=0`, (
                         response) => {
                         numberOfRowsInDB = response.records[0].rowNum;
 
