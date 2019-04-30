@@ -40,6 +40,7 @@ class Equipment {
             $query .= " WHERE equipment.ID = ".$id;
         }
         // Disse bruges til at ændre rækkefølgen af de modtagede data, og at sætte hvor meget der bliver hentet, og hvor i tabellen der skal startes
+        $query .= " ORDER BY assetTag ASC";
         $query .= " LIMIT $limiter";
         $query .= " OFFSET $offset";
         // prepare query statement
