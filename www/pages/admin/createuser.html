@@ -195,7 +195,7 @@
                                     //Prompter brugeren med at brugeren blev slettet
                                     app.dialog.alert(`Brugeren (<span style='color: green; font-weight: bold;'>${delbrugerNavn}</span>) blev slettet fra databasen.`, "Slet Bruger", function () {
                                         //Tilføjet handlingen til loggen
-                                        app.methods.addToLog(`${app.data['userID']}`, `Slettet brugeren ${delbrugerNavn}`);
+                                        app.methods.addToLog(`204`, `Slettet brugeren ${delbrugerNavn}`);
                                         //Refresher siden
                                         app.views.main.router.navigate("/createuser/", { reloadCurrent: true, });
                                     });
@@ -204,7 +204,7 @@
                                     //Prompter brugeren med at noget gik kaldt
                                     app.dialog.alert("Brugeren blev <span style='color: red; font-weight: bold;'>IKKE</span> slettet fra databasen.", "Slet Bruger");
                                 }
-                            });
+                            },function(e, e2){});
                         }
                     });
                 })
@@ -263,7 +263,7 @@
                             });
                         })
                         //Logger at brugeren blev oprettede
-                        app.methods.addToLog(`${app.data['userID']}`, `Oprettet brugeren ${newNavn}`);
+                        app.methods.addToLog(`204`, `Oprettet brugeren ${newNavn}`);
                         //Prompter brugeren med at brugeren var oprettede
                         app.dialog.alert(`Brugeren (<span style="color: green; font-weight: bold;">${newNavn}</span>) blev tilføjet til databasen.`, "Opret Bruger", function () {
                         //Refresher siden
@@ -430,7 +430,7 @@
                             i++;
                         });
                         //Logger handleringerne
-                        app.methods.addToLog(`${app.data['userID']}`, `Ændret på brugeren ${newNavn}`);
+                        app.methods.addToLog(`204`, `Ændret på brugeren ${newNavn}`);
                         //Refresher siden
                         app.views.main.router.navigate("/createuser/", { reloadCurrent: true, });
                     })
