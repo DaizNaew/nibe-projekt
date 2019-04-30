@@ -120,11 +120,13 @@
             fillTableDefault: function () {
                 // Definer en ny let som en string
                 let innerHTML = "";
+                // Let til at holde antal rækker af entries i databasen
                 let numberOfRowsInDB;
-                // Laver et request til DB for at få at vide hvor mange værktøj der kan reserveres
+                // Laver et request til DB for at få at vide hvor mange værktøj der er udlånt
                 app.request.getJSON(
                     `${app.data['serverip']}functions/callsp.php?sp=sp_CountToolsInOversigt&param=0`, (
                         response) => {
+                        //Fylder vores let med antallet af entries
                         numberOfRowsInDB = response.records[0].rowNum;
 
                         // Query databasen med alle data om den første halvdel af alle udlånt værktøj
