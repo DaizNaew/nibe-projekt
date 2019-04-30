@@ -351,12 +351,13 @@
                 app.request.getJSON(
                     `${app.data['serverip']}functions/callsp.php?sp=sp_CountToolsForReserve&param=0`, (
                     response) => {
+                        //Fylder vores let med antallet af entries
                         numberOfRowsInDB = response.records[0].rowNum;
                         //Viser preloader overlayet så brugeren ikke kan gøre noget på siden indtil den er færdig med at loade
                         $$('.tableoverlay').show();
                         // Definer en ny let som en string
                         let innerHTML = "";
-                        // Query databasen med alle data om de første 200 værktøj der kan udlånes
+                        // Query databasen med alle data om den første halvdel af alle værktøj
                         app.request.getJSON(
                             `${app.data['serverip']}functions/callsp.php?sp=sp_GetAllToolsForLoan&param=${numberOfRowsInDB/2},0`,
                             (
@@ -389,7 +390,7 @@
                                     }
                                 } // Slut på for loop
                             });
-                        // Query databasen med alle data om de næste 20000 værktøj start fra 200 der kan udlånes
+                        // Query databasen med alle data om den sidste halvdel af alle værktøj
                         app.request.getJSON(
                             `${app.data['serverip']}functions/callsp.php?sp=sp_GetAllToolsForLoan&param=${numberOfRowsInDB},${numberOfRowsInDB/2}`,
                             (
