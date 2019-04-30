@@ -24,7 +24,7 @@
                 <!--Item 2-->
                 <div style="display: inline-block;">
                     <div class="tableFixHead">
-                        <table class="table fixed_header" style="width:auto; background-color: #c5d9ec33;">
+                        <table id="reservationsTable" class="table fixed_header" style="width:auto; background-color: #c5d9ec33;">
                             <thead>
                                 <tr>
                                     <th scope="col" style="display: none;">#</th>
@@ -62,353 +62,174 @@
 
 <script>
 
+    /**
+     * Funktion der bruges til at redirect med et reservationsID
+     * @param {string} reservationID IDet på reservationen vi ønsker at udlåne.
+    **/
     udlon = (reservationID) => {
+        //Redirecter til udlånes siden med reservationsID
         app.views.main.router.navigate(`/udlon/${reservationID}/`, { reloadCurrent: true, });
     }
 
-    reservationerdeletetool = (kategoriID, equipmentID) => {
+    /**
+     * Funktion der bruges til at slette reservationer med
+     * @param {string} reservationID IDet på reservationen vi ønsker at slette
+     * @param {string} equipmentID IDet på equipmenten vi ønsker at slette.
+    **/
+    reservationerdeletetool = (reservationID, equipmentID) => {
+        //Prompter brugeren om de er sikker på de vil slette reservationen
         app.dialog.confirm('Er du sikker på at du vil slette denne reservation fra databasen?', 'Slet reservation', function () {
-            app.request.getJSON(`${app.data['serverip']}functions/reservation/delete.php?id=${kategoriID}&equipmentID=${equipmentID}`, (data) => {
+            //Kalder vores endpoint med de 2 med sendte variabler som sletter reservationen og markere equipmentet ikke længere som reserveret
+            app.request.getJSON(`${app.data['serverip']}functions/reservation/delete.php?id=${reservationID}&equipmentID=${equipmentID}`, (data) => {
+                //Checker om det gik som det skulle
                 if (data.result == 1) {
+                    //Prompter brugeren med success
                     app.dialog.alert(`Reservation blev slettet fra databasen.`, "Slet reservation", function () {
+                        //Refresher siden
                         app.views.main.router.navigate("/reservationer/", { reloadCurrent: true, });
                     });
                 } else {
+                    //Prompter brugeren med failure
                     app.dialog.alert("Reservation blev <span style='color: red; font-weight: bold;'>IKKE</span> slettet fra databasen.", "Slet reservation");
                 }
             });
         })
     }
 
+    /**
+     * Funktion der bruges til at sende en alert når der bliver klikket på note ikonet
+     * @param {string} note2pop Beskeden som skal sende med i alerten
+    **/
     notepop = (note2pop) => {
         app.dialog.alert(note2pop, 'Note', function () {
         })
     }
 
+    //Start på Framework7 og dens håndtering af internt data i dette page view
     return {
+        /**
+        * Det datasæt som framework bruger internt i dette view, de kan ikke tilgås udefra.
+        */
         data: function () {
             return {
-                oversigtListBruger: [],
-                oversigtListTools: []
             };
         },
-        // Component Methods
+        // Framework7 Component Methods
         methods: {
+            /**
+             * Denne funktion sørger for at query databasen via vores restAPI, og formatere selve responset og indsætte det i tabellen
+             */
             fillTableDefault: async function() {
-                let total = 0;
-                oldrow = null;
+                // Definer en ny let som en string
                 let innerHTML = "";
-                var app = this.$app;
-                let o = 0, p = 0;
-                let o2 = 0, p2 = 0;
+                // Definer 2 nye let variabler som styre om vores note ikon skal vises
                 let note = '<i></i>'
                 let note2 = '<i></i>'
+                // Let til at holde antal rækker af entries i databasen
+                let numberOfRowsInDB;
+                // Laver et request til DB for at få at vide hvor mange værktøj der er reserveret
+                app.request.getJSON(
+                    `${app.data['serverip']}functions/callsp.php?sp=sp_CountToolsReserved&param=0`, (
+                        response) => {
+                        //Fylder vores let med antallet af entries
+                        numberOfRowsInDB = response.records[0].rowNum;
 
-                this.oversigtListBruger.length = 0;
-                this.oversigtListTools.length = 0;
-
-                // request user data on page init
-                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllReservationer&param=50,0`, (response) => {
-                    // update component state with new state
-                    for (let i = 0; i < response.records.length; i++) {
-                        if(response.records[i].note != ""){
-                            note = `<i class="far fa-envelope" onclick="notepop('${response.records[i].note}')"></i>`
-                        }
-                        else{
-                            note = '<i></i>'
-                        }
-                        total++;
-                        innerHTML +=
-                            `
-                                <tr>
-                                    <td style="display: none;">${response.records[i].ID}</td>
-                                    <td class="label-cell MedhjælperNavn">${response.records[i].userName}</td>
-                                    <td class="label-cell MedhjælperNummer">${response.records[i].userCardID}</td>
-                                    <td class="label-cell VærktøjsNavn">${response.records[i].equipmentNavn}</td>
-                                    <td class="label-cell Kategori">${response.records[i].equipmentKategori}</td>
-                                    <td class="label-cell Mærke">${response.records[i].equipmentBrand}</td>
-                                    <td class="label-cell Model">${response.records[i].equipmentModel}</td>
-                                    <td class="label-cell AssetTag">${response.records[i].equipmentAsset}</td>
-                                    <td class="label-cell Stand">${response.records[i].equipmentCondition}</td>
-                                    <td class="label-cell ReserveretFra">${response.records[i].dateStart}</td>
-                                    <td class="label-cell ReserveretTil">${response.records[i].expectedDateEnd}</td>
-                                    
-                                    <td class="label-cell Note">${note}</td>
-                                    <td class="input-cell">
-                                        <button type="button" onclick="udlon(${response.records[i].ID})" class="no-ripple btn-primary">Udlån</button>
-                                    </td>
-                                    <td class="input-cell">
-                                        <button type="button" onclick="reservationerdeletetool(${response.records[i].ID}, ${response.records[i].equipmentID})" class="no-ripple btn-primary deletebtn">Slet</button>
-                                    </td>
-                                </tr>
-                                `;
-                        $$('.tableBody').html(innerHTML);
-                        
-                        if (i !== 0) {
-                            if(!this.oversigtListBruger.some(liste => liste.navn == response.records[i].userName )) {
-                                    this.oversigtListBruger.push({ navn: `${response.records[i].userName}`, ID: `${response.records[i].userCardID}` });
+                        // Query databasen med alle data om den første halvdel af alt reserveret værktøj
+                        app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllReservationer&param=${numberOfRowsInDB/2},0`, (response) => {
+                            // Loop igennem alle response fra restAPIen
+                            for (let i = 0; i < response.records.length; i++) {
+                                // Checker om der er en note vedlagt reservationen
+                                if(response.records[i].note != ""){
+                                    note = `<i class="far fa-envelope" onclick="notepop('${response.records[i].note}')"></i>`
                                 }
-                                if(!this.oversigtListTools.some(liste => liste.navn == response.records[i].equipmentNavn )) {
-                                    this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
+                                else{
+                                    note = '<i></i>'
                                 }
-                            } else {
-                                this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
-                                this.oversigtListBruger.push({ navn: `${response.records[i].userName}`, ID: `${response.records[i].userCardID}` });
+                                // Formaterer og tilføjer dataen til 'innerHTML'
+                                innerHTML +=
+                                    `
+                                        <tr>
+                                            <td style="display: none;">${response.records[i].ID}</td>
+                                            <td class="label-cell MedhjælperNavn">${response.records[i].userName}</td>
+                                            <td class="label-cell MedhjælperNummer">${response.records[i].userCardID}</td>
+                                            <td class="label-cell VærktøjsNavn">${response.records[i].equipmentNavn}</td>
+                                            <td class="label-cell Kategori">${response.records[i].equipmentKategori}</td>
+                                            <td class="label-cell Mærke">${response.records[i].equipmentBrand}</td>
+                                            <td class="label-cell Model">${response.records[i].equipmentModel}</td>
+                                            <td class="label-cell AssetTag">${response.records[i].equipmentAsset}</td>
+                                            <td class="label-cell Stand">${response.records[i].equipmentCondition}</td>
+                                            <td class="label-cell ReserveretFra">${response.records[i].dateStart}</td>
+                                            <td class="label-cell ReserveretTil">${response.records[i].expectedDateEnd}</td>
+                                            
+                                            <td class="label-cell Note">${note}</td>
+                                            <td class="input-cell">
+                                                <button type="button" onclick="udlon(${response.records[i].ID})" class="no-ripple btn-primary">Udlån</button>
+                                            </td>
+                                            <td class="input-cell">
+                                                <button type="button" onclick="reservationerdeletetool(${response.records[i].ID}, ${response.records[i].equipmentID})" class="no-ripple btn-primary deletebtn">Slet</button>
+                                            </td>
+                                        </tr>
+                                        `;
+                                // Til sidst bliver den html der er inde i 'tableBody' sat til at være den nye 'innerHTML'
+                                $$('.tableBody').html(innerHTML);
                             }
-                    }
-                });
-
-                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllReservationer&param=100,50`, (response) => {
-                    // update component state with new state
-                    for (let i = 0; i < response.records.length; i++) {
-                        if(response.records[i].note != ""){
-                            note2 = `<i class="far fa-envelope" onclick="notepop('${response.records[i].note}')"></i>`
-                        }
-                        else{
-                            note2 = '<i></i>'
-                        }
-                        total++;
-                        innerHTML +=
-                            `
-                                <tr>
-                                    <td style="display: none;">${response.records[i].ID}</td>
-                                    <td class="label-cell MedhjælperNavn">${response.records[i].userName}</td>
-                                    <td class="label-cell MedhjælperNummer">${response.records[i].userCardID}</td>
-                                    <td class="label-cell VærktøjsNavn">${response.records[i].equipmentNavn}</td>
-                                    <td class="label-cell Kategori">${response.records[i].equipmentKategori}</td>
-                                    <td class="label-cell Mærke">${response.records[i].equipmentBrand}</td>
-                                    <td class="label-cell Model">${response.records[i].equipmentModel}</td>
-                                    <td class="label-cell AssetTag">${response.records[i].equipmentAsset}</td>
-                                    <td class="label-cell Stand">${response.records[i].equipmentCondition}</td>
-                                    <td class="label-cell ReserveretFra">${response.records[i].dateStart}</td>
-                                    <td class="label-cell ReserveretTil">${response.records[i].expectedDateEnd}</td>
-                                    
-                                    <td class="label-cell Note">${note2}</td>
-                                    <td class="input-cell">
-                                        <button type="button" onclick="udlon(${response.records[i].ID})" class="no-ripple btn-primary">Udlån</button>
-                                    </td>
-                                    <td class="input-cell">
-                                        <button type="button" onclick="reservationerdeletetool(${response.records[i].ID}, ${response.records[i].equipmentID})" class="no-ripple btn-primary deletebtn">Slet</button>
-                                    </td>
-                                </tr>
-                                `;
-                        $$('.tableBody').html(innerHTML);
-                        if (i !== 0) {
-                            if(!this.oversigtListBruger.some(liste => liste.navn == response.records[i].userName )) {
-                                    this.oversigtListBruger.push({ navn: `${response.records[i].userName}`, ID: `${response.records[i].userCardID}` });
+                        });
+                        // Query databasen med alle data om de næste 20000 reservationer start fra 200
+                        app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllReservationer&param=${numberOfRowsInDB},${numberOfRowsInDB/2}`, (response) => {
+                            // Loop igennem alle response fra restAPIen
+                            for (let i = 0; i < response.records.length; i++) {
+                                // Checker om der er en note vedlagt reservationen
+                                if(response.records[i].note != ""){
+                                    note2 = `<i class="far fa-envelope" onclick="notepop('${response.records[i].note}')"></i>`
                                 }
-                                if(!this.oversigtListTools.some(liste => liste.navn == response.records[i].equipmentNavn )) {
-                                    this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
+                                else{
+                                    note2 = '<i></i>'
                                 }
-                            } else {
-                                this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
-                                this.oversigtListBruger.push({ navn: `${response.records[i].userName}`, ID: `${response.records[i].userCardID}` });
+                                // Formaterer og tilføjer dataen til 'innerHTML'
+                                innerHTML +=
+                                    `
+                                        <tr>
+                                            <td style="display: none;">${response.records[i].ID}</td>
+                                            <td class="label-cell MedhjælperNavn">${response.records[i].userName}</td>
+                                            <td class="label-cell MedhjælperNummer">${response.records[i].userCardID}</td>
+                                            <td class="label-cell VærktøjsNavn">${response.records[i].equipmentNavn}</td>
+                                            <td class="label-cell Kategori">${response.records[i].equipmentKategori}</td>
+                                            <td class="label-cell Mærke">${response.records[i].equipmentBrand}</td>
+                                            <td class="label-cell Model">${response.records[i].equipmentModel}</td>
+                                            <td class="label-cell AssetTag">${response.records[i].equipmentAsset}</td>
+                                            <td class="label-cell Stand">${response.records[i].equipmentCondition}</td>
+                                            <td class="label-cell ReserveretFra">${response.records[i].dateStart}</td>
+                                            <td class="label-cell ReserveretTil">${response.records[i].expectedDateEnd}</td>
+                                            
+                                            <td class="label-cell Note">${note2}</td>
+                                            <td class="input-cell">
+                                                <button type="button" onclick="udlon(${response.records[i].ID})" class="no-ripple btn-primary">Udlån</button>
+                                            </td>
+                                            <td class="input-cell">
+                                                <button type="button" onclick="reservationerdeletetool(${response.records[i].ID}, ${response.records[i].equipmentID})" class="no-ripple btn-primary deletebtn">Slet</button>
+                                            </td>
+                                        </tr>
+                                        `;
+                                // Til sidst bliver den html der er inde i 'tableBody' sat til at være den nye 'innerHTML'
+                                $$('.tableBody').html(innerHTML);
                             }
-                    }
-                });
-
-                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllReservationer&param=20000,2`, (response) => {
-                    // update component state with new state
-                    for (let i = 0; i < response.records.length; i++) {
-                        if(response.records[i].note != ""){
-                            note2 = `<i class="far fa-envelope" onclick="notepop('${response.records[i].note}')"></i>`
-                        }
-                        else{
-                            note2 = '<i></i>'
-                        }
-                        total++;
-                        innerHTML +=
-                            `
-                                <tr>
-                                    <td style="display: none;">${response.records[i].ID}</td>
-                                    <td class="label-cell MedhjælperNavn">${response.records[i].userName}</td>
-                                    <td class="label-cell MedhjælperNummer">${response.records[i].userCardID}</td>
-                                    <td class="label-cell VærktøjsNavn">${response.records[i].equipmentNavn}</td>
-                                    <td class="label-cell Kategori">${response.records[i].equipmentKategori}</td>
-                                    <td class="label-cell Mærke">${response.records[i].equipmentBrand}</td>
-                                    <td class="label-cell Model">${response.records[i].equipmentModel}</td>
-                                    <td class="label-cell AssetTag">${response.records[i].equipmentAsset}</td>
-                                    <td class="label-cell Stand">${response.records[i].equipmentCondition}</td>
-                                    <td class="label-cell ReserveretFra">${response.records[i].dateStart}</td>
-                                    <td class="label-cell ReserveretTil">${response.records[i].expectedDateEnd}</td>
-                                    
-                                    <td class="label-cell Note">${note}</td>
-                                    <td class="input-cell">
-                                        <button type="button" onclick="udlon(${response.records[i].ID})" class="no-ripple btn-primary">Udlån</button>
-                                    </td>
-                                    <td class="input-cell">
-                                        <button type="button" onclick="reservationerdeletetool(${response.records[i].ID}, ${response.records[i].equipmentID})" class="no-ripple btn-primary deletebtn">Slet</button>
-                                    </td>
-                                </tr>
-                                `;
-                        $$('.tableBody').html(innerHTML);
-                        if (i !== 0) {
-                            if (this.oversigtListBruger[o2].navn != response.records[i].userName) {
-                                this.oversigtListBruger.push({ navn: `${response.records[i].userName}`, ID: `${response.records[i].userCardID}` });
-                                o2++;
-                            }
-                            if (this.oversigtListTools[p2].navn != response.records[i].equipmentNavn) {
-                                this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
-                                p2++;
-                            }
-                        } else {
-                            this.oversigtListBruger.push({ navn: `${response.records[i].userName}`, ID: `${response.records[i].userCardID}` });
-                            this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
-                        }
-                    }
-                });
-                setTimeout(function(){
-                console.log("Reservationer: " + total)
-                }, 5000);
-            },
-            fillTableReserveName(name) {
-                oldrow = null;
-                let innerHTML = "";
-                var app = this.$app;
-                let note = '<i></i>'
-
-                // request user data on page init
-                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetSelectReservationUser&param=${name}`, (response) => {
-                    // update component state with new state
-                    for (let i = 0; i < response.records.length; i++) {
-                        if(response.records[i].note != ""){
-                            note = `<i class="far fa-envelope" onclick="notepop('${response.records[i].note}')"></i>`
-                        }
-                        else{
-                            note = '<i></i>'
-                        }
-                        innerHTML +=
-                            `
-                                <tr>
-                                    <td style="display: none;">${response.records[i].ID}</td>
-                                    <td class="label-cell MedhjælperNavn">${response.records[i].userName}</td>
-                                    <td class="label-cell MedhjælperNummer">${response.records[i].userCardID}</td>
-                                    <td class="label-cell VærktøjsNavn">${response.records[i].equipmentNavn}</td>
-                                    <td class="label-cell Kategori">${response.records[i].equipmentKategori}</td>
-                                    <td class="label-cell Mærke">${response.records[i].equipmentBrand}</td>
-                                    <td class="label-cell Model">${response.records[i].equipmentModel}</td>
-                                    <td class="label-cell AssetTag">${response.records[i].equipmentAsset}</td>
-                                    <td class="label-cell Stand">${response.records[i].equipmentCondition}</td>
-                                    <td class="label-cell ReserveretFra">${response.records[i].dateStart}</td>
-                                    <td class="label-cell ReserveretTil">${response.records[i].expectedDateEnd}</td>
-                                    <td class="label-cell Note">${note}</td>
-                                    <td class="input-cell">
-                                        <button type="button" onclick="udlon(${response.records[i].ID})" class="no-ripple btn-primary">Udlån</button>
-                                    </td>
-                                    <td class="input-cell">
-                                        <button type="button" onclick="reservationerdeletetool(${response.records[i].ID}, ${response.records[i].equipmentID})" class="no-ripple btn-primary deletebtn">Slet</button>
-                                    </td>
-                                </tr>
-                                `;
-                        $$('.tableBody').html(innerHTML);
-                    }
-                });
-            },
-            fillTableToolName(toolName) {
-                oldrow = null;
-                let innerHTML = "";
-                var app = this.$app;
-                let note = '<i></i>'
-                // request user data on page init
-                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetSelectReservationToolname&param=${toolName}`, (response) => {
-                    // update component state with new state
-                    for (let i = 0; i < response.records.length; i++) {
-                        if(response.records[i].note != ""){
-                            note = `<i class="far fa-envelope" onclick="notepop('${response.records[i].note}')"></i>`
-                        }
-                        else{
-                            note = '<i></i>'
-                        }
-                        innerHTML +=
-                            `
-                                <tr>
-                                    <td style="display: none;">${response.records[i].ID}</td>
-                                    <td class="label-cell MedhjælperNavn">${response.records[i].userName}</td>
-                                    <td class="label-cell MedhjælperNummer">${response.records[i].userCardID}</td>
-                                    <td class="label-cell VærktøjsNavn">${response.records[i].equipmentNavn}</td>
-                                    <td class="label-cell Kategori">${response.records[i].equipmentKategori}</td>
-                                    <td class="label-cell Mærke">${response.records[i].equipmentBrand}</td>
-                                    <td class="label-cell Model">${response.records[i].equipmentModel}</td>
-                                    <td class="label-cell AssetTag">${response.records[i].equipmentAsset}</td>
-                                    <td class="label-cell Stand">${response.records[i].equipmentCondition}</td>
-                                    <td class="label-cell ReserveretFra">${response.records[i].dateStart}</td>
-                                    <td class="label-cell ReserveretTil">${response.records[i].expectedDateEnd}</td>
-                                    <td class="label-cell Note">${note}</td>
-                                    <td class="input-cell">
-                                        <button type="button" onclick="udlon(${response.records[i].ID})" class="no-ripple btn-primary">Udlån</button>
-                                    </td>
-                                    <td class="input-cell">
-                                        <button type="button" onclick="reservationerdeletetool(${response.records[i].ID}, ${response.records[i].equipmentID})" class="no-ripple btn-primary deletebtn">Slet</button>
-                                    </td>
-                                </tr>
-                                `;
-                        $$('.tableBody').html(innerHTML);
-                    }
-                });
+                        });
+                    });
             },
         },
-        // Component States
+        // on giver os mulighed for at gøre ting når siden reagere med forskellige events, fx init eller pagemounted
         on: {
+            //Kører når denne page melder at den er blevet mountet men ikke nødvendigvis er i view
             pageMounted: function (page) {
+                //Function til at fylde tabellen med alle reservationer fra databasen
                 this.fillTableDefault();
-                var autocompleteBrugerList = app.autocomplete.create({
-                    inputEl: '#reservationListBruger',
-                    openIn: 'dropdown',
-                    textProperty: "navn",
-                    valueProperty: "navn",
-                    limit: 5,
-                    source: (query, render) => {
-                        var results = [];
-                        if (query.length === 0) {
-                            render(results);
-                            return;
-                        }
-                        $$('#reservationListTools').prop({ disabled: true });
-                        // Find matched items
-                        for (var i = 0; i < this.oversigtListBruger.length; i++) {
-                            if (this.oversigtListBruger[i].navn.toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(this.oversigtListBruger[i]);
-                        }
-                        // Render items by passing array with result items
-                        render(results);
 
-                    },
-                    on: {
-                        closed: (ele) => {
-                            //Check hvis feltet bliver sat til empty 
-                            if (this.oversigtListBruger.filter(l => (l.navn === ele.$inputEl[0].value)).length == 0) { this.fillTableDefault(); $$('#reservationListTools').prop({ disabled: false }); }
-                        },
-                        change: (ele) => { if (ele[0]) { this.fillTableReserveName(ele[0].ID) } }
-                    },
-                });
-                var autocompleteToolList = app.autocomplete.create({
-                    inputEl: '#reservationListTools',
-                    openIn: 'dropdown',
-                    textProperty: "navn",
-                    valueProperty: "navn",
-                    limit: 5,
-                    source: (query, render) => {
-                        var results = [];
-                        if (query.length === 0) {
-                            render(results);
-                            return;
-                        }
-                        $$('#reservationListBruger').prop({ disabled: true });
-                        // Find matched items
-                        for (var i = 0; i < this.oversigtListTools.length; i++) {
-                            if (this.oversigtListTools[i].navn.toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(this.oversigtListTools[i]);
-                        }
-                        // Render items by passing array with result items
-                        render(results);
-
-                    },
-                    on: {
-                        closed: (ele) => {
-                            //Check hvis feltet bliver sat til empty 
-                            if (this.oversigtListTools.filter(l => (l.navn === ele.$inputEl[0].value)).length == 0) { this.fillTableDefault(); $$('#reservationListBruger').prop({ disabled: false }); }
-                        },
-                        change: (ele) => { if (ele[0]) { this.fillTableToolName(ele[0].navn) } }
-                    },
-                });
+                //Function som gør det muligt at søge i tabellen med værktøj
+                //Første param er selve input feltets ID
+                //Andet param er selve tabellens ID
+                //Tredje param er det nummer i tabellens TD som skal søges i, her er 1 det første felt, dvs værktøjsnavn
+                app.methods.searchFunction('reservationListBruger', 'reservationsTable', 1);
+                app.methods.searchFunction('reservationListTools', 'reservationsTable', 3);
             }
         },
     }

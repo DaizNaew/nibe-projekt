@@ -1,7 +1,7 @@
 <template>
     <div class="page" data-name="createuser">
         <div class="tableoverlay">
-            <div class="preloader color-multi"></div>
+            <div class="loader"></div>
         </div>
         <div id="gridwrapper">
             <div class="grid">
@@ -9,23 +9,25 @@
                     <!--Item 1-->
                     <div>
                         <form>
-                            <div class="form-row">
-                                <label for="Navn" class="col">Fulde Navn</label>
-                                <input id="Navn" type="text" required="required"
-                                    class="form-control form-control-sm col" />
-                            </div>
-                            <div class="form-row">
-                                <label for="Mobilnr" class="col">Mobil Nr</label>
-                                <input id="Mobilnr" type="text" class="form-control form-control-sm col" />
-                            </div>
-                            <div class="form-row">
-                                <label for="Adresse" class="col">Adresse</label>
-                                <input id="Adresse" type="text" class="form-control form-control-sm col" />
-                            </div>
-                            <div class="form-row">
-                                <label for="Medhjælpernr" class="col">Medhjælper Nr</label>
-                                <input id="Medhjælpernr" type="text" required="required"
-                                    class="form-control form-control-sm col" />
+                            <div class="textFields">
+                                <div class="form-row">
+                                    <label for="Navn" class="col">Fulde Navn</label>
+                                    <input id="Navn" type="text" required="required"
+                                        class="form-control form-control-sm col" />
+                                </div>
+                                <div class="form-row">
+                                    <label for="Mobilnr" class="col">Mobil Nr</label>
+                                    <input id="Mobilnr" type="text" class="form-control form-control-sm col" />
+                                </div>
+                                <div class="form-row">
+                                    <label for="Adresse" class="col">Adresse</label>
+                                    <input id="Adresse" type="text" class="form-control form-control-sm col" />
+                                </div>
+                                <div class="form-row">
+                                    <label for="Medhjælpernr" class="col">Medhjælper Nr</label>
+                                    <input id="Medhjælpernr" type="text" required="required"
+                                        class="form-control form-control-sm col" />
+                                </div>
                             </div>
 
                             <div class="form-row">
@@ -87,7 +89,7 @@
                             </div>
                         </div>
                         <div class="tableFixHead" style="max-height: 475px !important">
-                            <table class="table fixed_header" style="background-color: #c5d9ec33;">
+                            <table class="table fixed_header" style="background-color: #c5d9ec33;" id="userlistTable">
                                 <thead>
                                     <tr>
                                         <th scope="col" style="display: none;">#</th>
@@ -121,66 +123,106 @@
 </template>
 
 <script>
+    //Start på Framework7 og dens håndtering af internt data i dette page view
     return {
+        /**
+         * Det datasæt som framework bruger internt i dette view, de kan ikke tilgås udefra.
+         */
         data: function () {
             return {
-                oversigtListBruger: [],
-                userCertList: [],
-                userLiceList: [],
-                selectedCerts: [],
-                selectedLices: [],
+                //Array som indeholder table klasserne
                 tables: ['.licenseTable', '.certificateTable'],
+                //Array som indeholder navnene på stored procedures
                 spNames: ['sp_InsertIntoUK', 'sp_InsertIntoUC'],
             };
         },
-        // Component Methods
+        // Framework7 Component Methods
         methods: {
+            /**
+             * Denne Funktion er til at nulstille alle input felter og elementer på siden
+             */
             resetfields: function () {
+                //Store alt hvad this indeholder i en temp variable
                 self = this;
+                //Prompter brugeren for at sikre os at knappen ikke blev trykket på ved et uheld
                 app.dialog.confirm('Er du sikker på at du vil nulstille alle felter?', 'Nulstil Felter', function () {
-                    let inputs = $$('form').find('input');
+                    // Finder alle input felter i vores form på siden
+                    let inputs = $$('.textFields').find('input');
+                    //Sætter inputs til ""
                     inputs.val('');
+                    //Sætter brugertype til 1 (som er default)
                     document.getElementById("Brugertype").value = "1";
+                    //Disabler update knappen
                     document.getElementById("update").disabled = true;
+                    //Enabler insert knappen
                     document.getElementById("insert").disabled = false;
 
+                    //Vi looper igennem hvert table i "tables" arrayet
                     self.tables.forEach(table => {
+                        //Vi bruger filter til at finde alle elementer fra table
                         $$(table).filter(function (index, e) {
-                            $$(e.children).find('input[type="checkbox"]').prop('checked', false);
-                            $$(e.children).css('background-color', '');
-                            $$(e.children).find('input[type="checkbox"]').removeClass('selected');
+                            isChecked = $$(e.children).find('input[type="checkbox"]').prop('checked');
+                            if(isChecked) {
+                                //Unchecker alle checkboxes
+                                $$(e.children).find('input[type="checkbox"]').prop('checked', false);
+                                //Fjerner alle highlights i tabellenerne
+                                $$(e.children).css('background-color', '');
+                                //Fjerner selected klassen fra alle elementer
+                                $$(e.children).find('input[type="checkbox"]').removeClass('selected');
+                            }
                         });
                     });
                 });
             },
+            /**
+             * Funktion der bruges til at slette brugere med
+            **/
             deletetool: () => {
+                //Finder alle radio buttons ind i "tableBody"
                 var checkBoxObj = $$('.tableBody').find('input[type="radio"]');
+                //Prompter brugeren for at sikre os at knappen ikke blev trykket på ved et uheld
                 app.dialog.confirm('Er du sikker på at du vil slette denne bruger fra databasen?', 'Slet Bruger', function () {
+                    //Vi looper igennem hvert element
                     checkBoxObj.forEach(element => {
+                        //Hvis elementet er checkede
                         if (element.checked) {
+                            //Kalder vi et endpoint med IDet fra elementet som var checkede
                             app.request.getJSON(`${app.data['serverip']}functions/users/delete.php?id=${element.value}`, (data) => {
+                                //Hvis vi for det forventet svar fra endpointed
                                 if (data.result == 1) {
+                                    //Henter navnet på brugeren ud fra det checkede element
                                     let delbrugerNavn = element.parentElement.parentElement.children[1].innerText;
+                                    //Prompter brugeren med at brugeren blev slettet
                                     app.dialog.alert(`Brugeren (<span style='color: green; font-weight: bold;'>${delbrugerNavn}</span>) blev slettet fra databasen.`, "Slet Bruger", function () {
-                                        app.methods.addToLog(`${app.data['userID']}`, `Slettet brugeren ${delbrugerNavn}`);
+                                        //Tilføjet handlingen til loggen
+                                        app.methods.addToLog(`204`, `Slettet brugeren ${delbrugerNavn}`);
+                                        //Refresher siden
                                         app.views.main.router.navigate("/createuser/", { reloadCurrent: true, });
                                     });
+                                    //Hvis ikke endpointed giver det forventet svar
                                 } else {
+                                    //Prompter brugeren med at noget gik kaldt
                                     app.dialog.alert("Brugeren blev <span style='color: red; font-weight: bold;'>IKKE</span> slettet fra databasen.", "Slet Bruger");
                                 }
-                            });
+                            },function(e, e2){});
                         }
                     });
                 })
             },
+            /**
+             * Funktion der bruges til at oprette en ny bruger med
+            **/
             inserttool: function async() {
+                //Henter alt data som brugeren indtastede og lægger dem i variabler
                 let newNavn = document.getElementById('Navn').value;
                 let newMobilnr = document.getElementById('Mobilnr').value;
                 let newAdresse = document.getElementById('Adresse').value;
                 let newMedhjælpernr = document.getElementById('Medhjælpernr').value;
                 let gruppeID = document.getElementById('Brugertype').selectedIndex + 1;
+                //Store this i en variable så den kan bruges senere
                 self = this;
 
+                //Checker at de required felter ikke er tomme
                 if (newNavn == "") {
                     app.dialog.alert("Navn feltet må ikke være tomt.", "Opret Bruger");
                     return;
@@ -197,75 +239,120 @@
                     app.dialog.alert("Medhjælper Nr feltet må ikke være tomt.", "Opret Bruger");
                     return;
                 }
+                //Kalder endpoint med alt det stored data
                 app.request.post(`${app.data['serverip']}endpoint/user.php`, { name: newNavn, phoneNumber: newMobilnr, address: newAdresse, cardID: newMedhjælpernr, usergruppe: gruppeID }, function (response) {
+                    //Hvis vi får det forventet svar fra endpointed
                     if (response.result == 1) {
+                        //Laver en temp variable som bruges senere
                         i = 0;
+                        //Kalder endpoint med den nye brugeres kordID
                         app.request.getJSON(`${app.data['serverip']}functions/users/cardid.php?id=${newMedhjælpernr}`, (res) => {
+                            //Ligger den nylig oprettede brugers ID ind i variable
                             uID = res.records[0].ID;
-                            tables = ['.licenseTable', '.certificateTable'];
-                            tables.forEach(table => {
+                            //Vi looper igennem hvert table i "tables" arrayet
+                            self.tables.forEach(table => {
+                                //Vi bruger filter til at finde alle elemter fra table
                                 $$(table).find('input[type="checkbox"]').filter(function (index, el) {
+                                    //Hvis elementer har klassen "selected"
                                     if ($$(el).hasClass('selected')) {
+                                        //Kalder vores funktion som asigner brugeren de valgte certifikater/kørekort i databasen
                                         self.insertCert(self.spNames[i], uID, el.value);
                                     }
                                 });
                                 i++;
                             });
                         })
-                        app.methods.addToLog(`${app.data['userID']}`, `Oprettet brugeren ${newNavn}`);
+                        //Logger at brugeren blev oprettede
+                        app.methods.addToLog(`204`, `Oprettet brugeren ${newNavn}`);
+                        //Prompter brugeren med at brugeren var oprettede
                         app.dialog.alert(`Brugeren (<span style="color: green; font-weight: bold;">${newNavn}</span>) blev tilføjet til databasen.`, "Opret Bruger", function () {
+                        //Refresher siden
                         app.views.main.router.navigate("/createuser/", { reloadCurrent: true, });
                         });
-
-                    } else {
-                        app.dialog.alert(`${newNavn} blev <span style='color: red; font-weight: bold;'>IKKE</span> tilføjet til databasen.`, "Opret Bruger");
-                        return;
-                    }
-                }, function (e, e2) {
-                }, "json");
+                        //Hvis vi ikke får det forventet svar fra endpointed
+                        } else {
+                            //prompter brugeren med at den nye bruger ikke blev oprettede
+                            app.dialog.alert(`${newNavn} blev <span style='color: red; font-weight: bold;'>IKKE</span> tilføjet til databasen.`, "Opret Bruger");
+                            //returner
+                            return;
+                        }
+                    }, function (e, e2) {
+                    }, "json");
 
             },
+            /**
+             * Funktion der bruges til at tage den valgte bruger fra brugerlisten og klaske dens data ind i diverse felter
+            **/
             edittool: function () {
+                 //Finder alle radio buttons inde i "tableBody"
                 var checkBoxObj = $$('.tableBody').find('input[type="radio"]');
-                let inputFields = $$('form').find(`input[type="text"]`);
+                //Enabler update knappen
                 $$('form').find('#update').prop('disabled', false);
+                //Disabler insert knappen
                 $$('form').find('#insert').prop('disabled', true);
+                 //Vi looper igennem hvert element
                 checkBoxObj.forEach(async (element) => {
+                    //Hvis elementet er checked
                     if (element.checked) {
+                        //Henter IDet på brugeren ud fra det checkede element
                         let userID = $$(element.parentElement.parentElement).find('input[type="radio"]').val();
-
+                        //Kalder endpoint med brugerens ID for at få alle brugerens certifikater
                         app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetUC&param=${userID}`, (response) => {
+                            // Check om der findes nogle certifikater til den valgte bruger
+                            if(response.result != 1) return;
+                            //Store endpoint data i en temp variable
                             let thong = response.records;
+                                //Vi bruger filter til at finde alle checkboxes fra tables[1]
                                 $$(this.tables[1]).find('input[type="checkbox"]').filter(function (index, el) {
+                                    //Looper igennem hvert element
                                     thong.forEach(thing => {
+                                        //Checker om elementet's value matcher endpoint elementet
                                         if(el.value == thing.certifikatID){
+                                            //Sætter elementet til at være checkede
                                             el.checked = true;
+                                            //Giver elementet klassen "selected"
                                             el.className = el.className + "selected";
+                                            //Highlighter elementet
                                             el.parentElement.parentElement.style.backgroundColor = "#a8baad";
                                         }
                                     })
                                 });
                         });
+                        //Kalder endpoint med brugerens ID for at få alle brugerens kørekort
                         app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetUK&param=${userID}`, (response) => {
+                            // Check om der findes nogle kørekort til den valgte bruger
+                            if(response.result != 1) return;
+                            //Store endpoint data i en temp variable
                             let thong = response.records;
+                            //Vi bruger filter til at finde alle checkboxes fra tables[0]
                                 $$(this.tables[0]).find('input[type="checkbox"]').filter(function (index, el) {
+                                     //Looper igennem hvert element
                                     thong.forEach(thing => {
+                                        //Checker om elementet's value matcher endpoint elementet
                                         if(el.value == thing.kørekortID){
+                                            //Sætter elementet til at være checkede
                                             el.checked = true;
+                                            //Giver elementet klassen "selected"
                                             el.className = el.className + "selected";
+                                            //Highlighter elementet
                                             el.parentElement.parentElement.style.backgroundColor = "#a8baad";
                                         }
                                     })
                                 });
                         });
-
+                        //Henter value ud fra den checked radio button og lægger den i et hidden felt med IDet "editID"
                         $$('form').find('#editID').val($$(element.parentElement.parentElement).find('input[type="radio"]').val());
+                        //Ligger alle TD med klassen "label-cell" i en temp variable
                         let cells = $$(element.parentElement.parentElement).find('.label-cell');
+                        //Looper igennem alle label cells
                         cells.forEach(element => {
-                            input = $$(inputFields).find(`${element.classList[1]}`).val();
+                            //Henter alt dataen ud fra elementet (fra brugerlisten) og ligger i en variable
                             input_data = element.firstChild.data;
+                            //Ligger dataen (fra brugerlisten) ind i felterne til redigering
                             $$('form').find(`#${element.classList[1]}`).val(input_data);
+                            //Hvis elementet er brugertype
                             if (element.classList[1] == 'Brugertype') {
+                                //Find brugertype feltet lig den udhentet value i feltet
                                 $$('form').find(`#${element.classList[1]}`).val(element.firstChild.parentElement.attributes[2].value);
                             }
                         })
@@ -274,7 +361,11 @@
                 });
                 
             },
+            /**
+             * Funktion der bruges til at pushe ændringer af en bruger til databasen
+            **/
             updatetool: function () {
+                //Henter alt data som brugeren indtastede og lægger dem i variabler
                 let newUserID = document.getElementById('editID').value;
                 let newNavn = document.getElementById('Navn').value;
                 let newMobilnr = document.getElementById('Mobilnr').value;
@@ -283,8 +374,10 @@
                 let gruppeID = document.getElementById('Brugertype').selectedIndex + 1;
                 let spInsertNames = ['sp_InsertIntoUK', 'sp_InsertIntoUC'];
                 let spDeleteNames = ['sp_DeleteUK', 'sp_DeleteUC'];
+                //Store this i en variable så den kan bruges senere
                 self = this;
 
+                //Checker at de required felter ikke er tomme
                 if (newNavn == "") {
                     app.dialog.alert("Navn feltet må ikke være tomt.", "Opret Bruger");
                     return;
@@ -302,32 +395,43 @@
                     return;
                 }
 
+                //Kalder endpoint med alt det stored data
                 app.request.post(`${app.data['serverip']}functions/users/update.php`, { ID: newUserID, name: newNavn, phoneNumber: newMobilnr, address: newAdresse, cardID: newMedhjælpernr, usergruppe: gruppeID }, function (response) {
+                    //Laver 2 temp variabler som bruges i loops senere
                     i = 0;
                     o = 0;
+                    //Kalder endpoint med brugeres kordID
                     app.request.getJSON(`${app.data['serverip']}functions/users/cardid.php?id=${newMedhjælpernr}`, (res) => {
+                        //Ligger brugers ID ind i variable
                         uID = res.records[0].ID;
-                        tables = ['.licenseTable', '.certificateTable'];
-
-                        tables.forEach(table1 => {
+                        //Vi looper igennem hvert table i "tables" arrayet
+                        self.tables.forEach(table1 => {
+                            //Vi bruger filter til at finde alle checkboxes fra table1
                             $$(table1).find('input[type="checkbox"]').filter(function (index1, el1) {
+                                //Hvis elementet ikke har klassen "selected"
                                 if ($$(el1).hasClass('selected') == false) {
+                                    //Sletter alle kørekort/certifkater som ikke var selected
                                     self.deleteCert(spDeleteNames[o], uID, el1.value);
                                 }
                             });
                             o++;
                         });
 
-                        tables.forEach(table2 => {
+                        //Vi looper igennem hvert table i "tables" arrayet
+                        self.tables.forEach(table2 => {
+                            //Vi bruger filter til at finde alle checkboxes fra table2
                             $$(table2).find('input[type="checkbox"]').filter(function (index2, el2) {
+                                //Hvis elementet har klassen "selected"
                                 if ($$(el2).hasClass('selected')) {
+                                    //Asigner alle de selected certifikater/kørekort til brugeren
                                     self.insertCert(spInsertNames[i], uID, el2.value);
                                 }
                             });
                             i++;
                         });
-                        
-                        app.methods.addToLog(`${app.data['userID']}`, `Ændret på brugeren ${newNavn}`);
+                        //Logger handleringerne
+                        app.methods.addToLog(`204`, `Ændret på brugeren ${newNavn}`);
+                        //Refresher siden
                         app.views.main.router.navigate("/createuser/", { reloadCurrent: true, });
                     })
                     
@@ -335,15 +439,18 @@
                 }, "json");
 
             },
+            /**
+             * Denne funktion sørger for at query databasen via vores restAPI, og formatere selve responset og indsætte det i tabellen
+             */
             fillTableDefault: function () {
+                //Viser preloaderen
                 $$('.tableoverlay').show()
+                //Temp variable som bruges til at store vores table data i indtil det bliver indsat i tabellen
                 let innerHTML = "";
-                var app = this.$app;
-                let o = 0, p = 0;
 
-                // request user data on page init
+                //Kalder et endpoint som returner alle bruger fra DB'en
                 app.request.getJSON(`${app.data['serverip']}endpoint/user.php?id=-1`, (response) => {
-                    // update component state with new state
+                    // For loop for at sikre at vi tager alle responses fra databasen
                     for (let i = 0; i < response.records.length; i++) {
                         innerHTML +=
                             `
@@ -360,53 +467,26 @@
                                 </td>
                             </tr>
                             `;
+                        //Tager alt data fra vores temp variable og pusher til vores table
                         $$('.userTable').html(innerHTML);
-                        if (i !== 0) {
-                            if(!this.oversigtListBruger.some(liste => liste.navn == response.records[i].userName )) {
-                                    this.oversigtListBruger.push({ navn: `${response.records[i].userName}`, ID: `${response.records[i].userCardID}` });
-                                }
-                            } else {
-                                this.oversigtListBruger.push({ navn: `${response.records[i].userName}`, ID: `${response.records[i].userCardID}` });
-                            }
+                        //Hvis vi har loopet igennem alle elementer i arrayet
                         if(i+1 == response.records.length ){
+                            //Fjerner preloaderen
                             $$('.tableoverlay').hide();
                         }
                     }
                 });
             },
-            fillTableUserID: function (id) {
-                let innerHTML = "";
-                var app = this.$app;
-                // request user data on page init
-                app.request.getJSON(`${app.data['serverip']}endpoint/user.php?id=${id}`, (response) => {
-                    // update component state with new state
-                    for (let i = 0; i < response.records.length; i++) {
-                        innerHTML +=
-                            `
-                            <tr>
-                                <td style="display: none;">${response.records[i].ID}</td>
-                                <td class="label-cell Navn">${response.records[i].name}</td>
-                                <td class="label-cell Mobilnr">${response.records[i].phoneNumber}</td>
-                                <td class="label-cell Adresse">${response.records[i].address}</td>
-                                <td class="label-cell Medhjælpernr">${response.records[i].cardID}</td>
-                                <td class="label-cell Brugertype" style="display: none;" value="${response.records[i].usergruppe}">${response.records[i].usergruppetitle}</td>
-                                <td class="radio-cell">
-                                    <input type="radio" value="${response.records[i].ID}" name="selectedTool"/>
-                                    <i class="icon-radio"></i>
-                                </td>
-                            </tr>
-                            `;
-                        $$('.userTable').html(innerHTML);
-                    }
-                });
-            },
 
+            /**
+             * Denne funktion sørger for at query databasen via vores restAPI, og formatere selve responset og indsætte det i tabellen
+             */
             fillCertTable: function () {
+                //Temp variable som bruges til at store vores table data i indtil det bliver indsat i tabellen
                 let innerHTML = "";
-                var app = this.$app;
-                // request driverlicense on page init
+                //Kalder et endpoint som returner alle certifikater fra DB'en
                 app.request.getJSON(`${app.data['serverip']}endpoint/certificate.php?id=-1&tableid=0`, (response) => {
-                    // update component state with new state
+                    // For loop for at sikre at vi tager alle responses fra databasen
                     for (let i = 0; i < response.certifikat.length; i++) {
                         innerHTML +=
                             `
@@ -418,17 +498,21 @@
                                 </td>
                             </tr>
                             `;
+                        //Tager alt data fra vores temp variable og pusher til vores table
                         $$('.certificateTable').html(innerHTML);
                     }
                 });
             },
 
+            /**
+             * Denne funktion sørger for at query databasen via vores restAPI, og formatere selve responset og indsætte det i tabellen
+             */
             fillLiceTable: function () {
+                //Temp variable som bruges til at store vores table data i indtil det bliver indsat i tabellen
                 let innerHTML = "";
-                var app = this.$app;
-                // request license data on page init
+                //Kalder et endpoint som returner alle kørekort fra DB'en
                 app.request.getJSON(`${app.data['serverip']}endpoint/certificate.php?id=-1&tableid=1`, (response) => {
-                    // update component state with new state
+                    // For loop for at sikre at vi tager alle responses fra databasen
                     for (let i = 0; i < response.kørekort.length; i++) {
                         innerHTML +=
                             `
@@ -440,111 +524,114 @@
                                 </td>
                             </tr>
                             `;
+                        //Tager alt data fra vores temp variable og pusher til vores table
                         $$('.licenseTable').html(innerHTML);
                     }
                 });
             },
 
+            /**
+             * Funktion der bruges til at asigne certifikater/kørekort til en bruger i databasen
+             * @param {string} sp Den stored procedure vi vil benytte os af
+             * @param {int} userID IDet på brugeren certifikatet/kørekortet skal asignes til
+             * @param {int} paramID IDet på certifikatet/kørekortet
+             */
             insertCert: function (sp, userID, paramID) {
                 //sp_InsertIntoUC  -  CERT
                 //sp_InsertIntoUK  -  Kørekort
+                //Kalder et endpoint som asigner et certifikat/kørekort til en bruger i databasen
                 app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=${sp}&param=${userID},${paramID}`, (response) => {
                 }, function (e) {
                 });
             },
-
+            /**
+             * Funktion der bruges til at fjerne certifikater/kørekort fra en bruger i databasen
+             * @param {string} sp Den stored procedure vi vil benytte os af
+             * @param {int} userID IDet på brugeren certifikatet/kørekortet skal fjernes fra
+             * @param {int} paramID IDet på certifikatet/kørekortet
+             */
             deleteCert: function (sp, userID, paramID) {
-                //sp_DeleteUC  -  CERT
+                //sp_DeleteUC   -  CERT
                 //sp_DeleteoUK  -  Kørekort
+                //Kalder et endpoint som fjerner et certifikat/kørekort fra en bruger i databasen
                 app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=${sp}&param=${userID},${paramID}`, (response) => {
                 }, function (e) {
                 });
             },
-
-            getCert: function (sp, userID) {
-                return app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=${sp}&param=${userID}`, (response) => {
-                    
-                });
-            }
         },
-        // Component States
+        //On giver os mulighed for at reagerer på events
         on: {
+            //pageMounted trigger når siden bliver insat i DOMen
             pageMounted: function (page) {
+                //Viser preloaderen
                 $$('.tableoverlay').show();
+                //Variable der bruges til at holde styr på det tidligere highlighted row
                 var userOldRow = null;
-
-                var app = this.$app;
-
-                this.oversigtListBruger.length = 0;
+                //Kalder et endpoint som returner alle usergrupper fra DB'en
                 app.request.getJSON(`${app.data['serverip']}endpoint/usergroup.php?id=-1`, (response) => {
+                    //Looper igennem grupperne
                     for (group of response.usergroups) {
+                        //Smider dem ind som en option i vores dropdown menu
                         $$('#Brugertype').append(`<option value="${group.ID}">${group.title}</option>`)
                     }
                 });
-
+                //Funktion til at fylde tabellen med alle brugere fra databasen
                 this.fillTableDefault();
+                //Funktion til at fylde tabellen med alle kørekort fra databasen
                 this.fillLiceTable();
+                //Funktion til at fylde tabellen med alle certifikater fra databasen
                 this.fillCertTable();
 
+                //Funktion som gør det muligt at søge i tabellen med bruger
+                //Første param er selve input feltets ID
+                //Andet param er selve tabellens ID
+                //Tredje param er det nummer i tabellens TD som skal søges i, her er 1 det første felt, dvs værktøjsnavn
+                app.methods.searchFunction('AddBrugerNavn', 'userlistTable', 1);
+
+                //Onclick funktion på alle rows i bruger tabellen
                 $$('.userTable').on('click', (e) => {
+                    //Hvis ikke der har vært klikkede på et row
                     if (userOldRow == null) {
+                        //Sætter oldRow til current row
                         userOldRow = e;
                     } else {
+                        //Hvis oldrow er sat så sætter vi den til ikke længere være highlighted
                         $$(userOldRow.target.parentElement).css('background-color', '');
+                        //Sætter oldrow til current row
                         userOldRow = e;
                     }
+                    //Finder den checkede radio box
                     $$(e.target.parentElement).find('input[type="radio"]').prop('checked', true);
+                    //Highlighter den
                     $$(e.target.parentElement).css('background-color', '#a8baad');
 
                 });
 
+                //Looper igennem tables arrayet
                 this.tables.forEach(table => {
+                    //Onclick på current table
                     $$(table).on('click', (e) => {
+                        //Checker om current row er checked eller ej og ligger boolean i en variable
                         isChecked = $$(e.target.parentElement).find('input[type="checkbox"]').prop('checked');
+                        //Hvis ikke den er checked
                         if (!isChecked) {
+                            //Sæt den til at være checked
                             $$(e.target.parentElement).find('input[type="checkbox"]').prop('checked', true);
+                            //Highlight den
                             $$(e.target.parentElement).css('background-color', '#a8baad');
+                            //Giv den klassen "selected"
                             $$(e.target.parentElement).find('input[type="checkbox"]').addClass('selected');
+                        //Hvis den er checked
                         } else {
+                            //Sæt den til at være unchecked
                             $$(e.target.parentElement).find('input[type="checkbox"]').prop('checked', false);
+                            //Fjern highlight
                             $$(e.target.parentElement).css('background-color', '');
+                            //Fjern "selected" klassen
                             $$(e.target.parentElement).find('input[type="checkbox"]').removeClass('selected');
                         }
                     });
                 })
-                var autocompleteBrugerList = app.autocomplete.create({
-                    inputEl: '#AddBrugerNavn',
-                    openIn: 'dropdown',
-                    textProperty: "navn",
-                    valueProperty: "navn",
-                    limit: 5,
-                    source: (query, render) => {
-                        var results = [];
-                        if (query.length === 0) {
-                            render(results);
-                            return;
-                        }
-                        //$$('#oversigtListTools').prop({ disabled:true });
-                        // Find matched items
-                        for (var i = 0; i < this.oversigtListBruger.length; i++) {
-                            if (this.oversigtListBruger[i].navn.toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(this.oversigtListBruger[i]);
-                        }
-                        // Render items by passing array with result items
-                        render(results);
-
-                    },
-                    on: {
-                        closed: (ele) => {
-                            //Check hvis feltet bliver sat til empty 
-                            if (this.oversigtListBruger.filter(l => (l.navn === ele.$inputEl[0].value)).length == 0) { this.fillTableDefault(); }
-                        },
-                        change: (ele) => {
-                            if (ele[0]) {
-                                this.fillTableUserID(ele[0].ID)
-                            }
-                        }
-                    },
-                });
             }
         },
     }

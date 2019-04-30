@@ -1,7 +1,7 @@
 <template>
     <div class="page" data-name="tooladdpan">
         <div class="tableoverlay">
-            <div class="preloader color-multi"></div>
+            <div class="loader"></div>
         </div>
         <div id="gridwrapper">
             <div class="grid">
@@ -65,15 +65,15 @@
                 </div>
                 <div style="padding: 25px"><!--Item 2-->
                     <div>
-                            <div class="form-row" style="text-align: left">
-                                    <label class="col">Værktøjs navn</label>
-                                    <div class="input-wrapper">
-                                        <input type="text" class="form-control form-control-sm col input-format" id="AddVærktøjsNavn">
-                                        <span><i class="fas fa-search icon-format"></i></span>
-                                    </div>
-                                </div>
+                        <div class="form-row" style="text-align: left">
+                            <label class="col">Værktøjs navn</label>
+                            <div class="input-wrapper">
+                                <input type="text" class="form-control form-control-sm col input-format" id="AddVærktøjsNavn">
+                                <span><i class="fas fa-search icon-format"></i></span>
+                            </div>
+                        </div>
                         <div class="tableFixHead" style="max-height: 450px;">
-                            <table class="table fixed_header" style="width:auto; background-color: #c5d9ec33;">
+                            <table class="table fixed_header" style="width:auto; background-color: #c5d9ec33;" id="toolTable">
                                 <thead>
                                     <tr>
                                         <th scope="col" style="display: none;">#</th>
@@ -107,41 +107,73 @@
     </template>
 
     <script>
+        //Start på Framework7 og dens håndtering af internt data i dette page view
         return {
+            /**
+             * Det datasæt som framework bruger internt i dette view, de kan ikke tilgås udefra.
+             */
             data: function () {
                 return {
-                    oversigtListTools: [],
                 };
             },
-        // Component Methods
+            // Framework7 Component Methods
             methods: {
+                /**
+                 * Denne Funktion er til at nulstille alle input felter og elementer på siden
+                 */
                 resetfields : () => {
+                    //Prompter brugeren for at sikre os at knappen ikke blev trykket på ved et uheld
                     app.dialog.confirm('Er du sikker på at du vil nulstille alle felter?', 'Nulstil Felter', function(){
+                        // Finder alle input felter i vores form på siden
                         let inputs = $$('form').find('input');
+                        //Sætter inputs til ""
                         inputs.val('');
+                        //Enabler antal feltet
                         $$('form').find('#Antal').prop('disabled', false);
+                        //Disabler opdater knappen
                         $$('form').find('#update').prop('disabled', true);
+                        //Enabler Opret knappen
                         $$('form').find('#insert').prop('disabled', false);
+                        //Sætter kategori dropdownen til default
                         $$('form').find(`#Kategori`).val(0);
+                        //Sætter certifikats krav til ingen
                         $$('form').find(`#certKrav`).val("-1");
+                        //Sætter kørekorts krav til ingen
                         $$('form').find(`#kortKrav`).val("-1");
                     });
                 },
+                /**
+                 * Denne Funktion bruges til at slette værktøj med
+                 */
                 deletetool : () => {
+                    //Prompter brugeren for at sikre os at knappen ikke blev trykket på ved et uheld
                     app.dialog.confirm('Er du sikker på at du vil slette dette værktøj fra databasen?', 'Slet Værktøj', () => {
+                        //Finder radio knapper i "tableBody"
                         var checkBoxObj = $$('.tableBody').find('input[type="radio"]');
+                        //Looper igennem hvert element
                         checkBoxObj.forEach(element => {
+                            //Hvis radio knappen er checked
                             if(element.checked) {
+                                //Kalder et endpoint for at slette certifikats krav
                                 app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_DeleteEC&param=${element.value}`, (response) =>{})
+                                //Kalder et endpoint for at slette kørekorts krav
                                 app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_DeleteEK&param=${element.value}`, (response) =>{})
+                                //Kalder et endpoint for at slette værktøjet
                                 app.request.getJSON(`${app.data['serverip']}functions/tools/delete.php?id=${element.value}`, (data) => {
+                                    //Hvis vi får det forventet svar fra endpoint
                                     if(data.result == 1) {
+                                        //Logger at værktøjet blev slettet
                                         app.methods.addToLog(`${app.data['userID']}`, `Slettet værktøjet ${element.parentElement.parentElement.children[1].innerHTML} med assetTag (${element.parentElement.parentElement.children[6].innerHTML})`);
+                                        //Prompter brugeren med en besked om at certifikatet blev slettet
                                         app.dialog.alert('Værktøjet blev slettet fra databasen', 'Success af sletning', () => {
+                                            //Refresher siden
                                             app.views.main.router.navigate("/tooladdpan/", {reloadCurrent: true,});
                                         });
+                                    //Hvis ikke vi får det forventet svar fra endpointed
                                     } else {
+                                        //Prompter brugeren om at noget gik galt
                                         app.dialog.alert('Værktøjet blev IKKE slettet fra databasen', 'Fejl af sletning', () => {
+                                            //Refresher siden
                                             app.views.main.router.navigate("/tooladdpan/", {reloadCurrent: true,});
                                         });
                                     }
@@ -150,10 +182,15 @@
                         });
                     });
                 },
+                /**
+                 * Denne Funktion bruges til at oprette nye certifikater/kørekort
+                 */
                 inserttool : async () => {
-
+                    //Henter certifikat IDet ud på certifikat kravet (Hvis der er et)
                     let certkravID = $$('#certKrav').val();
+                    //Henter kørekort IDet ud på kørekort kravet (Hvis der er et)
                     let kortkravID = $$('#kortKrav').val();
+                    //Opretter et ny objekt som indeholder alle properties på værktøjet
                     let tool = {
                         activeName: $$('#aktivNavn').val(),
                         brandName:  $$('#Mærke').val(),
@@ -163,7 +200,7 @@
                         condition:  $$('#Stand').val(),
                         categoryID:  $$('#Kategori').val(),
                     };
-
+                    //Checker at alle required felter ikke er tomme
                     if(tool.activeName == ""){
                     app.dialog.alert("Værktøj Navn feltet må ikke være tomt.", "Opret værktøj");
                     return;
@@ -180,41 +217,64 @@
                         app.dialog.alert("Antal feltet må ikke være tomt.", "Opret værktøj");
                         return;
                     }
-
+                    //Temp variable der bruges til at indholde data fra endpointed
                     let dat;
+                    //Variable der bruges til at holde vores toastbesked
                     let toastMessage = '';
+                    //Variable der bruges til at holde IDet på det nyligt oprettet værktøj
                     let newToolID;
-
+                    //Laver et promise for at sikre os at alt her i bliver kørt i sync
                     let prom = new Promise((resolve, reject) => {
+                        //Looper igennem hvert element
                         for(let i = 1; i <= $$('#Antal').val(); i++) {
+                        //Kalder et endpoint med objektet som indeholder alle properties for at oprette en nyt stykke værktøj
                         app.request.post(`${app.data['serverip']}endpoint/equipment.php`, tool, (data) => {
+                            //Logger vores handling
                             app.methods.addToLog(`${app.data['userID']}`, `Oprettet værktøjet ${tool.activeName} med assetTag (${tool.assetTag})`);
+                            //Gemmer endpoint dataen i vores temp variable (Så det kan bruges uden for endpoint scoped)
                             dat = data;
-
+                            //Hvis der er enten et certifikats krav eller kørekorts krav enter vi det her scope
                             if(certkravID != -1 || kortkravID != -1){
+                                //Kalder et endpoint med værktøjets assetTag for at få værktøjets DB ID
                                 app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetNewestEquipmentID&param=${tool.assetTag}`, (response) =>{
+                                //Gemmer det nyligt oprettet værktøjs ID i en variable
                                 newToolID = response.records[0].ID;
+                                //Hvis der er et certifikat krav
                                 if(certkravID != -1){
+                                    //Kalder et endpoint med værktøjs IDet og certifikats IDet
                                     app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_InsertIntoEC&param=${newToolID},${certkravID}`, (response) =>{
+                                        //Hvis ikke der er et kørekorts krav
                                         if(kortkravID == -1){
+                                            //Resolver promise
                                             resolve();
+                                        //Hvis der er et kørekorts krav
                                         }else{
+                                            //Kalder et endpoint med værktøjs IDet og kørekort IDet
                                             app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_InsertIntoEK&param=${newToolID},${kortkravID}`, (response) =>{
+                                                //Resolver promise
                                                 resolve();
                                             })
                                         }
                                     },function(e){console.error(e)})
+                                //Hvis ikke der er et certifikats krav
                                 }else{
+                                    //Hvis der ikke er kørekorts krav
                                     if(kortkravID == -1){
+                                            //Resolver promise
                                             resolve();
+                                        //Hvis der er kørekorts krav
                                         }else{
+                                            //Kalder endpoint med værktøjs IDet og kørekort IDet
                                             app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_InsertIntoEK&param=${newToolID},${kortkravID}`, (response) =>{
+                                                //Resolver promise
                                                 resolve();
                                             })
                                         }
                                 }
                                 })
+                            //Hvis der hverken er certifikat eller kørekorts krav
                             }else{
+                                //Resolver promise
                                 resolve();
                             }
                             
@@ -225,51 +285,77 @@
                         
                         }
                     })
-
+                    //Afventer vores promise
                     await prom;
-
+                        //Hvis vi for det forventet svar fra endpointed
                         if(dat.result == 1) {
+                            //Sætter toast besked
                             toastMessage = 'Værktøjet blev sat ind i databasen';
+                        //Hvis vi ikke for det forventet svar fra endpointed
                         } else {
+                            //Sætter toastbesked
                             toastMessage = 'Værktøjet blev IKKE sat ind i databasen'
                         }
+                        //Prompter brugeren med vores toastbesked
                         app.dialog.alert(toastMessage, 'Opret Værktøj', () => {
+                            //Refresher siden
                             app.views.main.router.navigate("/tooladdpan/", {reloadCurrent: true,});
                         });
                     
                 },
+                /**
+                 * Funktion der bruges til at tage det valgte værktøj fra listen og klaske dens data ind i diverse felter 
+                 */
                 edittool : () => {
+                    //Finder radio knapper i "tableBody"
                     var checkBoxObj = $$('.tableBody').find('input[type="radio"]');
+                    //Finder text felterne i "form"
                     let inputFields = $$('form').find(`input[type="text"]`);
-                    $$('form').find('#Antal').prop('disabled', true)
+                    //Disabler antal feltet
+                    $$('form').find('#Antal').prop('disabled', true);
+                    //Enabler opdater knappen
                     $$('form').find('#update').prop('disabled', false);
+                    //Disabler opret knappen
                     $$('form').find('#insert').prop('disabled', true);
+                        //Looper igennem hvert element
                         checkBoxObj.forEach(element => {
+                            //Hvis elementet er checked
                             if(element.checked) {
+                                //Finder det hidden felt med IDet "editID" og sætter dens værdi til det checked elements ID
                                 $$('form').find('#editID').val($$(element.parentElement.parentElement).find('input[type="radio"]').val());
+                                //Ligger det hidden felts værdi i en variable
                                 let equipmentID = $$('form').find('#editID').val()
-
+                                //Kalder et endpoint med værktøjs IDet for at finde certifikats krav (hvis der er et)
                                 app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetSingleEquipmentCertifikat&param=${equipmentID}`, (response) => {
+                                    //Hvis der er et certifikats krav bliver krav feltet sat
                                     $$('form').find(`#certKrav`).val(response.records[0].certifikatID);
                                 },function(e, e2){
+                                    //Hvis ikke der er et krav bliver krav feltet sat til "Ingen"
                                     $$('form').find(`#certKrav`).val("-1");
                                 })
-
+                                //Kalder et endpoint med værktøjs IDet for at finde kørekorts krav (hvis der er et)
                                 app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetSingleEquipmentKørekort&param=${equipmentID}`, (response) => {
+                                    //Hvis der er et certifikats krav bliver krav feltet sat
                                     $$('form').find(`#kortKrav`).val(response.records[0].kørekortID);
                                 },function(e, e2){
+                                    //Hvis ikke der er et krav bliver krav feltet sat til "Ingen"
                                     $$('form').find(`#kortKrav`).val("-1");
                                 })
 
-
+                                //Finder alle label-cells og ligger i en variable
                                 let cells = $$(element.parentElement.parentElement).find('.label-cell');
+                                //Looper igennem hvert element
                                 cells.forEach(element => {
-                                    input = $$(inputFields).find(`${element.classList[1]}`).val();
+                                    //Hvis elementet har et child element
                                     if(element.firstChild != null){
+                                        //Henter alt dataen ud fra elementet (fra værktøjslisten) og ligger i en variable
                                         input_data = element.firstChild.data;
+                                        //Ligger dataen (fra værktøjslisten) ind i felterne til redigering
                                         $$('form').find(`#${element.classList[1]}`).val(input_data);
                                     }
+                                    //Hvis elementet er kategori
                                     if(element.classList[1] == 'Kategori') {
+                                        //Find kategori feltet lig den udhentet value i feltet
                                         $$('form').find(`#${element.classList[1]}`).val(element.firstChild.parentElement.attributes[1].value);
                                     }
                                 })
@@ -277,7 +363,11 @@
                             }
                         });
                 },
+                /**
+                 * Funktion der bruges til at pushe det redigeret værktøj til databasen
+                 */
                 updatetool : async () => {
+                    //Opretter et ny objekt som indeholder alle properties på værktøjet
                     let tool = {
                         activeName: $$('#aktivNavn').val(),
                         brandName:  $$('#Mærke').val(),
@@ -288,7 +378,7 @@
                         categoryID:  $$('#Kategori').val(),
                         ID: $$('#editID').val(),
                     };
-
+                    //Checker alle required felter ikke er tomme
                     if(tool.activeName == ""){
                     app.dialog.alert("Værktøj Navn feltet må ikke være tomt.", "Opret værktøj");
                     return;
@@ -301,44 +391,65 @@
                         app.dialog.alert("Værktøjs stand feltet må ikke være tomt.", "Opret værktøj");
                         return;
                     }
-
+                     //Temp variable der bruges til at indholde data fra endpointed
                     let dat;
+                    //Variable der bruges til at holde vores toastbesked
                     let toastMessage = '';
-
+                    //Laver et promise for at sikre os at alt her i bliver kørt i sync
                     let prom = new Promise((resolve, reject) => {
-
+                        //Kalder et endpoint med objektet som indeholder alle properties for at opdater værktøjet
                         app.request.post(`${app.data['serverip']}functions/tools/update.php`, tool, (data) => {
+                            //Logger handlingen
                             app.methods.addToLog(`${app.data['userID']}`, `Ændret værktøjet ${tool.activeName} med assetTag (${tool.assetTag})`);
+                            //Gemmer endpoint dataen i vores temp variable (Så det kan bruges uden for endpoint scoped)
                             dat = data;
+                            //Ligger IDer i variabler
                             let equipmentID = $$('form').find('#editID').val();
                             let certKravID = $$('form').find(`#certKrav`).val();
                             let kortKravID = $$('form').find(`#kortKrav`).val();
 
+                            //Kalder endpoint med værktøjs IDet for at slette alle certifikat krav
                             app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_DeleteEC&param=${equipmentID}`, (response) => {});
+                            //Kalder endpoint med værktøjs IDet for at slette alle kørekort krav
                             app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_DeleteEK&param=${equipmentID}`, (response) => {});
-
+                             //Hvis der er enten et certifikats krav eller kørekorts krav enter vi det her scope
                             if(certKravID != -1 || kortKravID != -1){
+                                //Hvis der er et certifikat krav
                                 if(certKravID != -1){
+                                    //Kalder et endpoint med værktøjs IDet og certifikats IDet
                                     app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_InsertIntoEC&param=${equipmentID},${certKravID}`, (response) =>{
+                                        //Hvis ikke der er et kørekorts krav
                                         if(kortKravID == -1){
+                                            //Resolver promise
                                             resolve();
+                                        //Hvis der er et kørekorts krav
                                         }else{
+                                            //Kalder et endpoint med værktøjs IDet og kørekort IDet
                                             app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_InsertIntoEK&param=${equipmentID},${kortKravID}`, (response) =>{
+                                                //Resolver promise
                                                 resolve();
                                             })
                                         }
                                     })
+                                //Hvis ikke der er et certifikats krav
                                 }else{
+                                    //Hvis der ikke er kørekorts krav
                                     if(kortKravID == -1){
+                                        //Resolver promise
                                         resolve();
+                                    //Hvis der er kørekorts krav
                                     }else{
+                                        //Kalder endpoint med værktøjs IDet og kørekort IDet
                                         app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_InsertIntoEK&param=${equipmentID},${kortKravID}`, (response) =>{
+                                            //Resolver promise
                                             resolve();
                                         })
                                     }
 
                                 }
+                            //Hvis der hverken er certifikat eller kørekorts krav
                             }else{
+                                //Resolver promise
                                 resolve();
                             }
 
@@ -349,199 +460,159 @@
                         
                         
                     })
-
+                    //Afventer vores promise
                     await prom;
-
+                        //Hvis vi får det forventet svar fra endpointed
                         if(dat.result == 1) {
+                            //Sætter toastbesked
                             toastMessage = 'Værktøjet blev opdateret i databasen';
+                        //Hvis ikke vi får det forventet svar fra endpointed
                         } else {
+                            //Sætter toastbesked
                             toastMessage = 'Værktøjet blev opdateret i databasen';
                         }
+                        //Prompter brugeren med toastbeskeden
                         app.dialog.alert(toastMessage, 'Opdater Værktøj', () => {
+                            //Refresher siden
                             app.views.main.router.navigate("/tooladdpan/", {reloadCurrent: true,});
                         });
                 },
+                /**
+                 * Denne funktion sørger for at query databasen via vores restAPI, og formatere selve responset og indsætte det i tabellen
+                 */
                 fillTableDefault: function() {
+                    //Viser preloaderen
                     $$('.tableoverlay').show();
+                    //Temp variable som bruges til at store vores table data i indtil det bliver indsat i tabellen
                     let innerHTML = "";
-                    let total = 0;
-                    var app = this.$app;
-                    let p = 0;
-                    let p2 = 0;
-
-                    this.oversigtListTools.length = 0;
-                    
-                    // request user data on page init
-                    app.request.getJSON(`${app.data['serverip']}endpoint/equipment.php?id=-1&limit=200&offset=0`, (tools) => {
-                        // update component state with new state
-                        for(let i = 0; i < tools.records.length; i++) {
-                            total++;
-                            innerHTML += 
-                            `
-                            <tr>
-                                <td style="display: none;">${tools.records[i].ID}</td>
-                                <td class="label-cell aktivNavn">${tools.records[i].activeName}</td>
-                                <td class="label-cell Kategori" value="${tools.records[i].categoryID}">${tools.records[i].categoryName}</td>
-                                <td class="label-cell Mærke">${tools.records[i].brandName}</td>
-                                <td class="label-cell Model">${tools.records[i].modelName}</td>
-                                <td class="label-cell Serienummer">${tools.records[i].serialNumber}</td>
-                                <td class="label-cell AssetTag">${tools.records[i].assetTag}</td>
-                                <td class="label-cell Stand" style="display:none;">${tools.records[i].condition}</td>
-                                <td class="radio-cell">
-                                    <input type="radio" value="${tools.records[i].ID}" name="selectedTool"/>
-                                    <i class="icon-radio"></i>
-                                </td>
-                            </tr>
-                            `;
-                            $$('.tableBody').html(innerHTML);
-                            if (i !== 0) {
-                                if(!this.oversigtListTools.some(liste => liste.navn == tools.records[i].equipmentNavn )) {
-                                    this.oversigtListTools.push({ navn: `${tools.records[i].equipmentNavn}`, ID: `${tools.records[i].ID}` });
+                    // Let til at holde antal rækker af entries i databasen
+                    let numberOfRowsInDB;
+                    // Laver et request til DB for at få at vide hvor mange værktøj der er
+                    app.request.getJSON(
+                        `${app.data['serverip']}functions/callsp.php?sp=sp_CountAllTools&param=0`, (
+                        response) => {
+                            //Fylder vores let med antallet af entries
+                            numberOfRowsInDB = response.records[0].rowNum;
+                        // Query databasen med alle data om den første halvdel af alle værktøj
+                        app.request.getJSON(`${app.data['serverip']}endpoint/equipment.php?id=-1&limit=${numberOfRowsInDB/2}&offset=0`, (tools) => {
+                            // Loop igennem alle response fra restAPIen
+                            for(let i = 0; i < tools.records.length; i++) {
+                                innerHTML += 
+                                `
+                                <tr>
+                                    <td style="display: none;">${tools.records[i].ID}</td>
+                                    <td class="label-cell aktivNavn">${tools.records[i].activeName}</td>
+                                    <td class="label-cell Kategori" value="${tools.records[i].categoryID}">${tools.records[i].categoryName}</td>
+                                    <td class="label-cell Mærke">${tools.records[i].brandName}</td>
+                                    <td class="label-cell Model">${tools.records[i].modelName}</td>
+                                    <td class="label-cell Serienummer">${tools.records[i].serialNumber}</td>
+                                    <td class="label-cell AssetTag">${tools.records[i].assetTag}</td>
+                                    <td class="label-cell Stand" style="display:none;">${tools.records[i].condition}</td>
+                                    <td class="radio-cell">
+                                        <input type="radio" value="${tools.records[i].ID}" name="selectedTool"/>
+                                        <i class="icon-radio"></i>
+                                    </td>
+                                </tr>
+                                `;
+                                // Til sidst bliver den html der er inde i 'tableBody' sat til at være den nye 'innerHTML'
+                                $$('.tableBody').html(innerHTML);
+                                // Check til at se om alle værktøjene er blevet tilføjet
+                                if(tools.records.length < 200){
+                                    //Derefter gemmer vi preloader overlayet igen
+                                    if(i+1 == tools.records.length ){
+                                        $$('.tableoverlay').hide();
+                                    }
                                 }
-                            } else {
-                                this.oversigtListTools.push({ navn: `${tools.records[i].equipmentNavn}`, ID: `${tools.records[i].ID}` });
                             }
-                            if(tools.records.length < 200){
+                        });
+                        // Query databasen med alle data om den sidste halvdel af alle værktøj
+                        app.request.getJSON(`${app.data['serverip']}endpoint/equipment.php?id=-1&limit=${numberOfRowsInDB}&offset=${numberOfRowsInDB/2}`, (tools) => {
+                            // Loop igennem alle response fra restAPIen
+                            for(let i = 0; i < tools.records.length; i++) {
+                                innerHTML += 
+                                `
+                                <tr>
+                                    <td style="display: none;">${tools.records[i].ID}</td>
+                                    <td class="label-cell aktivNavn">${tools.records[i].activeName}</td>
+                                    <td class="label-cell Kategori" value="${tools.records[i].categoryID}">${tools.records[i].categoryName}</td>
+                                    <td class="label-cell Mærke">${tools.records[i].brandName}</td>
+                                    <td class="label-cell Model">${tools.records[i].modelName}</td>
+                                    <td class="label-cell Serienummer">${tools.records[i].serialNumber}</td>
+                                    <td class="label-cell AssetTag">${tools.records[i].assetTag}</td>
+                                    <td class="label-cell Stand" style="display:none;">${tools.records[i].condition}</td>
+                                    <td class="radio-cell">
+                                        <input type="radio" value="${tools.records[i].ID}" name="selectedTool"/>
+                                        <i class="icon-radio"></i>
+                                    </td>
+                                </tr>
+                                `;
+                                // Til sidst bliver den html der er inde i 'tableBody' sat til at være den nye 'innerHTML'
+                                $$('.tableBody').html(innerHTML);
+                                //Derefter gemmer vi preloader overlayet igen
                                 if(i+1 == tools.records.length ){
                                     $$('.tableoverlay').hide();
                                 }
                             }
-                        }
-                    });
-
-                    app.request.getJSON(`${app.data['serverip']}endpoint/equipment.php?id=-1&limit=20000&offset=200`, (tools) => {
-                        // update component state with new state
-                        for(let i = 0; i < tools.records.length; i++) {
-                            total++;
-                            innerHTML += 
-                            `
-                            <tr>
-                                <td style="display: none;">${tools.records[i].ID}</td>
-                                <td class="label-cell aktivNavn">${tools.records[i].activeName}</td>
-                                <td class="label-cell Kategori" value="${tools.records[i].categoryID}">${tools.records[i].categoryName}</td>
-                                <td class="label-cell Mærke">${tools.records[i].brandName}</td>
-                                <td class="label-cell Model">${tools.records[i].modelName}</td>
-                                <td class="label-cell Serienummer">${tools.records[i].serialNumber}</td>
-                                <td class="label-cell AssetTag">${tools.records[i].assetTag}</td>
-                                <td class="label-cell Stand" style="display:none;">${tools.records[i].condition}</td>
-                                <td class="radio-cell">
-                                    <input type="radio" value="${tools.records[i].ID}" name="selectedTool"/>
-                                    <i class="icon-radio"></i>
-                                </td>
-                            </tr>
-                            `;
-                            $$('.tableBody').html(innerHTML);
-                            if (i !== 0) {
-                                if(!this.oversigtListTools.some(liste => liste.navn == tools.records[i].equipmentNavn )) {
-                                    this.oversigtListTools.push({ navn: `${tools.records[i].equipmentNavn}`, ID: `${tools.records[i].ID}` });
-                                }
-                            } else {
-                                this.oversigtListTools.push({ navn: `${tools.records[i].equipmentNavn}`, ID: `${tools.records[i].ID}` });
-                            }
-                            if(i+1 == tools.records.length ){
-                                $$('.tableoverlay').hide();
-                            }
-                        }
+                        });
                     });
                 },
-                fillTableToolName: function(name) {
-                    let innerHTML = "";
-                    
-                    var app = this.$app;
-                    // request user data on page init
-                    app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetSelectTool&param=${name}`, (tools) => {
-                        // update component state with new state
-                        for(let i = 0; i < tools.records.length; i++) {
-                            innerHTML += 
-                            `
-                            <tr>
-                                <td style="display: none;">${tools.records[i].ID}</td>
-                                <td class="label-cell aktivNavn">${tools.records[i].aktivNavn}</td>
-                                <td class="label-cell Kategori" value="${tools.records[i].katID}">${tools.records[i].katNavn}</td>
-                                <td class="label-cell Mærke">${tools.records[i].brand}</td>
-                                <td class="label-cell Model">${tools.records[i].model}</td>
-                                <td class="label-cell Serienummer">${tools.records[i].serieNummer}</td>
-                                <td class="label-cell AssetTag">${tools.records[i].assetTag}</td>
-                                <td class="label-cell Stand" style="display:none;">${tools.records[i].stand}</td>
-                                <td class="radio-cell">
-                                    <input type="radio" value="${tools.records[i].ID}" name="selectedTool"/>
-                                    <i class="icon-radio"></i>
-                                </td>
-                            </tr>
-                            `;
-                            $$('.tableBody').html(innerHTML);
-                        }
-                    });
-                },
-                
             },
-        // Component States
+            // on giver os mulighed for at gøre ting når siden reagere med forskellige events, fx init eller pagemounted
             on: {
+                //Kører når denne page melder at den er blevet mountet men ikke nødvendigvis er i view
                 pageMounted: function (page) {
+                    //Viser preloaderen
                     $$('.tableoverlay').show();
-                    var app = this.$app;
+                    //Kalder et endpoint som returner alle kategorierne fra DB'en
                     app.request.getJSON(`${app.data['serverip']}endpoint/category.php?id=-1`, (cats) => {
+                        //Looper igennem kategorierne
                         for(cat of cats.categories) {
+                            //Smider dem ind som en option i vores dropdown menu
                             $$('#Kategori').append(`<option value="${cat.ID}">${cat.katNavn}</option>`)
                         }
                     });
-
+                    //Kalder et endpoint som returner alle certifikaterne fra DB'en
                     app.request.getJSON(`${app.data['serverip']}endpoint/certificate.php?id=-1&tableid=0`, (certs) => {
+                        //Looper igennem certifikaterne
                         for(cert of certs.certifikat){
+                            //Smider dem ind som en option i vores dropdown menu
                             $$('#certKrav').append(`<option value="${cert.ID}">${cert.type}</option>`)
                         }
                     });
-
+                    //Kalder et endpoint som returner alle kørekortene fra DB'en
                     app.request.getJSON(`${app.data['serverip']}endpoint/certificate.php?id=-1&tableid=1`, (korts) => {
+                        //Looper igennem kørekortene
                         for(kort of korts.kørekort){
+                            //Smider dem ind som en option i vores dropdown menu
                             $$('#kortKrav').append(`<option value="${kort.ID}">${kort.type}</option>`)
                         }
                     });
-
-                   this.fillTableDefault();
+                    //Function til at fylde tabellen med alle værktøjer som er udlånt fra databasen
+                    this.fillTableDefault();
+                    //Variable der bruges til at holde styr på det tidligere highlighted row
                     var oldrow = null;
+                    //Onclick funktion på alle rows i tableBody tabellen
                     $$('.tableBody').on('click', (e) => {
+                        //Hvis ikke der har vært klikkede på et row
                         if(oldrow == null){
+                            //Sætter oldRow til current row
                             oldrow = e;
                         }else{
+                            //Hvis oldrow er sat så sætter vi den til ikke længere være highlighted
                             $$(oldrow.target.parentElement).css('background-color', '');
+                            //Sætter oldRow til current row
                             oldrow = e;
                         }
+                            //Hvis oldrow ikke er sat så sætter vi den til at være highlighted
                             $$(e.target.parentElement).find('input[type="radio"]').prop('checked', true);
                             $$(e.target.parentElement).css('background-color', '#a8baad');
                         
                     });
-
-                    var autocompleteToolList = app.autocomplete.create({
-                        inputEl: '#AddVærktøjsNavn',
-                        openIn: 'dropdown',
-                        textProperty: "navn",
-                        valueProperty: "navn",
-                        limit: 5,
-                        source: (query, render) => {
-                            var results = [];
-                            if (query.length === 0) {
-                                render(results);
-                                return;
-                            }
-                            // Find matched items
-                            for (var i = 0; i < this.oversigtListTools.length; i++) {
-                                if (this.oversigtListTools[i].navn.toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(this.oversigtListTools[i]);
-                            }
-                            // Render items by passing array with result items
-                            render(results);
-
-                        },
-                        on: {
-                            closed: (ele) => {
-                                //Check hvis feltet bliver sat til empty 
-                                if (this.oversigtListTools.filter(l => (l.navn === ele.$inputEl[0].value)).length == 0) { this.fillTableDefault(); }
-                            },
-                            change: (ele) => {
-                                if (ele[0]) { this.fillTableToolName(ele[0].navn) }
-                            }
-                        },
-                    });
+                    //Function som gør det muligt at søge i tabellen med værktøj
+                    //Første param er selve input feltets ID
+                    //Andet param er selve tabellens ID
+                    //Tredje param er det nummer i tabellens TD som skal søges i, her er 1 det første felt, dvs værktøjsnavn
+                    app.methods.searchFunction('AddVærktøjsNavn', 'toolTable', 1);
                 }
             },
         }

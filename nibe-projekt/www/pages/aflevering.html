@@ -98,19 +98,38 @@
 </template>
 
 <script>
+    //Array til at holde alle de værktøj som skal afleveres
     var toolsForDeliver = [];
 
+    /**
+     * Funktion som køres når brugeren vil fjerne et værktøj fra afleverings listen
+     * @param {int} værktøjsID Det ID som værktøjet har i databasen.
+     * @param {string} asset Det er assetTagget som værktøjet har i databasen
+     */
     fjernafleveringsværktøj = (værktøjsID, asset) => {
+        //Fjerner det valgte værktøj fra listen over værktøj som skal afleveres
         $$(`.låneTableBody`).find(`#værktøjnr${værktøjsID}`).remove();
+        //Fjerner det med sendte element fra arrayet
         toolsForDeliver.splice(toolsForDeliver.indexOf(asset), 1);
+        //Checker om "Værktøj valgt til aflevering" tablen er tom
         if($$('låneTableBody').html ="") {
+            //Hvis den er tom bliver "Aflever" knappen disabled
             $$("#aflever").prop("disabled", true);
         }
     }
 
+    /**
+     * Funktion som køres når brugeren vil fjerne et værktøj fra afleverings listen
+     * @param {int} værktøjsID Det ID som værktøjet har i databasen
+     */
     addFromTable = (værktøjsID) => {
+        //Temp variable som bruges til at store vores table data i indtil det bliver indsat i tabellen
+        let innerHTML = "";
+        //Tager med sendte variable og bruger den i et kald til endpointet
         app.request.getJSON(`${app.data['serverip']}endpoint/equipment.php?id=${værktøjsID}`, (response) => {
+            //Tager alle elementer som allerede findes i "Værktøj valgt til udlån" tabellen og ligger i vores temp variable
             innerHTML = $$(`.låneTableBody`).html();
+            //Ligger hvert element ind i vores temp variable
             innerHTML +=
                 `
                     <tr id="værktøjnr${værktøjsID}">
@@ -127,78 +146,124 @@
                         </td>
                     </tr>
                     `;
+            
             toolsForDeliver.push(response.records[0].assetTag);
+            //Tager alt data fra vores temp variable og pusher til vores table
             $$('.låneTableBody').html(innerHTML);
+            //Tømmer tables efter itemen er blevet tilføjet til afleverings tablet
             $$('.tableBody').html("");
             $$('#dupeTable').hide();
+            //Enabler afleverings knappen & scan feltet
             $$("#assetTagForAfl").prop('disabled', false);
             $$("#aflever").prop("disabled", false);
 
         })
     }
 
+    //Start på Framework7 og dens håndtering af internt data i dette page view
     return {
+        /**
+         * Det datasæt som framework bruger internt i dette view, de kan ikke tilgås udefra.
+         */
         data: function () {
             return {
-                selectedUserID: 0,
-                reserveList: [],
             };
         },
-        // Component Methods
+        // Framework7 Component Methods
         methods: {
+            /**
+             * Denne Funktion er til at nulstille alle input felter og elementer på siden
+             */
             resetfields: () => {
+                //Prompter brugeren for at sikre os at knappen ikke blev trykket på ved et uheld
                 app.dialog.confirm('Er du sikker på at du vil nulstille alle felter?', 'Nulstil Felter', function () {
+                    // Dette køres hvis brugeren trykker ja
+                    //Enabler scan feltet
                     $$("#assetTagForAfl").prop('disabled', false);
+                    // Finder alle input felter i vores form på siden
                     let inputs = $$('form').find('input');
+                    // Sætter alle inputs values til at være ''
                     inputs.val('');
+                    // Sætter 'låneTableBody's html til at være ''
                     $$(`.låneTableBody`).html('');
+                    // Sætter 'tableBody's html til at være ''
                     $$(`.tableBody`).html('');
+                    // Sætter 'dupeTable's html til at være ''
                     $$('#dupeTable').hide();
+                    //Finder alle knapper i vores table
                     var checkBoxObj = $$('.tableBody').find('button');
+                     //Looper igennem hvert element (hver knap)
                     checkBoxObj.forEach(element => {
+                        //Hvis knappen er disabled
                         if (element.disabled) {
+                            //Disabled no more
                             element.disabled = false;
                         }
                     })
                 });
             },
-            //Ret denne function til at bruge toolsForDeliver for at lave den mere optimeret
+            /**
+             * Funktion der bruges til at aflever værktøj med
+            **/
             aflevertool: async () => {
+                //Variable der bruges til at store data fra et endpoint
                 let dat;
+                //Variable der bruges til at store toastbeskeden som kan skifte alt efter hvad vi får fra endpointet
                 let toastMessage = '';
+                //Variable vi senere bruger som et objekt
                 let loan;
+                //Laver et promise som bruges til at sørge for at vi har afleveret alt værktøjet som var scannet ind, inden vi går videre
                 let prom = new Promise((resolve, reject) => {
+                    //Vi looper igennem hvert indscannet element
                     $$('.låneTableBody').forEach(element => {
+                        //Looper igennem hvert under element
                         for (i = 0; i < element.children.length; i++) {
                             loan = {
+                                //Smider Alt brugbar information fra elementet ind i vores objekt
                                 id: element.children[i].children[0].innerText,
                                 VærktøjsNavn: element.children[i].children[1].innerText,
                                 equipmentID: (element.children[i].id).split("værktøjnr").pop(),
                                 AssetTag: element.children[i].children[6].innerText,
                             };
 
+                            //Kalder et endpoint med vores objekt for at aflever de valgte værktøjer
                             app.request.post(`${app.data['serverip']}functions/loans/deliver.php`, loan, (data) => {
+                                //Logger vores handling
                                 app.methods.addToLog(`204`, `Afleverede værktøjet ${loan.VærktøjsNavn} med assetTag (${loan.AssetTag})`);
+                                //Store det data vi får tilbage fra endpointet i vores variable
                                 dat = data;
+                                //Resolver vores promise
                                 resolve();
                             }, (error) => {
+                                //I tilfælde af vores endpoint giver os en fejl kode
+                                //Vi rejecter vores promise
                                 reject();
                             }, 'json');
                         }
                     });
                 });
+                //Afventer vores promise
                 await prom;
+                //Hvis vi fik det forventet svar fra vores endpoint
                 if (dat.result == 1) {
                     toastMessage = 'Værktøjet blev Afleveret';
+                //Hvis ikke vi fik det forventet svar fra vores endpoint
                 } else {
                     toastMessage = 'Værktøjet blev ikke Afleveret';
                 }
+                //Prompter brugeren med vores toast besked
                 app.dialog.alert(toastMessage, 'Afleveret Værktøj', () => {
+                    //Fjerner det afleveret værktøj fra vores array
                     toolsForDeliver.splice(toolsForDeliver.indexOf(loan.AssetTag), 1);
+                    //Refresher siden
                     app.views.main.router.navigate("/aflevering/", { reloadCurrent: true, });
                 });
             },
+            /**
+             * Denne funktion sørger for at query databasen via vores restAPI, og formatere selve responset og indsætte det i tabellen
+             */
             fillTable: function (response) {
+                //Tager alle elementer som allerede findes i "Værktøj valgt til aflevering" tabellen og ligger i vores temp variable
                 let innerHTML = $$('.tableBody').html();
                 innerHTML +=
                     `
@@ -215,21 +280,35 @@
                                 </td>
                             </tr>
                             `;
+                //Tager alt data fra vores temp variable og pusher til vores table
                 $$('.tableBody').html(innerHTML);
             },
+            /**
+             * Funktion der bruges til at tilføje værktøj til "Værktøj valgt til aflevering" tabellen
+             * @param {int} assetTag assetTagget på værktøjet vi ønsker at tilføje.
+            **/
             tilføjafleveringsværktøj: function (assetTag) {
-
+                //Temp variable som bruges til at store vores table data i indtil det bliver indsat i tabellen
                 let innerHTML = "";
+                // Query databasen med assetTagget for at få alt information om værktøjet
                 app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetToolForAfleveringByAssetTag&param=${assetTag}`, (response) => {
-                    //app.request.getJSON(`${app.data['serverip']}endpoint/equipment.php?id=${værktøjsID}`, (response) => {
-                    //$$(`.tableBody`).find(`#btn${værktøjsID}`).prop("disabled",true);
+                    //I tilfælde endpointed ikke fandt noget så returner vi
+                    if(response.result == 0) return;
+                    //Tager alle elementer som allerede findes i "Værktøj valgt til aflevering" tabellen og ligger i vores temp variable
                     innerHTML = $$(`.låneTableBody`).html();
+                    //Disabler scan feltet
                     $$("#assetTagForAfl").prop('disabled', true);
+                    //Vi looper det fra vi modtog fra endpointet
                     for (let i = 0; i < response.records.length; i++) {
+                        //Hvis vi modtog mere end 1 ting fra endpointed
                         if (response.records.length > 1) {
+                            //Vi gør vores "dupe" table synligt
                             $$('#dupeTable').show();
-                            this.fillTable(response.records[i])
+                            //Kalder vores funktion med fylder vores "dupe" table med data
+                            this.fillTable(response.records[i]);
+                            //Hvis vi kun modtager 1 ting fra endpointed
                         } else {
+                            //Hvis elementet allerede er tilføjet til tablet så breaker vi
                             if (toolsForDeliver.includes(response.records[i].equipmentID)) break;
                             innerHTML +=
                                 `
@@ -247,30 +326,45 @@
                                     </td>
                                 </tr>
                                 `;
+                            //Pusher elementet til vores array
                             toolsForDeliver.push(response.records[i].equipmentID);
+                            //Tager alt data fra vores temp variable og pusher til vores table
                             $$('.låneTableBody').html(innerHTML);
+                            //Enabler aflever knappen
                             $$("#aflever").prop("disabled", false);
+                            //Enabler scan feltet
                             $$("#assetTagForAfl").prop('disabled', false);
                         }
                     }
                 })
             },
+            /**
+             * Funktion tager scanners input, søger i databsen og indsætter det ind i tabellen
+            **/
             scantool: function () {
+                //Hvis scan feltet er tomt returner vi
+                if($$("#assetTagForAfl").val() === "") return;
+                //Hvis IDet fra scan feltet allerede er i vores afleverings array så returner vi og tømmer feltet
                 if (toolsForDeliver.includes($$("#assetTagForAfl").val())) return $$("#assetTagForAfl").val('');
-                
-                //app.dialog.confirm(`Indsæt dette værktøj? ${$$("#assetTagForAfl").val()}`);
+                //Kalder vores funktion til at tilføje det indscannede værktøj til tabellen
                 this.tilføjafleveringsværktøj($$("#assetTagForAfl").val());
+                //Vi tømmer scan feltet
                 $$("#assetTagForAfl").val('');
             },
         },
-
+        //On giver os mulighed for at reagerer på events
         on: {
+            //pageMounted trigger når siden bliver insat i DOMen
             pageMounted: function (page) {
               
             },
+            //pageAfterIn trigger når siden bliver synlig
             pageAfterIn: function (e, page) {
+                //Opretter vores array som skal holde styr på alle værktøjer som skal afleveres
                 toolsForDeliver = [];
+                //Sætter fokus på scan feltet
                 $$("#assetTagForAfl").focus();
+                //Disabler aflever knappen
                 $$("#aflever").prop("disabled", true);
             },
         },

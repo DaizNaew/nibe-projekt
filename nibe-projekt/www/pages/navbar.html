@@ -22,6 +22,9 @@
           <li class="nav-item" id="navbarhistorik" @click="dothis('navbarhistorik', false)">
             <a class="nav-link" href="/historik/" data-view=".view-main" data-reload-current="true">Historik</a>
           </li>
+          <li class="nav-item" id="createuser" @click="dothis('createuser', false)">
+              <a class="nav-link" href="/createuser/" data-view=".view-main" data-reload-current="true">Opret låner</a>
+          </li>
           <li class="nav-item adminbutton admintab" id="navbaradminlogin" @click="dothis('navbaradminlogin', false)">
             <a class="nav-link" href="/adminlogin/" data-view=".view-main" data-reload-current="true">Administrator</a>
           </li>
@@ -32,9 +35,6 @@
 <div id="adminnavbarwrapper"> 
     <nav class="navbar navbar-expand-sm bg-info navbar-dark adminnav">
         <ul class="navbar-nav">
-          <li class="nav-item adminnavli" id="adminnavbarcreateuser" @click="dothis('adminnavbarcreateuser', true)">
-            <a class="nav-link" href="/createuser/" data-view=".view-main" data-reload-current="true">Opret låner</a>
-          </li>
           <li class="nav-item adminnavli" id="adminnavbartooladdpan" @click="dothis('adminnavbartooladdpan', true)">
             <a class="nav-link" href="/tooladdpan/" data-view=".view-main" data-reload-current="true">Opret værktøj</a>
           </li>
@@ -51,7 +51,7 @@
             <a class="nav-link" href="/log/" data-view=".view-main" data-reload-current="true">Log</a>
           </li>
           <li class="nav-item adminnavli" id="adminnavbaruserList" @click="dothis('adminnavbaruserList', true)">
-            <a class="nav-link" href="/userList/" data-view=".view-main" data-reload-current="true">Bruger list</a>
+            <a class="nav-link" href="/userList/" data-view=".view-main" data-reload-current="true">Brugerliste</a>
           </li>
         </ul>
     </nav>
@@ -85,7 +85,7 @@
             }
 
             if(ID == 'navbaradminlogin'){
-              $$(`#adminnavbarcreateuser`).addClass('active');
+              $$(`#adminnavbartooladdpan`).addClass('active');
             }
 
             $$(`#${ID}`).addClass('active');

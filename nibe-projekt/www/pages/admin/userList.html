@@ -1,10 +1,38 @@
 <template>
     <div class="page" data-name="userList">
         <div id="wrapper">
-            <div style="padding: 25px; width:100%; text-align: center;"><!--Item 2-->
+            <div style="padding: 25px; width:100%; text-align: center;">
+                <!--Item 2-->
+                <form class="mb-3" autocomplete="off" autocomplete="false">
+                    <div class="form-row" style="text-align: left">
+                        <label class="col">Medhjælper navn</label>
+                        <div class="input-wrapper">
+                            <input type="text" class="form-control form-control-sm col input-format"
+                                id="admOversigtListBrugere">
+                            <span><i class="fas fa-search icon-format"></i></span>
+                        </div>
+                    </div>
+                    <div class="form-row" style="text-align: left">
+                        <label class="col">Kørekort</label>
+                        <div class="input-wrapper">
+                            <input type="text" class="form-control form-control-sm col input-format"
+                                id="admOversigtListKørekort">
+                            <span><i class="fas fa-search icon-format"></i></span>
+                        </div>
+                    </div>
+                    <div class="form-row" style="text-align: left">
+                        <label class="col">Certifikat</label>
+                        <div class="input-wrapper">
+                            <input type="text" class="form-control form-control-sm col input-format"
+                                id="admOversigtListCertifikat">
+                            <span><i class="fas fa-search icon-format"></i></span>
+                        </div>
+                    </div>
+                </form>
                 <div style="display: inline-block; width: 85%;">
                     <div class="tableFixHead">
-                        <table class="table fixed_header" style="width:100%; background-color: #c5d9ec33;">
+                        <table class="table fixed_header" style="width:100%; background-color: #c5d9ec33;"
+                            id="userTable">
                             <thead>
                                 <tr>
                                     <th scope="col" style="display: none;">#</th>
@@ -18,59 +46,101 @@
                                 </tr>
                             </thead>
                             <tbody class="tableBody">
-                                    
+
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
-            <input id="rowcount" type="hidden" value="0"/>
         </div>
     </div>
 </template>
-        
+
 <script>
+    //Start på Framework7 og dens håndtering af internt data i dette page view
     return {
+        /**
+         * Det datasæt som framework bruger internt i dette view, de kan ikke tilgås udefra.
+         */
         data: function () {
-            return {
-                userArr : [],
-            };
+            return {};
         },
         // Component Methods
         methods: {
-        
-        },
-        // Component States
-        on: {
-            pageMounted: function (page) {
+            fillTableDefault: function () {
+                // Laver en 'innerHTML' let som bruges til at fylde tabellen
                 let innerHTML = "";
-                // request user data on page init
-                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllUserInfo&param=-1`, (response) => {
-                    // update component state with new state
-                    for(let i = 0; i < response.records.length; i++) {
-                        if(response.records[i].kørekortType == null){
-                            response.records[i].kørekortType = "Ingen"
-                        }
-                        if(response.records[i].certifikatType == null){
-                            response.records[i].certifikatType = "Ingen"
-                        }
-                        this.userArr.push(response.records[i]);
-                        innerHTML += 
-                            `
-                            <tr>
-                                <td style="display: none;">${i+1}</td>
-                                <td class="label-cell list_name">${response.records[i].name}</td>
-                                <td class="label-cell list_phonenumber">${response.records[i].phoneNumber}</td>
-                                <td class="label-cell list_address">${response.records[i].address}</td>
-                                <td class="label-cell list_cardID">${response.records[i].cardID}</td>
-                                <td class="label-cell list_kørekort">${response.records[i].kørekortType}</td>
-                                <td class="label-cell list_certifikat">${response.records[i].certifikatType}</td>
-                                <td class="label-cell list_usertype">${response.records[i].title}</td>
-                            </tr>
-                            `;
-                            $$('.tableBody').html(innerHTML);
+
+                // Let til at holde antal rækker af brugere i databasen
+                let numberOfRowsInDB;
+                // Laver et request til DB for at få at vide hvor mange brugere der er i systemet
+                app.request.getJSON(
+                    `${app.data['serverip']}functions/callsp.php?sp=sp_CountToolsForReserve&param=0`, (
+                    response) => {
+                        //Fylder vores let med antallet af entries
+                        numberOfRowsInDB = response.records[0].rowNum;
+
+                        // Query databasen med alle data om alle brugere i systemet
+                        app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllUserInfo&param=${numberOfRowsInDB}`, (
+                            response) => {
+                            // Loop igennem alle response fra restAPIen
+                            for (let i = 0; i < response.records.length; i++) {
+                                // Checker hvis brugeren har et kørekort, hvis ikke siger vi at de har ingen
+                                if (response.records[i].kørekortType == null) {
+                                    response.records[i].kørekortType = "Ingen"
+                                }
+                                // Checker hvis brugeren har et certifikat, hvis ikke siger vi at de har ingen
+                                if (response.records[i].certifikatType == null) {
+                                    response.records[i].certifikatType = "Ingen"
+                                }
+                                // Formaterer og tilføjer dataen til 'innerHTML'
+                                innerHTML +=
+                                    `
+                                    <tr>
+                                        <td style="display: none;">${i+1}</td>
+                                        <td class="label-cell list_name">${response.records[i].name}</td>
+                                        <td class="label-cell list_phonenumber">${response.records[i].phoneNumber}</td>
+                                        <td class="label-cell list_address">${response.records[i].address}</td>
+                                        <td class="label-cell list_cardID">${response.records[i].cardID}</td>
+                                        <td class="label-cell list_kørekort">${response.records[i].kørekortType}</td>
+                                        <td class="label-cell list_certifikat">${response.records[i].certifikatType}</td>
+                                        <td class="label-cell list_usertype">${response.records[i].title}</td>
+                                    </tr>
+                                    `;
+                                // Til sidst bliver den html der er inde i 'tableBody' sat til at være den nye 'innerHTML'
+                                $$('.tableBody').html(innerHTML);
+                            }// Slut på for loop
+                        });// Slut request til restAPI
                     }
-                });
+                );
+            },// Slut fillTableDefault() funktion
+        },// Slut på method blokken
+
+        // on giver os mulighed for at gøre ting når siden reagere med forskellige events, fx init eller pagemounted
+        on: {
+            // Kører når denne page melder at den er blevet mountet men ikke nødvendigvis er i view
+            pageMounted: function (page) {
+
+                //Function til at fylde tabellen med alle brugere fra databasen
+                this.fillTableDefault();
+
+                /**
+                 * Start Søge metoder blok, som bruges til at søge igennem tabellen vha input felterne
+                 */ 
+
+                //Function som gør det muligt at søge i tabellen med værktøj
+                //Første param er selve input feltets ID
+                //Andet param er selve tabellens ID
+                //Tredje param er det nummer i tabellens TD som skal søges i, her er 1 det første synlige felt, dvs medhjælperens navn, 
+                //da vi bruger selve tabellens TDs som et Array, og det starter på 0, og 0 er sat til none
+                app.methods.searchFunction('admOversigtListBrugere', 'userTable', 1);
+                app.methods.searchFunction('admOversigtListKørekort', 'userTable', 5);
+                app.methods.searchFunction('admOversigtListCertifikat', 'userTable', 6)
+
+                /**
+                 * Slut på søge blokken
+                 */ 
+
             }
         },
     }

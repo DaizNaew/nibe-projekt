@@ -23,39 +23,65 @@
 </template>
 
 <script>
+    //Start på Framework7 og dens håndtering af internt data i dette page view
     return {
-    // Component Methods
+        /**
+        * Det datasæt som framework bruger internt i dette view, de kan ikke tilgås udefra.
+        */
+        data: function () {
+            return {
+            };
+        },
+        // Framework7 Component Methods
         methods: {
+            /**
+             * Denne Funktion bruges til at checke om det ind scannede kort har administrative rettigheder via vores restAPI & database
+             */
             userVerify: function () {
+                // henter det ind scannede kort ID og ligger i en variable
                 let cardID = document.getElementById('cardID').value;
-                let userID = app.data['userID'];
-
+                // Query databasen for at få alle admin kortID
                 app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllAdmins&param=${cardID}`, (response) =>{
+                    //Hvis ikke vi modtager det svar vi leder efter
                     if(response.result == 0){
+                        //Resetter vores hidden felt som indholder det ind scannede kortID
                         document.getElementById('cardID').value = "";
+                        //Gør vores error box synlig
                         document.getElementById('errorcenter').style.display = "block";
+                        //Sætter vores error besked
                         document.getElementById('errorbox').innerHTML = "Kortet tilhøre ikke en Administrator"
                         return
                     }
+                    //Hvis vi modtager det forventet svar
                     if(response.records[0].cardID == cardID) {
+                        //Sætter globale variabler til at store navnet & userIDet på brugeren der loggede ind 
                         app.data['username'] = response.records[0].name;
                         app.data['userID'] = response.records[0].ID;
                         app.data['adminConfirmedBool'] = true;
+                        //Kalder vores global funktion til visning af administrator navbaren
                         app.methods.showAdminNavbar();
-                        app.views.main.router.navigate("/createuser/", {reloadCurrent: true,});
+                        //Redirecter til "Opret bruger panelet"
+                        app.views.main.router.navigate("/tooladdpan/", {reloadCurrent: true,});
 
                     } else {
+                        //Resetter vores hidden felt som indholder det ind scannede kortID
+                        document.getElementById('cardID').value = "";
+                        //Gør vores error box synlig
                         document.getElementById('errorcenter').style.display = "block";
+                        //Sætter vores error besked
                         document.getElementById('errorbox').innerHTML = "Kortet tilhøre ikke en Administrator"
-                        document.getElementById('cardID').value
                         return
                     }
                 },function(e){});
             },
         },
+        // on giver os mulighed for at gøre ting når siden reagere med forskellige events, fx init eller pagemounted
         on: {
+            //Kører så snart at pagen kommer ind i view på siden
             pageAfterIn: function(e, page) {
+                //Sætter fokus på vores hidden felt som tager sig af user input
                 document.getElementById("cardID").focus(); 
+                //Sætter fokus på vores hidden felt som tager sig af user input hvert sekund for at sikker os det altid er i fokus
                 setInterval(()=>{$$("#cardID").focus()}, 1000)
             },
         }

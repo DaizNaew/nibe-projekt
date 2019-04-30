@@ -1,8 +1,8 @@
 <template>
     <div class="page" data-name="reserver">
-            <div class="tableoverlay">
-                    <div class="preloader color-multi"></div>
-            </div>
+        <div class="tableoverlay">
+            <div class="loader"></div>
+        </div>
         <div id="gridwrapper">
             <div class="grid">
                 <div style="padding: 25px" id="item1">
@@ -14,8 +14,9 @@
                             <div class="form-row" style="text-align: left">
                                 <label class="col">Reserver navn</label>
                                 <div class="input-wrapper" style="width:400px !important;">
-                                    <input type="text" class="form-control form-control-sm col input-format" id="ReserverNavn" required="required">
-                                    <span><i  class="fas fa-user-tag icon-format"></i></span>
+                                    <input type="text" class="form-control form-control-sm col input-format"
+                                        id="ReserverNavn" required="required">
+                                    <span><i class="fas fa-user-tag icon-format"></i></span>
                                 </div>
                             </div>
 
@@ -49,40 +50,36 @@
                             </div>
 
                             <div class="input-group form-group">
-                                <label for="calendar_input" class="col">Afhentnings Dato</label>
+                                <label for="AfhentningsDato" class="col">Afhentnings Dato</label>
                                 <div class="input-group-prepend col">
-                                    <input type="text" id="calendar_input" required="required"
+                                    <input type="text" id="AfhentningsDato" required="required"
                                         class="form-control form-control-sm" autocomplete="off">
-                                    <span><i 
-                                            class="far fa-calendar-alt input-group-text input_icon_css"></i></span>
+                                    <span><i class="far fa-calendar-alt input-group-text input_icon_css"></i></span>
                                 </div>
                             </div>
                             <div class="input-group form-group">
-                                <label for="input-a" class="col">Afhentnings Tidspunkt</label>
+                                <label for="AfhentningsTid" class="col">Afhentnings Tidspunkt</label>
                                 <div class="input-group-prepend col">
-                                    <input id="input-a" value="" data-default="10:00" required="required"
+                                    <input id="AfhentningsTid" value="" data-default="10:00" required="required"
                                         class="form-control form-control-sm" autocomplete="off">
-                                    <span><i 
-                                            class="far fa-clock input-group-text input_icon_css"></i></span>
+                                    <span><i class="far fa-clock input-group-text input_icon_css"></i></span>
                                 </div>
                             </div>
                             <hr>
                             <div class="input-group form-group">
-                                <label for="calendar_input2" class="col">Afleverings Dato</label>
+                                <label for="AfleveringsDato" class="col">Afleverings Dato</label>
                                 <div class="input-group-prepend col">
-                                    <input type="text" id="calendar_input2" required="required"
+                                    <input type="text" id="AfleveringsDato" required="required"
                                         class="form-control form-control-sm" autocomplete="off">
-                                    <span><i 
-                                            class="far fa-calendar-alt input-group-text input_icon_css"></i></span>
+                                    <span><i class="far fa-calendar-alt input-group-text input_icon_css"></i></span>
                                 </div>
                             </div>
                             <div class="input-group form-group">
-                                <label for="input-b" class="col">Afleverings Tidspunkt</label>
+                                <label for="AfleveringsTid" class="col">Afleverings Tidspunkt</label>
                                 <div class="input-group-prepend col">
-                                    <input id="input-b" value="" data-default="10:00" required="required"
+                                    <input id="AfleveringsTid" value="" data-default="10:00" required="required"
                                         class="form-control form-control-sm" autocomplete="off">
-                                    <span><i 
-                                            class="far fa-clock input-group-text input_icon_css"></i></span>
+                                    <span><i class="far fa-clock input-group-text input_icon_css"></i></span>
                                 </div>
                             </div>
 
@@ -103,13 +100,14 @@
                         <div class="form-row" style="text-align: left">
                             <label class="col">Værktøjs navn</label>
                             <div class="input-wrapper">
-                                <input type="text" class="form-control form-control-sm col input-format" id="VærktøjsNavn" required="required">
+                                <input type="text" class="form-control form-control-sm col input-format"
+                                    id="VærktøjsNavn" required="required">
                                 <span><i id="calendar_icon" class="fas fa-search icon-format"></i></span>
                             </div>
                         </div>
 
                         <div class="tableFixHead">
-                            <table class="table fixed_header" style="background-color: #c5d9ec33;">
+                            <table class="table fixed_header" style="background-color: #c5d9ec33;" id="toolTable">
                                 <thead>
                                     <tr>
                                         <th scope="col" style="display: none;">#</th>
@@ -138,21 +136,40 @@
 
 
 <script>
+    //Array til at holde alle de værktøj som skal reserveres
     var arr = [];
 
+    /**
+     * Funktion som køres når brugeren vil fjerne et værktøj fra reserverings listen
+     * @param {int} værktøjsID Det ID som værktøjet har i databasen.
+     */
     fjernreserverværktøj = (værktøjsID) => {
+        //Finder værktøjet i tabellen over alt værktøj, og enabler dens "tilføj" knap igen
         $$(`.tableBody`).find(`#btn${værktøjsID}`).prop("disabled", false);
+        //Fjerner det valgte værktøj fra listen over værktøj som skal reserveres
         $$(`.låneTableBody`).find(`#værktøjnr${værktøjsID}`).remove();
+        //Fjerner Værktøjets ID fra arrayet over værktøj til reservationer
         arr.splice(arr.indexOf(værktøjsID), 1);
-    }
+    } //Slut fjernreserverværktøj() funktion
 
+    /**
+     * Funktion som køres når brugeren vil tage et værktøj fra listen og tilføje til listen over værktøj som skal reserveres
+     * @param {int} værktøjsID Det ID som værktøjet har i databasen
+     */
     tilføjreserverværktøj = (værktøjsID) => {
+        // Pusher det valgte værktøjs ID til arrayet med IDer fra alle værktøjer som skal reserveres
         arr.push(værktøjsID);
+        // Definer en ny let som en string
         let innerHTML = "";
+        // Query databasen med alle data om værktøjet ud fra dets ID
         app.request.getJSON(`${app.data['serverip']}endpoint/equipment.php?id=${værktøjsID}`, (response) => {
+            // Disabler den knap som bruges til at tilføje det valgte værktøj til listen over værktøj der skal reserveres, så man ikke kan reservere det samme værktøj flere gange
             $$(`.tableBody`).find(`#btn${værktøjsID}`).prop("disabled", true);
+            // Tager alt HTML fra 'låneTableBody' og ligger den til 'innerHTML' leten
             innerHTML = $$(`.låneTableBody`).html();
+            // For loop for at sikre at vi tager alle responses fra databasen
             for (let i = 0; i < response.records.length; i++) {
+                // Her lægges resultatet til 'innerHTML', formateret som et row til tabellen
                 innerHTML +=
                     `
                     <tr id="værktøjnr${værktøjsID}">
@@ -167,114 +184,189 @@
                         </td>
                     </tr>
                     `;
+                // Til sidst bliver den html der er inde i 'låneTableBody' sat til at være den nye 'innerHTML'
                 $$('.låneTableBody').html(innerHTML);
-            }
-        })
-    }
+            } //Slut for loop
+        }); //Slut database kald
+    } //Slut tilføjreserverværktøj() funktion
 
+    //Start på Framework7 og dens håndtering af internt data i dette page view
     return {
+        /**
+         * Det datasæt som framework bruger internt i dette view, de kan ikke tilgås udefra.
+         */
         data: function () {
             return {
-                oversigtListTools: [],
+                // Dette er listen over alle brugere som blev fundet i databasen som har mulighed for at låne værktøj
                 userList: [],
             };
         },
-        // Component Methods
+        // Framework7 Component Methods
         methods: {
+            /**
+             * Denne Funktion er til at nulstille alle input felter og elementer på siden
+             */
             resetfields: () => {
-                app.dialog.confirm('Er du sikker på at du vil nulstille alle felter?', 'Nulstil Felter', function () {
-                    let inputs = $$('form').find('input');
-                    inputs.val('');
-                    $$(`.låneTableBody`).html('');
-                    var checkBoxObj = $$('.tableBody').find('button');
-                    checkBoxObj.forEach(element => {
-                        if (element.disabled) {
-                            element.disabled = false;
-                        }
-                    })
-                });
-            },
+                /** Construction af en confirm dialog box som popper op for at spørge brugeren om den er sikker på at der skal nulstilles alle felter
+                 * @callback
+                 */
+                app.dialog.confirm('Er du sikker på at du vil nulstille alle felter?', 'Nulstil Felter',
+                    function () {
+                        // Dette køres hvis brugeren trykker ja
+                        // Finder alle input felter i vores form på siden
+                        let inputs = $$('form').find('input');
+                        // sætter alle inputs values til at være ''
+                        inputs.val('');
+                        // Sætter 'låneTableBody's html til at være ''
+                        $$(`.låneTableBody`).html('');
+                        // Finder alle knapper i 'tableBody' og lægger dem til 'checkBoxObj' variablen
+                        var checkBoxObj = $$('.tableBody').find('button');
+                        // Vi looper igennem alle objekter assigned til 'checkBoxObj' som en callback
+                        checkBoxObj.forEach(element => {
+                            // Tjekker om de enkelte elementers 'disabled' property er true
+                            if (element.disabled) {
+                                // Hvis ja, sætter vi deres value til false
+                                element.disabled = false;
+                            }
+                        }); //Slut på forEach loopet
+                    }); //Slut på confirm dialog box construction
+            }, //Slut på resetfields() funktionen
 
+            /**
+             * Denne Funktion tager alle inputs og reserverer et værktøj til den valgte bruger
+             */
             reservertool: async () => {
+                /**
+                 * Alle values fra input felterne som er påkrævet for at låne et stykke værktøj
+                 */
                 let newReserverNavn = document.getElementById('ReserverNavn').value;
                 let newReserverID = document.getElementById('ID').value;
-                let newAfhentDato = document.getElementById('calendar_input').value + " " + document.getElementById('input-a').value + ":00";
-                let newAfleverDato = document.getElementById('calendar_input2').value + " " + document.getElementById('input-b').value + ":00";
+                let newAfhentDato = document.getElementById('AfhentningsDato').value + " " + document
+                    .getElementById('AfhentningsTid').value + ":00";
+                let newAfleverDato = document.getElementById('AfleveringsDato').value + " " + document
+                    .getElementById('AfleveringsTid').value + ":00";
                 let newNote = document.getElementById('notefelt').value;
 
+                // En let til at holde de data som der bliver returneret fra restAPIen efter query
+                let dat;
+
+                /**
+                 * Checks på om der mangler noget i de nødvendige felter og melder fejl til brugeren i en alert dialog box hvis der mangler at blive udfylt et felt
+                 */
                 if (newReserverNavn == "") {
                     app.dialog.alert("Reserver navn feltet må ikke være tomt.", "Reserver");
                     return;
                 }
-                if (document.getElementById('calendar_input').value == "") {
+                if (document.getElementById('AfhentningsDato').value == "") {
                     app.dialog.alert("Afhentnings dato feltet må ikke være tomt.", "Reserver");
                     return;
                 }
-                if (document.getElementById('calendar_input2').value == "") {
+                if (document.getElementById('AfleveringsDato').value == "") {
                     app.dialog.alert("Afleverings dato feltet må ikke være tomt.", "Reserver");
                     return;
                 }
-                if (document.getElementById('input-a').value == "") {
+                if (document.getElementById('AfhentningsTid').value == "") {
                     app.dialog.alert("Afhentnings tidspunkt feltet må ikke være tomt.", "Reserver");
                     return;
                 }
-                if (document.getElementById('input-b').value == "") {
+                if (document.getElementById('AfleveringsTid').value == "") {
                     app.dialog.alert("Afleverings tidspunkt feltet må ikke være tomt.", "Reserver");
                     return;
                 }
                 if (arr.length == 0) {
-                    app.dialog.alert("Du skal huske at vælge mindst et stykke værktøj som skal reserveres.", "Reserver");
+                    app.dialog.alert("Du skal huske at vælge mindst et stykke værktøj som skal reserveres.",
+                        "Reserver");
                     return;
                 }
 
-                let dat;
-
+                // Construct et nyt promise for at give os mulighed for at await på det og sikre at der bliver lavet et post query til restAPIen
                 let prom = new Promise((resolve, reject) => {
-
+                    // For loop for at sikre at alle tingene på reserver listen bliver reserveret
                     for (i = 0; i < arr.length; i++) {
-                        //Kald Endpoint med id som arr[i]
-                        app.request.post(`${app.data['serverip']}endpoint/reservation.php`, { userID: newReserverID, equipmentID: arr[i], dateStart: newAfhentDato, expectedDateEnd: newAfleverDato, note: newNote }, function (response) {
+                        //Kald Endpoint med alle de stored information for at lave reservationen
+                        app.request.post(`${app.data['serverip']}endpoint/reservation.php`, {
+                            userID: newReserverID,
+                            equipmentID: arr[i],
+                            dateStart: newAfhentDato,
+                            expectedDateEnd: newAfleverDato,
+                            note: newNote
+                        }, function (response) {
                             if (response.result == 1) {
+                                //Sætter dat til response hvis vi fik et resultat fra restAPIen
                                 dat = response;
                                 resolve();
                             } else {
+                                //Ellers rejecter vi vores promise
                                 reject();
                             }
                         }, function (e, e2) {
+                            //Dette er til error logging
+                            //console.error(e);
                         }, "json");
                     }
                 })
 
+                //Vent på at promiset er færdigt
                 await prom;
+                //Derefter tjekker vi om svaret fra restAPIen viser result = 1
                 if (dat.result == 1) {
-                    app.dialog.alert(`Reservationen til (<span style="color: green; font-weight: bold;">${newReserverNavn}</span>) blev oprettet.`, "Reserver", function () {
-                        for (i = 0; i < arr.length; i++) {
-                            app.request.getJSON(`${app.data['serverip']}endpoint/equipment.php?id=${arr[i]}`, (response) => {
-                                app.methods.addToLog(`${newReserverID}`, `Reservered ${response.records[0].activeName} med assetTag (${response.records[0].assetTag})`);
-                            })
-                        }
-                        app.views.main.router.navigate("/reserver/", { reloadCurrent: true, });
-                        arr = [];
-                    });
+                    //Fortæl brugeren at reservationen gik igennem
+                    app.dialog.alert(
+                        `Reservationen til (<span style="color: green; font-weight: bold;">${newReserverNavn}</span>) blev oprettet.`,
+                        "Reserver",
+                        function () {
+                            for (i = 0; i < arr.length; i++) {
+                                //Sørg for at tilføje til loggen over hvad der er sket i systemet
+                                app.request.getJSON(
+                                    `${app.data['serverip']}endpoint/equipment.php?id=${arr[i]}`, (
+                                        response) => {
+                                        app.methods.addToLog(`${newReserverID}`,
+                                            `Reservered ${response.records[0].activeName} med assetTag (${response.records[0].assetTag})`
+                                        );
+                                    })
+                            }
+                            //Navigere tilbage til den nuværende side for at reloade den
+                            app.views.main.router.navigate("/reserver/", {
+                                reloadCurrent: true,
+                            });
+                            //Sætter arrayet til at være tomt
+                            arr = [];
+                        });
                 } else {
-                    app.dialog.alert(`Reservationen til ${newReserverNavn} blev <span style='color: red; font-weight: bold;'>IKKE</span> oprettet.`, "Reserver");
+                    //Fortæl brugeren at reservationen ikke gik igennem
+                    app.dialog.alert(
+                        `Reservationen til ${newReserverNavn} blev <span style='color: red; font-weight: bold;'>IKKE</span> oprettet.`,
+                        "Reserver");
                     return;
                 }
             },
 
-            fillTableDefault: function() {
-                    $$('.tableoverlay').show();
-                    console.log("kom")
-                    let total = 0;
-                    let innerHTML = "";
-                    let p = 0;
-                    let p2 = 0;
-                    this.oversigtListTools.length = 0
-                    app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllToolsForLoan&param=200,0`, (response) => {
-                        for (let i = 0; i < response.records.length; i++) {
-                            total++;
-                            innerHTML +=
-                                `
+            /**
+             * Denne funktion sørger for at query databasen via vores restAPI, og formatere selve responset og indsætte det i tabellen
+             */
+            fillTableDefault: function () {
+                // Let til at holde antal rækker af værktøj som kan reserveres i databasen
+                let numberOfRowsInDB;
+                // Laver et request til DB for at få at vide hvor mange værktøj der kan reserveres
+                app.request.getJSON(
+                    `${app.data['serverip']}functions/callsp.php?sp=sp_CountToolsForReserve&param=0`, (
+                    response) => {
+                        //Fylder vores let med antallet af entries
+                        numberOfRowsInDB = response.records[0].rowNum;
+                        //Viser preloader overlayet så brugeren ikke kan gøre noget på siden indtil den er færdig med at loade
+                        $$('.tableoverlay').show();
+                        // Definer en ny let som en string
+                        let innerHTML = "";
+                        // Query databasen med alle data om den første halvdel af alle værktøj
+                        app.request.getJSON(
+                            `${app.data['serverip']}functions/callsp.php?sp=sp_GetAllToolsForLoan&param=${numberOfRowsInDB/2},0`,
+                            (
+                                response) => {
+                                // Loop igennem alle response fra restAPIen
+                                for (let i = 0; i < response.records.length; i++) {
+                                    // Formaterer og tilføjer dataen til 'innerHTML'
+                                    innerHTML +=
+                                        `
                                 <tr>
                                     <td style="display: none;">${response.records[i].ID}</td>
                                     <td class="label-cell VærktøjsNavn">${response.records[i].equipmentNavn}</td>
@@ -287,27 +379,27 @@
                                     </td>
                                 </tr>
                                 `;
-                            $$('.tableBody').html(innerHTML);
-                            if (i !== 0) {
-                                if(!this.oversigtListTools.some(liste => liste.navn == response.records[i].equipmentNavn )) {
-                                    this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
-                                }
-                            } else {
-                                this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
-                            }
-                        }
-                        if(response.records.length < 200){
-                            if(i+1 == response.records.length ){
-                                $$('.tableoverlay').hide();
-                            }
-                        }
-                    })
-
-                    app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllToolsForLoan&param=20000,200`, (response) => {
-                        for (let i = 0; i < response.records.length; i++) {
-                            total++;
-                            innerHTML +=
-                                `
+                                    // Til sidst bliver den html der er inde i 'tableBody' sat til at være den nye 'innerHTML'
+                                    $$('.tableBody').html(innerHTML);
+                                    // Check til at se om alle værktøjene er blevet tilføjet
+                                    if (response.records.length < 200) {
+                                        //Derefter gemmer vi preloader overlayet igen
+                                        if (i + 1 == response.records.length) {
+                                            $$('.tableoverlay').hide();
+                                        }
+                                    }
+                                } // Slut på for loop
+                            });
+                        // Query databasen med alle data om den sidste halvdel af alle værktøj
+                        app.request.getJSON(
+                            `${app.data['serverip']}functions/callsp.php?sp=sp_GetAllToolsForLoan&param=${numberOfRowsInDB},${numberOfRowsInDB/2}`,
+                            (
+                                response) => {
+                                // Loop igennem alle response fra restAPIen
+                                for (let i = 0; i < response.records.length; i++) {
+                                    // Formaterer og tilføjer dataen til 'innerHTML'
+                                    innerHTML +=
+                                        `
                                 <tr>
                                     <td style="display: none;">${response.records[i].ID}</td>
                                     <td class="label-cell VærktøjsNavn">${response.records[i].equipmentNavn}</td>
@@ -320,145 +412,132 @@
                                     </td>
                                 </tr>
                                 `;
-                            $$('.tableBody').html(innerHTML);
-                            if (i !== 0) {
-                                if(!this.oversigtListTools.some(liste => liste.navn == response.records[i].equipmentNavn )) {
-                                    this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
-                                }
-                            } else {
-                                this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
-                            }
-                            if(i+1 == response.records.length ){
-                                $$('.tableoverlay').hide();
-                            }
-                        }
-                    })
+                                    // Til sidst bliver den html der er inde i 'tableBody' sat til at være den nye 'innerHTML'
+                                    $$('.tableBody').html(innerHTML);
+                                    // Check til at se om alle værktøjene er blevet tilføjet
+                                    // Derefter gemmer vi preloader overlayet igen
+                                    if (i + 1 == response.records.length) {
+                                        $$('.tableoverlay').hide();
+                                    }
+                                } // Slut på for loop
+                            });
+                    });
+            }, //Slut filltableDefault() funktion
+        }, //Slut på method blokken
 
-                    setTimeout(function(){
-                }, 5000)
-            },
-            fillTableToolName(name) {
-                let innerHTML = "";
-                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetSelectToolForLoan&param=${name}`, (response) => {
-                    for (let i = 0; i < response.records.length; i++) {
-                        innerHTML +=
-                            `
-                            <tr>
-                                <td style="display: none;">${response.records[i].ID}</td>
-                                <td class="label-cell VærktøjsNavn">${response.records[i].equipmentNavn}</td>
-                                <td class="label-cell Kategori">${response.records[i].equipmentKategori}</td>
-                                <td class="label-cell Mærke">${response.records[i].equipmentBrand}</td>
-                                <td class="label-cell Model">${response.records[i].equipmentModel}</td>
-                                <td class="label-cell AssetTag">${response.records[i].equipmentAsset}</td>
-                                <td class="radio-cell">
-                                    <button type="button" id="btn${response.records[i].ID}" onclick="tilføjreserverværktøj(${response.records[i].ID})" class="no-ripple btn-primary">Tilføj</button>
-                                </td>
-                            </tr>
-                            `;
-                        $$('.tableBody').html(innerHTML);
-                    }
-                })
-            },
-
-        },
-
+        // on giver os mulighed for at gøre ting når siden reagere med forskellige events, fx init eller pagemounted
         on: {
+            //Kører så snart at pagen kommer ind i view på siden
             pageAfterIn: function (e, page) {
 
-                var myCalendar = new dhtmlXCalendarObject(
-                    { input: "calendar_input", button: "calendar_input" }
-                );
-                myCalendar.hideTime();
+                /**
+                 * Kalender objekter
+                 **/
+                // Kalender til afhentnings dato
+                var AfhentningsCal = new dhtmlXCalendarObject({
+                    input: "AfhentningsDato",
+                    button: "AfhentningsDato"
+                });
+                AfhentningsCal.hideTime();
+                // Kalender til afleverings dato
+                var AfleveringsCal = new dhtmlXCalendarObject({
+                    input: "AfleveringsDato",
+                    button: "AfleveringsDato"
+                });
+                AfleveringsCal.hideTime();
 
-                var myCalendar2 = new dhtmlXCalendarObject(
-                    { input: "calendar_input2", button: "calendar_input2" }
-                );
-                myCalendar2.hideTime();
-
-                var input = $('#input-a');
-                input.clockpicker({
+                /**
+                 * Time picker objekter
+                 **/
+                // Time Picker til afhentnings tidspunkt
+                var AfhentningsClock = $('#AfhentningsTid');
+                AfhentningsClock.clockpicker({
                     autoclose: true
                 });
-                var input2 = $('#input-b');
-                input2.clockpicker({
+                // Time Picker til afleverings tidspunkt
+                var AfleveringsClock = $('#AfleveringsTid');
+                AfleveringsClock.clockpicker({
                     autoclose: true
                 });
 
             },
+            //Kører når denne page melder at den er blevet mountet men ikke nødvendigvis er i view
             pageMounted: function (page) {
+                //Viser preloader overviewet
                 $$('.tableoverlay').show();
+                //Laver kald til databasen for at hente alle brugere som kan reservere værktøj fra databasen
                 app.request.getJSON(`${app.data['serverip']}endpoint/user.php?id=-1`, (response) => {
+                    //For loop til at pushe alle resultater til userList arrayet, med navn og ID properties
                     for (let i = 0; i < response.records.length; i++) {
-                        this.userList[i] = { navn: `${response.records[i].name}`, ID: `${response.records[i].ID}` }
+                        this.userList[i] = {
+                            navn: `${response.records[i].name}`,
+                            ID: `${response.records[i].ID}`
+                        }
                     }
-                })
+                });
 
+                //Start på det object som håndterer søgefunktionen for selve bruger liste feltet
                 var autocompleteBrugerList = app.autocomplete.create({
+                    //Det element som håndterer input og søge parametrene
                     inputEl: '#ReserverNavn',
+                    //Den type søgeresultater skal vises som
                     openIn: 'dropdown',
+                    //Hvad der skal vises i input feltet når man har valgt et resultat
                     textProperty: "navn",
+                    //Hvad der skal søges i for at få et resultat
                     valueProperty: "navn",
+                    //Hvor mange resultater der max skal vises i den dropdown liste der er
                     limit: 5,
+                    //Selve source koden til søge funktionen
                     source: (query, render) => {
                         var results = [];
+                        //Checker om input feltet er tomt
                         if (query.length === 0) {
+                            //Render ingenting fordi der var 0 resultater
                             render(results);
                             return;
                         }
-                        //$$('#oversigtListTools').prop({ disabled:true });
-                        // Find matched items
+                        // Start på for loopet som skal checke i userlisten
                         for (var i = 0; i < this.userList.length; i++) {
-                            if (this.userList[i].navn.toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(this.userList[i]);
+                            //Checker om det indtastede matcher noget fra userlist arrayet
+                            if (this.userList[i].navn.toLowerCase().indexOf(query.toLowerCase()) >= 0) {
+                                //Ligger matchende elementer fra userlisten til results arrayet
+                                results.push(this.userList[i]);
+                            }
                         }
-                        // Render items by passing array with result items
+                        // Viser de resultater som matcher søge inputtet
                         render(results);
 
                     },
+                    //Gør så vi kan reagere på forskellige events fra funktionen
                     on: {
+                        //Gør noget når brugeren klikker udenfor søgefeltet og mister fokus uden at vælge et søge resultat
                         closed: (ele) => {
                             //Check hvis feltet bliver sat til empty 
-                            if (this.userList.filter(l => (l.navn === ele.$inputEl[0].value)).length == 0) { this.fillTableDefault(); }
+                            if (this.userList.filter(l => (l.navn === ele.$inputEl[0].value)).length ==
+                                0) {
+                                //Meddel brugeren om at feltet er tomt
+                            }
                         },
-                        change: (ele) => { if (ele[0]) { $$("#ID").val(ele[0].ID) } }
+                        //Gør noget hvis der bliver ændret i feltets value
+                        change: (ele) => {
+                            if (ele[0]) {
+                                //Sætter et hidden ID felt til at være den valgte brugers ID
+                                $$("#ID").val(ele[0].ID);
+                            }
+                        }
                     },
                 });
+
+                //Function til at fylde tabellen med alle værktøjer som kan reserveres fra databasen
                 this.fillTableDefault();
-                    var autocompleteToolList = app.autocomplete.create({
-                        inputEl: '#VærktøjsNavn',
-                        openIn: 'dropdown',
-                        textProperty: "navn",
-                        valueProperty: "navn",
-                        limit: 5,
-                        source: (query, render) => {
-                            var results = [];
-                            if (query.length === 0) {
-                                render(results);
-                                return;
-                            }
-                            // Find matched items
-                            for (var i = 0; i < this.oversigtListTools.length; i++) {
-                                if (this.oversigtListTools[i].navn.toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(this.oversigtListTools[i]);
-                            }
-                            // Render items by passing array with result items
-                            render(results);
 
-                        },
-                        on: {
-                            closed: (ele) => {
-                                //Check hvis feltet bliver sat til empty 
-                                if (this.oversigtListTools.filter(l => (l.navn === ele.$inputEl[0].value)).length == 0) { this.fillTableDefault(); }
-                            },
-                            change: (ele) => {
-                                if (ele[0]) { this.fillTableToolName(ele[0].navn) }
-                            }
-                        },
-                    });
-                
-
-                
-
+                //Function som gør det muligt at søge i tabellen med værktøj
+                //Første param er selve input feltets ID
+                //Andet param er selve tabellens ID
+                //Tredje param er det nummer i tabellens TD som skal søges i, her er 1 det første felt, dvs værktøjsnavn
+                app.methods.searchFunction('VærktøjsNavn', 'toolTable', 1);
             }
-        },
+        }, // Slut på on <events>
     }
-
 </script>
