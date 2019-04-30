@@ -49,29 +49,60 @@
     </template>
 
     <script>
+        //Start på Framework7 og dens håndtering af internt data i dette page view
         return {
-        // Component Methods
+            /**
+             * Det datasæt som framework bruger internt i dette view, de kan ikke tilgås udefra.
+             */
+             data: function () {
+                return {
+
+                }
+            },
+            // Framework7 Component Methods
             methods: {
+                /**
+                 * Denne Funktion er til at nulstille alle input felter og elementer på siden
+                 */
                 resetfields : () => {
+                    //Prompter brugeren for at sikre os at knappen ikke blev trykket på ved et uheld
                     app.dialog.confirm('Er du sikker på at du vil nulstille alle felter?', 'Nulstil felter', function(){
+                        //Sætter aktivNavn feltet til at være ""
                         document.getElementById('aktivNavn').value = "";
+                        //Disabler opdater knappen
                         document.getElementById("Opdaterbtn").disabled = true;
+                        //Enabler opret knappen
                         document.getElementById("Opretbtn").disabled = false; 
                     })
                 },
+                /**
+                 * Denne Funktion bruges til at slette værktøjs kategorier
+                 */
                 deletetool : () => {
+                    //Finder radio knapper i "tableBody"
                     var checkBoxObj = $$('.tableBody').find('input[type="radio"]');
+                    //Prompter brugeren for at sikre os at knappen ikke blev trykket på ved et uheld
                     app.dialog.confirm('Er du sikker på at du vil slette denne kategori fra databasen?', 'Slet kategori', function(){
+                    //Looper igennem hvert element
                     checkBoxObj.forEach(element => {
+                        //Hvis radio knappen er checked
                         if(element.checked) {
+                            //Kalder et endpoint for at slette kategorien
                             app.request.getJSON(`${app.data['serverip']}functions/cats/delete.php?id=${element.value}`, (data) => {
+                                //Hvis vi får det forventet svar fra endpointed
                                 if(data.result == 1) {
+                                    //Henter navnet på den slette kategori ud og ligger det en variable
                                     let delKatNavn = element.parentElement.parentElement.children[1].innerText;
+                                    //Prompter brugeren med en besked om at kategorien blev slettet
                                     app.dialog.alert(`Kategorie (<span style='color: green; font-weight: bold;'>${delKatNavn}</span>) blev slettet fra databasen.`, "Slet kategori", function(){
+                                        //Logger at kategorien blev slettet
                                         app.methods.addToLog(`${app.data['userID']}`, `Slettet værktøjets kategorien ${delKatNavn}`);
+                                        //Refresher siden
                                         app.views.main.router.navigate("/toolkat/", {reloadCurrent: true,});
                                     });
+                                //Hvis ikke vi får det forventet svar fra endpointed
                                 } else {
+                                    //Prompter brugeren om at noget gik galt
                                     app.dialog.alert("Kategorien blev <span style='color: red; font-weight: bold;'>IKKE</span> slettet fra databasen.", "Slet kategori");
                                 }
                             });
@@ -80,31 +111,49 @@
 
                     })
                 },
+                /**
+                 * Denne Funktion bruges til at oprette nye kategorier
+                 */
                 inserttool : () => {
+                    //Henter navnet ud på den nye kategori
                     let newKatNavn = document.getElementById('aktivNavn').value;
+                    //Checker at der faktisk er sat et navn
                     if(newKatNavn == ""){
+                        //Hvis ikke der er sat et navn prompter vi brugeren og returner
                         app.dialog.alert("Navn feltet må ikke være tomt.", "Opret kategori");
                         return;
                     }
+                    //Kalder et endpoint med kategori navnet for at oprette en ny kategori
                     app.request.post(`${app.data['serverip']}endpoint/category.php`, { katNavn:`${newKatNavn}` }, function(response){
+                        //Hvis vi for det forventet svar fra endpointed
                         if(response.result == 1){
+                            //Vi prompter brugeren med beskeden om at den nye kategori blev tilføjet
                             app.dialog.alert(`Kategorien (<span style="color: green; font-weight: bold;">${newKatNavn}</span>) blev tilføjet til databasen.`, "Opret kategori", function(){
+                                //Vi logger at en ny kategori blev oprettet
                                 app.methods.addToLog(`${app.data['userID']}`, `Oprettet værktøjets kategorien ${newKatNavn}`);
+                                //Refresher siden
                                 app.views.main.router.navigate("/toolkat/", {reloadCurrent: true,});
                             });
-
+                        //Hvis ikke vi for det forventet svar fra endpointed
                         }else{
+                            //Prompter brugeren om at noget gik galt og returner
                             app.dialog.alert("Kategorien blev <span style='color: red; font-weight: bold;'>IKKE</span> tilføjet til databasen.", "Opret kategori");
                             return;
                         }
                     }, function(e, e2){
                     }, "json");
                 },
-
+                /**
+                 * Funktion der bruges til at tage det valgte certifikat fra listen og klaske dens data ind i diverse felter 
+                 */
                 edittool : () => {
+                    //Finder radio knapper i "tableBody"
                     var checkBoxObj = $$('.tableBody').find('input[type="radio"]');
+                    //Looper igennem hvert element
                     checkBoxObj.forEach(element => {
+                        //Hvis elementet er checked
                         if(element.checked) {
+                            //Flytter dataen fra listen ind i redigerings felterne
                             document.getElementById('aktivNavn').value = element.parentElement.parentElement.children[1].innerHTML;
                             document.getElementById('ID').value = element.parentElement.parentElement.children[2].children[0].value;
                             document.getElementById("Opdaterbtn").disabled = false;
@@ -112,30 +161,37 @@
                         }
                     });
                 },
-
+                /**
+                 * Funktion der bruges til at pushe de redigeret kategorier til databasen
+                 */
                 updatetool : () => {
+                    //Tager kategori navnet og ligger i en variable
                     let updatedKatNavn = document.getElementById('aktivNavn').value;
+                    //Tager kategori IDet og ligger i en variable
                     let updatedKatID = document.getElementById('ID').value;
+                    //Kalder endpoint med redigeret kategori navn & kategori ID for at opdater kategorien
                     app.request.post(`${app.data['serverip']}functions/cats/update.php`, { katNavn:`${updatedKatNavn}`, ID:`${updatedKatID}`}, function(response){
+                        //Logger handlingen 
                         app.methods.addToLog(`${app.data['userID']}`, `Ændret værktøjets kategorien ${updatedKatNavn}`);
+                        //Refresher siden
                         app.views.main.router.navigate("/toolkat/", {reloadCurrent: true,});
                     }, function(e, e2){
                     }, "json");
                     
                 },
             },
-        // Component States
+        //On giver os mulighed for at reagerer på events
         on: {
+                //pageMounted trigger når siden bliver insat i DOMen
                 pageMounted: (page) => {
+                    //Temp variable som bruges til at store vores table data i indtil det bliver indsat i tabellen
                     let innerHTML = "";
+                    //Variable der bruges til at holde styr på det tidligere highlighted row
                     var oldrow = null;
-                    var self = this;
-                    var app = self.app;
-                    // request user data on page init
+                    //Kalder et endpoint som returner alle kategorier fra DB'en
                     app.request.getJSON(`${app.data['serverip']}endpoint/category.php?id=-1`, (response) => {
-                        // update component state with new state
+                        //Looper igennem kategorierne
                         for(let i = 0; i < response.categories.length; i++) {
-                            
                             innerHTML += 
                             `
                             <tr>
@@ -147,16 +203,23 @@
                                 </td>
                             </tr>
                             `;
+                            //Tager alt data fra vores temp variable og pusher til vores table
                             $$('.tableBody').html(innerHTML);
                         }
                     });
+                    //Onclick funktion på alle rows i kategori tabellen
                     $$('.tableBody').on('click', (e) => {
+                        //Hvis ikke der har vært klikkede på et row
                         if(oldrow == null){
+                            //Sætter oldRow til current row
                             oldrow = e;
                         }else{
+                            //Hvis oldrow er sat så sætter vi den til ikke længere være highlighted
                             $$(oldrow.target.parentElement).css('background-color', '');
+                            //Sætter oldRow til current row
                             oldrow = e;
                         }
+                            //Hvis oldrow ikke er sat så sætter vi den til at være highlighted
                             $$(e.target.parentElement).find('input[type="radio"]').prop('checked', true);
                             $$(e.target.parentElement).css('background-color', '#a8baad');
                         

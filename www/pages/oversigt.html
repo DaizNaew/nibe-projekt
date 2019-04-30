@@ -1,26 +1,22 @@
 <template>
     <div class="page" data-name="oversigt">
-
         <div id="wrapper" style="padding: 25px;">
             <div style="width:100%; text-align: center;">
                 <form class="mb-3" autocomplete="off" autocomplete="false">
-
-
                     <div class="form-row" style="text-align: left">
                         <label class="col">Medhjælper navn</label>
                         <div class="input-wrapper">
                             <input type="text" class="form-control form-control-sm col input-format"
                                 id="oversigtListBruger">
-                            <span><i id="calendar_icon" class="fas fa-search icon-format"></i></span>
+                            <span><i class="fas fa-search icon-format"></i></span>
                         </div>
                     </div>
-
                     <div class="form-row" style="text-align: left">
                         <label class="col">Værktøjets navn</label>
                         <div class="input-wrapper">
                             <input type="text" class="form-control form-control-sm col input-format"
                                 id="oversigtListTools">
-                            <span><i id="calendar_icon" class="fas fa-search icon-format"></i></span>
+                            <span><i class="fas fa-search icon-format"></i></span>
                         </div>
                     </div>
                 </form>
@@ -28,7 +24,7 @@
                 <!--Item 2-->
                 <div style="display: inline-block;">
                     <div class="tableFixHead">
-                        <table class="table fixed_header" style="width:auto; background-color: #c5d9ec33;">
+                        <table id="oversigtTable" class="table fixed_header" style="width:auto; background-color: #c5d9ec33;">
                             <thead>
                                 <tr>
                                     <th scope="col">#</th>
@@ -51,255 +47,107 @@
                 </div>
             </div>
         </div>
-
     </div>
-
 </template>
 
 <script>
+    //Start på Framework7 og dens håndtering af internt data i dette page view
     return {
+        /**
+        * Det datasæt som framework bruger internt i dette view, de kan ikke tilgås udefra.
+        */
         data: function () {
             return {
-                oversigtListBruger: [],
-                oversigtListTools: []
             };
         },
-        // Component Methods
+        // Framework7 Component Methods
         methods: {
-
-            fillTableDefault: function() {
-                let total = 0;
+            /**
+             * Denne funktion sørger for at query databasen via vores restAPI, og formatere selve responset og indsætte det i tabellen
+             */
+            fillTableDefault: function () {
+                // Definer en ny let som en string
                 let innerHTML = "";
-                var app = this.$app;
-                let o = 0, p = 0;
-                let o2 = 0, p2 = 0;
+                // Let til at holde antal rækker af entries i databasen 
+                let numberOfRowsInDB;
+                // Laver et request til DB for at få at vide hvor mange værktøj der er udlånt
+                app.request.getJSON(
+                    `${app.data['serverip']}functions/callsp.php?sp=sp_CountToolsInOversigt&param=0`, (
+                    response) => {
+                        //Fylder vores let med antallet af entries
+                        numberOfRowsInDB = response.records[0].rowNum;
 
-                this.oversigtListBruger.length = 0;
-                this.oversigtListTools.length = 0;
+                        // Query databasen med alle data om den første halvdel af alle udlånt værktøj
+                        app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllOversigt&param=${numberOfRowsInDB/2},0`,
+                            (response) => {
+                            // Loop igennem alle response fra restAPIen
+                            for (let i = 0; i < response.records.length; i++) {
+                                // Formaterer og tilføjer dataen til 'innerHTML'
+                                innerHTML +=
+                                    `
+                                        <tr id="oversigt${response.records[i].ID}">
+                                            <td>${response.records[i].ID}</td>
+                                            <td class="label-cell MedhjælperNavn">${response.records[i].userName}</td>
+                                            <td class="label-cell MedhjælperNummer">${response.records[i].userCardID}</td>
+                                            <td class="label-cell VærktøjsNavn">${response.records[i].equipmentNavn}</td>
+                                            <td class="label-cell Kategori">${response.records[i].equipmentKategori}</td>
+                                            <td class="label-cell Mærke">${response.records[i].equipmentBrand}</td>
+                                            <td class="label-cell Model">${response.records[i].equipmentModel}</td>
+                                            <td class="label-cell AssetTag">${response.records[i].equipmentAsset}</td>
+                                            <td class="label-cell Stand">${response.records[i].equipmentCondition}</td>
+                                            <td class="label-cell DatoUdlånt">${response.records[i].dateStart}</td>
+                                            <td class="label-cell ForventesTilbage">${response.records[i].expectedDateEnd}</td>
+                                        </tr>
+                                        `;
+                                // Til sidst bliver den html der er inde i 'tableBody' sat til at være den nye 'innerHTML'
+                                $$('.tableBody').html(innerHTML);
+                            }
+                        });
 
-                // request user data on page init
-                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllOversigt&param=200,0`, (response) => {
-                    // update component state with new state
-                    for (let i = 0; i < response.records.length; i++) {
-                        total++;
-                        innerHTML +=
-                            `
-                                <tr id="oversigt${response.records[i].ID}">
-                                    <td>${response.records[i].ID}</td>
-                                    <td class="label-cell MedhjælperNavn">${response.records[i].userName}</td>
-                                    <td class="label-cell MedhjælperNummer">${response.records[i].userCardID}</td>
-                                    <td class="label-cell VærktøjsNavn">${response.records[i].equipmentNavn}</td>
-                                    <td class="label-cell Kategori">${response.records[i].equipmentKategori}</td>
-                                    <td class="label-cell Mærke">${response.records[i].equipmentBrand}</td>
-                                    <td class="label-cell Model">${response.records[i].equipmentModel}</td>
-                                    <td class="label-cell AssetTag">${response.records[i].equipmentAsset}</td>
-                                    <td class="label-cell Stand">${response.records[i].equipmentCondition}</td>
-                                    <td class="label-cell DatoUdlånt">${response.records[i].dateStart}</td>
-                                    <td class="label-cell ForventesTilbage">${response.records[i].expectedDateEnd}</td>
-                                </tr>
-                                `;
-                        $$('.tableBody').html(innerHTML);
-                        if (i !== 0) {
-                            if(!this.oversigtListBruger.some(liste => liste.navn == response.records[i].userName )) {
-                                    this.oversigtListBruger.push({ navn: `${response.records[i].userName}`, ID: `${response.records[i].userCardID}` });
-                                }
-                                if(!this.oversigtListTools.some(liste => liste.navn == response.records[i].equipmentNavn )) {
-                                    this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
-                                }
-                            } else {
-                                this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
-                                this.oversigtListBruger.push({ navn: `${response.records[i].userName}`, ID: `${response.records[i].userCardID}` });
+                        // Query databasen med alle data om den sidste halvdel af alle udlånt værktøj
+                        app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllOversigt&param=${numberOfRowsInDB},${numberOfRowsInDB/2}`, (response) => {
+                            // Loop igennem alle response fra restAPIen
+                            for (let i = 0; i < response.records.length; i++) {
+                                // Formaterer og tilføjer dataen til 'innerHTML'
+                                innerHTML +=
+                                    `
+                                        <tr id="oversigt${response.records[i].ID}">
+                                            <td>${response.records[i].ID}</td>
+                                            <td class="label-cell MedhjælperNavn">${response.records[i].userName}</td>
+                                            <td class="label-cell MedhjælperNummer">${response.records[i].userCardID}</td>
+                                            <td class="label-cell VærktøjsNavn">${response.records[i].equipmentNavn}</td>
+                                            <td class="label-cell Kategori">${response.records[i].equipmentKategori}</td>
+                                            <td class="label-cell Mærke">${response.records[i].equipmentBrand}</td>
+                                            <td class="label-cell Model">${response.records[i].equipmentModel}</td>
+                                            <td class="label-cell AssetTag">${response.records[i].equipmentAsset}</td>
+                                            <td class="label-cell Stand">${response.records[i].equipmentCondition}</td>
+                                            <td class="label-cell DatoUdlånt">${response.records[i].dateStart}</td>
+                                            <td class="label-cell ForventesTilbage">${response.records[i].expectedDateEnd}</td>
+                                        </tr>
+                                        `;
+                                // Til sidst bliver den html der er inde i 'tableBody' sat til at være den nye 'innerHTML'
+                                $$('.tableBody').html(innerHTML);
+                                } // slut på for loop
                             }
-                            /*
-                        if (i !== 0) {
-                            if (this.oversigtListBruger[o].navn != response.records[i].userName) {
-                                this.oversigtListBruger.push({ navn: `${response.records[i].userName}`, ID: `${response.records[i].userCardID}` });
-                                o++;
-                            }
-                            if (this.oversigtListTools[p].navn != response.records[i].equipmentNavn) {
-                                this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
-                                p++;
-                            }
-                        } else {
-                            this.oversigtListBruger.push({ navn: `${response.records[i].userName}`, ID: `${response.records[i].userCardID}` });
-                            this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
-                        }
-                        */
+                        ); // Slut på get request til restAPI
                     }
-                });
-
-                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllOversigt&param=20000,200`, (response) => {
-                    // update component state with new state
-                    for (let i = 0; i < response.records.length; i++) {
-                        total++;
-                        innerHTML +=
-                            `
-                                <tr id="oversigt${response.records[i].ID}">
-                                    <td>${response.records[i].ID}</td>
-                                    <td class="label-cell MedhjælperNavn">${response.records[i].userName}</td>
-                                    <td class="label-cell MedhjælperNummer">${response.records[i].userCardID}</td>
-                                    <td class="label-cell VærktøjsNavn">${response.records[i].equipmentNavn}</td>
-                                    <td class="label-cell Kategori">${response.records[i].equipmentKategori}</td>
-                                    <td class="label-cell Mærke">${response.records[i].equipmentBrand}</td>
-                                    <td class="label-cell Model">${response.records[i].equipmentModel}</td>
-                                    <td class="label-cell AssetTag">${response.records[i].equipmentAsset}</td>
-                                    <td class="label-cell Stand">${response.records[i].equipmentCondition}</td>
-                                    <td class="label-cell DatoUdlånt">${response.records[i].dateStart}</td>
-                                    <td class="label-cell ForventesTilbage">${response.records[i].expectedDateEnd}</td>
-                                </tr>
-                                `;
-                        $$('.tableBody').html(innerHTML);
-                        if (i !== 0) {
-                            if(!this.oversigtListBruger.some(liste => liste.navn == response.records[i].userName )) {
-                                    this.oversigtListBruger.push({ navn: `${response.records[i].userName}`, ID: `${response.records[i].userCardID}` });
-                                }
-                                if(!this.oversigtListTools.some(liste => liste.navn == response.records[i].equipmentNavn )) {
-                                    this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
-                                }
-                            } else {
-                                this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
-                                this.oversigtListBruger.push({ navn: `${response.records[i].userName}`, ID: `${response.records[i].userCardID}` });
-                            }
-                        /*
-                        if (i !== 0) {
-                            if (this.oversigtListBruger[o2].navn != response.records[i].userName) {
-                                this.oversigtListBruger.push({ navn: `${response.records[i].userName}`, ID: `${response.records[i].userCardID}` });
-                                o2++;
-                            }
-                            if (this.oversigtListTools[p2].navn != response.records[i].equipmentNavn) {
-                                this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
-                                p2++;
-                            }
-                        } else {
-                            this.oversigtListBruger.push({ navn: `${response.records[i].userName}`, ID: `${response.records[i].userCardID}` });
-                            this.oversigtListTools.push({ navn: `${response.records[i].equipmentNavn}`, ID: `${response.records[i].ID}` });
-                        }
-                        */
-                    }
-                });
-                setTimeout(function(){
-            }, 5000);
-            },
-            //sp_GetSelectOversigtByToolName
-            fillTableToolName(toolName) {
-                var app = this.$app;
-                let innerHTML = "";
-                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetSelectOversigtByToolName&param=${toolName}`, (response) => {
-                    $$('.tableBody').html("");
-                    // update component state with new state
-                    for (let i = 0; i < response.records.length; i++) {
-                        innerHTML +=
-                            `
-                                                <tr id="oversigt${response.records[i].ID}">
-                                                    <td>${response.records[i].ID}</td>
-                                                    <td class="label-cell MedhjælperNavn">${response.records[i].userName}</td>
-                                                    <td class="label-cell MedhjælperNummer">${response.records[i].userCardID}</td>
-                                                    <td class="label-cell VærktøjsNavn">${response.records[i].equipmentNavn}</td>
-                                                    <td class="label-cell Kategori">${response.records[i].equipmentKategori}</td>
-                                                    <td class="label-cell Mærke">${response.records[i].equipmentBrand}</td>
-                                                    <td class="label-cell Model">${response.records[i].equipmentModel}</td>
-                                                    <td class="label-cell AssetTag">${response.records[i].equipmentAsset}</td>
-                                                    <td class="label-cell Stand">${response.records[i].equipmentCondition}</td>
-                                                    <td class="label-cell DatoUdlånt">${response.records[i].dateStart}</td>
-                                                    <td class="label-cell ForventesTilbage">${response.records[i].expectedDateEnd}</td>
-                                                </tr>
-                                                `;
-                        $$('.tableBody').html(innerHTML);
-                    }
-                }, (error) => { console.error(error) });
-            },
-            fillTable(userName) {
-                var app = this.$app;
-                let innerHTML = "";
-                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetSelectOversigt&param=${userName}`, (response) => {
-                    $$('.tableBody').html("");
-                    // update component state with new state
-                    for (let i = 0; i < response.records.length; i++) {
-                        innerHTML +=
-                            `
-                                                <tr id="oversigt${response.records[i].ID}">
-                                                    <td>${response.records[i].ID}</td>
-                                                    <td class="label-cell MedhjælperNavn">${response.records[i].userName}</td>
-                                                    <td class="label-cell MedhjælperNummer">${response.records[i].userCardID}</td>
-                                                    <td class="label-cell VærktøjsNavn">${response.records[i].equipmentNavn}</td>
-                                                    <td class="label-cell Kategori">${response.records[i].equipmentKategori}</td>
-                                                    <td class="label-cell Mærke">${response.records[i].equipmentBrand}</td>
-                                                    <td class="label-cell Model">${response.records[i].equipmentModel}</td>
-                                                    <td class="label-cell AssetTag">${response.records[i].equipmentAsset}</td>
-                                                    <td class="label-cell Stand">${response.records[i].equipmentCondition}</td>
-                                                    <td class="label-cell DatoUdlånt">${response.records[i].dateStart}</td>
-                                                    <td class="label-cell ForventesTilbage">${response.records[i].expectedDateEnd}</td>
-                                                </tr>
-                                                `;
-                        $$('.tableBody').html(innerHTML);
-                    }
-                }, (error) => { console.error(error) });
-            }
+                );// Slut på request til restAPI for at hente antal af værktøj
+            }, //Slut filltableDefault() funktion
         },
-        // Component States
+        // on giver os mulighed for at gøre ting når siden reagere med forskellige events, fx init eller pagemounted
         on: {
+            //Kører når denne page melder at den er blevet mountet men ikke nødvendigvis er i view
             pageMounted: function (page) {
 
+                //Function til at fylde tabellen med alle værktøjer som er udlånt fra databasen
                 this.fillTableDefault();
 
-                var autocompleteBrugerList = app.autocomplete.create({
-                    inputEl: '#oversigtListBruger',
-                    openIn: 'dropdown',
-                    textProperty: "navn",
-                    valueProperty: "navn",
-                    limit: 5,
-                    source: (query, render) => {
-                        var results = [];
-                        if (query.length === 0) {
-                            render(results);
-                            return;
-                        }
-                        $$('#oversigtListTools').prop({ disabled: true });
-                        // Find matched items
-                        for (var i = 0; i < this.oversigtListBruger.length; i++) {
-                            if (this.oversigtListBruger[i].navn.toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(this.oversigtListBruger[i]);
-                        }
-                        // Render items by passing array with result items
-                        render(results);
-
-                    },
-                    on: {
-                        closed: (ele) => {
-                            //Check hvis feltet bliver sat til empty 
-                            if (this.oversigtListBruger.filter(l => (l.navn === ele.$inputEl[0].value)).length == 0) { this.fillTableDefault(); $$('#oversigtListTools').prop({ disabled: false }); }
-                        },
-                        change: (ele) => { if (ele[0]) { this.fillTable(ele[0].navn) } }
-                    },
-                });
-                var autocompleteToolList = app.autocomplete.create({
-                    inputEl: '#oversigtListTools',
-                    openIn: 'dropdown',
-                    textProperty: "navn",
-                    valueProperty: "navn",
-                    limit: 5,
-                    source: (query, render) => {
-                        var results = [];
-                        if (query.length === 0) {
-                            render(results);
-                            return;
-                        }
-                        $$('#oversigtListBruger').prop({ disabled: true });
-                        // Find matched items
-                        for (var i = 0; i < this.oversigtListTools.length; i++) {
-                            if (this.oversigtListTools[i].navn.toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(this.oversigtListTools[i]);
-                        }
-                        // Render items by passing array with result items
-                        render(results);
-
-                    },
-                    on: {
-                        closed: (ele) => {
-                            //Check hvis feltet bliver sat til empty 
-                            if (this.oversigtListTools.filter(l => (l.navn === ele.$inputEl[0].value)).length == 0) { this.fillTableDefault(); $$('#oversigtListBruger').prop({ disabled: false }); }
-                        },
-                        change: (ele) => { if (ele[0]) { this.fillTableToolName(ele[0].navn) } }
-                    },
-                });
+                //Function som gør det muligt at søge i tabellen med værktøj
+                //Første param er selve input feltets ID
+                //Andet param er selve tabellens ID
+                //Tredje param er det nummer i tabellens TD som skal søges i, her er 1 det første felt, dvs værktøjsnavn
+                app.methods.searchFunction('oversigtListBruger', 'oversigtTable', 1);
+                app.methods.searchFunction('oversigtListTools', 'oversigtTable', 3);
             }
         },
     }
