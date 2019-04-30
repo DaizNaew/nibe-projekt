@@ -98,48 +98,6 @@ var app = new Framework7({
         }
       });
     }, //Slut searchFunction() funktion
-
-    /**
-     * Denne function er til for at tjekke om brugeren har været aktiv på sitet, hvis der ikke er nogen aktivitet på siden 
-     * bliver der redirektet tilbage til udlon
-     * @param {int} timeToWait Dette parameter er det antal minutter der skal ventes inden der skal navigeres tilbage til udlon
-     */
-    idleTimer: function(timeToWait) {
-      let InterValTime = 1000 * 60; // Variabel som indeholder 60000, som svarer til et minut i ms
-      // En variabel som indeholder en array af alle list items i navbaren som HTMLObjekter
-      let navbarheader = $$('#navbarheader').find('li'); 
-      idleTime = 0; // variabel som indeholder det antal minutter der ikke er sket noget på siden
-      // Laver en intern timer som kører hver 60000ms, dvs hvert minut tjekker vi om 
-      // der er gået det antal minutter der skal inden der bliver redirected
-        setInterval(function () {
-          idleTime++; // Incrementer idleTime hvert minut
-          // Hvis der er gået længere tid end der er defineret der skal, så køres funktionerne som redirekter brugeren til udlon og logger ud som admin
-          if (idleTime > timeToWait) { 
-            app.methods.hideAdminNavbar(); // Gemmer admin navbaren
-            // For hver list item element i headeren som har en active class, de mister den class
-            for (let i = 0; i < navbarheader.length; i++) {
-              if ($$(navbarheader[i]).hasClass('active')) {
-                $$(navbarheader[i]).removeClass('active');
-              }
-            }
-            $$(`#navbarudlon`).addClass('active'); // Sætter udlon som aktiv i navbaren
-            // Redirekter tilbage til udlon siden
-            app.views.main.router.navigate("/udlon/", {
-              reloadCurrent: true, // Sikrer at der kommer friskt data på siden
-            });
-          }
-        }, InterValTime); 
-
-        // Checker om der sker mousemovements eller keypresses
-        $$(document).mousemove(function (e) {
-          idleTime = 0;
-        });
-
-        $$(document).keypress(function (e) {
-          idleTime = 0;
-        });
-    }, //Slut idleTimer() funktion
-
   },
 
   // App routes
@@ -172,15 +130,38 @@ var app = new Framework7({
         app.data['navbarheight'] = $$('#view-navbar')[0].clientHeight;
         document.getElementById('view-home').style.top = app.data['navbarheight'] + "px";
       }, 0);
+      // En variabel som indeholder en array af alle list items i navbaren som HTMLObjekter
+      let navbarheader = $$('#navbarheader').find('li'); 
+      var idleTime = 0; // variabel som indeholder det antal minutter der ikke er sket noget på siden
+      // Laver en intern timer som kører hver 60000ms, dvs hvert minut tjekker vi om 
+      // der er gået det antal minutter der skal inden der bliver redirected
+        setInterval(function () {
+          idleTime++; // Incrementer idleTime hvert minut
+          // Hvis der er gået længere tid end der er defineret der skal, så køres funktionerne som redirekter brugeren til udlon og logger ud som admin
+          if (idleTime > 5) { 
+            app.methods.hideAdminNavbar(); // Gemmer admin navbaren
+            // For hver list item element i headeren som har en active class, de mister den class
+            for (let i = 0; i < navbarheader.length; i++) {
+              if ($$(navbarheader[i]).hasClass('active')) {
+                $$(navbarheader[i]).removeClass('active');
+              }
+            }
+            $$(`#navbarudlon`).addClass('active'); // Sætter udlon som aktiv i navbaren
+            // Redirekter tilbage til udlon siden
+            app.views.main.router.navigate("/udlon/", {
+              reloadCurrent: true, // Sikrer at der kommer friskt data på siden
+            });
+          }
+        }, 60000); 
 
-      // Check til håndtering af hvis brugeren har været idle i for lang tid
-      // Currentpage er den nuværende side som er i aktiv fokus inde i homeview
-      let currentpage = app.views.main.router.currentPageEl.dataset.name;
-      if (currentpage != "udlon") {
-        // Her køres timeren hvis siden ikke er udlon, med parametret '5' som er det antal minutter der skal tjekkes i inden der bliver "timeoutet"
-        // og sitet går tilbage til udlon
-        app.methods.idleTimer(5);
-      } // Slut af IF statementet
+        // Checker om der sker mousemovements eller keypresses
+        $$(document).mousemove(function (e) {
+          idleTime = 0;
+        });
+
+        $$(document).keypress(function (e) {
+          idleTime = 0;
+        });
     }, // Slut på pageAfterIn eventet
   }, // Slut på on delen af Framework7
 });
