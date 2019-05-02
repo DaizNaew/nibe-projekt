@@ -66,8 +66,9 @@ var app = new Framework7({
      * @param {int} rowCount Dette parameter er den position hvor i tabellen vi gerne vil filtrere resultater med
      */
     searchFunction: function (inputFieldID, tableID, rowCount) {
-      //Vi bruger dom7 til at vælge vores input felt, og så reagere vi på keyup events via et callback
-      $$(`#${inputFieldID}`).keyup(field => {
+
+      // En constant som er den funktion der skal køres
+      const search = (field, tableID, rowCount) => {
         //Definer lets som der skal bruges i functionen
         let input, filter, table, tr, td, txtValue;
         //Sætter input variablen til at være vores input field object
@@ -96,37 +97,17 @@ var app = new Framework7({
             }
           }
         }
+      }
+      
+      //Vi bruger dom7 til at vælge vores input felt, og så reagere vi på keyup events via et callback
+      $$(`#${inputFieldID}`).keyup(field => {
+        // Kald til funktionen men de krævede variabler
+        search(field, tableID, rowCount);
       });
       //Vi bruger dom7 til at vælge vores input felt, og så reagere vi på keyup events via et callback
       $$(`#${inputFieldID}`).click(field => {
-        //Definer lets som der skal bruges i functionen
-        let input, filter, table, tr, td, txtValue;
-        //Sætter input variablen til at være vores input field object
-        input = field.target;
-        //Sætter det som skal bruges til at filtre i databasen til værende selve input feltets value
-        filter = input.value.toUpperCase();
-        //Sætter Table variablen til at være vores table object som skal søges i
-        table = $$(`#${tableID}`);
-        //Sætter tr variablen til at være alle de elemener i tabellen som matcher vores kriteria som er tr
-        tr = table.find('tr');
-        //Start på for loop for at kigge igennem alle tabel rows og finde noget der matcher
-        for (i = 0; i < tr.length; i++) {
-          //Sætter td til at være det specifikke element i tr som vi vil søge igennem
-          td = tr[i].getElementsByTagName("td")[rowCount];
-          //Checker om der faktisk er sat noget til td
-          if (td) {
-            //Finder den text value som er i td
-            txtValue = td.textContent || td.innerText;
-            //Checker om text valuen passer med noget af det vi søger efter
-            if (txtValue.toUpperCase().indexOf(filter) > -1) {
-              //Sætter rowets display til ikke at være none, så det faktisk er synligt
-              tr[i].style.display = "";
-            } else {
-              //Ellers sætter vi display til at være none, så det ikke kan ses af brugeren.
-              tr[i].style.display = "none";
-            }
-          }
-        }
+        // Kald til funktionen men de krævede variabler
+        search(field, tableID, rowCount);
       });
     }, //Slut searchFunction() funktion
   },
