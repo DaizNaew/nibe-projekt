@@ -46,6 +46,8 @@ if(!isset($param)) {
         // execute query
         $stmt->execute();
     } catch(Exception $e) {
+        // set response code - 404 OK
+        http_response_code(404);
         // Meld til brugeren hvis der ikke kunne finde den valgte stored procedure
         echo json_encode(
             array(
