@@ -157,7 +157,7 @@
             $$("#assetTagForAfl").prop('disabled', false);
             $$("#aflever").prop("disabled", false);
 
-        })
+        }, function (e, e2) {console.error(e); console.error(e2)})
     }
 
     //Start på Framework7 og dens håndtering af internt data i dette page view
@@ -236,6 +236,7 @@
                                 resolve();
                             }, (error) => {
                                 //I tilfælde af vores endpoint giver os en fejl kode
+                                console.error(error);
                                 //Vi rejecter vores promise
                                 reject();
                             }, 'json');
@@ -336,7 +337,7 @@
                             $$("#assetTagForAfl").prop('disabled', false);
                         }
                     }
-                })
+                }, function (e, e2) {console.error(e); console.error(e2)})
             },
             /**
              * Funktion tager scanners input, søger i databsen og indsætter det ind i tabellen

@@ -217,7 +217,7 @@
                     arr.push(globalEquipmentID);
                     //Sletter reservationen da værktøjet nu er udlånt
                     app.request.getJSON(`${app.data['serverip']}functions/reservation/delete.php?id=${globalReservationID}&equipmentID=${globalEquipmentID}`, (data) => {
-                    }, function (e) { });
+                    }, function (e, e2) {console.error(e); console.error(e2)});
                 }
 
                 //Laver et promise for at sikre os at alt her i bliver kørt i sync
@@ -230,7 +230,7 @@
                         app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetUC&param=${newLånerID}`, (res) => {
                             //Tager brugerens certifikater og ligger i en variable
                             lånerCerts = res.records;
-                        })
+                        }, function (e, e2) {console.error(e); console.error(e2)})
                         //Starter et loop så vi kan loop igennem alle værktøj som skal udlånes for at checke efter certifikat requirements
                         for (i = 0; i < arr.length; i++) {
                             //Kalder et endpoint med equipmentID for at hente equipments certifikat requirements
@@ -257,14 +257,14 @@
                                         app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetSelectToolByID&param=${arr[o]}`, (res3) => {
                                             //Prompter brugeren med hvilket equipment der ikke blev fundet det required certifikat til
                                             app.dialog.alert(`Vær opmærksom på at brugeren <span style='color: red; font-weight: bold;'>IKKE</span> har det krævet certifikat/kørekort til ${res3.records[0].aktivNavn}`, "Udlån");
-                                        },function(e, e2){console.error(e + " " + e2)})
+                                        }, function (e, e2) {console.error(e); console.error(e2)})
                                     }
                                 }else{
                                     //I tilfælde af vores equipment ikke har et requirement
                                 }
                             
 
-                            })
+                            }, function (e, e2) {console.error(e); console.error(e2)})
                             //Kalder et endpoint for at udlåne equipmentet 
                             app.request.post(`${app.data['serverip']}endpoint/loaned.php`, { userID: newLånerID, equipmentID: arr[i], expectedDateEnd: expectedDateEnd }, function (response) {
                                 //Checker om det faktisk blev sat til at være udlånt
@@ -277,9 +277,9 @@
                                     //Vi rejecter vores promise
                                     reject();
                                 }
-                            }, function (e, e2) { console.error(e + " " + e2) }, "json")
+                            }, function (e, e2) {console.error(e); console.error(e2)})
                         }
-                    }, function (e) { })
+                    }, function (e, e2) {console.error(e); console.error(e2)})
                 })
                 //Vi afventer vores promise
                 await prom;
@@ -293,7 +293,7 @@
                             app.request.getJSON(`${app.data['serverip']}endpoint/equipment.php?id=${arr[i]}`, (response) => {
                                 //Vi logger hvert stykke equipment
                                 app.methods.addToLog(`${newLånerID}`, `Lånte ${response.records[0].activeName} med assetTag (${response.records[0].assetTag})`);
-                            })
+                            }, function (e, e2) {console.error(e); console.error(e2)})
                         }
                         //Vi reloader siden
                         app.views.main.router.navigate("/udlon/", { reloadCurrent: true, });
@@ -326,7 +326,7 @@
                         tilføjudlånsværktøj(data.records[0].ID);
                     }
                     
-                },function(e, e2){})
+                }, function (e, e2) {console.error(e); console.error(e2)})
             },
         },
         //On giver os mulighed for at reagerer på events
@@ -379,8 +379,7 @@
                             `;
                         //Tager alt data fra vores temp variable og pusher til vores table
                         $$('.låneTableBody').html(låneInnerHTML);
-                    }, function (e) {
-                    })
+                    }, function (e, e2) {console.error(e); console.error(e2)})
                 }
             }
         },

@@ -102,7 +102,7 @@
                                 // Til sidst bliver den html der er inde i 'tableBody' sat til at være den nye 'innerHTML'
                                 $$('.tableBody').html(innerHTML);
                             }
-                        });
+                        }, function (e, e2) {console.error(e); console.error(e2)});
 
                         // Query databasen med alle data om den sidste halvdel af alle udlånt værktøj
                         app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllOversigt&param=${numberOfRowsInDB},${numberOfRowsInDB/2}`, (response) => {
@@ -128,9 +128,9 @@
                                 // Til sidst bliver den html der er inde i 'tableBody' sat til at være den nye 'innerHTML'
                                 $$('.tableBody').html(innerHTML);
                                 } // slut på for loop
-                            }
-                        ); // Slut på get request til restAPI
-                    }
+                            }, function (e, e2) {console.error(e); console.error(e2)}
+                            ); // Slut på get request til restAPI
+                    }, function (e, e2) {console.error(e); console.error(e2)}
                 );// Slut på request til restAPI for at hente antal af værktøj
             }, //Slut filltableDefault() funktion
         },

@@ -110,8 +110,8 @@
                                 // Til sidst bliver den html der er inde i 'tableBody' sat til at være den nye 'innerHTML'
                                 $$('.tableBody').html(innerHTML);
                             }// Slut på for loop
-                        });// Slut request til restAPI
-                    }
+                        }, function (e, e2) {console.error(e); console.error(e2)});// Slut request til restAPI
+                    }, function (e, e2) {console.error(e); console.error(e2)}
                 );
             },// Slut fillTableDefault() funktion
         },// Slut på method blokken

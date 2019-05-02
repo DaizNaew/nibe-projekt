@@ -187,7 +187,7 @@
                 // Til sidst bliver den html der er inde i 'låneTableBody' sat til at være den nye 'innerHTML'
                 $$('.låneTableBody').html(innerHTML);
             } //Slut for loop
-        }); //Slut database kald
+        }, function (e, e2) {console.error(e); console.error(e2)}); //Slut database kald
     } //Slut tilføjreserverværktøj() funktion
 
     //Start på Framework7 og dens håndtering af internt data i dette page view
@@ -299,10 +299,7 @@
                                 //Ellers rejecter vi vores promise
                                 reject();
                             }
-                        }, function (e, e2) {
-                            //Dette er til error logging
-                            //console.error(e);
-                        }, "json");
+                        }, function (e, e2) {console.error(e); console.error(e2)});
                     }
                 })
 
@@ -323,7 +320,7 @@
                                         app.methods.addToLog(`${newReserverID}`,
                                             `Reservered ${response.records[0].activeName} med assetTag (${response.records[0].assetTag})`
                                         );
-                                    })
+                                    }, function (e, e2) {console.error(e); console.error(e2)})
                             }
                             //Navigere tilbage til den nuværende side for at reloade den
                             app.views.main.router.navigate("/reserver/", {
@@ -389,7 +386,7 @@
                                         }
                                     }
                                 } // Slut på for loop
-                            });
+                            }, function (e, e2) {console.error(e); console.error(e2)});
                         // Query databasen med alle data om den sidste halvdel af alle værktøj
                         app.request.getJSON(
                             `${app.data['serverip']}functions/callsp.php?sp=sp_GetAllToolsForLoan&param=${numberOfRowsInDB},${numberOfRowsInDB/2}`,
@@ -420,8 +417,8 @@
                                         $$('.tableoverlay').hide();
                                     }
                                 } // Slut på for loop
-                            });
-                    });
+                            }, function (e, e2) {console.error(e); console.error(e2)});
+                    }, function (e, e2) {console.error(e); console.error(e2)});
             }, //Slut filltableDefault() funktion
         }, //Slut på method blokken
 
@@ -474,7 +471,7 @@
                             ID: `${response.records[i].ID}`
                         }
                     }
-                });
+                }, function (e, e2) {console.error(e); console.error(e2)});
 
                 //Start på det object som håndterer søgefunktionen for selve bruger liste feltet
                 var autocompleteBrugerList = app.autocomplete.create({
