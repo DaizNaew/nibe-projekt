@@ -207,6 +207,17 @@
             //Kører når denne page melder at den er blevet mountet men ikke nødvendigvis er i view
             pageMounted: function (page) {
 
+                //Når vores søge felt kommer i fokus
+                $$('#admOversigtListBruger').on("focus", function(){
+                    //Tømme de andre søge felter
+                    $$('#admOversigtListTools').val('');
+                });
+                //Når vores søge felt kommer i fokus
+                $$('#admOversigtListTools').on("focus", function(){
+                    //Tømme de andre søge felter
+                    $$('#admOversigtListBruger').val('');
+                });
+
                 //Function til at fylde tabellen med alle værktøjer som kan reserveres fra databasen
                 this.fillTableDefault();
 
