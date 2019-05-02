@@ -144,6 +144,17 @@
             //Kører når denne page melder at den er blevet mountet men ikke nødvendigvis er i view
             pageMounted: function (page) {
 
+                //Når vores søge felt kommer i fokus
+                $$('#historikListBruger').on("focus", function(){
+                    //Tømme de andre søge felter
+                    $$('#historikListVærktøj').val('');
+                });
+                //Når vores søge felt kommer i fokus
+                $$('#historikListVærktøj').on("focus", function(){
+                    //Tømme de andre søge felter
+                    $$('#historikListBruger').val('');
+                });
+
                 //Function til at fylde tabellen med alle værktøjer har vært udlånt fra databasen
                 this.tableFillDefault();
                 
