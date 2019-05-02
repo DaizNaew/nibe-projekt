@@ -97,6 +97,37 @@ var app = new Framework7({
           }
         }
       });
+      //Vi bruger dom7 til at vælge vores input felt, og så reagere vi på keyup events via et callback
+      $$(`#${inputFieldID}`).click(field => {
+        //Definer lets som der skal bruges i functionen
+        let input, filter, table, tr, td, txtValue;
+        //Sætter input variablen til at være vores input field object
+        input = field.target;
+        //Sætter det som skal bruges til at filtre i databasen til værende selve input feltets value
+        filter = input.value.toUpperCase();
+        //Sætter Table variablen til at være vores table object som skal søges i
+        table = $$(`#${tableID}`);
+        //Sætter tr variablen til at være alle de elemener i tabellen som matcher vores kriteria som er tr
+        tr = table.find('tr');
+        //Start på for loop for at kigge igennem alle tabel rows og finde noget der matcher
+        for (i = 0; i < tr.length; i++) {
+          //Sætter td til at være det specifikke element i tr som vi vil søge igennem
+          td = tr[i].getElementsByTagName("td")[rowCount];
+          //Checker om der faktisk er sat noget til td
+          if (td) {
+            //Finder den text value som er i td
+            txtValue = td.textContent || td.innerText;
+            //Checker om text valuen passer med noget af det vi søger efter
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+              //Sætter rowets display til ikke at være none, så det faktisk er synligt
+              tr[i].style.display = "";
+            } else {
+              //Ellers sætter vi display til at være none, så det ikke kan ses af brugeren.
+              tr[i].style.display = "none";
+            }
+          }
+        }
+      });
     }, //Slut searchFunction() funktion
   },
 
@@ -131,44 +162,44 @@ var app = new Framework7({
         document.getElementById('view-home').style.top = app.data['navbarheight'] + "px";
       }, 0);
       // En variabel som indeholder en array af alle list items i navbaren som HTMLObjekter
-      let navbarheader = $$('#navbarheader').find('li'); 
+      let navbarheader = $$('#navbarheader').find('li');
       var idleTime = 0; // variabel som indeholder det antal minutter der ikke er sket noget på siden
       // Laver en intern timer som kører hver 60000ms, dvs hvert minut tjekker vi om 
       // der er gået det antal minutter der skal inden der bliver redirected
-        setInterval(function () {
-          idleTime++; // Incrementer idleTime hvert minut
-          // Hvis der er gået længere tid end der er defineret der skal, så køres funktionerne som redirekter brugeren til udlon og logger ud som admin
-          if (idleTime > 5) { 
-            app.methods.hideAdminNavbar(); // Gemmer admin navbaren
-            // For hver list item element i headeren som har en active class, de mister den class
-            for (let i = 0; i < navbarheader.length; i++) {
-              if ($$(navbarheader[i]).hasClass('active')) {
-                $$(navbarheader[i]).removeClass('active');
-              }
+      setInterval(function () {
+        idleTime++; // Incrementer idleTime hvert minut
+        // Hvis der er gået længere tid end der er defineret der skal, så køres funktionerne som redirekter brugeren til udlon og logger ud som admin
+        if (idleTime > 5) {
+          app.methods.hideAdminNavbar(); // Gemmer admin navbaren
+          // For hver list item element i headeren som har en active class, de mister den class
+          for (let i = 0; i < navbarheader.length; i++) {
+            if ($$(navbarheader[i]).hasClass('active')) {
+              $$(navbarheader[i]).removeClass('active');
             }
-            $$(`#navbarudlon`).addClass('active'); // Sætter udlon som aktiv i navbaren
-            // Redirekter tilbage til udlon siden
-            app.views.main.router.navigate("/udlon/", {
-              reloadCurrent: true, // Sikrer at der kommer friskt data på siden
-            });
           }
-        }, 60000); 
+          $$(`#navbarudlon`).addClass('active'); // Sætter udlon som aktiv i navbaren
+          // Redirekter tilbage til udlon siden
+          app.views.main.router.navigate("/udlon/", {
+            reloadCurrent: true, // Sikrer at der kommer friskt data på siden
+          });
+        }
+      }, 60000);
 
-        // Checker om der sker mousemovements eller keypresses
-        $$(document).mousemove(function (e) {
-          idleTime = 0;
-        });
+      // Checker om der sker mousemovements eller keypresses
+      $$(document).mousemove(function (e) {
+        idleTime = 0;
+      });
 
-        $$(document).keypress(function (e) {
-          idleTime = 0;
-        });
+      $$(document).keypress(function (e) {
+        idleTime = 0;
+      });
     }, // Slut på pageAfterIn eventet
   }, // Slut på on delen af Framework7
 });
 
 /**
  * Init/Create views
- */ 
+ */
 // Homeview som er det main view component der håndterer det meste af vores data og pages
 var homeView = app.views.create('#view-home', {
   url: '/'
