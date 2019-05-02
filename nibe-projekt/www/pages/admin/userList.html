@@ -121,6 +121,25 @@
             // Kører når denne page melder at den er blevet mountet men ikke nødvendigvis er i view
             pageMounted: function (page) {
 
+                //Når vores søge felt kommer i fokus
+                $$('#admOversigtListBrugere').on("focus", function(){
+                    //Tømme de andre søge felter
+                    $$('#admOversigtListKørekort').val('');
+                    $$('#admOversigtListCertifikat').val('');
+                });
+                //Når vores søge felt kommer i fokus
+                $$('#admOversigtListKørekort').on("focus", function(){
+                    //Tømme de andre søge felter
+                    $$('#admOversigtListBrugere').val('');
+                    $$('#admOversigtListCertifikat').val('');
+                });
+                //Når vores søge felt kommer i fokus
+                $$('#admOversigtListCertifikat').on("focus", function(){
+                    //Tømme de andre søge felter
+                    $$('#admOversigtListBrugere').val('');
+                    $$('#admOversigtListKørekort').val('');
+                });
+
                 //Function til at fylde tabellen med alle brugere fra databasen
                 this.fillTableDefault();
 
