@@ -14,9 +14,9 @@ include_once '../models/Logging.php';
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $id = $_GET['id'];
     // Laver en limit variable for at sætte hvor mange resultater der skal fetches fra databasen på én gang
-    $limit = $_GET['limit'];
+    $limit = round($_GET['limit'],0,PHP_ROUND_HALF_UP);
     // Laver et offset som fortæller hvor der skal startes fra i databasen med at hente data
-    $offset = $_GET['offset'];
+    $offset = round($_GET['offset'],0,PHP_ROUND_HALF_UP);
     // Laver en connection til databasen og assigner forbindelsen til en lokal variabel
     $database = new Database();
     $db = $database->getConnection();
