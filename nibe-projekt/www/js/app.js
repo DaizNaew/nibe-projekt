@@ -132,6 +132,15 @@ var app = new Framework7({
         app.data['navbarheight'] = $$('#view-navbar')[0].clientHeight;
         document.getElementById('view-home').style.top = app.data['navbarheight'] + "px";
       }
+      
+      /**
+       * Moment exempel på hvordan det skal bruges
+       */
+      // only needing core
+      define(['moment'], function (moment) {
+        console.log(moment().format('LLLL'));
+      });
+
     }, // Slut på pageInit eventet
 
     // Start på pageAfterIn()
