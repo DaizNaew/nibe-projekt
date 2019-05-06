@@ -317,15 +317,28 @@
                 $$('#assetTagForLon').val('');
                 //Kalder et endpoint for at hente alt information om det scannede stykke equipment
                 app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetSelectToolByAsset&param=${newAssetTag}`, (data) => {
-                    //Vi checker at det scannede stykke værktøj ikke allerede er lagt i tabellen
-                    if(arr.includes(data.records[0].ID)){
-                        //Hvis det er så returner vi
-                        return
+                    if(data.result == 0){
+                        app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_LoanReserveredTool&param=${moment().utcOffset(3).format('YYYY-MM-DD h:m:s')}`, (data2) => {
+                            if(arr.includes(data2.records[0].ID)){
+                                //Hvis det er så returner vi
+                                return
+                            }else{
+                                moment.locale('da');
+                                app.dialog.alert(`Vær opmærksom på at værktøjet '<span style='font-weight: bold;'>${data2.records[0].eName}</span>' er reserveret til '<span style='font-weight: bold;'>${data2.records[0].uName}</span>' og skal derefter afleveres INDEN '<span style='font-weight: bold;'>${moment(data2.records[0].dateStart).format("dddd [d.] D. MMMM [kl.] HH:mm")}</span>'`, "Udlån");
+                                //Ellers tilføjer vi det til tabellen
+                                tilføjudlånsværktøj(data2.records[0].ID);
+                            }
+                        },function(e, e2){console.log(e); console.log(e2)});
                     }else{
-                        //Ellers tilføjer vi det til tabellen
-                        tilføjudlånsværktøj(data.records[0].ID);
+                        //Vi checker at det scannede stykke værktøj ikke allerede er lagt i tabellen
+                        if(arr.includes(data.records[0].ID)){
+                            //Hvis det er så returner vi
+                            return
+                        }else{
+                            //Ellers tilføjer vi det til tabellen
+                            tilføjudlånsværktøj(data.records[0].ID);
+                        }
                     }
-                    
                 }, function (e, e2) {console.error(e); console.error(e2)})
             },
         },
