@@ -250,6 +250,10 @@ nav {
   margin-right: 5px;
 }
 
+.form-button-row>a {
+  margin: 0 5px;
+}
+
 .grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);

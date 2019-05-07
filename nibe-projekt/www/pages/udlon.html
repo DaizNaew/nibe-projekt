@@ -97,7 +97,8 @@
         //Bruger framework7 til at finde det med sendte element og fjerner det fra "Værktøj valgt til udlån" tabellen
         $$(`.låneTableBody`).find(`#værktøjnr${værktøjsID}`).remove();
         //Fjernede det med sendte element fra arrayet
-        arr.splice(arr.indexOf(værktøjsID), 1);
+        let pos = arr.indexOf(værktøjsID.toString());
+        arr.splice(pos, 1);
     }
 
     /**
@@ -317,26 +318,43 @@
                 $$('#assetTagForLon').val('');
                 //Kalder et endpoint for at hente alt information om det scannede stykke equipment
                 app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetSelectToolByAsset&param=${newAssetTag}`, (data) => {
+                    // Check til om værktøjet er reserveret men stadig mulighed for at blive lånt
                     if(data.result == 0){
                         app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_LoanReserveredTool&param=${moment().utcOffset(3).format('YYYY-MM-DD h:m:s')}`, (data2) => {
                             if(arr.includes(data2.records[0].ID)){
                                 //Hvis det er så returner vi
                                 return
                             }else{
+                                // Sætter moment til at være Dansk
                                 moment.locale('da');
+                                // Laver en alert box til at informere brugeren om at værktøjet er reserveret men kan stadig udlånes
                                 app.dialog.alert(`Vær opmærksom på at værktøjet '<span style='font-weight: bold;'>${data2.records[0].eName}</span>' er reserveret til '<span style='font-weight: bold;'>${data2.records[0].uName}</span>' og skal derefter afleveres INDEN '<span style='font-weight: bold;'>${moment(data2.records[0].dateStart).format("dddd [d.] D. MMMM [kl.] HH:mm")}</span>'`, "Udlån");
                                 //Ellers tilføjer vi det til tabellen
                                 tilføjudlånsværktøj(data2.records[0].ID);
                             }
                         },function(e, e2){console.log(e); console.log(e2)});
-                    }else{
+                    } else {
+                        var BreakException = {};
                         //Vi checker at det scannede stykke værktøj ikke allerede er lagt i tabellen
-                        if(arr.includes(data.records[0].ID)){
+                        if(arr.includes(data.records[arr.length].ID) && arr.length == data.records.length){
                             //Hvis det er så returner vi
-                            return
-                        }else{
-                            //Ellers tilføjer vi det til tabellen
-                            tilføjudlånsværktøj(data.records[0].ID);
+                            return;
+                        } else {
+                            try {
+                                // Looper igennem alle værktøj for at sikre os at de ikke allerede er tilføjet til udlån, ellers tilføj den
+                                data.records.forEach(tool => {
+                                    if(!arr.includes(tool.ID.toString())) {
+                                        //Ellers tilføjer vi det til tabellen
+                                        tilføjudlånsværktøj(tool.ID);
+                                        // Smid breakException
+                                        throw BreakException;
+                                    }
+                                })
+                                // Fang BreakException
+                            } catch(e) {
+                                // Smid den ud fordi vi skulle bare have noget dirty kode til at breake ud af en forEach loop
+                                if (e !== BreakException) throw e;
+                            }
                         }
                     }
                 }, function (e, e2) {console.error(e); console.error(e2)})
