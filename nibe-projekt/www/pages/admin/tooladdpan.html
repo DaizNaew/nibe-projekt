@@ -95,8 +95,11 @@
                             </table>
                         </div>
                         <div class="form-row form-button-row">
-                            <a><button type="submit" @click="edittool" class="no-ripple col btn btn-primary godbtn">Rediger Værktøj</button></a>
-                            <a><button type="button" @click="deletetool" class="no-ripple col btn btn-primary godbtn deletebtn">Slet Værktøj</button></a>
+                            <a><button type="submit" @click="edittool" class="no-ripple col btn btn-primary godbtn" id="edittoolples">Rediger Værktøj</button></a>
+                            <a><button type="button" @click="deletetool" class="no-ripple col btn btn-primary godbtn deletebtn" id="delsinglebtn">Slet Værktøj</button></a>
+                            <a><button type="button" @click="selectmoretools" class="no-ripple col btn btn-primary godbtn deletemorebtn" id="selmorebtn">Slet Flere Værktøj</button></a>
+                            <a><button type="button" @click="selectnomoretools" class="no-ripple col btn btn-primary godbtn" id="nomoresel" style="display:none;">Annuller</button></a>
+                            <a><button type="button" @click="deletemoretools" class="no-ripple col btn btn-primary godbtn deletebtn" id="delmorebtn" style="display:none;">Slet Valgte Værktøj</button></a>
                         </div>
                     </div>
                 </div>
@@ -142,6 +145,38 @@
                         $$('form').find(`#kortKrav`).val("-1");
                     });
                 },
+                /**
+                 * Denne Funktion bruges til at slette flere værktøj af gangen med
+                 */
+                 selectnomoretools : () => {
+                    $$('#delmorebtn').hide();
+                    $$('#nomoresel').hide();
+                    $$('#selmorebtn').show();
+                    $$('#edittoolples').show();
+                    $$('#delsinglebtn').show();
+                    $$('#insert').prop({disabled: false});
+                    $$('#reset').prop({disabled: false});
+                },
+                /**
+                 * Denne Funktion bruges til at slette flere værktøj af gangen med
+                 */
+                 deletemoretools : () => {
+
+                },
+                /**
+                 * Denne Funktion bruges til at gøre tabellen klar til at slette mere end 1 værktøj af gangen
+                 */
+                selectmoretools : () => {
+                    $$('#delmorebtn').show();
+                    $$('#nomoresel').show();
+                    $$('#selmorebtn').hide();
+                    $$('#edittoolples').hide();
+                    $$('#delsinglebtn').hide();
+                    $$('#insert').prop({disabled: true});
+                    $$('#reset').prop({disabled: true});
+
+                },
+
                 /**
                  * Denne Funktion bruges til at slette værktøj med
                  */
