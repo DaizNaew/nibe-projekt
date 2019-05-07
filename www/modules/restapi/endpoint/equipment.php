@@ -15,13 +15,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     if(empty($_GET['limit'])){
         $limit = 20000;
     }else{
-        $limit = $_GET['limit'];
+        $limit = round($_GET['limit'],0,PHP_ROUND_HALF_UP);
     }
     // Checker om der bliver sat et offset med, hvis ikke sætter vi bare offset til 0, ellers bruger vi det der blev sendt med
     if(empty($_GET['offset'])){
         $offset = 0;
     }else{
-        $offset = $_GET['offset'];
+        $offset = round($_GET['offset'],0,PHP_ROUND_HALF_UP);
     }
     $id = $_GET['id'];
 

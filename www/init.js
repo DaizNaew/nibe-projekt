@@ -1,4 +1,3 @@
-
 // For any third party dependencies, like jQuery, place them in the lib folder.
 
 // Configure loading modules from the lib directory,
@@ -9,7 +8,7 @@ requirejs.config({
     paths: {
         app: '../js',
         framework7: '../framework7',
-        mysql: '../mysql'
+        mysql: '../node_modules/mysql'
     }
 });
 

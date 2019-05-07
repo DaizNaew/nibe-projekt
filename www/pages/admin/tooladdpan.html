@@ -95,8 +95,11 @@
                             </table>
                         </div>
                         <div class="form-row form-button-row">
-                            <a><button type="submit" @click="edittool" class="no-ripple col btn btn-primary godbtn">Rediger Værktøj</button></a>
-                            <a><button type="button" @click="deletetool" class="no-ripple col btn btn-primary godbtn deletebtn">Slet Værktøj</button></a>
+                            <a><button type="submit" @click="edittool" class="no-ripple col btn btn-primary godbtn" id="edittoolples">Rediger Værktøj</button></a>
+                            <a><button type="button" @click="deletetool" class="no-ripple col btn btn-primary godbtn deletebtn" id="delsinglebtn">Slet Værktøj</button></a>
+                            <a><button type="button" @click="selectmoretools" class="no-ripple col btn btn-primary godbtn deletemorebtn" id="selmorebtn">Slet Flere Værktøj</button></a>
+                            <a><button type="button" @click="selectnomoretools" class="no-ripple col btn btn-primary godbtn" id="nomoresel" style="display:none;">Annuller</button></a>
+                            <a><button type="button" @click="deletemoretools" class="no-ripple col btn btn-primary godbtn deletebtn" id="delmorebtn" style="display:none;">Slet Valgte Værktøj</button></a>
                         </div>
                     </div>
                 </div>
@@ -114,6 +117,7 @@
              */
             data: function () {
                 return {
+                    delMore: false,
                 };
             },
             // Framework7 Component Methods
@@ -143,6 +147,90 @@
                     });
                 },
                 /**
+                 * Denne Funktion bruges til at gå tilbage til normal tilstand i tabellen
+                 */
+                 selectnomoretools : () => {
+                     // Sørger for at alle de knapper som ikke længere skal være disabled kan bruges
+                    $$('#delmorebtn').hide();
+                    $$('#nomoresel').hide();
+                    $$('#selmorebtn').show();
+                    $$('#edittoolples').show();
+                    $$('#delsinglebtn').show();
+                    $$('#insert').prop({disabled: false});
+                    $$('#reset').prop({disabled: false});
+                    // Unchecker alle input felter i tabellen og sætter deres type tilbage til radio
+                    $$('.tableBody').filter((index, el) => {
+                        $$(el).find('input').prop('checked', false);
+                        $$(el).find('input[type="checkbox"]').attr('type', 'radio');
+                    });
+                },
+                /**
+                 * Denne Funktion bruges til at slette alle de valgte værktøj i tabellen
+                 */
+                 deletemoretools : () => {
+                    //Prompter brugeren for at sikre os at knappen ikke blev trykket på ved et uheld
+                    app.dialog.confirm('Er du sikker på at du vil slette de valgte værktøj fra databasen?', 'Slet Værktøj', () => {
+                        //Finder radio knapper i "tableBody"
+                        var checkBoxObj = $$('.tableBody').find('input[type="checkbox"]');
+                        //Looper igennem hvert element
+                        checkBoxObj.forEach(element => {
+                            //Hvis radio knappen er checked
+                            if(element.checked) {
+                                //Kalder et endpoint for at slette certifikats krav
+                                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_DeleteEC&param=${element.value}`, (response) =>{
+                                }, (error) => { // Log af error hvis RestAPIen sender alt andet end http response 200
+                                    console.error(error);
+                                })
+                                //Kalder et endpoint for at slette kørekorts krav
+                                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_DeleteEK&param=${element.value}`, (response) =>{
+                                }, (error) => { // Log af error hvis RestAPIen sender alt andet end http response 200
+                                    console.error(error);
+                                })
+                                //Kalder et endpoint for at slette værktøjet
+                                app.request.getJSON(`${app.data['serverip']}functions/tools/delete.php?id=${element.value}`, (data) => {
+                                    //Hvis vi får det forventet svar fra endpoint
+                                    if(data.result == 1) {
+                                        //Logger at værktøjet blev slettet
+                                        app.methods.addToLog(`${app.data['userID']}`, `Slettet værktøjet ${element.parentElement.parentElement.children[1].innerHTML} med assetTag (${element.parentElement.parentElement.children[6].innerHTML})`);
+                                    //Hvis ikke vi får det forventet svar fra endpointed
+                                    } else {
+                                        //Prompter brugeren om at noget gik galt
+                                        app.dialog.alert('Værktøjet blev IKKE slettet fra databasen', 'Fejl af sletning', () => {
+                                            //Refresher siden
+                                            app.views.main.router.navigate("/tooladdpan/", {reloadCurrent: true,});
+                                        });
+                                    }
+                                }, (error) => { // Log af error hvis RestAPIen sender alt andet end http response 200
+                                    console.error(error);
+                                });
+                            }
+                        });
+                        //Prompter brugeren med en besked om at alt det valgte værktøj blev slettet
+                        app.dialog.alert('Værktøjet blev slettet fra databasen', 'Success af sletning', () => {
+                            //Refresher siden
+                            app.views.main.router.navigate("/tooladdpan/", {reloadCurrent: true,});
+                        });
+                    });
+
+                },
+                /**
+                 * Denne Funktion bruges til at gøre tabellen klar til at slette mere end 1 værktøj ad gangen
+                 */
+                selectmoretools: function (btn) {
+                    // Sørger for at alle de knapper som ikke er nødvendige så længe vi er i slet mode, er skjult eller disabled
+                    $$('#delmorebtn').show();
+                    $$('#nomoresel').show();
+                    $$('#selmorebtn').hide();
+                    $$('#edittoolples').hide();
+                    $$('#delsinglebtn').hide();
+                    $$('#insert').prop({disabled: true});
+                    $$('#reset').prop({disabled: true});
+                    // Sætter alle input felter i tabellen som er af typen radio til at være af typen checkbox
+                    $$('.tableBody').filter((index, el) => {
+                        $$(el).find('input[type="radio"]').attr('type', 'checkbox');
+                    });
+                },
+                /**
                  * Denne Funktion bruges til at slette værktøj med
                  */
                 deletetool : () => {
@@ -155,9 +243,15 @@
                             //Hvis radio knappen er checked
                             if(element.checked) {
                                 //Kalder et endpoint for at slette certifikats krav
-                                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_DeleteEC&param=${element.value}`, (response) =>{})
+                                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_DeleteEC&param=${element.value}`, (response) =>{
+                                }, (error) => { // Log af error hvis RestAPIen sender alt andet end http response 200
+                                    console.error(error);
+                                })
                                 //Kalder et endpoint for at slette kørekorts krav
-                                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_DeleteEK&param=${element.value}`, (response) =>{})
+                                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_DeleteEK&param=${element.value}`, (response) =>{
+                                }, (error) => { // Log af error hvis RestAPIen sender alt andet end http response 200
+                                    console.error(error);
+                                })
                                 //Kalder et endpoint for at slette værktøjet
                                 app.request.getJSON(`${app.data['serverip']}functions/tools/delete.php?id=${element.value}`, (data) => {
                                     //Hvis vi får det forventet svar fra endpoint
@@ -177,6 +271,8 @@
                                             app.views.main.router.navigate("/tooladdpan/", {reloadCurrent: true,});
                                         });
                                     }
+                                }, (error) => { // Log af error hvis RestAPIen sender alt andet end http response 200
+                                    console.error(error);
                                 });
                             }
                         });
@@ -202,8 +298,8 @@
                     };
                     //Checker at alle required felter ikke er tomme
                     if(tool.activeName == ""){
-                    app.dialog.alert("Værktøj Navn feltet må ikke være tomt.", "Opret værktøj");
-                    return;
+                        app.dialog.alert("Værktøj Navn feltet må ikke være tomt.", "Opret værktøj");
+                        return;
                     }
                     if(tool.assetTag == ""){
                         app.dialog.alert("Asset Tag feltet må ikke være tomt.", "Opret værktøj");
@@ -253,9 +349,13 @@
                                             app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_InsertIntoEK&param=${newToolID},${kortkravID}`, (response) =>{
                                                 //Resolver promise
                                                 resolve();
+                                            }, (error) => { // Log af error hvis RestAPIen sender alt andet end http response 200
+                                                console.error(error);
                                             })
                                         }
-                                    },function(e){console.error(e)})
+                                    }, (error) => { // Log af error hvis RestAPIen sender alt andet end http response 200
+                                        console.error(error);
+                                    })
                                 //Hvis ikke der er et certifikats krav
                                 }else{
                                     //Hvis der ikke er kørekorts krav
@@ -268,9 +368,13 @@
                                             app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_InsertIntoEK&param=${newToolID},${kortkravID}`, (response) =>{
                                                 //Resolver promise
                                                 resolve();
+                                            }, (error) => { // Log af error hvis RestAPIen sender alt andet end http response 200
+                                                console.error(error);
                                             })
                                         }
                                 }
+                                }, (error) => { // Log af error hvis RestAPIen sender alt andet end http response 200
+                                    console.error(error);
                                 })
                             //Hvis der hverken er certifikat eller kørekorts krav
                             }else{
@@ -278,7 +382,7 @@
                                 resolve();
                             }
                             
-                        }, (error) => {
+                        }, (error) => { // Log af error hvis RestAPIen sender alt andet end http response 200
                             console.error(error)
                             reject();
                         }, 'json');
@@ -329,7 +433,9 @@
                                 app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetSingleEquipmentCertifikat&param=${equipmentID}`, (response) => {
                                     //Hvis der er et certifikats krav bliver krav feltet sat
                                     $$('form').find(`#certKrav`).val(response.records[0].certifikatID);
-                                },function(e, e2){
+                                },function(e, e2){ // Logger error i consolen hvis restAPIen sender alt andet end http response 200 tilbage
+                                    console.error(e);
+                                    console.error(e2);
                                     //Hvis ikke der er et krav bliver krav feltet sat til "Ingen"
                                     $$('form').find(`#certKrav`).val("-1");
                                 })
@@ -337,7 +443,9 @@
                                 app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetSingleEquipmentKørekort&param=${equipmentID}`, (response) => {
                                     //Hvis der er et certifikats krav bliver krav feltet sat
                                     $$('form').find(`#kortKrav`).val(response.records[0].kørekortID);
-                                },function(e, e2){
+                                },function(e, e2){ // Logger error i consolen hvis restAPIen sender alt andet end http response 200 tilbage
+                                    console.error(e);
+                                    console.error(e2);
                                     //Hvis ikke der er et krav bliver krav feltet sat til "Ingen"
                                     $$('form').find(`#kortKrav`).val("-1");
                                 })
@@ -380,8 +488,8 @@
                     };
                     //Checker alle required felter ikke er tomme
                     if(tool.activeName == ""){
-                    app.dialog.alert("Værktøj Navn feltet må ikke være tomt.", "Opret værktøj");
-                    return;
+                        app.dialog.alert("Værktøj Navn feltet må ikke være tomt.", "Opret værktøj");
+                        return;
                     }
                     if(tool.assetTag == ""){
                         app.dialog.alert("Asset Tag feltet må ikke være tomt.", "Opret værktøj");
@@ -409,9 +517,15 @@
                             let kortKravID = $$('form').find(`#kortKrav`).val();
 
                             //Kalder endpoint med værktøjs IDet for at slette alle certifikat krav
-                            app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_DeleteEC&param=${equipmentID}`, (response) => {});
+                            app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_DeleteEC&param=${equipmentID}`, (response) => {
+                            }, (error) => { // Log af error hvis RestAPIen sender alt andet end http response 200
+                                console.error(error);
+                            });
                             //Kalder endpoint med værktøjs IDet for at slette alle kørekort krav
-                            app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_DeleteEK&param=${equipmentID}`, (response) => {});
+                            app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_DeleteEK&param=${equipmentID}`, (response) => {
+                            }, (error) => { // Log af error hvis RestAPIen sender alt andet end http response 200
+                                console.error(error);
+                            });
                              //Hvis der er enten et certifikats krav eller kørekorts krav enter vi det her scope
                             if(certKravID != -1 || kortKravID != -1){
                                 //Hvis der er et certifikat krav
@@ -428,8 +542,12 @@
                                             app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_InsertIntoEK&param=${equipmentID},${kortKravID}`, (response) =>{
                                                 //Resolver promise
                                                 resolve();
+                                            }, (error) => { // Log af error hvis RestAPIen sender alt andet end http response 200
+                                                console.error(error);
                                             })
                                         }
+                                    }, (error) => { // Log af error hvis RestAPIen sender alt andet end http response 200
+                                        console.error(error);
                                     })
                                 //Hvis ikke der er et certifikats krav
                                 }else{
@@ -443,22 +561,22 @@
                                         app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_InsertIntoEK&param=${equipmentID},${kortKravID}`, (response) =>{
                                             //Resolver promise
                                             resolve();
+                                        }, (error) => { // Log af error hvis RestAPIen sender alt andet end http response 200
+                                            console.error(error);
                                         })
                                     }
-
                                 }
                             //Hvis der hverken er certifikat eller kørekorts krav
                             }else{
                                 //Resolver promise
                                 resolve();
                             }
-
                             
-                        }, (error) => {
+                        }, (error) => { // Log af error hvis RestAPIen sender alt andet end http response 200
+                            console.error(error);
                             reject();
-                        }, 'json');
-                        
-                        
+                        }, 
+                        'json');
                     })
                     //Afventer vores promise
                     await prom;
@@ -524,6 +642,8 @@
                                     }
                                 }
                             }
+                        }, (error) => { // Log af error hvis RestAPIen sender alt andet end http response 200
+                            console.error(error);
                         });
                         // Query databasen med alle data om den sidste halvdel af alle værktøj
                         app.request.getJSON(`${app.data['serverip']}endpoint/equipment.php?id=-1&limit=${numberOfRowsInDB}&offset=${numberOfRowsInDB/2}`, (tools) => {
@@ -553,7 +673,11 @@
                                     $$('.tableoverlay').hide();
                                 }
                             }
+                        }, (error) => { // Log af error hvis RestAPIen sender alt andet end http response 200
+                            console.error(error);
                         });
+                    }, (error) => { // Log af error hvis RestAPIen sender alt andet end http response 200
+                        console.error(error);
                     });
                 },
             },
@@ -570,6 +694,8 @@
                             //Smider dem ind som en option i vores dropdown menu
                             $$('#Kategori').append(`<option value="${cat.ID}">${cat.katNavn}</option>`)
                         }
+                    }, (error) => { // Log af error hvis RestAPIen sender alt andet end http response 200
+                        console.error(error);
                     });
                     //Kalder et endpoint som returner alle certifikaterne fra DB'en
                     app.request.getJSON(`${app.data['serverip']}endpoint/certificate.php?id=-1&tableid=0`, (certs) => {
@@ -578,6 +704,8 @@
                             //Smider dem ind som en option i vores dropdown menu
                             $$('#certKrav').append(`<option value="${cert.ID}">${cert.type}</option>`)
                         }
+                    }, (error) => { // Log af error hvis RestAPIen sender alt andet end http response 200
+                        console.error(error);
                     });
                     //Kalder et endpoint som returner alle kørekortene fra DB'en
                     app.request.getJSON(`${app.data['serverip']}endpoint/certificate.php?id=-1&tableid=1`, (korts) => {
@@ -586,6 +714,8 @@
                             //Smider dem ind som en option i vores dropdown menu
                             $$('#kortKrav').append(`<option value="${kort.ID}">${kort.type}</option>`)
                         }
+                    }, (error) => { // Log af error hvis RestAPIen sender alt andet end http response 200
+                        console.error(error);
                     });
                     //Function til at fylde tabellen med alle værktøjer som er udlånt fra databasen
                     this.fillTableDefault();
@@ -604,10 +734,12 @@
                             oldrow = e;
                         }
                             //Hvis oldrow ikke er sat så sætter vi den til at være highlighted
-                            $$(e.target.parentElement).find('input[type="radio"]').prop('checked', true);
+                            $$(e.target.parentElement).find('input').prop('checked', true);
                             $$(e.target.parentElement).css('background-color', '#a8baad');
-                        
                     });
+                    
+                },
+                pageAfterIn: function(page) {
                     //Function som gør det muligt at søge i tabellen med værktøj
                     //Første param er selve input feltets ID
                     //Andet param er selve tabellens ID
