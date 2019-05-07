@@ -158,7 +158,10 @@
                                     // Til sidst bliver den html der er inde i 'tableBody' sat til at være den nye 'innerHTML'
                                     $$('.tableBody').html(innerHTML);
                                 }
-                            });
+                            }, (error) => { // Log af error hvis RestAPIen sender alt andet end http response 200
+                                console.error(error);
+                            }
+                            );
                         // Query databasen med alle data om den sidste halvdel af alle udlånt værktøj
                         app.request.getJSON(
                             `${app.data['serverip']}functions/callsp.php?sp=sp_GetAllOversigt&param=${numberOfRowsInDB},${numberOfRowsInDB/2}`,
@@ -189,8 +192,12 @@
                                     // Til sidst bliver den html der er inde i 'tableBody' sat til at være den nye 'innerHTML'
                                     $$('.tableBody').html(innerHTML);
                                 } // slut på for loop
+                            }, (error) => { // Log af error hvis RestAPIen sender alt andet end http response 200
+                                console.error(error);
                             }
                         ); // Slut på get request til restAPI
+                    }, (error) => { // Log af error hvis RestAPIen sender alt andet end http response 200
+                        console.error(error);
                     }
                 ); // Slut på request til restAPI for at hente antal af værktøj
             }, //Slut filltableDefault() funktion
@@ -199,6 +206,17 @@
         on: {
             //Kører når denne page melder at den er blevet mountet men ikke nødvendigvis er i view
             pageMounted: function (page) {
+
+                //Når vores søge felt kommer i fokus
+                $$('#admOversigtListBruger').on("focus", function(){
+                    //Tømme de andre søge felter
+                    $$('#admOversigtListTools').val('');
+                });
+                //Når vores søge felt kommer i fokus
+                $$('#admOversigtListTools').on("focus", function(){
+                    //Tømme de andre søge felter
+                    $$('#admOversigtListBruger').val('');
+                });
 
                 //Function til at fylde tabellen med alle værktøjer som kan reserveres fra databasen
                 this.fillTableDefault();

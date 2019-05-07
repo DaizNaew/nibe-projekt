@@ -100,6 +100,7 @@
 <script>
     //Array til at holde alle de værktøj som skal afleveres
     var toolsForDeliver = [];
+    var toolsForDeliverID = [];
 
     /**
      * Funktion som køres når brugeren vil fjerne et værktøj fra afleverings listen
@@ -148,6 +149,7 @@
                     `;
             
             toolsForDeliver.push(response.records[0].assetTag);
+            toolsForDeliverID.push(response.records[0].ID);
             //Tager alt data fra vores temp variable og pusher til vores table
             $$('.låneTableBody').html(innerHTML);
             //Tømmer tables efter itemen er blevet tilføjet til afleverings tablet
@@ -157,7 +159,7 @@
             $$("#assetTagForAfl").prop('disabled', false);
             $$("#aflever").prop("disabled", false);
 
-        })
+        }, function (e, e2) {console.error(e); console.error(e2)})
     }
 
     //Start på Framework7 og dens håndtering af internt data i dette page view
@@ -236,6 +238,7 @@
                                 resolve();
                             }, (error) => {
                                 //I tilfælde af vores endpoint giver os en fejl kode
+                                console.error(error);
                                 //Vi rejecter vores promise
                                 reject();
                             }, 'json');
@@ -263,25 +266,31 @@
              * Denne funktion sørger for at query databasen via vores restAPI, og formatere selve responset og indsætte det i tabellen
              */
             fillTable: function (response) {
-                //Tager alle elementer som allerede findes i "Værktøj valgt til aflevering" tabellen og ligger i vores temp variable
-                let innerHTML = $$('.tableBody').html();
-                innerHTML +=
-                    `
-                            <tr>
-                                <td style="display: none;">${response.ID}</td>
-                                <td class="label-cell udlåner">${response.userName}</td>
-                                <td class="label-cell VærktøjsNavn">${response.equipmentNavn}</td>
-                                <td class="label-cell Kategori">${response.equipmentKategori}</td>
-                                <td class="label-cell Mærke">${response.equipmentBrand}</td>
-                                <td class="label-cell Model">${response.equipmentModel}</td>
-                                <td class="label-cell AssetTag">${response.equipmentAsset}</td>
-                                <td class="radio-cell">
-                                    <button type="button" id="btn${response.equipmentID}" onclick="addFromTable(${response.equipmentID})" class="no-ripple btn-primary">Tilføj</button>
-                                </td>
-                            </tr>
-                            `;
-                //Tager alt data fra vores temp variable og pusher til vores table
-                $$('.tableBody').html(innerHTML);
+                if(!toolsForDeliverID.includes(response.equipmentID)) {
+                    //Vi gør vores "dupe" table synligt
+                    $$('#dupeTable').show();
+                    //Tager alle elementer som allerede findes i "Værktøj valgt til aflevering" tabellen og ligger i vores temp variable
+                    let innerHTML = $$('.tableBody').html();
+                    innerHTML +=
+                        `
+                                <tr>
+                                    <td style="display: none;">${response.ID}</td>
+                                    <td class="label-cell udlåner">${response.userName}</td>
+                                    <td class="label-cell VærktøjsNavn">${response.equipmentNavn}</td>
+                                    <td class="label-cell Kategori">${response.equipmentKategori}</td>
+                                    <td class="label-cell Mærke">${response.equipmentBrand}</td>
+                                    <td class="label-cell Model">${response.equipmentModel}</td>
+                                    <td class="label-cell AssetTag">${response.equipmentAsset}</td>
+                                    <td class="radio-cell">
+                                        <button type="button" id="btn${response.equipmentID}" onclick="addFromTable(${response.equipmentID})" class="no-ripple btn-primary">Tilføj</button>
+                                    </td>
+                                </tr>
+                                `;
+                    //Tager alt data fra vores temp variable og pusher til vores table
+                    $$('.tableBody').html(innerHTML);
+                } else {
+                    $$("#assetTagForAfl").prop('disabled', false);
+                }
             },
             /**
              * Funktion der bruges til at tilføje værktøj til "Værktøj valgt til aflevering" tabellen
@@ -302,8 +311,7 @@
                     for (let i = 0; i < response.records.length; i++) {
                         //Hvis vi modtog mere end 1 ting fra endpointed
                         if (response.records.length > 1) {
-                            //Vi gør vores "dupe" table synligt
-                            $$('#dupeTable').show();
+                            
                             //Kalder vores funktion med fylder vores "dupe" table med data
                             this.fillTable(response.records[i]);
                             //Hvis vi kun modtager 1 ting fra endpointed
@@ -336,7 +344,7 @@
                             $$("#assetTagForAfl").prop('disabled', false);
                         }
                     }
-                })
+                }, function (e, e2) {console.error(e); console.error(e2)})
             },
             /**
              * Funktion tager scanners input, søger i databsen og indsætter det ind i tabellen
@@ -345,7 +353,7 @@
                 //Hvis scan feltet er tomt returner vi
                 if($$("#assetTagForAfl").val() === "") return;
                 //Hvis IDet fra scan feltet allerede er i vores afleverings array så returner vi og tømmer feltet
-                if (toolsForDeliver.includes($$("#assetTagForAfl").val())) return $$("#assetTagForAfl").val('');
+                //if (toolsForDeliver.includes($$("#assetTagForAfl").val())) return $$("#assetTagForAfl").val('');
                 //Kalder vores funktion til at tilføje det indscannede værktøj til tabellen
                 this.tilføjafleveringsværktøj($$("#assetTagForAfl").val());
                 //Vi tømmer scan feltet
