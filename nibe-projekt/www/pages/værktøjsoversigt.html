@@ -34,6 +34,7 @@
                                     <th class="label-cell" scope="col">Model</th>
                                     <th class="label-cell" scope="col">AssetTag</th>
                                     <th class="label-cell" scope="col">Stand</th>
+                                    <th class="label-cell" scope="col">Antal</th>
                                 </tr>
                             </thead>
                             <tbody class="tableBody">
@@ -89,6 +90,7 @@
                                             <td class="label-cell Model">${response.records[i].equipmentModel}</td>
                                             <td class="label-cell AssetTag">${response.records[i].equipmentAsset}</td>
                                             <td class="label-cell Stand">${response.records[i].equipmentCondition}</td>
+                                            <td class="label-cell Antal">${response.records[i].amount}</td>
                                         </tr>
                                         `;
                                 // Til sidst bliver den html der er inde i 'tableBody' sat til at være den nye 'innerHTML'
@@ -111,6 +113,7 @@
                                             <td class="label-cell Model">${response.records[i].equipmentModel}</td>
                                             <td class="label-cell AssetTag">${response.records[i].equipmentAsset}</td>
                                             <td class="label-cell Stand">${response.records[i].equipmentCondition}</td>
+                                            <td class="label-cell Antal">${response.records[i].amount}</td>
                                         </tr>
                                         `;
                                 // Til sidst bliver den html der er inde i 'tableBody' sat til at være den nye 'innerHTML'
