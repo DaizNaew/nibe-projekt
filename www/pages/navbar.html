@@ -14,16 +14,19 @@
             <a class="nav-link" href="/reserver/" data-view=".view-main" data-reload-current="true">Reserver</a>
           </li>
           <li class="nav-item" id="navbaroversigt" @click="dothis('navbaroversigt', false)">
-            <a class="nav-link" href="/oversigt/" data-view=".view-main" data-reload-current="true">Oversigt</a>
+            <a class="nav-link" href="/oversigt/" data-view=".view-main" data-reload-current="true">Udlåns Oversigt</a>
           </li>
           <li class="nav-item" id="navbarreservationer" @click="dothis('navbarreservationer', false)">
             <a class="nav-link" href="/reservationer/" data-view=".view-main" data-reload-current="true">Reservationer</a>
+          </li>
+          <li class="nav-item" id="navbarværktøjsoversigt" @click="dothis('navbarværktøjsoversigt', false)">
+            <a class="nav-link" href="/værktøjsoversigt/" data-view=".view-main" data-reload-current="true">Værktøjs Oversigt</a>
           </li>
           <li class="nav-item" id="navbarhistorik" @click="dothis('navbarhistorik', false)">
             <a class="nav-link" href="/historik/" data-view=".view-main" data-reload-current="true">Historik</a>
           </li>
           <li class="nav-item" id="createuser" @click="dothis('createuser', false)">
-              <a class="nav-link" href="/createuser/" data-view=".view-main" data-reload-current="true">Opret låner</a>
+              <a class="nav-link" href="/createuser/" data-view=".view-main" data-reload-current="true">Opret/Rediger låner</a>
           </li>
           <li class="nav-item adminbutton admintab" id="navbaradminlogin" @click="dothis('navbaradminlogin', false)">
             <a class="nav-link" href="/adminlogin/" data-view=".view-main" data-reload-current="true">Administrator</a>
@@ -45,7 +48,7 @@
             <a class="nav-link" href="/toolkat/" data-view=".view-main" data-reload-current="true">Opret værktøjs kategori</a>
           </li>
           <li class="nav-item adminnavli" id="adminnavbaroversigt" @click="dothis('adminnavbaroversigt', true)">
-            <a class="nav-link" href="/adminoversigt/" data-view=".view-main" data-reload-current="true">Udlåns oversigt</a>
+            <a class="nav-link" href="/adminoversigt/" data-view=".view-main" data-reload-current="true">Rediger Udlåns oversigt</a>
           </li>
           <li class="nav-item adminnavli" id="adminnavbarlog" @click="dothis('adminnavbarlog', true)">
             <a class="nav-link" href="/log/" data-view=".view-main" data-reload-current="true">Log</a>
