@@ -88,15 +88,15 @@
                                 <span><i class="fas fa-search icon-format"></i></span>
                             </div>
                         </div>
-                        <div class="tableFixHead" style="max-height: 475px !important">
+                        <div class="tableFixHead data-table data-table-init" style="max-height: 475px !important">
                             <table class="table fixed_header" style="background-color: #c5d9ec33;" id="userlistTable">
                                 <thead>
                                     <tr>
                                         <th scope="col" style="display: none;">#</th>
-                                        <th class="label-cell" scope="col">Fulde navn</th>
-                                        <th class="label-cell" scope="col">Mobil nr</th>
-                                        <th class="label-cell" scope="col">Adresse</th>
-                                        <th class="label-cell" scope="col">Medhjælper nr</th>
+                                        <th class="label-cell sortable-cell sortable-cell-active" scope="col" @click="sortTable('userlistTable', '.tableoverlay', 1)">Fulde navn</th>
+                                        <th class="label-cell sortable-cell" scope="col" @click="sortTable('userlistTable', '.tableoverlay', 2)">Mobil nr</th>
+                                        <th class="label-cell sortable-cell" scope="col" @click="sortTable('userlistTable', '.tableoverlay', 3)">Adresse</th>
+                                        <th class="label-cell sortable-cell" scope="col" @click="sortTable('userlistTable', '.tableoverlay', 4)">Medhjælper nr</th>
                                         <th class="radio-cell" scope="col">
                                             <!--<input type="checkbox" class="no-ripple"/>-->
                                             <i class="icon-radio"></i>
@@ -138,6 +138,9 @@
         },
         // Framework7 Component Methods
         methods: {
+
+            sortTable : (tableID, overlayClass, n) => app.methods.sortTable(tableID, overlayClass, n),
+
             /**
              * Denne Funktion er til at nulstille alle input felter og elementer på siden
              */

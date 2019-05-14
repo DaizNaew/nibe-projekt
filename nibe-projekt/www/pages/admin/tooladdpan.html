@@ -72,17 +72,17 @@
                                 <span><i class="fas fa-search icon-format"></i></span>
                             </div>
                         </div>
-                        <div class="tableFixHead" style="max-height: 450px;">
+                        <div class="tableFixHead data-table data-table-init" style="max-height: 450px;">
                             <table class="table fixed_header" style="width:auto; background-color: #c5d9ec33;" id="toolTable">
                                 <thead>
                                     <tr>
                                         <th scope="col" style="display: none;">#</th>
-                                        <th class="label-cell" scope="col">Værktøjs navn</th>
-                                        <th class="label-cell" scope="col">Kategori</th>
-                                        <th class="label-cell" scope="col">Mærke</th>
-                                        <th class="label-cell" scope="col">Model</th>
-                                        <th class="label-cell" scope="col">Serienummer</th>
-                                        <th class="label-cell" scope="col">AssetTag</th>
+                                        <th class="label-cell sortable-cell" scope="col" @click="sortTable('toolTable', '.tableoverlay', 1)">Værktøjs navn</th>
+                                        <th class="label-cell sortable-cell" scope="col" @click="sortTable('toolTable', '.tableoverlay', 2)">Kategori</th>
+                                        <th class="label-cell sortable-cell" scope="col" @click="sortTable('toolTable', '.tableoverlay', 3)">Mærke</th>
+                                        <th class="label-cell sortable-cell" scope="col" @click="sortTable('toolTable', '.tableoverlay', 4)">Model</th>
+                                        <th class="label-cell sortable-cell" scope="col" @click="sortTable('toolTable', '.tableoverlay', 5)">Serienummer</th>
+                                        <th class="label-cell sortable-cell sortable-cell-active" scope="col" @click="sortTable('toolTable', '.tableoverlay', 6)">AssetTag</th>
                                         <th class="radio-cell" scope="col">
                                             <!--<input type="checkbox" class="no-ripple"/>-->
                                             <i class="icon-radio"></i>
@@ -122,6 +122,9 @@
             },
             // Framework7 Component Methods
             methods: {
+
+                sortTable : (tableID, overlayClass, n) => app.methods.sortTable(tableID, overlayClass, n),
+
                 /**
                  * Denne Funktion er til at nulstille alle input felter og elementer på siden
                  */
