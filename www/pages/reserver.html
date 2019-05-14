@@ -116,6 +116,7 @@
                                         <th class="label-cell sortable-cell" scope="col" @click="sortTable('toolTable', '.tableoverlay', 3)">Mærke</th>
                                         <th class="label-cell sortable-cell" scope="col" @click="sortTable('toolTable', '.tableoverlay', 4)">Model</th>
                                         <th class="label-cell sortable-cell sortable-cell-active" scope="col" @click="sortTable('toolTable', '.tableoverlay', 5)">AssetTag</th>
+                                        <th class="label-cell" scope="col">Antal</th>
                                         <th class="radio-cell" scope="col">
                                             <!--<input type="checkbox" class="no-ripple"/>-->
                                             <i class="icon-radio"></i>
@@ -374,6 +375,7 @@
                                     <td class="label-cell Mærke">${response.records[i].equipmentBrand}</td>
                                     <td class="label-cell Model">${response.records[i].equipmentModel}</td>
                                     <td class="label-cell AssetTag">${response.records[i].equipmentAsset}</td>
+                                    <td class="label-cell Antal">${response.records[i].amount}</td>
                                     <td class="radio-cell">
                                         <button type="button" id="btn${response.records[i].ID}" onclick="tilføjreserverværktøj(${response.records[i].ID})" class="no-ripple btn-primary">Tilføj</button>
                                     </td>
@@ -407,6 +409,7 @@
                                     <td class="label-cell Mærke">${response.records[i].equipmentBrand}</td>
                                     <td class="label-cell Model">${response.records[i].equipmentModel}</td>
                                     <td class="label-cell AssetTag">${response.records[i].equipmentAsset}</td>
+                                    <td class="label-cell Antal">${response.records[i].amount}</td>
                                     <td class="radio-cell">
                                         <button type="button" id="btn${response.records[i].ID}" onclick="tilføjreserverværktøj(${response.records[i].ID})" class="no-ripple btn-primary">Tilføj</button>
                                     </td>
