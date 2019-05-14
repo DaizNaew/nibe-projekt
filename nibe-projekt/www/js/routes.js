@@ -70,6 +70,11 @@ routes = [
     path: '/oversigt/', // Den sti som der skal kaldes når der routes i HTML koden, dvs der skal peges på denne sti i 'href'
     componentUrl: './pages/oversigt.html', // Den path hvor i filen som vi prøver at indlæse ligger i og navnet på filen
   },
+  {
+    name: 'værktøjsoversigt', // Internt navn på routen
+    path: '/værktøjsoversigt/', // Den sti som der skal kaldes når der routes i HTML koden, dvs der skal peges på denne sti i 'href'
+    componentUrl: './pages/værktøjsoversigt.html', // Den path hvor i filen som vi prøver at indlæse ligger i og navnet på filen
+  },
   
   /** 
    * Start på alle routes som hører til Admin området

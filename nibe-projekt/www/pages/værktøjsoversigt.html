@@ -1,0 +1,153 @@
+<template>
+    <div class="page" data-name="værktøjsoversigt">
+        <div id="wrapper" style="padding: 25px;">
+            <div style="width:100%; text-align: center;">
+                <form class="mb-3" autocomplete="off" autocomplete="false">
+                    <div class="form-row" style="text-align: left">
+                        <label class="col">AssetTag</label>
+                        <div class="input-wrapper">
+                            <input type="text" class="form-control form-control-sm col input-format"
+                                id="værktøjoversigtListBruger">
+                            <span><i class="fas fa-search icon-format"></i></span>
+                        </div>
+                    </div>
+                    <div class="form-row" style="text-align: left">
+                        <label class="col">Værktøjets navn</label>
+                        <div class="input-wrapper">
+                            <input type="text" class="form-control form-control-sm col input-format"
+                                id="værktøjoversigtListTools">
+                            <span><i class="fas fa-search icon-format"></i></span>
+                        </div>
+                    </div>
+                </form>
+
+                <!--Item 2-->
+                <div style="display: inline-block; width: 90%;">
+                    <div class="tableFixHead">
+                        <table id="oversigtTable" class="table fixed_header" style="width:100%; background-color: #c5d9ec33;">
+                            <thead>
+                                <tr>
+                                    <th scope="col" style="display: none;">#</th>
+                                    <th class="label-cell" scope="col">Værktøjs Navn</th>
+                                    <th class="label-cell" scope="col">Kategori</th>
+                                    <th class="label-cell" scope="col">Mærke</th>
+                                    <th class="label-cell" scope="col">Model</th>
+                                    <th class="label-cell" scope="col">AssetTag</th>
+                                    <th class="label-cell" scope="col">Stand</th>
+                                </tr>
+                            </thead>
+                            <tbody class="tableBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+    //Start på Framework7 og dens håndtering af internt data i dette page view
+    return {
+        /**
+        * Det datasæt som framework bruger internt i dette view, de kan ikke tilgås udefra.
+        */
+        data: function () {
+            return {
+            };
+        },
+        // Framework7 Component Methods
+        methods: {
+            /**
+             * Denne funktion sørger for at query databasen via vores restAPI, og formatere selve responset og indsætte det i tabellen
+             */
+            fillTableDefault: function () {
+                // Definer en ny let som en string
+                let innerHTML = "";
+                // Let til at holde antal rækker af entries i databasen 
+                let numberOfRowsInDB;
+                // Laver et request til DB for at få at vide hvor mange værktøj der er udlånt
+                app.request.getJSON(
+                    `${app.data['serverip']}functions/callsp.php?sp=sp_CountToolsForReserve&param=0`, (
+                    response) => {
+                        //Fylder vores let med antallet af entries
+                        numberOfRowsInDB = response.records[0].rowNum;
+
+                        // Query databasen med alle data om den første halvdel af alle udlånt værktøj
+                        app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllToolsForLoan&param=${numberOfRowsInDB/2},0`,
+                            (response) => {
+                            // Loop igennem alle response fra restAPIen
+                            for (let i = 0; i < response.records.length; i++) {
+                                // Formaterer og tilføjer dataen til 'innerHTML'
+                                innerHTML +=
+                                    `
+                                        <tr id="oversigt${response.records[i].ID}">
+                                            <td style="display: none;">${response.records[i].ID}</td>
+                                            <td class="label-cell VærktøjsNavn">${response.records[i].equipmentNavn}</td>
+                                            <td class="label-cell Kategori">${response.records[i].equipmentKategori}</td>
+                                            <td class="label-cell Mærke">${response.records[i].equipmentBrand}</td>
+                                            <td class="label-cell Model">${response.records[i].equipmentModel}</td>
+                                            <td class="label-cell AssetTag">${response.records[i].equipmentAsset}</td>
+                                            <td class="label-cell Stand">${response.records[i].equipmentCondition}</td>
+                                        </tr>
+                                        `;
+                                // Til sidst bliver den html der er inde i 'tableBody' sat til at være den nye 'innerHTML'
+                                $$('.tableBody').html(innerHTML);
+                            }
+                        }, function (e, e2) {console.error(e); console.error(e2)});
+
+                        // Query databasen med alle data om den sidste halvdel af alle udlånt værktøj
+                        app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllToolsForLoan&param=${numberOfRowsInDB},${numberOfRowsInDB/2}`, (response) => {
+                            // Loop igennem alle response fra restAPIen
+                            for (let i = 0; i < response.records.length; i++) {
+                                // Formaterer og tilføjer dataen til 'innerHTML'
+                                innerHTML +=
+                                    `
+                                        <tr id="oversigt${response.records[i].ID}">
+                                            <td style="display: none;">${response.records[i].ID}</td>
+                                            <td class="label-cell VærktøjsNavn">${response.records[i].equipmentNavn}</td>
+                                            <td class="label-cell Kategori">${response.records[i].equipmentKategori}</td>
+                                            <td class="label-cell Mærke">${response.records[i].equipmentBrand}</td>
+                                            <td class="label-cell Model">${response.records[i].equipmentModel}</td>
+                                            <td class="label-cell AssetTag">${response.records[i].equipmentAsset}</td>
+                                            <td class="label-cell Stand">${response.records[i].equipmentCondition}</td>
+                                        </tr>
+                                        `;
+                                // Til sidst bliver den html der er inde i 'tableBody' sat til at være den nye 'innerHTML'
+                                $$('.tableBody').html(innerHTML);
+                                } // slut på for loop
+                            }, function (e, e2) {console.error(e); console.error(e2)}
+                            ); // Slut på get request til restAPI
+                    }, function (e, e2) {console.error(e); console.error(e2)}
+                );// Slut på request til restAPI for at hente antal af værktøj
+            }, //Slut filltableDefault() funktion
+        },
+        // on giver os mulighed for at gøre ting når siden reagere med forskellige events, fx init eller pagemounted
+        on: {
+            //Kører når denne page melder at den er blevet mountet men ikke nødvendigvis er i view
+            pageMounted: function (page) {
+
+                //Når vores søge felt kommer i fokus
+                $$('#værktøjoversigtListTools').on("focus", function(){
+                    //Tømme de andre søge felter
+                    $$('#værktøjoversigtListBruger').val('');
+                });
+                //Når vores søge felt kommer i fokus
+                $$('#værktøjoversigtListBruger').on("focus", function(){
+                    //Tømme de andre søge felter
+                    $$('#værktøjoversigtListTools').val('');
+                });
+
+                //Function til at fylde tabellen med alle værktøjer som er udlånt fra databasen
+                this.fillTableDefault();
+
+                //Function som gør det muligt at søge i tabellen med værktøj
+                //Første param er selve input feltets ID
+                //Andet param er selve tabellens ID
+                //Tredje param er det nummer i tabellens TD som skal søges i, her er 1 det første felt, dvs værktøjsnavn
+                app.methods.searchFunction('værktøjoversigtListBruger', 'oversigtTable', 5);
+                app.methods.searchFunction('værktøjoversigtListTools', 'oversigtTable', 1);
+            },
+        },
+    }
+</script>
