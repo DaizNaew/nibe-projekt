@@ -133,6 +133,7 @@
                         response) => {
                         //Fylder vores let med antallet af entries
                         numberOfRowsInDB = response.records[0].rowNum;
+                        if(numberOfRowsInDB = 0) return;
 
                         // Query databasen med alle data om den første halvdel af alt reserveret værktøj
                         app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllReservationer&param=${numberOfRowsInDB/2},0`, (response) => {
