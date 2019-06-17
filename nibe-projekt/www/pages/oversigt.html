@@ -19,6 +19,14 @@
                             <span><i class="fas fa-search icon-format"></i></span>
                         </div>
                     </div>
+                    <div class="form-row" style="text-align: left">
+                        <label class="col">Værktøjets assettag</label>
+                        <div class="input-wrapper">
+                            <input type="text" class="form-control form-control-sm col input-format"
+                                id="oversigtListAsset">
+                            <span><i class="fas fa-search icon-format"></i></span>
+                        </div>
+                    </div>
                 </form>
 
                 <!--Item 2-->
@@ -159,6 +167,7 @@
                 //Tredje param er det nummer i tabellens TD som skal søges i, her er 1 det første felt, dvs værktøjsnavn
                 app.methods.searchFunction('oversigtListBruger', 'oversigtTable', 1);
                 app.methods.searchFunction('oversigtListTools', 'oversigtTable', 3);
+                app.methods.searchFunction('oversigtListAsset', 'oversigtTable', 7);
             },
         },
     }
