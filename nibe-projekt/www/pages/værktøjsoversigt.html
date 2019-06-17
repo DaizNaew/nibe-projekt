@@ -1,5 +1,8 @@
 <template>
     <div class="page" data-name="værktøjsoversigt">
+        <div class="tableoverlay">
+            <div class="loader"></div>
+        </div>
         <div id="wrapper" style="padding: 25px;">
             <div style="width:100%; text-align: center;">
                 <form class="mb-3" autocomplete="off" autocomplete="false">
@@ -19,22 +22,30 @@
                             <span><i class="fas fa-search icon-format"></i></span>
                         </div>
                     </div>
+                    <div class="form-row" style="text-align: left">
+                        <label class="col">Værktøjets kategori</label>
+                        <div class="input-wrapper">
+                            <input type="text" class="form-control form-control-sm col input-format"
+                                id="værktøjoversigtListKategori">
+                            <span><i class="fas fa-search icon-format"></i></span>
+                        </div>
+                    </div>
                 </form>
 
                 <!--Item 2-->
                 <div style="display: inline-block; width: 90%;">
-                    <div class="tableFixHead">
+                    <div class="tableFixHead data-table data-table-init">
                         <table id="oversigtTable" class="table fixed_header" style="width:100%; background-color: #c5d9ec33;">
                             <thead>
                                 <tr>
-                                    <th scope="col" style="display: none;">#</th>
-                                    <th class="label-cell" scope="col">Værktøjs Navn</th>
-                                    <th class="label-cell" scope="col">Kategori</th>
-                                    <th class="label-cell" scope="col">Mærke</th>
-                                    <th class="label-cell" scope="col">Model</th>
-                                    <th class="label-cell" scope="col">AssetTag</th>
-                                    <th class="label-cell" scope="col">Stand</th>
-                                    <th class="label-cell" scope="col">Antal</th>
+                                    <th class="label-cell sortable-cell sortable-cell-active" scope="col" style="display: none;">#</th>
+                                    <th class="label-cell sortable-cell" scope="col" @click="sortTable('oversigtTable', '.tableoverlay', 1)">Værktøjs Navn</th>
+                                    <th class="label-cell sortable-cell" scope="col" @click="sortTable('oversigtTable', '.tableoverlay', 2)">Kategori</th>
+                                    <th class="label-cell sortable-cell" scope="col" @click="sortTable('oversigtTable', '.tableoverlay', 3)">Mærke</th>
+                                    <th class="label-cell sortable-cell" scope="col" @click="sortTable('oversigtTable', '.tableoverlay', 4)">Model</th>
+                                    <th class="label-cell sortable-cell" scope="col" @click="sortTable('oversigtTable', '.tableoverlay', 5)">AssetTag</th>
+                                    <th class="label-cell sortable-cell" scope="col" @click="sortTable('oversigtTable', '.tableoverlay', 6)">Stand</th>
+                                    <th class="label-cell sortable-cell" scope="col" @click="sortTable('oversigtTable', '.tableoverlay', 7)">Antal</th>
                                 </tr>
                             </thead>
                             <tbody class="tableBody">
@@ -59,6 +70,9 @@
         },
         // Framework7 Component Methods
         methods: {
+
+            sortTable : (tableID, overlayClass, n) => app.methods.sortTable(tableID, overlayClass, n),
+
             /**
              * Denne funktion sørger for at query databasen via vores restAPI, og formatere selve responset og indsætte det i tabellen
              */
@@ -126,6 +140,7 @@
                 //Tredje param er det nummer i tabellens TD som skal søges i, her er 1 det første felt, dvs værktøjsnavn
                 app.methods.searchFunction('værktøjoversigtListBruger', 'oversigtTable', 5);
                 app.methods.searchFunction('værktøjoversigtListTools', 'oversigtTable', 1);
+                app.methods.searchFunction('værktøjoversigtListKategori', 'oversigtTable', 2);
             },
         },
     }

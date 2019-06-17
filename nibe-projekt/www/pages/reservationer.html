@@ -1,5 +1,8 @@
 <template>
     <div class="page" data-name="reservationer">
+        <div class="tableoverlay">
+            <div class="loader"></div>
+        </div>
         <div id="wrapper">
             <div style="padding: 25px; width:100%; text-align: center;">
                 <form class="mb-3" autocomplete="off" autocomplete="false">
@@ -23,23 +26,23 @@
                 </form>
                 <!--Item 2-->
                 <div style="display: inline-block;">
-                    <div class="tableFixHead">
+                    <div class="tableFixHead data-table data-table-init">
                         <table id="reservationsTable" class="table fixed_header" style="width:auto; background-color: #c5d9ec33;">
                             <thead>
                                 <tr>
-                                    <th scope="col" style="display: none;">#</th>
-                                    <th class="label-cell" scope="col">Medhjælper Navn</th>
-                                    <th class="label-cell" scope="col">Medhjælper Nummer</th>
-                                    <th class="label-cell" scope="col">Værktøjs Navn</th>
-                                    <th class="label-cell" scope="col">Kategori</th>
-                                    <th class="label-cell" scope="col">Mærke</th>
-                                    <th class="label-cell" scope="col">Model</th>
-                                    <th class="label-cell" scope="col">AssetTag</th>
-                                    <th class="label-cell" scope="col">Stand</th>
-                                    <th class="label-cell" scope="col">Reserveret Fra</th>
-                                    <th class="label-cell" scope="col">Reserveret Til</th>
-                                    <th class="label-cell" scope="col">Note</th>
-                                    <th class="radio-cell" scope="col">
+                                    <th class="label-cell sortable-cell sortable-cell-active" scope="col" style="display: none;">#</th>
+                                    <th class="label-cell sortable-cell" scope="col" @click="sortTable('reservationsTable', '.tableoverlay', 1)">Medhjælper Navn</th>
+                                    <th class="label-cell sortable-cell" scope="col" @click="sortTable('reservationsTable', '.tableoverlay', 2)">Medhjælper Nummer</th>
+                                    <th class="label-cell sortable-cell" scope="col" @click="sortTable('reservationsTable', '.tableoverlay', 3)">Værktøjs Navn</th>
+                                    <th class="label-cell sortable-cell" scope="col" @click="sortTable('reservationsTable', '.tableoverlay', 4)">Kategori</th>
+                                    <th class="label-cell sortable-cell" scope="col" @click="sortTable('reservationsTable', '.tableoverlay', 5)">Mærke</th>
+                                    <th class="label-cell sortable-cell" scope="col" @click="sortTable('reservationsTable', '.tableoverlay', 6)">Model</th>
+                                    <th class="label-cell sortable-cell" scope="col" @click="sortTable('reservationsTable', '.tableoverlay', 7)">AssetTag</th>
+                                    <th class="label-cell sortable-cell" scope="col" @click="sortTable('reservationsTable', '.tableoverlay', 8)">Stand</th>
+                                    <th class="label-cell sortable-cell" scope="col" @click="sortTable('reservationsTable', '.tableoverlay', 9)">Reserveret Fra</th>
+                                    <th class="label-cell sortable-cell" scope="col" @click="sortTable('reservationsTable', '.tableoverlay', 10)">Reserveret Til</th>
+                                    <th class="label-cell sortable-cell" scope="col" @click="sortTable('reservationsTable', '.tableoverlay', 11)">Note</th>
+                                    <th class="radio-cell sortable-cell" scope="col" @click="sortTable('reservationsTable', '.tableoverlay', 12)">
                                         <!--<input type="checkbox" class="no-ripple"/>-->
                                         <i class="icon-radio"></i>
                                     </th>
@@ -116,6 +119,9 @@
         },
         // Framework7 Component Methods
         methods: {
+
+            sortTable : (tableID, overlayClass, n) => app.methods.sortTable(tableID, overlayClass, n),
+
             /**
              * Denne funktion sørger for at query databasen via vores restAPI, og formatere selve responset og indsætte det i tabellen
              */
