@@ -242,12 +242,12 @@
                         for (i = 0; i < arr.length; i++) {
                             //Kalder et endpoint med equipmentID for at hente equipments certifikat requirements
                             app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetSingleEquipmentCertifikat&param=${arr[i]}`, (res2) => {
-                                //Tager det requirede certifikat og ligger i en variable
-                                let certRequired = res2.records[0].certifikatID;
                                 //Laver en variable til at holde styr på om vi skal prompt brugeren
                                 let hasaccess = false;
                                 //Vi sikre os at equipment faktisk har et requirement
                                 if(res2.records != null){
+                                    //Tager det requirede certifikat og ligger i en variable
+                                    let certRequired = res2.records[0].certifikatID;
                                     //Vi looper igennem alle brugeres certifikater
                                     for (o = 0; o < lånerCerts.length; o++) {
                                         //Vi checker om det certifikat vi er kommet til matcher det som er required
@@ -327,7 +327,7 @@
                     // Check til om værktøjet er reserveret men stadig mulighed for at blive lånt
                     if(data.result == 0){
                         app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_LoanReserveredTool&param=${moment().utcOffset(3).format('YYYY-MM-DD h:m:s')}`, (data2) => {
-                            if(arr.includes(data2.records[0].ID)){
+                            if(arr.includes(data2.records[0].eID)){
                                 //Hvis det er så returner vi
                                 return
                             }else{
@@ -336,16 +336,12 @@
                                 // Laver en alert box til at informere brugeren om at værktøjet er reserveret men kan stadig udlånes
                                 app.dialog.alert(`Vær opmærksom på at værktøjet '<span style='font-weight: bold;'>${data2.records[0].eName}</span>' er reserveret til '<span style='font-weight: bold;'>${data2.records[0].uName}</span>' og skal derefter afleveres INDEN '<span style='font-weight: bold;'>${moment(data2.records[0].dateStart).format("dddd [d.] D. MMMM [kl.] HH:mm")}</span>'`, "Udlån");
                                 //Ellers tilføjer vi det til tabellen
-                                tilføjudlånsværktøj(data2.records[0].ID);
+                                tilføjudlånsværktøj(data2.records[0].eID);
                             }
                         },function(e, e2){console.log(e); console.log(e2)});
                     } else {
                         var BreakException = {};
                         //Vi checker at det scannede stykke værktøj ikke allerede er lagt i tabellen
-                        if(arr.includes(data.records[arr.length].ID) && arr.length == data.records.length){
-                            //Hvis det er så returner vi
-                            return;
-                        } else {
                             try {
                                 // Looper igennem alle værktøj for at sikre os at de ikke allerede er tilføjet til udlån, ellers tilføj den
                                 data.records.forEach(tool => {
@@ -361,7 +357,6 @@
                                 // Smid den ud fordi vi skulle bare have noget dirty kode til at breake ud af en forEach loop
                                 if (e !== BreakException) throw e;
                             }
-                        }
                     }
                 }, function (e, e2) {console.error(e); console.error(e2)})
             },

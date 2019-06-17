@@ -1,5 +1,8 @@
 <template>
     <div class="page" data-name="oversigt">
+        <div class="tableoverlay">
+            <div class="loader"></div>
+        </div>
         <div id="wrapper" style="padding: 25px;">
             <div style="width:100%; text-align: center;">
                 <form class="mb-3" autocomplete="off" autocomplete="false">
@@ -19,25 +22,33 @@
                             <span><i class="fas fa-search icon-format"></i></span>
                         </div>
                     </div>
+                    <div class="form-row" style="text-align: left">
+                        <label class="col">Værktøjets assettag</label>
+                        <div class="input-wrapper">
+                            <input type="text" class="form-control form-control-sm col input-format"
+                                id="oversigtListAsset">
+                            <span><i class="fas fa-search icon-format"></i></span>
+                        </div>
+                    </div>
                 </form>
 
                 <!--Item 2-->
                 <div style="display: inline-block;">
-                    <div class="tableFixHead">
+                    <div class="tableFixHead data-table data-table-init">
                         <table id="oversigtTable" class="table fixed_header" style="width:auto; background-color: #c5d9ec33;">
                             <thead>
                                 <tr>
-                                    <th scope="col">#</th>
-                                    <th class="label-cell" scope="col">Medhjælper Navn</th>
-                                    <th class="label-cell" scope="col">Medhjælper Nummer</th>
-                                    <th class="label-cell" scope="col">Værktøjs Navn</th>
-                                    <th class="label-cell" scope="col">Kategori</th>
-                                    <th class="label-cell" scope="col">Mærke</th>
-                                    <th class="label-cell" scope="col">Model</th>
-                                    <th class="label-cell" scope="col">AssetTag</th>
-                                    <th class="label-cell" scope="col">Stand</th>
-                                    <th class="label-cell" scope="col">Dato Udlånt</th>
-                                    <th class="label-cell" scope="col">Forventes Tilbage</th>
+                                    <th class="label-cell sortable-cell sortable-cell-active" scope="col">#</th>
+                                    <th class="label-cell sortable-cell" scope="col" @click="sortTable('oversigtTable', '.tableoverlay', 1)">Medhjælper Navn</th>
+                                    <th class="label-cell sortable-cell" scope="col" @click="sortTable('oversigtTable', '.tableoverlay', 2)">Medhjælper Nummer</th>
+                                    <th class="label-cell sortable-cell" scope="col" @click="sortTable('oversigtTable', '.tableoverlay', 3)">Værktøjs Navn</th>
+                                    <th class="label-cell sortable-cell" scope="col" @click="sortTable('oversigtTable', '.tableoverlay', 4)">Kategori</th>
+                                    <th class="label-cell sortable-cell" scope="col" @click="sortTable('oversigtTable', '.tableoverlay', 5)">Mærke</th>
+                                    <th class="label-cell sortable-cell" scope="col" @click="sortTable('oversigtTable', '.tableoverlay', 6)">Model</th>
+                                    <th class="label-cell sortable-cell" scope="col" @click="sortTable('oversigtTable', '.tableoverlay', 7)">AssetTag</th>
+                                    <th class="label-cell sortable-cell" scope="col" @click="sortTable('oversigtTable', '.tableoverlay', 8)">Stand</th>
+                                    <th class="label-cell sortable-cell" scope="col" @click="sortTable('oversigtTable', '.tableoverlay', 9)">Dato Udlånt</th>
+                                    <th class="label-cell sortable-cell" scope="col" @click="sortTable('oversigtTable', '.tableoverlay', 10)">Forventes Tilbage</th>
                                 </tr>
                             </thead>
                             <tbody class="tableBody">
@@ -62,6 +73,9 @@
         },
         // Framework7 Component Methods
         methods: {
+
+            sortTable : (tableID, overlayClass, n) => app.methods.sortTable(tableID, overlayClass, n),
+
             /**
              * Denne funktion sørger for at query databasen via vores restAPI, og formatere selve responset og indsætte det i tabellen
              */
@@ -159,6 +173,7 @@
                 //Tredje param er det nummer i tabellens TD som skal søges i, her er 1 det første felt, dvs værktøjsnavn
                 app.methods.searchFunction('oversigtListBruger', 'oversigtTable', 1);
                 app.methods.searchFunction('oversigtListTools', 'oversigtTable', 3);
+                app.methods.searchFunction('oversigtListAsset', 'oversigtTable', 7);
             },
         },
     }
