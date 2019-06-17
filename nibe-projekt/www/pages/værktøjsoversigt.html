@@ -75,7 +75,7 @@
                         numberOfRowsInDB = response.records[0].rowNum;
 
                         // Query databasen med alle data om den første halvdel af alle udlånt værktøj
-                        app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllToolsForLoan&param=${numberOfRowsInDB/2},0`,
+                        app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllToolsForLoan&param=${numberOfRowsInDB},0`,
                             (response) => {
                             // Loop igennem alle response fra restAPIen
                             for (let i = 0; i < response.records.length; i++) {
@@ -97,30 +97,6 @@
                                 $$('.tableBody').html(innerHTML);
                             }
                         }, function (e, e2) {console.error(e); console.error(e2)});
-
-                        // Query databasen med alle data om den sidste halvdel af alle udlånt værktøj
-                        app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllToolsForLoan&param=${numberOfRowsInDB},${numberOfRowsInDB/2}`, (response) => {
-                            // Loop igennem alle response fra restAPIen
-                            for (let i = 0; i < response.records.length; i++) {
-                                // Formaterer og tilføjer dataen til 'innerHTML'
-                                innerHTML +=
-                                    `
-                                        <tr id="oversigt${response.records[i].ID}">
-                                            <td style="display: none;">${response.records[i].ID}</td>
-                                            <td class="label-cell VærktøjsNavn">${response.records[i].equipmentNavn}</td>
-                                            <td class="label-cell Kategori">${response.records[i].equipmentKategori}</td>
-                                            <td class="label-cell Mærke">${response.records[i].equipmentBrand}</td>
-                                            <td class="label-cell Model">${response.records[i].equipmentModel}</td>
-                                            <td class="label-cell AssetTag">${response.records[i].equipmentAsset}</td>
-                                            <td class="label-cell Stand">${response.records[i].equipmentCondition}</td>
-                                            <td class="label-cell Antal">${response.records[i].amount}</td>
-                                        </tr>
-                                        `;
-                                // Til sidst bliver den html der er inde i 'tableBody' sat til at være den nye 'innerHTML'
-                                $$('.tableBody').html(innerHTML);
-                                } // slut på for loop
-                            }, function (e, e2) {console.error(e); console.error(e2)}
-                            ); // Slut på get request til restAPI
                     }, function (e, e2) {console.error(e); console.error(e2)}
                 );// Slut på request til restAPI for at hente antal af værktøj
             }, //Slut filltableDefault() funktion

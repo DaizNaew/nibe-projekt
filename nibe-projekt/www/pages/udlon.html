@@ -3,22 +3,23 @@
         <div id="gridwrapper">
             <div style="padding: 25px;">
                 <form>
-                    
-                    <div class="form-row" style="text-align: left">
-                        <label class="col">Låner ID</label>
-                        <div class="input-wrapper">
-                            <input type="text" class="form-control form-control-sm col input-format" id="lånerID" required="required">
-                            <span><i id="calendar_icon" class="far fa-address-card icon-format"></i></span>
-                        </div>
-                    </div>
-
-                    <div>
+                    <div id="inputToLoopsBroder">
                         <div class="form-row" style="text-align: left">
-                            <label class="col">Tryk for at kunne scanne at låne et værktøj</label>
-                            <a style="display:none"><button id="lonTool" type="submit" @click="scantoolforlon" class="no-ripple col btn btn-primary godbtn">Scan Værktøj</button></a>
+                            <label class="col">Låner ID</label>
                             <div class="input-wrapper">
-                                <input type="text" class="form-control form-control-sm col input-format" id="assetTagForLon" required="required">
-                                <span><i id="" class="fas fa-wrench icon-format"></i></span>
+                                <input type="text" class="form-control form-control-sm col input-format" id="lånerID" required="required" data-index="1">
+                                <span><i id="calendar_icon" class="far fa-address-card icon-format"></i></span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="form-row" style="text-align: left">
+                                <label class="col">Tryk for at kunne scanne at låne et værktøj</label>
+                                <a style="display:none"><button id="lonTool" type="submit" @click="scantoolforlon" class="no-ripple col btn btn-primary godbtn">Scan Værktøj</button></a>
+                                <div class="input-wrapper">
+                                    <input type="text" class="form-control form-control-sm col input-format" id="assetTagForLon" required="required" data-index="2">
+                                    <span><i id="" class="fas fa-wrench icon-format"></i></span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -225,6 +226,11 @@
                 let prom = new Promise((resolve, reject) => {
                     //Kalder et endpoint med brugerens lånerkortID for at få brugerensID
                     app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_ConvertCardIDtoUserID&param=${newLånerCard}`, (data2) => {
+                        //Check på om udlåneren faktisk eksistere i databasen
+                        if(!data2.records) {
+                            //Advar hvis ikke den eksisterer
+                            app.dialog.alert("Denne udlåner eksistere ikke i databasen", "Ukendt udlåner")
+                        }
                         //Tager brugerensID og ligger i en variable
                         newLånerID = data2.records[0].ID;
                         //Kalder et endpoint med brugerensID for at få alle brugerens certifikater
@@ -379,6 +385,13 @@
                     autoclose: true,
                     placement: 'top'
                 });
+                $$('#inputToLoopsBroder').on('keydown', 'input', function(event) {
+                    if(event.which == 13) {
+                        let $this = $$(event.target);
+                        let index = parseFloat($this.attr('data-index'));
+                        $$(`[data-index="${(index + 1).toString()}"]`).focus();
+                    }
+                })
             },
             //pageMounted trigger når siden bliver insat i DOMen
             pageMounted: function (page) {
