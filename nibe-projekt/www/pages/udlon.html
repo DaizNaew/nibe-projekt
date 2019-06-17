@@ -324,6 +324,7 @@
                 $$('#assetTagForLon').val('');
                 //Kalder et endpoint for at hente alt information om det scannede stykke equipment
                 app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetSelectToolByAsset&param=${newAssetTag}`, (data) => {
+                    console.log(data)
                     // Check til om værktøjet er reserveret men stadig mulighed for at blive lånt
                     if(data.result == 0){
                         app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_LoanReserveredTool&param=${moment().utcOffset(3).format('YYYY-MM-DD h:m:s')}`, (data2) => {
@@ -342,10 +343,6 @@
                     } else {
                         var BreakException = {};
                         //Vi checker at det scannede stykke værktøj ikke allerede er lagt i tabellen
-                        if(arr.includes(data.records[arr.length].ID) && arr.length == data.records.length){
-                            //Hvis det er så returner vi
-                            return;
-                        } else {
                             try {
                                 // Looper igennem alle værktøj for at sikre os at de ikke allerede er tilføjet til udlån, ellers tilføj den
                                 data.records.forEach(tool => {
@@ -361,7 +358,6 @@
                                 // Smid den ud fordi vi skulle bare have noget dirty kode til at breake ud af en forEach loop
                                 if (e !== BreakException) throw e;
                             }
-                        }
                     }
                 }, function (e, e2) {console.error(e); console.error(e2)})
             },
