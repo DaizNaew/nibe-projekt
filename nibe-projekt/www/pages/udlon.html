@@ -335,11 +335,13 @@
                         },function(e, e2){console.log(e); console.log(e2)});
                     } else {
                         var BreakException = {};
+                        
+                        if(arr.length == 0){
+                            arrlength = 0;
+                        }else{
+                            arrlength = arr.length - 1;
+                        }
                         //Vi checker at det scannede stykke værktøj ikke allerede er lagt i tabellen
-                        if(arr.includes(data.records[arr.length].ID) && arr.length == data.records.length){
-                            //Hvis det er så returner vi
-                            return;
-                        } else {
                             try {
                                 // Looper igennem alle værktøj for at sikre os at de ikke allerede er tilføjet til udlån, ellers tilføj den
                                 data.records.forEach(tool => {
@@ -355,7 +357,6 @@
                                 // Smid den ud fordi vi skulle bare have noget dirty kode til at breake ud af en forEach loop
                                 if (e !== BreakException) throw e;
                             }
-                        }
                     }
                 }, function (e, e2) {console.error(e); console.error(e2)})
             },
