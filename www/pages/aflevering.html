@@ -192,6 +192,8 @@
                     $$(`.tableBody`).html('');
                     // Sætter 'dupeTable's html til at være ''
                     $$('#dupeTable').hide();
+                    //Sætter første input felt i fokus
+                    document.getElementById("assetTagForAfl").focus();
                     //Finder alle knapper i vores table
                     var checkBoxObj = $$('.tableBody').find('button');
                      //Looper igennem hvert element (hver knap)

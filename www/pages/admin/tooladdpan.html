@@ -135,6 +135,8 @@
                         let inputs = $$('form').find('input');
                         //Sætter inputs til ""
                         inputs.val('');
+                        //Sætter første input felt i fokus
+                        $$('#aktivNavn').focus();
                         //Enabler antal feltet
                         $$('form').find('#Antal').prop('disabled', false);
                         //Disabler opdater knappen
@@ -743,6 +745,8 @@
                     
                 },
                 pageAfterIn: function(page) {
+                    //Sætter første input felt i fokus
+                    $$('#aktivNavn').focus();
                     //Function som gør det muligt at søge i tabellen med værktøj
                     //Første param er selve input feltets ID
                     //Andet param er selve tabellens ID
