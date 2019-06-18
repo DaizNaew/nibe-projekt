@@ -89,7 +89,7 @@
                         numberOfRowsInDB = response.records[0].rowNum;
 
                         // Query databasen med alle data om den første halvdel af alle udlånt værktøj
-                        app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllToolsForLoan&param=${numberOfRowsInDB},0`,
+                        app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllToolsGrouped&param=0`,
                             (response) => {
                             // Loop igennem alle response fra restAPIen
                             for (let i = 0; i < response.records.length; i++) {
