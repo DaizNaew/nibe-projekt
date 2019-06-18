@@ -164,6 +164,8 @@
                     let inputs = $$('form').find('input');
                     //Sætter alle input felter til at være tomme
                     inputs.val('');
+                    //Sætter første input felt i fokus
+                    document.getElementById("lånerID").focus(); 
                     //Sætter "Værktøj valgt til udlån" tabellen til at være tom
                     $$(`.låneTableBody`).html('');
                     //Finder alle knapper i vores table
@@ -386,6 +388,8 @@
                         $$(`[data-index="${(index + 1).toString()}"]`).focus();
                     }
                 })
+                //Sætter første input felt i fokus
+                document.getElementById("lånerID").focus(); 
             },
             //pageMounted trigger når siden bliver insat i DOMen
             pageMounted: function (page) {

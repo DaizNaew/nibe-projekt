@@ -124,12 +124,23 @@
                 $$('#værktøjoversigtListTools').on("focus", function(){
                     //Tømme de andre søge felter
                     $$('#værktøjoversigtListBruger').val('');
+                    $$('#værktøjoversigtListKategori').val('');
                 });
                 //Når vores søge felt kommer i fokus
                 $$('#værktøjoversigtListBruger').on("focus", function(){
                     //Tømme de andre søge felter
                     $$('#værktøjoversigtListTools').val('');
+                    $$('#værktøjoversigtListKategori').val('');
                 });
+                //Når vores søge felt kommer i fokus
+                $$('#værktøjoversigtListKategori').on("focus", function(){
+                    //Tømme de andre søge felter
+                    $$('#værktøjoversigtListTools').val('');
+                    $$('#værktøjoversigtListBruger').val('');
+                });
+
+                //Sætter første input felt i fokus
+                $$('#værktøjoversigtListBruger').focus();
 
                 //Function til at fylde tabellen med alle værktøjer som er udlånt fra databasen
                 this.fillTableDefault();

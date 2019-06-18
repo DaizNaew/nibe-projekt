@@ -8,7 +8,7 @@
                         <label class="col">Medhjælper navn</label>
                         <div class="input-wrapper">
                             <input type="text" class="form-control form-control-sm col input-format"
-                                id="admOversigtListBrugere">
+                                id="admListBrugere">
                             <span><i class="fas fa-search icon-format"></i></span>
                         </div>
                     </div>
@@ -16,7 +16,7 @@
                         <label class="col">Kørekort</label>
                         <div class="input-wrapper">
                             <input type="text" class="form-control form-control-sm col input-format"
-                                id="admOversigtListKørekort">
+                                id="admListKørekort">
                             <span><i class="fas fa-search icon-format"></i></span>
                         </div>
                     </div>
@@ -24,7 +24,7 @@
                         <label class="col">Certifikat</label>
                         <div class="input-wrapper">
                             <input type="text" class="form-control form-control-sm col input-format"
-                                id="admOversigtListCertifikat">
+                                id="admListCertifikat">
                             <span><i class="fas fa-search icon-format"></i></span>
                         </div>
                     </div>
@@ -122,23 +122,26 @@
             pageMounted: function (page) {
 
                 //Når vores søge felt kommer i fokus
-                $$('#admOversigtListBrugere').on("focus", function(){
+                $$('#admListBrugere').on("focus", function(){
                     //Tømme de andre søge felter
-                    $$('#admOversigtListKørekort').val('');
-                    $$('#admOversigtListCertifikat').val('');
+                    $$('#admListKørekort').val('');
+                    $$('#admListCertifikat').val('');
                 });
                 //Når vores søge felt kommer i fokus
-                $$('#admOversigtListKørekort').on("focus", function(){
+                $$('#admListKørekort').on("focus", function(){
                     //Tømme de andre søge felter
-                    $$('#admOversigtListBrugere').val('');
-                    $$('#admOversigtListCertifikat').val('');
+                    $$('#admListBrugere').val('');
+                    $$('#admListCertifikat').val('');
                 });
                 //Når vores søge felt kommer i fokus
-                $$('#admOversigtListCertifikat').on("focus", function(){
+                $$('#admListCertifikat').on("focus", function(){
                     //Tømme de andre søge felter
-                    $$('#admOversigtListBrugere').val('');
-                    $$('#admOversigtListKørekort').val('');
+                    $$('#admListBrugere').val('');
+                    $$('#admListKørekort').val('');
                 });
+
+                //Sætter første input felt i fokus
+                $$('#admListBrugere').focus();
 
                 //Function til at fylde tabellen med alle brugere fra databasen
                 this.fillTableDefault();
@@ -152,9 +155,9 @@
                 //Andet param er selve tabellens ID
                 //Tredje param er det nummer i tabellens TD som skal søges i, her er 1 det første synlige felt, dvs medhjælperens navn, 
                 //da vi bruger selve tabellens TDs som et Array, og det starter på 0, og 0 er sat til none
-                app.methods.searchFunction('admOversigtListBrugere', 'userTable', 1);
-                app.methods.searchFunction('admOversigtListKørekort', 'userTable', 5);
-                app.methods.searchFunction('admOversigtListCertifikat', 'userTable', 6)
+                app.methods.searchFunction('admListBrugere', 'userTable', 1);
+                app.methods.searchFunction('admListKørekort', 'userTable', 5);
+                app.methods.searchFunction('admListCertifikat', 'userTable', 6)
 
                 /**
                  * Slut på søge blokken

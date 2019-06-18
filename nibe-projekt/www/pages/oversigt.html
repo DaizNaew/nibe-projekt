@@ -8,6 +8,7 @@
                 <form class="mb-3" autocomplete="off" autocomplete="false">
                     <div class="form-row" style="text-align: left">
                         <label class="col">Medhjælper navn</label>
+                        
                         <div class="input-wrapper">
                             <input type="text" class="form-control form-control-sm col input-format"
                                 id="oversigtListBruger">
@@ -157,12 +158,24 @@
                 $$('#oversigtListTools').on("focus", function(){
                     //Tømme de andre søge felter
                     $$('#oversigtListBruger').val('');
+                    $$('#oversigtListAsset').val('');
                 });
                 //Når vores søge felt kommer i fokus
                 $$('#oversigtListBruger').on("focus", function(){
                     //Tømme de andre søge felter
                     $$('#oversigtListTools').val('');
+                    $$('#oversigtListAsset').val('');
                 });
+                //Når vores søge felt kommer i fokus
+                $$('#oversigtListAsset').on("focus", function(){
+                    //Tømme de andre søge felter
+                    $$('#oversigtListBruger').val('');
+                    $$('#oversigtListTools').val('');
+                });
+
+                
+                //Sætter første input felt i fokus
+                $$('#oversigtListBruger').focus();
 
                 //Function til at fylde tabellen med alle værktøjer som er udlånt fra databasen
                 this.fillTableDefault();
