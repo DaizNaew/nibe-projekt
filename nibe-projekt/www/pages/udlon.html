@@ -53,6 +53,7 @@
                     <div class="input-group form-group" style="margin-top: 25px;">
                         <label for="calendar_input" class="col">Afleverings Dato</label>
                         <div class="input-group-prepend col">
+                            <span style="width: 100px;"><i class="input-group-text input_icon_css">dag-måned-år</i></span>
                             <input type="text" id="calendar_input" required="required"
                                 class="form-control form-control-sm" autocomplete="off">
                             <span><i id="calendar_icon"
@@ -62,6 +63,7 @@
                     <div class="input-group form-group">
                         <label for="input-a" class="col">Afleverings Tidspunkt</label>
                         <div class="input-group-prepend col">
+                            <span style="width: 100px;"><i style="margin-left: 20px;" class="input-group-text input_icon_css">10:30</i></span>
                             <input id="input-a" value="" data-default="10:00" required="required"
                                 class="form-control form-control-sm" autocomplete="off">
                             <span><i id="calendar_icon" class="far fa-clock input-group-text input_icon_css"></i></span>
@@ -373,7 +375,12 @@
                 var myCalendar = new dhtmlXCalendarObject(
                     { input: "calendar_input", button: "calendar_input" }
                 );
+                //Sætter kalenderen til dansk dato format
+                myCalendar.setDateFormat("%d-%m-%Y");
+                //Fjerner tid fra kalender objektet så vi kun får en dato
                 myCalendar.hideTime();
+                //Sætter calendar input feltet med current date som default value
+                $$('#calendar_input').val(myCalendar.getDate(true));
 
                 //Opretter time-picker objekt
                 var input = $('#input-a');
