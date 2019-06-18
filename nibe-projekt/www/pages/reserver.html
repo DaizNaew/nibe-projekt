@@ -167,9 +167,9 @@
         // Definer en ny let som en string
         let innerHTML = "";
         // Query databasen med alle data om værktøjet ud fra dets ID
-        app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetSelectToolByAsset&param=${værktøjsAsset}`, (response) => {
+        app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetSelectToolValidForReservation&param=${værktøjsAsset}`, (response) => {
 
-            let length = arr != [] && response.records.length > 1 ? arr.length : 0; // DET HER SKAL ALTSÅ LAVES FÆRDIGT!!!!!!!!!!
+            let length = arr != [] && response.records.length > 1 ? arr.length : 0;
 
             // Tjekker om der kun er 1 af denne type værktøj i databasen og
             // Disabler den knap som bruges til at tilføje det valgte værktøj til listen over værktøj der skal reserveres, 
@@ -193,6 +193,14 @@
             }
             // Pusher det valgte værktøjs ID til arrayet med IDer fra alle værktøjer som skal reserveres
             arr.push(parseInt(response.records[length].ID));
+            app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_CheckLoanStatus&param=${parseInt(response.records[length].ID)}`, (response2) => {
+                if(response2.result == 1){
+                    if(response2.records[0].udløbet == 0){
+                        let expectedDateEnd = moment(response2.records[0].expectedDateEnd).format("dddd [d.] D. MMMM [kl.] HH:mm");
+                        app.dialog.alert(`Værktøjet ${response2.records[0].aktivNavn} er lige pt udlånt af ${response2.records[0].name} det forventes tilbage ${expectedDateEnd}`);
+                    }
+                }
+            })
 
                 // Her lægges resultatet til 'innerHTML', formateret som et row til tabellen
                 innerHTML +=
@@ -385,9 +393,8 @@
                         let innerHTML = "";
                         // Query databasen med alle data om den første halvdel af alle værktøj
                         app.request.getJSON(
-                            `${app.data['serverip']}functions/callsp.php?sp=sp_GetAllToolsForLoan&param=${numberOfRowsInDB/2},0`,
-                            (
-                                response) => {
+                            `${app.data['serverip']}functions/callsp.php?sp=sp_GetAllToolsForReservation&param=0`,
+                            (response) => {
                                 // Loop igennem alle response fra restAPIen
                                 for (let i = 0; i < response.records.length; i++) {
                                     // Formaterer og tilføjer dataen til 'innerHTML'
@@ -464,6 +471,8 @@
             },
             //Kører når denne page melder at den er blevet mountet men ikke nødvendigvis er i view
             pageMounted: function (page) {
+                //Tømmer arr
+                arr = [];
                 //Viser preloader overviewet
                 $$('.tableoverlay').show();
                 //Laver kald til databasen for at hente alle brugere som kan reservere værktøj fra databasen
