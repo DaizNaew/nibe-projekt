@@ -89,7 +89,7 @@ class Reservation {
         // Checker hvis der er extra data sent med, hvis ja bliver de sat ind query statementet og sendt til databasen
         $note = null;
         $expectedDateEnd = null;
-        if(isset($post['expectedDateEnd'])) $expectedDateEnd = $post['expectedDateEnd'];
+        if(isset($post['expectedDateEnd'])) $expectedDateEnd = date("y-m-d", strtotime($post['expectedDateEnd']));
         if(isset($post['note'])) $note = $post['note'];
 
         // Sql statement som bruges til at indsætte i databasen med de forventede parametre

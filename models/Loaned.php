@@ -80,7 +80,7 @@ class Loaned {
 
         $expectedDateEnd = null;
         $note = null;
-        if(isset($post['expectedDateEnd'])) $expectedDateEnd = $post['expectedDateEnd'];
+        if(isset($post['expectedDateEnd'])) $expectedDateEnd = date("y-m-d", strtotime($post['expectedDateEnd']));
         if(isset($post['note'])) $note = $post['note'];
         // Sql statement som bruges til at indsætte i databasen med de forventede parametre
         $query = "INSERT INTO " . $this->table_name . " (userID,equipmentID,expectedDateEnd,note) VALUES " . "('$userID', '$equipmentID', '$expectedDateEnd', '$note')";
