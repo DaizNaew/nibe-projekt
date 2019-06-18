@@ -89,7 +89,7 @@
                         numberOfRowsInDB = response.records[0].rowNum;
 
                         // Query databasen med alle data om den første halvdel af alle udlånt værktøj
-                        app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllToolsForLoan&param=${numberOfRowsInDB},0`,
+                        app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllToolsGrouped&param=0`,
                             (response) => {
                             // Loop igennem alle response fra restAPIen
                             for (let i = 0; i < response.records.length; i++) {
@@ -124,12 +124,23 @@
                 $$('#værktøjoversigtListTools').on("focus", function(){
                     //Tømme de andre søge felter
                     $$('#værktøjoversigtListBruger').val('');
+                    $$('#værktøjoversigtListKategori').val('');
                 });
                 //Når vores søge felt kommer i fokus
                 $$('#værktøjoversigtListBruger').on("focus", function(){
                     //Tømme de andre søge felter
                     $$('#værktøjoversigtListTools').val('');
+                    $$('#værktøjoversigtListKategori').val('');
                 });
+                //Når vores søge felt kommer i fokus
+                $$('#værktøjoversigtListKategori').on("focus", function(){
+                    //Tømme de andre søge felter
+                    $$('#værktøjoversigtListTools').val('');
+                    $$('#værktøjoversigtListBruger').val('');
+                });
+
+                //Sætter første input felt i fokus
+                $$('#værktøjoversigtListBruger').focus();
 
                 //Function til at fylde tabellen med alle værktøjer som er udlånt fra databasen
                 this.fillTableDefault();

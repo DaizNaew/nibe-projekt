@@ -6,8 +6,8 @@
                     <div>
                         <form>
                             <div class="form-row">
-                                <label for="aktivNavn" class="col">Navn</label>
-                                <input id="aktivNavn" type="text" required="required" class="form-control form-control-sm col"/>
+                                <label for="certAktivNavn" class="col">Navn</label>
+                                <input id="certAktivNavn" type="text" required="required" class="form-control form-control-sm col"/>
                                 <input id="ID" type="hidden"/>
                                 <input id="tableID" type="hidden"/>
                             </div>
@@ -93,14 +93,16 @@
                 resetfields : () => {
                     //Prompter brugeren for at sikre os at knappen ikke blev trykket på ved et uheld
                     app.dialog.confirm('Er du sikker på at du vil nulstille alle felter?', 'Nulstil felter', function(){
-                        //Sætter aktivNavn feltet til at være ""
-                        document.getElementById('aktivNavn').value = "";
+                        //Sætter certAktivNavn feltet til at være ""
+                        document.getElementById('certAktivNavn').value = "";
                         //Disabler opdater knappen
                         document.getElementById("Opdaterbtn").disabled = true;
                         //Enabler opret knappen
                         document.getElementById("Opretbtn").disabled = false;
                         //Enabler type feltet
                         document.getElementById("type").disabled = false; 
+                        //Sætter første input felt i fokus
+                        $$('#certAktivNavn').focus();
                     })
                 },
                 /**
@@ -171,7 +173,7 @@
                  */
                 inserttool : () => {
                     //Henter navnet ud på det nye certifikat/kørekort
-                    let newTingNavn = document.getElementById('aktivNavn').value;
+                    let newTingNavn = document.getElementById('certAktivNavn').value;
                     //Henter type IDet ud
                     let tableID = document.getElementById('type').selectedIndex;
                     //Henter navnet på certifikatet/kørekortet ud
@@ -216,7 +218,7 @@
                         //Hvis elementet er checked
                         if(element.checked) {
                             //Flytter dataen fra listen ind i redigerings felterne
-                            document.getElementById('aktivNavn').value = element.parentElement.parentElement.children[1].innerHTML;
+                            document.getElementById('certAktivNavn').value = element.parentElement.parentElement.children[1].innerHTML;
                             document.getElementById('ID').value = element.parentElement.parentElement.children[2].children[0].value;
                             document.getElementById('tableID').value = 0;
                             document.getElementById("Opdaterbtn").disabled = false;
@@ -230,7 +232,7 @@
                         //Hvis elementet er checked
                         if(element.checked) {
                             //Flytter dataen fra listen ind i redigerings felterne
-                            document.getElementById('aktivNavn').value = element.parentElement.parentElement.children[1].innerHTML;
+                            document.getElementById('certAktivNavn').value = element.parentElement.parentElement.children[1].innerHTML;
                             document.getElementById('ID').value = element.parentElement.parentElement.children[2].children[0].value;
                             document.getElementById('tableID').value = 1;
                             document.getElementById("Opdaterbtn").disabled = false;
@@ -246,7 +248,7 @@
                  */
                 updatetool : () => {
                     //Tager certifikat/kørekort navnet og ligger i en variable
-                    let updatedType = document.getElementById('aktivNavn').value;
+                    let updatedType = document.getElementById('certAktivNavn').value;
                     //Tager certifikat/kørekort IDet og ligger i en variable
                     let updatedID = document.getElementById('ID').value;
                     //Tager tableIDet og ligger i en variable
@@ -278,6 +280,8 @@
                     let innerHTMLKort = "";
                     //Variable der bruges til at holde styr på det tidligere highlighted row
                     var oldrow = null;
+                    //Sætter første input felt i fokus
+                    $$('#certAktivNavn').focus();
                     //Kalder et endpoint som returner alle certifikater fra DB'en
                     app.request.getJSON(`${app.data['serverip']}endpoint/certificate.php?id=-1&tableid=0`, (response) => {
                         //Looper igennem certifikaterne
