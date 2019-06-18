@@ -153,6 +153,8 @@
                     let inputs = $$('.textFields').find('input');
                     //Sætter inputs til ""
                     inputs.val('');
+                    //Sætter første input felt i fokus
+                    $$('#Navn').focus();
                     //Sætter brugertype til 1 (som er default)
                     document.getElementById("Brugertype").value = "1";
                     //Disabler update knappen
@@ -593,6 +595,9 @@
                 }, (error) => { // Log af error hvis RestAPIen sender alt andet end http response 200
                     console.error(error);
                 });
+
+                //Sætter første input felt i fokus
+                $$('#Navn').focus();
                 //Funktion til at fylde tabellen med alle brugere fra databasen
                 this.fillTableDefault();
                 //Funktion til at fylde tabellen med alle kørekort fra databasen

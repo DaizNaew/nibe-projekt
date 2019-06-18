@@ -6,8 +6,8 @@
                     <div>
                         <form>
                             <div class="form-row">
-                                <label for="aktivNavn" class="col">Navn</label>
-                                <input id="aktivNavn" type="text" required="required" class="form-control form-control-sm col"/>
+                                <label for="katAktivNavn" class="col">Navn</label>
+                                <input id="katAktivNavn" type="text" required="required" class="form-control form-control-sm col"/>
                                 <input id="ID" type="hidden"/>
                             </div>
                             <div class="form-row form-button-row">
@@ -67,12 +67,14 @@
                 resetfields : () => {
                     //Prompter brugeren for at sikre os at knappen ikke blev trykket på ved et uheld
                     app.dialog.confirm('Er du sikker på at du vil nulstille alle felter?', 'Nulstil felter', function(){
-                        //Sætter aktivNavn feltet til at være ""
-                        document.getElementById('aktivNavn').value = "";
+                        //Sætter katAktivNavn feltet til at være ""
+                        document.getElementById('katAktivNavn').value = "";
                         //Disabler opdater knappen
                         document.getElementById("Opdaterbtn").disabled = true;
                         //Enabler opret knappen
                         document.getElementById("Opretbtn").disabled = false; 
+                        //Sætter første input felt i fokus
+                        $$('#katAktivNavn').focus();
                     })
                 },
                 /**
@@ -116,7 +118,7 @@
                  */
                 inserttool : () => {
                     //Henter navnet ud på den nye kategori
-                    let newKatNavn = document.getElementById('aktivNavn').value;
+                    let newKatNavn = document.getElementById('katAktivNavn').value;
                     //Checker at der faktisk er sat et navn
                     if(newKatNavn == ""){
                         //Hvis ikke der er sat et navn prompter vi brugeren og returner
@@ -154,7 +156,7 @@
                         //Hvis elementet er checked
                         if(element.checked) {
                             //Flytter dataen fra listen ind i redigerings felterne
-                            document.getElementById('aktivNavn').value = element.parentElement.parentElement.children[1].innerHTML;
+                            document.getElementById('katAktivNavn').value = element.parentElement.parentElement.children[1].innerHTML;
                             document.getElementById('ID').value = element.parentElement.parentElement.children[2].children[0].value;
                             document.getElementById("Opdaterbtn").disabled = false;
                             document.getElementById("Opretbtn").disabled = true; 
@@ -166,7 +168,7 @@
                  */
                 updatetool : () => {
                     //Tager kategori navnet og ligger i en variable
-                    let updatedKatNavn = document.getElementById('aktivNavn').value;
+                    let updatedKatNavn = document.getElementById('katAktivNavn').value;
                     //Tager kategori IDet og ligger i en variable
                     let updatedKatID = document.getElementById('ID').value;
                     //Kalder endpoint med redigeret kategori navn & kategori ID for at opdater kategorien
@@ -188,6 +190,8 @@
                     let innerHTML = "";
                     //Variable der bruges til at holde styr på det tidligere highlighted row
                     var oldrow = null;
+                    //Sætter første input felt i fokus
+                    $$('#katAktivNavn').focus();
                     //Kalder et endpoint som returner alle kategorier fra DB'en
                     app.request.getJSON(`${app.data['serverip']}endpoint/category.php?id=-1`, (response) => {
                         //Looper igennem kategorierne
