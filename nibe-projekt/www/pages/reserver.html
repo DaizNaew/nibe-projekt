@@ -144,50 +144,69 @@
      * Funktion som køres når brugeren vil fjerne et værktøj fra reserverings listen
      * @param {int} værktøjsID Det ID som værktøjet har i databasen.
      */
-    fjernreserverværktøj = (værktøjsID) => {
+    fjernreserverværktøj = (værktøjsID, assetTag) => {
         //Finder værktøjet i tabellen over alt værktøj, og enabler dens "tilføj" knap igen
-        $$(`.tableBody`).find(`#btn${værktøjsID}`).prop("disabled", false);
+        $$(`.tableBody`).find(`#btn${assetTag}`).prop("disabled", false);
         //Fjerner det valgte værktøj fra listen over værktøj som skal reserveres
         $$(`.låneTableBody`).find(`#værktøjnr${værktøjsID}`).remove();
         //Fjerner Værktøjets ID fra arrayet over værktøj til reservationer
-        arr.splice(arr.indexOf(værktøjsID), 1);
+        if(arr.indexOf(værktøjsID) > -1) {
+            arr.splice(arr.indexOf(værktøjsID), 1);
+        }
     } //Slut fjernreserverværktøj() funktion
 
     /**
      * Funktion som køres når brugeren vil tage et værktøj fra listen og tilføje til listen over værktøj som skal reserveres
      * @param {int} værktøjsID Det ID som værktøjet har i databasen
      */
-    tilføjreserverværktøj = (værktøjsID) => {
-        // Pusher det valgte værktøjs ID til arrayet med IDer fra alle værktøjer som skal reserveres
-        arr.push(værktøjsID);
+    tilføjreserverværktøj = (værktøjsAsset) => {
         // Definer en ny let som en string
         let innerHTML = "";
         // Query databasen med alle data om værktøjet ud fra dets ID
-        app.request.getJSON(`${app.data['serverip']}endpoint/equipment.php?id=${værktøjsID}`, (response) => {
-            // Disabler den knap som bruges til at tilføje det valgte værktøj til listen over værktøj der skal reserveres, så man ikke kan reservere det samme værktøj flere gange
-            $$(`.tableBody`).find(`#btn${værktøjsID}`).prop("disabled", true);
+        app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetSelectToolByAsset&param=${værktøjsAsset}`, (response) => {
+
+            let length = arr != [] && response.records.length > 1 ? arr.length : 0; // DET HER SKAL ALTSÅ LAVES FÆRDIGT!!!!!!!!!!
+
+            // Tjekker om der kun er 1 af denne type værktøj i databasen og
+            // Disabler den knap som bruges til at tilføje det valgte værktøj til listen over værktøj der skal reserveres, 
+            // så man ikke kan reservere det samme værktøj flere gange
+            if(response.records.length == 1) $$(`.tableBody`).find(`#btn${værktøjsAsset}`).prop("disabled", true);
+
             // Tager alt HTML fra 'låneTableBody' og ligger den til 'innerHTML' leten
             innerHTML = $$(`.låneTableBody`).html();
-            // For loop for at sikre at vi tager alle responses fra databasen
-            for (let i = 0; i < response.records.length; i++) {
+
+            if(arr.includes(parseInt(response.records[0].ID))){
+                for(let i = 0; i < length; i++) {
+                    if(!arr.includes(parseInt(response.records[i].ID))) {
+                        length = i;
+                        break;
+                    }
+                }
+            }
+            if(response.records[length] == undefined) {
+                $$(`.tableBody`).find(`#btn${værktøjsAsset}`).prop("disabled", true);
+                return app.dialog.alert(`Der er ikke flere ${response.records[0].aktivNavn} som kan reserveres`);
+            }
+            // Pusher det valgte værktøjs ID til arrayet med IDer fra alle værktøjer som skal reserveres
+            arr.push(parseInt(response.records[length].ID));
+
                 // Her lægges resultatet til 'innerHTML', formateret som et row til tabellen
                 innerHTML +=
                     `
-                    <tr id="værktøjnr${værktøjsID}">
-                        <td style="display: none;">${værktøjsID}</td>
-                        <td class="label-cell VærktøjsNavn">${response.records[i].activeName}</td>
-                        <td class="label-cell Kategori">${response.records[i].categoryName}</td>
-                        <td class="label-cell Mærke">${response.records[i].brandName}</td>
-                        <td class="label-cell Model">${response.records[i].modelName}</td>
-                        <td class="label-cell AssetTag">${response.records[i].assetTag}</td>
+                    <tr id="værktøjnr${response.records[length].ID}">
+                        <td style="display: none;">${response.records[length].ID}</td>
+                        <td class="label-cell VærktøjsNavn">${response.records[length].aktivNavn}</td>
+                        <td class="label-cell Kategori">${response.records[length].katNavn}</td>
+                        <td class="label-cell Mærke">${response.records[length].brand}</td>
+                        <td class="label-cell Model">${response.records[length].model}</td>
+                        <td class="label-cell AssetTag">${response.records[length].assetTag}</td>
                         <td class="radio-cell">
-                            <button type="button" onclick="fjernreserverværktøj(${response.records[0].ID})" class="no-ripple btn-primary deletebtn">Slet</button>
+                            <button type="button" onclick="fjernreserverværktøj(${response.records[length].ID},${response.records[length].assetTag})" class="no-ripple btn-primary deletebtn">Slet</button>
                         </td>
                     </tr>
                     `;
                 // Til sidst bliver den html der er inde i 'låneTableBody' sat til at være den nye 'innerHTML'
                 $$('.låneTableBody').html(innerHTML);
-            } //Slut for loop
         }, function (e, e2) {console.error(e); console.error(e2)}); //Slut database kald
     } //Slut tilføjreserverværktøj() funktion
 
@@ -377,7 +396,7 @@
                                     <td class="label-cell AssetTag">${response.records[i].equipmentAsset}</td>
                                     <td class="label-cell Antal">${response.records[i].amount}</td>
                                     <td class="radio-cell">
-                                        <button type="button" id="btn${response.records[i].ID}" onclick="tilføjreserverværktøj(${response.records[i].ID})" class="no-ripple btn-primary">Tilføj</button>
+                                        <button type="button" id="btn${response.records[i].equipmentAsset}" onclick="tilføjreserverværktøj(${response.records[i].equipmentAsset})" class="no-ripple btn-primary">Tilføj</button>
                                     </td>
                                 </tr>
                                 `;
