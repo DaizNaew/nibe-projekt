@@ -331,7 +331,8 @@
                     // Check til om værktøjet er reserveret men stadig mulighed for at blive lånt
                     if(data.result == 0){
                         app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetToolByAsset&param=${newAssetTag}`, (loanedData) => {
-                            return app.dialog.alert(`${loanedData.records[0].aktivNavn} er allerede udlånt i til: ${loanedData.records[0].udlånerNavn}. </br> Den forventes tilbage ${loanedData.records[0].forventetTilbage}`)
+                            return app.dialog.alert(`${loanedData.records[0].aktivNavn} er allerede udlånt i til: ${loanedData.records[0].udlånerNavn}. 
+                            </br> Den forventes tilbage ${moment(loanedData.records[0].forventetTilbage).format("dddd [d.] D. MMMM [kl.] HH:mm") }`)
                         })
                         app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_LoanReserveredTool&param=${moment().utcOffset(3).format('YYYY-MM-DD h:m:s')}`, (data2) => {
                             if(arr.includes(data2.records[0].eID)){
