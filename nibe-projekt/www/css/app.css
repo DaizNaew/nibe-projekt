@@ -519,3 +519,10 @@ label{
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
+.customDialog {
+  text-align: center;
+  width: auto !important;
+  left: 5% !important;
+  margin-left: 0 !important;
+}

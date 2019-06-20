@@ -99,7 +99,7 @@
                                         <th class="label-cell sortable-cell" scope="col"
                                             @click="sortTable('toolTable', '.tableoverlay', 4)">Model</th>
                                         <th class="label-cell sortable-cell" scope="col"
-                                            @click="sortTable('toolTable', '.tableoverlay', 5)">Serienummer</th>
+                                            @click="sortTable('toolTable', '.tableoverlay', 5)">Antal</th>
                                         <th class="label-cell sortable-cell sortable-cell-active" scope="col"
                                             @click="sortTable('toolTable', '.tableoverlay', 6)">AssetTag</th>
                                         <th class="radio-cell" scope="col">
@@ -138,6 +138,37 @@
 </template>
 
 <script>
+
+function process(str) {
+
+var div = document.createElement('div');
+div.innerHTML = str.trim();
+
+return format(div, 0).innerHTML;
+}
+
+function format(node, level) {
+
+var indentBefore = new Array(level++ + 1).join('  '),
+    indentAfter  = new Array(level - 1).join('  '),
+    textNode;
+
+for (var i = 0; i < node.children.length; i++) {
+
+    textNode = document.createTextNode('\n' + indentBefore);
+    node.insertBefore(textNode, node.children[i]);
+
+    format(node.children[i], level);
+
+    if (node.lastElementChild == node.children[i]) {
+        textNode = document.createTextNode('\n' + indentAfter);
+        node.appendChild(textNode);
+    }
+}
+
+return node;
+}
+
     //Start på Framework7 og dens håndtering af internt data i dette page view
     return {
         /**
@@ -274,39 +305,133 @@
                     //Looper igennem hvert element
                     checkBoxObj.forEach(element => {
                         //Hvis radio knappen er checked
-                        if (element.checked) {
-                            //Kalder et endpoint for at slette certifikats krav
-                            app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_DeleteEC&param=${element.value}`, (response) => {
-                            }, (error) => { // Log af error hvis RestAPIen sender alt andet end http response 200
-                                console.error(error);
-                            })
-                            //Kalder et endpoint for at slette kørekorts krav
-                            app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_DeleteEK&param=${element.value}`, (response) => {
-                            }, (error) => { // Log af error hvis RestAPIen sender alt andet end http response 200
-                                console.error(error);
-                            })
-                            //Kalder et endpoint for at slette værktøjet
-                            app.request.getJSON(`${app.data['serverip']}functions/tools/delete.php?id=${element.value}`, (data) => {
-                                //Hvis vi får det forventet svar fra endpoint
-                                if (data.result == 1) {
-                                    //Logger at værktøjet blev slettet
-                                    app.methods.addToLog(`${app.data['userID']}`, `Slettet værktøjet ${element.parentElement.parentElement.children[1].innerHTML} med assetTag (${element.parentElement.parentElement.children[6].innerHTML})`);
-                                    //Prompter brugeren med en besked om at certifikatet blev slettet
-                                    app.dialog.alert('Værktøjet blev slettet fra databasen', 'Success af sletning', () => {
-                                        //Refresher siden
-                                        app.views.main.router.navigate("/tooladdpan/", { reloadCurrent: true, });
+                        if (element.checked) 
+                        {
+                            amount = parseInt($$(element.parentNode.parentNode.childNodes[11]).text());
+                            if(amount == 1) 
+                            {
+                                //Kalder et endpoint for at slette certifikats krav
+                                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_DeleteEC&param=${element.value}`, (response) => {
+                                }, (error) => { // Log af error hvis RestAPIen sender alt andet end http response 200
+                                    console.error(error);
+                                })
+                                //Kalder et endpoint for at slette kørekorts krav
+                                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_DeleteEK&param=${element.value}`, (response) => {
+                                }, (error) => { // Log af error hvis RestAPIen sender alt andet end http response 200
+                                    console.error(error);
+                                })
+                                //Kalder et endpoint for at slette værktøjet
+                                app.request.getJSON(`${app.data['serverip']}functions/tools/delete.php?id=${element.value}`, (data) => {
+                                    //Hvis vi får det forventet svar fra endpoint
+                                    if (data.result == 1) {
+                                        //Logger at værktøjet blev slettet
+                                        app.methods.addToLog(`${app.data['userID']}`, `Slettet værktøjet ${element.parentElement.parentElement.children[1].innerHTML} med assetTag (${element.parentElement.parentElement.children[6].innerHTML})`);
+                                        //Prompter brugeren med en besked om at certifikatet blev slettet
+                                        app.dialog.alert('Værktøjet blev slettet fra databasen', 'Success af sletning', () => {
+                                            //Refresher siden
+                                            app.views.main.router.navigate("/tooladdpan/", { reloadCurrent: true, });
+                                        });
+                                        //Hvis ikke vi får det forventet svar fra endpointed
+                                    } else {
+                                        //Prompter brugeren om at noget gik galt
+                                        app.dialog.alert('Værktøjet blev IKKE slettet fra databasen', 'Fejl af sletning', () => {
+                                            //Refresher siden
+                                            app.views.main.router.navigate("/tooladdpan/", { reloadCurrent: true, });
+                                        });
+                                    }
+                                }, (error) => { // Log af error hvis RestAPIen sender alt andet end http response 200
+                                    console.error(error);
+                                });
+                            } else {
+                                let dialog;
+                                let checled;
+                                test = () => {
+                                    let tableCont = `
+                                    <div style="display: inline-block;">
+                                    <div class="tableFixHead" style="max-height: 450px; text-align:center;">
+                                    <table class="table fixed_header" background-color: #c5d9ec33; color: #000; ">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col" style="display: none;">#</th>
+                                                <th class="label-cell sortable-cell" scope="col">Værktøjs navn</th>
+                                                <th class="label-cell sortable-cell" scope="col">Kategori</th>
+                                                <th class="label-cell sortable-cell" scope="col">Mærke</th>
+                                                <th class="label-cell sortable-cell" scope="col">Model</th>
+                                                <th class="radio-cell" scope="col">
+                                                    <!--<input type="checkbox" class="no-ripple"/>-->
+                                                    Click box for valg til slet
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="tableBody" style="text-align:center">
+                                        `;
+                                        let prom = new Promise((resolve, reject) => {
+                                            app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllToolsByAsset&param=${element.parentElement.parentElement.children[6].innerHTML}`, (toolData) => {
+                                                for (let i = 0; i < toolData.records.length; i++) {
+                                                tableCont +=
+                                                `
+                                                    <tr>
+                                                        <td style="display: none;">${toolData.records[i].ID}</td>
+                                                        <td class="label-cell aktivNavn">${toolData.records[i].navn}</td>
+                                                        <td class="label-cell Kategori">${toolData.records[i].katNavn}</td>
+                                                        <td class="label-cell Mærke">${toolData.records[i].brand}</td>
+                                                        <td class="label-cell Model">${toolData.records[i].model}</td>
+                                                        <td class="label-cell Stand" style="display:none;">${toolData.records[i].stand}</td>
+                                                        <td class="radio-cell">
+                                                            <input type="checkbox" value="${toolData.records[i].ID}" name="selectedTool"/>
+                                                        </td>
+                                                    </tr>
+                                                `;
+                                                }
+                                                tableCont += "</tbody></table></div></div>"
+                                            
+                                                resolve(tableCont);
+                                            }, (error) => { // Log af error hvis RestAPIen sender alt andet end http response 200
+                                                console.error(error);
+                                            }); 
+                                        });
+                                    prom.then((tableCont) => {
+                                        dialog = app.dialog.create({
+                                        title: `Sletning af ${element.parentElement.parentElement.children[1].innerHTML}`,
+                                        destroyOnClose: true,
+                                        text: 'placeholder',
+                                        buttons: [
+                                            {
+                                                text: 'LUK',
+                                                onClick: () => {console.log('luk')}
+                                                
+                                            },
+                                            {
+                                                text: 'OK',
+                                                onClick: () => {
+                                                    temp = $$('.customDialog').children().children('.dialog-text');
+                                                    console.dir(temp[0]);
+
+                                                }
+                                            }
+                                        ],
+                                        on: {
+                                            opened: () => {
+                                                $$('.customDialog').children().children('.dialog-text').html(tableCont);
+                                                $$('.customDialog').children().children('.dialog-text').filter(function (index, el) {
+                                                    console.dir(index, el);
+                                                    console.error('SPLITTER');
+                                                    console.dir($$(this).find('.tableBody').filter(function (index,el) {
+                                                        console.error($$(this).find('input[type="checkbox"]'))
+                                                    }))
+                                                })
+                                            }
+                                        },
+                                        cssClass: 'customDialog',
                                     });
-                                    //Hvis ikke vi får det forventet svar fra endpointed
-                                } else {
-                                    //Prompter brugeren om at noget gik galt
-                                    app.dialog.alert('Værktøjet blev IKKE slettet fra databasen', 'Fejl af sletning', () => {
-                                        //Refresher siden
-                                        app.views.main.router.navigate("/tooladdpan/", { reloadCurrent: true, });
+                                    
+                                    
+                                    dialog.open();
                                     });
-                                }
-                            }, (error) => { // Log af error hvis RestAPIen sender alt andet end http response 200
-                                console.error(error);
-                            });
+                                    
+                                };
+                                test();
+                            }
                         }
                     });
                 });
@@ -637,11 +762,47 @@
                 //Temp variable som bruges til at store vores table data i indtil det bliver indsat i tabellen
                 let innerHTML = "";
                 // Let til at holde antal rækker af entries i databasen
-                let numberOfRowsInDB;
+                // et numberOfRowsInDB;
+
+                app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllTools&param=0`, tools => {
+                    console.dir(tools.records)
+                    // Loop igennem alle response fra restAPIen
+                    for (let i = 0; i < tools.records.length; i++) {
+                        innerHTML +=
+                            `
+                                <tr>
+                                    <td style="display: none;">${tools.records[i].ID}</td>
+                                    <td class="label-cell aktivNavn">${tools.records[i].aktivNavn}</td>
+                                    <td class="label-cell Kategori" value="${tools.records[i].katID}">${tools.records[i].katNavn}</td>
+                                    <td class="label-cell Mærke">${tools.records[i].brand}</td>
+                                    <td class="label-cell Model">${tools.records[i].model}</td>
+                                    <td class="label-cell Antal">${tools.records[i].amount}</td>
+                                    <td class="label-cell AssetTag">${tools.records[i].assetTag}</td>
+                                    <td class="label-cell Stand" style="display:none;">${tools.records[i].stand}</td>
+                                    <td class="radio-cell">
+                                        <input type="radio" value="${tools.records[i].ID}" name="selectedTool"/>
+                                        <i class="icon-radio"></i>
+                                    </td>
+                                    <td style="display:none;" class="label-cell Serienummer">${tools.records[i].serieNummer}</td>
+                                </tr>
+                            `;
+                        // Til sidst bliver den html der er inde i 'tableBody' sat til at være den nye 'innerHTML'
+                        $$('.tableBody').html(innerHTML);
+                        // Check til at se om alle værktøjene er blevet tilføjet
+                        if (tools.records.length < 200) {
+                            //Derefter gemmer vi preloader overlayet igen
+                            if (i + 1 == tools.records.length) {
+                                $$('.tableoverlay').hide();
+                            }
+                        }
+                    }
+                })
                 // Laver et request til DB for at få at vide hvor mange værktøj der er
+                /*
                 app.request.getJSON(
                     `${app.data['serverip']}functions/callsp.php?sp=sp_CountAllTools&param=0`, (
                         response) => {
+                        
                         //Fylder vores let med antallet af entries
                         numberOfRowsInDB = response.records[0].rowNum;
                         // Query databasen med alle data om den første halvdel af alle værktøj
@@ -650,20 +811,20 @@
                             for (let i = 0; i < tools.records.length; i++) {
                                 innerHTML +=
                                     `
-                                <tr>
-                                    <td style="display: none;">${tools.records[i].ID}</td>
-                                    <td class="label-cell aktivNavn">${tools.records[i].activeName}</td>
-                                    <td class="label-cell Kategori" value="${tools.records[i].categoryID}">${tools.records[i].categoryName}</td>
-                                    <td class="label-cell Mærke">${tools.records[i].brandName}</td>
-                                    <td class="label-cell Model">${tools.records[i].modelName}</td>
-                                    <td class="label-cell Serienummer">${tools.records[i].serialNumber}</td>
-                                    <td class="label-cell AssetTag">${tools.records[i].assetTag}</td>
-                                    <td class="label-cell Stand" style="display:none;">${tools.records[i].condition}</td>
-                                    <td class="radio-cell">
-                                        <input type="radio" value="${tools.records[i].ID}" name="selectedTool"/>
-                                        <i class="icon-radio"></i>
-                                    </td>
-                                </tr>
+                                    <tr>
+                                        <td style="display: none;">${tools.records[i].ID}</td>
+                                        <td class="label-cell aktivNavn">${tools.records[i].activeName}</td>
+                                        <td class="label-cell Kategori" value="${tools.records[i].categoryID}">${tools.records[i].categoryName}</td>
+                                        <td class="label-cell Mærke">${tools.records[i].brandName}</td>
+                                        <td class="label-cell Model">${tools.records[i].modelName}</td>
+                                        <td class="label-cell Serienummer">${tools.records[i].serialNumber}</td>
+                                        <td class="label-cell AssetTag">${tools.records[i].assetTag}</td>
+                                        <td class="label-cell Stand" style="display:none;">${tools.records[i].condition}</td>
+                                        <td class="radio-cell">
+                                            <input type="radio" value="${tools.records[i].ID}" name="selectedTool"/>
+                                            <i class="icon-radio"></i>
+                                        </td>
+                                    </tr>
                                 `;
                                 // Til sidst bliver den html der er inde i 'tableBody' sat til at være den nye 'innerHTML'
                                 $$('.tableBody').html(innerHTML);
@@ -684,20 +845,20 @@
                             for (let i = 0; i < tools.records.length; i++) {
                                 innerHTML +=
                                     `
-                                <tr>
-                                    <td style="display: none;">${tools.records[i].ID}</td>
-                                    <td class="label-cell aktivNavn">${tools.records[i].activeName}</td>
-                                    <td class="label-cell Kategori" value="${tools.records[i].categoryID}">${tools.records[i].categoryName}</td>
-                                    <td class="label-cell Mærke">${tools.records[i].brandName}</td>
-                                    <td class="label-cell Model">${tools.records[i].modelName}</td>
-                                    <td class="label-cell Serienummer">${tools.records[i].serialNumber}</td>
-                                    <td class="label-cell AssetTag">${tools.records[i].assetTag}</td>
-                                    <td class="label-cell Stand" style="display:none;">${tools.records[i].condition}</td>
-                                    <td class="radio-cell">
-                                        <input type="radio" value="${tools.records[i].ID}" name="selectedTool"/>
-                                        <i class="icon-radio"></i>
-                                    </td>
-                                </tr>
+                                    <tr>
+                                        <td style="display: none;">${tools.records[i].ID}</td>
+                                        <td class="label-cell aktivNavn">${tools.records[i].activeName}</td>
+                                        <td class="label-cell Kategori" value="${tools.records[i].categoryID}">${tools.records[i].categoryName}</td>
+                                        <td class="label-cell Mærke">${tools.records[i].brandName}</td>
+                                        <td class="label-cell Model">${tools.records[i].modelName}</td>
+                                        <td class="label-cell Serienummer">${tools.records[i].serialNumber}</td>
+                                        <td class="label-cell AssetTag">${tools.records[i].assetTag}</td>
+                                        <td class="label-cell Stand" style="display:none;">${tools.records[i].condition}</td>
+                                        <td class="radio-cell">
+                                            <input type="radio" value="${tools.records[i].ID}" name="selectedTool"/>
+                                            <i class="icon-radio"></i>
+                                        </td>
+                                    </tr>
                                 `;
                                 // Til sidst bliver den html der er inde i 'tableBody' sat til at være den nye 'innerHTML'
                                 $$('.tableBody').html(innerHTML);
@@ -708,10 +869,10 @@
                             }
                         }, (error) => { // Log af error hvis RestAPIen sender alt andet end http response 200
                             console.error(error);
-                        });
+                        }); 
                     }, (error) => { // Log af error hvis RestAPIen sender alt andet end http response 200
                         console.error(error);
-                    });
+                    }); */
             },
         },
         // on giver os mulighed for at gøre ting når siden reagere med forskellige events, fx init eller pagemounted
