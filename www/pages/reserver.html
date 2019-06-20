@@ -20,7 +20,7 @@
                                 </div>
                             </div>
 
-                            <div class="tableFixHead">
+                            <div class="tableFixHead" style="max-height: 300px;">
                                 <table class="table fixed_header" style="background-color: #c5d9ec33;">
                                     <thead>
                                         <tr>
@@ -111,7 +111,7 @@
                         </div>
 
                         <div class="tableFixHead data-table data-table-init">
-                            <table class="table fixed_header" style="background-color: #c5d9ec33;" id="toolTable" style="max-height: 300px;">
+                            <table class="table fixed_header" style="background-color: #c5d9ec33;" id="toolTable" style="max-height: 200px;">
                                 <thead>
                                     <tr>
                                         <th scope="col" style="display: none;">#</th>
@@ -159,6 +159,7 @@
             arr[assetTag].splice(arr[assetTag].indexOf(værktøjsID), 1);
         }
         t[assetTag] = arr[assetTag];
+        if(t[assetTag].length == 0) return delete t[assetTag];
     } //Slut fjernreserverværktøj() funktion
 
     /**
@@ -332,20 +333,28 @@
                     app.dialog.alert("Afleverings tidspunkt feltet må ikke være tomt.", "Reserver");
                     return;
                 }
-                if (arr.length == 0) {
+                let idArray = [];
+
+                if (Object.keys(t).length == 0) {
                     app.dialog.alert("Du skal huske at vælge mindst et stykke værktøj som skal reserveres.",
                         "Reserver");
                     return;
                 }
-
+                
+                for(var prop in t) {
+                    for(var ID in t[prop]) {
+                        idArray.push(t[prop][ID]);
+                    }
+                }
+                
                 // Construct et nyt promise for at give os mulighed for at await på det og sikre at der bliver lavet et post query til restAPIen
                 let prom = new Promise((resolve, reject) => {
                     // For loop for at sikre at alle tingene på reserver listen bliver reserveret
-                    for (i = 0; i < arr.length; i++) {
+                    for (i = 0; i < idArray.length; i++) {
                         //Kald Endpoint med alle de stored information for at lave reservationen
                         app.request.post(`${app.data['serverip']}endpoint/reservation.php`, {
                             userID: newReserverID,
-                            equipmentID: arr[i],
+                            equipmentID: idArray[i],
                             dateStart: newAfhentDato,
                             expectedDateEnd: newAfleverDato,
                             note: newNote
@@ -353,9 +362,11 @@
                             if (response.result == 1) {
                                 //Sætter dat til response hvis vi fik et resultat fra restAPIen
                                 dat = response;
+                                console.error(response)
                                 resolve();
                             } else {
                                 //Ellers rejecter vi vores promise
+                                console.error(response)
                                 reject();
                             }
                         }, function (e, e2) {console.error(e); console.error(e2)}, "json");
@@ -364,6 +375,8 @@
 
                 //Vent på at promiset er færdigt
                 await prom;
+
+                
                 //Derefter tjekker vi om svaret fra restAPIen viser result = 1
                 if (dat.result == 1) {
                     //Fortæl brugeren at reservationen gik igennem
@@ -371,10 +384,10 @@
                         `Reservationen til (<span style="color: green; font-weight: bold;">${newReserverNavn}</span>) blev oprettet.`,
                         "Reserver",
                         function () {
-                            for (i = 0; i < arr.length; i++) {
+                            for (i = 0; i < idArray.length; i++) {
                                 //Sørg for at tilføje til loggen over hvad der er sket i systemet
                                 app.request.getJSON(
-                                    `${app.data['serverip']}endpoint/equipment.php?id=${arr[i]}`, (
+                                    `${app.data['serverip']}endpoint/equipment.php?id=${idArray[i]}`, (
                                         response) => {
                                         app.methods.addToLog(`${newReserverID}`,
                                             `Reservered ${response.records[0].activeName} med assetTag (${response.records[0].assetTag})`
@@ -386,7 +399,8 @@
                                 reloadCurrent: true,
                             });
                             //Sætter arrayet til at være tomt
-                            arr = [];
+                            arr , idArray = [];
+                            t = {};
                         });
                 } else {
                     //Fortæl brugeren at reservationen ikke gik igennem
