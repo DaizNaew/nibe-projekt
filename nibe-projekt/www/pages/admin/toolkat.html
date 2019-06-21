@@ -206,10 +206,11 @@
                                     <i class="icon-radio"></i>
                                 </td>
                             </tr>
-                            `;
-                            //Tager alt data fra vores temp variable og pusher til vores table
-                            $$('.tableBody').html(innerHTML);
+                            `
+                            ;
                         }
+                        //Tager alt data fra vores temp variable og pusher til vores table
+                        $$('.tableBody').html(innerHTML);
                     });
                     //Onclick funktion på alle rows i kategori tabellen
                     $$('.tableBody').on('click', (e) => {

@@ -138,11 +138,12 @@
                         </td>
                     </tr>
                     `;
-                    //Tager alt data fra vores temp variable og pusher til vores table
-                $$('.låneTableBody').html(innerHTML);
-            }
-        });
-    }
+                    
+            } // Slut på for loop
+            //Tager alt data fra vores temp variable og pusher til vores table
+            $$('.låneTableBody').html(innerHTML);
+        }); // Slut på request til databasen
+    } // Slut på tilføjUdlånsVærktøj()
 
     //Start på Framework7 og dens håndtering af internt data i dette page view
     return {

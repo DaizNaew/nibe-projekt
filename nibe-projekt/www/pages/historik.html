@@ -100,10 +100,11 @@
                                 <td class="label-cell ForventesTilbage">${response.records[i].expectedDateEnd}</td>
                                 <td class="label-cell FaktiskAfleveret">${response.records[i].actualDateEnd}</td>
                             </tr>
-                            `;
-                            // Til sidst bliver den html der er inde i 'tableBody' sat til at være den nye 'innerHTML'
-                            $$('.tableBody').html(innerHTML);
+                            `
+                        ;
                     }
+                    // Til sidst bliver den html der er inde i 'tableBody' sat til at være den nye 'innerHTML'
+                    $$('.tableBody').html(innerHTML);
                 }, function (e, e2) {console.error(e); console.error(e2)});
             },
 
@@ -137,10 +138,11 @@
                                 <td class="label-cell ForventesTilbage">${response.records[i].expectedDateEnd}</td>
                                 <td class="label-cell FaktiskAfleveret">${response.records[i].actualDateEnd}</td>
                             </tr>
-                            `;
-                            // Til sidst bliver den html der er inde i 'tableBody' sat til at være den nye 'nyHTML'
-                            $$('.tableBody').html(nyHTML);
+                            `
+                        ;
                     }
+                    // Til sidst bliver den html der er inde i 'tableBody' sat til at være den nye 'nyHTML'
+                    $$('.tableBody').html(nyHTML);
                 }, function (e, e2) {console.error(e); console.error(e2)});
 
             },
