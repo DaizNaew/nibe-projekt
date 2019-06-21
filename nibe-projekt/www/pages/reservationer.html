@@ -176,10 +176,11 @@
                                                 <button type="button" onclick="reservationerdeletetool(${response.records[i].ID}, ${response.records[i].equipmentID})" class="no-ripple btn-primary deletebtn">Slet</button>
                                             </td>
                                         </tr>
-                                        `;
-                                // Til sidst bliver den html der er inde i 'tableBody' sat til at være den nye 'innerHTML'
-                                $$('.tableBody').html(innerHTML);
-                            }
+                                    `
+                                ;
+                            } // Slut på for loop
+                            // Til sidst bliver den html der er inde i 'tableBody' sat til at være den nye 'innerHTML'
+                            $$('.tableBody').html(innerHTML);
                         }, function (e, e2) {console.error(e); console.error(e2)});
                         // Query databasen med alle data om de næste 20000 reservationer start fra 200
                         app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllReservationer&param=${numberOfRowsInDB},${numberOfRowsInDB/2}`, (response) => {
@@ -216,10 +217,11 @@
                                                 <button type="button" onclick="reservationerdeletetool(${response.records[i].ID}, ${response.records[i].equipmentID})" class="no-ripple btn-primary deletebtn">Slet</button>
                                             </td>
                                         </tr>
-                                        `;
-                                // Til sidst bliver den html der er inde i 'tableBody' sat til at være den nye 'innerHTML'
-                                $$('.tableBody').html(innerHTML);
+                                    `
+                                ;
                             }
+                            // Til sidst bliver den html der er inde i 'tableBody' sat til at være den nye 'innerHTML'
+                            $$('.tableBody').html(innerHTML);
                         }, function (e, e2) {console.error(e); console.error(e2)});
                     }, function (e, e2) {console.error(e); console.error(e2)});
             },

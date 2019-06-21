@@ -298,9 +298,9 @@
                                 </td>
                             </tr>
                             `;
-                            //Tager alt data fra vores temp variable og pusher til vores table
-                            $$('.tableCertBody').html(innerHTMLCert);
                         }
+                        //Tager alt data fra vores temp variable og pusher til vores table
+                        $$('.tableCertBody').html(innerHTMLCert);
                     });
                     //Kalder et endpoint som returner alle kørekort fra DB'en
                     app.request.getJSON(`${app.data['serverip']}endpoint/certificate.php?id=-1&tableid=1`, (response) => {
@@ -318,9 +318,9 @@
                                 </td>
                             </tr>
                             `;
-                            //Tager alt data fra vores temp variable og pusher til vores table
-                            $$('.tableKortBody').html(innerHTMLKort);
                         }
+                        //Tager alt data fra vores temp variable og pusher til vores table
+                        $$('.tableKortBody').html(innerHTMLKort);
                     });
                      //Onclick funktion på alle rows i kategori tabellen
                     $$('.tableCertBody').on('click', (e) => {

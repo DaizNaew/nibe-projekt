@@ -155,12 +155,12 @@
                                     </td>
                                 </tr>
                                 `;
-                                    // Til sidst bliver den html der er inde i 'tableBody' sat til at være den nye 'innerHTML'
-                                    $$('.tableBody').html(innerHTML);
-                                }
+                                } // Slut på for loop
+                                // Til sidst bliver den html der er inde i 'tableBody' sat til at være den nye 'innerHTML'
+                                $$('.tableBody').html(innerHTML);
                             }, (error) => { // Log af error hvis RestAPIen sender alt andet end http response 200
                                 console.error(error);
-                            }
+                            } // Slut på Request til database
                             );
                         // Query databasen med alle data om den sidste halvdel af alle udlånt værktøj
                         app.request.getJSON(
@@ -189,12 +189,13 @@
                                     </td>
                                 </tr>
                                 `;
-                                    // Til sidst bliver den html der er inde i 'tableBody' sat til at være den nye 'innerHTML'
-                                    $$('.tableBody').html(innerHTML);
                                 } // slut på for loop
+                                // Til sidst bliver den html der er inde i 'tableBody' sat til at være den nye 'innerHTML'
+                             $$('.tableBody').html(innerHTML);
                             }, (error) => { // Log af error hvis RestAPIen sender alt andet end http response 200
                                 console.error(error);
                             }
+                            
                         ); // Slut på get request til restAPI
                     }, (error) => { // Log af error hvis RestAPIen sender alt andet end http response 200
                         console.error(error);

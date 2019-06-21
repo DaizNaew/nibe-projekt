@@ -106,10 +106,11 @@
                                             <td class="label-cell Stand">${response.records[i].equipmentCondition}</td>
                                             <td class="label-cell Antal">${response.records[i].amount}</td>
                                         </tr>
-                                        `;
-                                // Til sidst bliver den html der er inde i 'tableBody' sat til at være den nye 'innerHTML'
-                                $$('.tableBody').html(innerHTML);
-                            }
+                                    `
+                                ;
+                            } // Slut på for loop
+                            // Til sidst bliver den html der er inde i 'tableBody' sat til at være den nye 'innerHTML'
+                            $$('.tableBody').html(innerHTML);
                         }, function (e, e2) {console.error(e); console.error(e2)});
                     }, function (e, e2) {console.error(e); console.error(e2)}
                 );// Slut på request til restAPI for at hente antal af værktøj
