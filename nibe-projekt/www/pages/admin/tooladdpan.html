@@ -665,8 +665,6 @@
                                     </td>
                                 </tr>
                                 `;
-                                // Til sidst bliver den html der er inde i 'tableBody' sat til at være den nye 'innerHTML'
-                                $$('.tableBody').html(innerHTML);
                                 // Check til at se om alle værktøjene er blevet tilføjet
                                 if (tools.records.length < 200) {
                                     //Derefter gemmer vi preloader overlayet igen
@@ -675,6 +673,8 @@
                                     }
                                 }
                             }
+                            // Til sidst bliver den html der er inde i 'tableBody' sat til at være den nye 'innerHTML'
+                            $$('.tableBody').html(innerHTML);
                         }, (error) => { // Log af error hvis RestAPIen sender alt andet end http response 200
                             console.error(error);
                         });
@@ -699,13 +699,14 @@
                                     </td>
                                 </tr>
                                 `;
-                                // Til sidst bliver den html der er inde i 'tableBody' sat til at være den nye 'innerHTML'
-                                $$('.tableBody').html(innerHTML);
+                                
                                 //Derefter gemmer vi preloader overlayet igen
                                 if (i + 1 == tools.records.length) {
                                     $$('.tableoverlay').hide();
                                 }
                             }
+                            // Til sidst bliver den html der er inde i 'tableBody' sat til at være den nye 'innerHTML'
+                            $$('.tableBody').html(innerHTML);
                         }, (error) => { // Log af error hvis RestAPIen sender alt andet end http response 200
                             console.error(error);
                         });
