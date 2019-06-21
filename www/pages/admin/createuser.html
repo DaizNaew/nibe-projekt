@@ -477,14 +477,15 @@
                                 </td>
                             </tr>
                             `;
-                        //Tager alt data fra vores temp variable og pusher til vores table
-                        $$('.userTable').html(innerHTML);
+                        
                         //Hvis vi har loopet igennem alle elementer i arrayet
                         if(i+1 == response.records.length ){
                             //Fjerner preloaderen
                             $$('.tableoverlay').hide();
                         }
                     }
+                    //Tager alt data fra vores temp variable og pusher til vores table
+                    $$('.userTable').html(innerHTML);
                 }, (error) => { // Log af error hvis RestAPIen sender alt andet end http response 200
                     console.error(error);
                 });
@@ -510,9 +511,10 @@
                                 </td>
                             </tr>
                             `;
-                        //Tager alt data fra vores temp variable og pusher til vores table
-                        $$('.certificateTable').html(innerHTML);
+                        
                     }
+                    //Tager alt data fra vores temp variable og pusher til vores table
+                    $$('.certificateTable').html(innerHTML);
                 }, (error) => { // Log af error hvis RestAPIen sender alt andet end http response 200
                     console.error(error);
                 });
@@ -538,9 +540,10 @@
                                 </td>
                             </tr>
                             `;
-                        //Tager alt data fra vores temp variable og pusher til vores table
-                        $$('.licenseTable').html(innerHTML);
+                        
                     }
+                    //Tager alt data fra vores temp variable og pusher til vores table
+                    $$('.licenseTable').html(innerHTML);
                 }, (error) => { // Log af error hvis RestAPIen sender alt andet end http response 200
                     console.error(error);
                 });
