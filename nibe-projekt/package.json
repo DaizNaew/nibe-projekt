@@ -1,7 +1,7 @@
 {
     "name": "dk.nibefestival.nibelager",
     "displayName": "nibelager",
-    "version": "1.3.1",
+    "version": "1.4.1",
     "description": "Et lagersystem til nibe festivallen",
     "repository": {
         "type": "git",
