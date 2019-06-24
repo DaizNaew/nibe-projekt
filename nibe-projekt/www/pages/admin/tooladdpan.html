@@ -119,15 +119,6 @@
                             <a><button type="button" @click="deletetool"
                                     class="no-ripple col btn btn-primary godbtn deletebtn" id="delsinglebtn">Slet
                                     Værktøj</button></a>
-                            <a><button type="button" @click="selectmoretools"
-                                    class="no-ripple col btn btn-primary godbtn deletemorebtn" id="selmorebtn">Slet
-                                    Flere Værktøj</button></a>
-                            <a><button type="button" @click="selectnomoretools"
-                                    class="no-ripple col btn btn-primary godbtn" id="nomoresel"
-                                    style="display:none;">Annuller</button></a>
-                            <a><button type="button" @click="deletemoretools"
-                                    class="no-ripple col btn btn-primary godbtn deletebtn" id="delmorebtn"
-                                    style="display:none;">Slet Valgte Værktøj</button></a>
                         </div>
                     </div>
                 </div>
@@ -139,35 +130,35 @@
 
 <script>
 
-function process(str) {
+    function process(str) {
 
-var div = document.createElement('div');
-div.innerHTML = str.trim();
+        var div = document.createElement('div');
+        div.innerHTML = str.trim();
 
-return format(div, 0).innerHTML;
-}
-
-function format(node, level) {
-
-var indentBefore = new Array(level++ + 1).join('  '),
-    indentAfter  = new Array(level - 1).join('  '),
-    textNode;
-
-for (var i = 0; i < node.children.length; i++) {
-
-    textNode = document.createTextNode('\n' + indentBefore);
-    node.insertBefore(textNode, node.children[i]);
-
-    format(node.children[i], level);
-
-    if (node.lastElementChild == node.children[i]) {
-        textNode = document.createTextNode('\n' + indentAfter);
-        node.appendChild(textNode);
+        return format(div, 0).innerHTML;
     }
-}
 
-return node;
-}
+    function format(node, level) {
+
+        var indentBefore = new Array(level++ + 1).join('  '),
+            indentAfter = new Array(level - 1).join('  '),
+            textNode;
+
+        for (var i = 0; i < node.children.length; i++) {
+
+            textNode = document.createTextNode('\n' + indentBefore);
+            node.insertBefore(textNode, node.children[i]);
+
+            format(node.children[i], level);
+
+            if (node.lastElementChild == node.children[i]) {
+                textNode = document.createTextNode('\n' + indentAfter);
+                node.appendChild(textNode);
+            }
+        }
+
+        return node;
+    }
 
     //Start på Framework7 og dens håndtering af internt data i dette page view
     return {
@@ -234,7 +225,7 @@ return node;
             deletemoretools: () => {
                 //Prompter brugeren for at sikre os at knappen ikke blev trykket på ved et uheld
                 app.dialog.confirm('Er du sikker på at du vil slette de valgte værktøj fra databasen?', 'Slet Værktøj', () => {
-                    //Finder radio knapper i "tableBody"
+                    //Finder checkboxes i "tableBody"
                     var checkBoxObj = $$('.tableBody').find('input[type="checkbox"]');
                     //Looper igennem hvert element
                     checkBoxObj.forEach(element => {
@@ -259,7 +250,7 @@ return node;
                                     //Hvis ikke vi får det forventet svar fra endpointed
                                 } else {
                                     //Prompter brugeren om at noget gik galt
-                                    app.dialog.alert('Værktøjet blev IKKE slettet fra databasen', 'Fejl af sletning', () => {
+                                    app.dialog.alert('Værktøjet blev IKKE slettet fra databasen </br> ' + data.message, 'Fejl af sletning', () => {
                                         //Refresher siden
                                         app.views.main.router.navigate("/tooladdpan/", { reloadCurrent: true, });
                                     });
@@ -305,11 +296,9 @@ return node;
                     //Looper igennem hvert element
                     checkBoxObj.forEach(element => {
                         //Hvis radio knappen er checked
-                        if (element.checked) 
-                        {
+                        if (element.checked) {
                             amount = parseInt($$(element.parentNode.parentNode.childNodes[11]).text());
-                            if(amount == 1) 
-                            {
+                            if (amount == 1) {
                                 //Kalder et endpoint for at slette certifikats krav
                                 app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_DeleteEC&param=${element.value}`, (response) => {
                                 }, (error) => { // Log af error hvis RestAPIen sender alt andet end http response 200
@@ -322,6 +311,7 @@ return node;
                                 })
                                 //Kalder et endpoint for at slette værktøjet
                                 app.request.getJSON(`${app.data['serverip']}functions/tools/delete.php?id=${element.value}`, (data) => {
+                                    console.dir(data)
                                     //Hvis vi får det forventet svar fra endpoint
                                     if (data.result == 1) {
                                         //Logger at værktøjet blev slettet
@@ -334,7 +324,7 @@ return node;
                                         //Hvis ikke vi får det forventet svar fra endpointed
                                     } else {
                                         //Prompter brugeren om at noget gik galt
-                                        app.dialog.alert('Værktøjet blev IKKE slettet fra databasen', 'Fejl af sletning', () => {
+                                        app.dialog.alert('Værktøjet blev IKKE slettet fra databasen </br> ' + data.message, 'Fejl af sletning', () => {
                                             //Refresher siden
                                             app.views.main.router.navigate("/tooladdpan/", { reloadCurrent: true, });
                                         });
@@ -347,9 +337,8 @@ return node;
                                 let checled;
                                 test = () => {
                                     let tableCont = `
-                                    <div style="display: inline-block;">
                                     <div class="tableFixHead" style="max-height: 450px; text-align:center;">
-                                    <table class="table fixed_header" background-color: #c5d9ec33; color: #000; ">
+                                    <table class="table fixed_header" style="background-color: #c5d9ec33; color: #000; ">
                                         <thead>
                                             <tr>
                                                 <th scope="col" style="display: none;">#</th>
@@ -365,12 +354,20 @@ return node;
                                         </thead>
                                         <tbody class="tableBody" style="text-align:center">
                                         `;
-                                        let prom = new Promise((resolve, reject) => {
-                                            app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllToolsByAsset&param=${element.parentElement.parentElement.children[6].innerHTML}`, (toolData) => {
-                                                for (let i = 0; i < toolData.records.length; i++) {
+                                    let prom = new Promise((resolve, reject) => {
+                                        app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllToolsByAsset&param=${element.parentElement.parentElement.children[6].innerHTML}`, (toolData) => {
+                                            for (let i = 0; i < toolData.records.length; i++) {
                                                 tableCont +=
-                                                `
-                                                    <tr>
+                                                    `
+                                                    <tr onClick="
+                                                    if($$(this).find('input').prop('checked')) {
+                                                        $$(this).find('input').prop('checked', false);
+                                                        $$(this).css('background-color', '');
+                                                    } else {
+                                                        $$(this).find('input').prop('checked', true);
+                                                        $$(this).css('background-color', '#a8baad');
+                                                    }
+                                                    ">
                                                         <td style="display: none;">${toolData.records[i].ID}</td>
                                                         <td class="label-cell aktivNavn">${toolData.records[i].navn}</td>
                                                         <td class="label-cell Kategori">${toolData.records[i].katNavn}</td>
@@ -382,53 +379,80 @@ return node;
                                                         </td>
                                                     </tr>
                                                 `;
-                                                }
-                                                tableCont += "</tbody></table></div></div>"
-                                            
-                                                resolve(tableCont);
-                                            }, (error) => { // Log af error hvis RestAPIen sender alt andet end http response 200
-                                                console.error(error);
-                                            }); 
+                                            }
+                                            tableCont += "</tbody></table></div>"
+
+                                            resolve(tableCont);
+                                        }, (error) => { // Log af error hvis RestAPIen sender alt andet end http response 200
+                                            console.error(error);
                                         });
+                                    });
                                     prom.then((tableCont) => {
                                         dialog = app.dialog.create({
-                                        title: `Sletning af ${element.parentElement.parentElement.children[1].innerHTML}`,
-                                        destroyOnClose: true,
-                                        text: 'placeholder',
-                                        buttons: [
-                                            {
-                                                text: 'LUK',
-                                                onClick: () => {console.log('luk')}
-                                                
-                                            },
-                                            {
-                                                text: 'OK',
-                                                onClick: () => {
-                                                    temp = $$('.customDialog').children().children('.dialog-text');
-                                                    console.dir(temp[0]);
+                                            title: `Sletning af ${element.parentElement.parentElement.children[1].innerHTML}`,
+                                            destroyOnClose: true,
+                                            text: 'placeholder',
+                                            buttons: [
+                                                {
+                                                    text: 'LUK',
+                                                    onClick: () => { console.log('luk') }
 
+                                                },
+                                                {
+                                                    text: 'OK',
+                                                    onClick: () => {
+                                                        $$('.customDialog').children().children('.dialog-text').filter(function (index, el) {
+                                                            console.error('SPLITTER');
+                                                            $$(this).find('.tableBody').filter(function (index, el) {
+                                                                var boxe = $$(this).find('input[type="checkbox"]');
+                                                                boxe.forEach(element => {
+                                                                    if (element.checked) {
+                                                                        //Kalder et endpoint for at slette certifikats krav
+                                                                        app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_DeleteEC&param=${element.value}`, (response) => {
+                                                                        }, (error) => { // Log af error hvis RestAPIen sender alt andet end http response 200
+                                                                            console.error(error);
+                                                                        })
+                                                                        //Kalder et endpoint for at slette kørekorts krav
+                                                                        app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_DeleteEK&param=${element.value}`, (response) => {
+                                                                        }, (error) => { // Log af error hvis RestAPIen sender alt andet end http response 200
+                                                                            console.error(error);
+                                                                        })
+                                                                        //Kalder et endpoint for at slette værktøjet
+                                                                        app.request.getJSON(`${app.data['serverip']}functions/tools/delete.php?id=${element.value}`, (data) => {
+                                                                            //Hvis vi får det forventet svar fra endpoint
+                                                                            if (data.result == 1) {
+                                                                                //Logger at værktøjet blev slettet
+                                                                                app.methods.addToLog(`${app.data['userID']}`, `Slettet værktøjet ${element.parentElement.parentElement.children[1].innerHTML} med assetTag (${element.parentElement.parentElement.children[6].innerHTML})`);
+
+                                                                                //Hvis ikke vi får det forventet svar fra endpointed
+                                                                            } else {
+                                                                                //Prompter brugeren om at noget gik galt
+                                                                                app.dialog.alert('Værktøjet blev IKKE slettet fra databasen </br> ' + data.message, 'Fejl af sletning', () => {
+                                                                                    //Refresher siden
+                                                                                    app.views.main.router.navigate("/tooladdpan/", { reloadCurrent: true, });
+                                                                                });
+                                                                            }
+                                                                        }, (error) => { // Log af error hvis RestAPIen sender alt andet end http response 200
+                                                                            console.error(error);
+                                                                        });
+                                                                    }
+                                                                })
+                                                            })
+                                                        })
+                                                    }
                                                 }
-                                            }
-                                        ],
-                                        on: {
-                                            opened: () => {
-                                                $$('.customDialog').children().children('.dialog-text').html(tableCont);
-                                                $$('.customDialog').children().children('.dialog-text').filter(function (index, el) {
-                                                    console.dir(index, el);
-                                                    console.error('SPLITTER');
-                                                    console.dir($$(this).find('.tableBody').filter(function (index,el) {
-                                                        console.error($$(this).find('input[type="checkbox"]'))
-                                                    }))
-                                                })
-                                            }
-                                        },
-                                        cssClass: 'customDialog',
+                                            ],
+                                            on: {
+                                                opened: () => {
+                                                    $$('.customDialog').children().children('.dialog-text').html(tableCont);
+                                                }
+                                            },
+                                            cssClass: 'customDialog',
+                                        });
+
+                                        dialog.open(); // Åbner den created dialog vindue
                                     });
-                                    
-                                    
-                                    dialog.open();
-                                    });
-                                    
+
                                 };
                                 test();
                             }
@@ -765,7 +789,6 @@ return node;
                 // et numberOfRowsInDB;
 
                 app.request.getJSON(`${app.data['serverip']}functions/callsp.php?sp=sp_GetAllTools&param=0`, tools => {
-                    console.dir(tools.records)
                     // Loop igennem alle response fra restAPIen
                     for (let i = 0; i < tools.records.length; i++) {
                         innerHTML +=

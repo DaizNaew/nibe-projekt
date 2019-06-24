@@ -523,6 +523,7 @@ label{
 .customDialog {
   text-align: center;
   width: auto !important;
-  left: 5% !important;
+  left: 15% !important;
+  right: 15%;
   margin-left: 0 !important;
 }
