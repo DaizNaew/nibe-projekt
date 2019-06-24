@@ -130,6 +130,11 @@ class Equipment {
         // Forbered query statement
         $stmt = $this->conn->prepare($query);
         // Execute query statement og returner det til check
-        return $stmt->execute();
+        try {
+            // execute query
+            return $stmt->execute();
+        } catch (PDOException $e) {
+            return ($e);
+        }
     }
 }
