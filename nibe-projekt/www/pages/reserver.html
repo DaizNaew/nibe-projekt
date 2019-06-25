@@ -333,6 +333,11 @@
                     app.dialog.alert("Afleverings tidspunkt feltet må ikke være tomt.", "Reserver");
                     return;
                 }
+
+                if(newReserverID == ""){
+                    app.dialog.alert("Den indtastede person blev ikke fundet", "Reserver");
+                    return;
+                }
                 let idArray = [];
 
                 if (Object.keys(t).length == 0) {
