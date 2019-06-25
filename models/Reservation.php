@@ -101,12 +101,13 @@ class Reservation {
     
         // Prøv at opdatere equipment til at sige at det værktøj med det valgte id er reserveret
         try {
+            if(!$this->conn->query($query)) return false;
             $query2 = "UPDATE equipment SET reserved = '1' WHERE ID = ". $equipmentID;
             $stmt2 = $this->conn->prepare($query2);
             // execute queries
             $stmt2->execute();
             // og returner den første query så der kan checkes på den
-            return $stmt->execute();
+            return true;
         } catch (PDOException $e) {
             // Returner error hvis der går noget galt
             return ($e);
