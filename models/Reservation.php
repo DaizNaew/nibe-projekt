@@ -84,12 +84,12 @@ class Reservation {
         // Sætter de parametre vi får fra $post i nogle lokale variabler
         $userID = $post['userID'];
         $equipmentID = $post['equipmentID'];
-        $dateStart = date("y-m-d", strtotime($post['dateStart']));
+        $dateStart = date("Y-m-d H:i:s", strtotime($post['dateStart']));
         
         // Checker hvis der er extra data sent med, hvis ja bliver de sat ind query statementet og sendt til databasen
         $note = null;
         $expectedDateEnd = null;
-        if(isset($post['expectedDateEnd'])) $expectedDateEnd = date("y-m-d", strtotime($post['expectedDateEnd']));
+        if(isset($post['expectedDateEnd'])) $expectedDateEnd = date("Y-m-d H:i:s", strtotime($post['expectedDateEnd']));
         if(isset($post['note'])) $note = $post['note'];
         
 

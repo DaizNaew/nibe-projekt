@@ -80,7 +80,7 @@ class Loaned {
 
         $expectedDateEnd = null;
         $note = null;
-        if(isset($post['expectedDateEnd'])) $expectedDateEnd = date("y-m-d", strtotime($post['expectedDateEnd']));
+        if(isset($post['expectedDateEnd'])) $expectedDateEnd = date("Y-m-d H:i:s", strtotime($post['expectedDateEnd']));
         if(isset($post['note'])) $note = $post['note'];
         // Sql statement som bruges til at indsætte i databasen med de forventede parametre
         $query = "INSERT INTO " . $this->table_name . " (userID,equipmentID,expectedDateEnd,note) VALUES " . "('$userID', '$equipmentID', '$expectedDateEnd', '$note')";
@@ -131,7 +131,6 @@ class Loaned {
         $id = $post['id'];
         $equipmentID = $post['equipmentID'];
         
-
         //Henter og sætter den nuværende dato og tid
         date_default_timezone_set('Europe/Copenhagen'); 
 
