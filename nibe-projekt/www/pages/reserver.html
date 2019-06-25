@@ -301,10 +301,8 @@
                  */
                 let newReserverNavn = document.getElementById('ReserverNavn').value;
                 let newReserverID = document.getElementById('ID').value;
-                let newAfhentDato = document.getElementById('AfhentningsDato').value + " " + document
-                    .getElementById('AfhentningsTid').value + ":00";
-                let newAfleverDato = document.getElementById('AfleveringsDato').value + " " + document
-                    .getElementById('AfleveringsTid').value + ":00";
+                let newAfhentDato = document.getElementById('AfhentningsDato').value + " " + document.getElementById('AfhentningsTid').value + ":00";
+                let newAfleverDato = document.getElementById('AfleveringsDato').value + " " + document.getElementById('AfleveringsTid').value + ":00";
                 let newNote = document.getElementById('notefelt').value;
 
                 // En let til at holde de data som der bliver returneret fra restAPIen efter query
@@ -506,7 +504,8 @@
                 // Time Picker til afleverings tidspunkt
                 var AfleveringsClock = $('#AfleveringsTid');
                 AfleveringsClock.clockpicker({
-                    autoclose: true
+                    autoclose: true,
+                    placement: 'top'
                 });
 
             },
