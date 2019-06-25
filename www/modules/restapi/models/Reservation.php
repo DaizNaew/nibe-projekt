@@ -84,12 +84,12 @@ class Reservation {
         // Sætter de parametre vi får fra $post i nogle lokale variabler
         $userID = $post['userID'];
         $equipmentID = $post['equipmentID'];
-        $dateStart = date("y-m-d", strtotime($post['dateStart']));
+        $dateStart = date("Y-m-d H:i:s", strtotime($post['dateStart']));
         
         // Checker hvis der er extra data sent med, hvis ja bliver de sat ind query statementet og sendt til databasen
         $note = null;
         $expectedDateEnd = null;
-        if(isset($post['expectedDateEnd'])) $expectedDateEnd = date("y-m-d", strtotime($post['expectedDateEnd']));
+        if(isset($post['expectedDateEnd'])) $expectedDateEnd = date("Y-m-d H:i:s", strtotime($post['expectedDateEnd']));
         if(isset($post['note'])) $note = $post['note'];
         
 
@@ -101,12 +101,13 @@ class Reservation {
     
         // Prøv at opdatere equipment til at sige at det værktøj med det valgte id er reserveret
         try {
+            if(!$this->conn->query($query)) return false;
             $query2 = "UPDATE equipment SET reserved = '1' WHERE ID = ". $equipmentID;
             $stmt2 = $this->conn->prepare($query2);
             // execute queries
             $stmt2->execute();
             // og returner den første query så der kan checkes på den
-            return $stmt->execute();
+            return true;
         } catch (PDOException $e) {
             // Returner error hvis der går noget galt
             return ($e);
